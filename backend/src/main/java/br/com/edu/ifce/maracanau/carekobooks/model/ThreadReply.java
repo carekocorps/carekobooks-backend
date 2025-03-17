@@ -18,10 +18,6 @@ public class ThreadReply extends AbstractEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
-
-    @ManyToOne
     @JoinColumn(name = "thread_id", nullable = false)
     private Thread thread;
 

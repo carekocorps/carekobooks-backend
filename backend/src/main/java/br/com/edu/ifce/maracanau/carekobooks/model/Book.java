@@ -25,10 +25,10 @@ public class Book extends AbstractEntity {
     @Column(nullable = false)
     private String publisher;
 
-    @Column(name = "published_at", nullable = false)
+    @Column(name = "published_at")
     private LocalDate publishedAt;
 
-    @Column(name = "total_pages", nullable = false)
+    @Column(name = "total_pages")
     private Integer totalPages;
 
     @Column(name = "score_sum", nullable = false)
@@ -45,8 +45,5 @@ public class Book extends AbstractEntity {
 
     @OneToMany(mappedBy = "book")
     private List<Thread> threads;
-
-    @OneToMany(mappedBy = "book")
-    private List<ThreadReply> replies;
 
 }
