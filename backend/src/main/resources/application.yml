@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: carekobooks
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update # Temporário, será alterado para "none" em breve
+    open-in-view: false
