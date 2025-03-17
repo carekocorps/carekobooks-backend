@@ -14,6 +14,12 @@ public class BookProgress extends AbstractEntity {
     @Column(nullable = false)
     private BookProgressStatus status = BookProgressStatus.READING;
 
+    @Column(nullable = false)
+    private Boolean isFavorited = false;
+
+    @Column
+    private Integer pagesRead;
+
     @Column
     private Integer score;
 
