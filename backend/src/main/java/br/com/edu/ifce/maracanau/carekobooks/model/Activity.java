@@ -14,6 +14,9 @@ public class Activity extends AbstractEntity {
     @Column
     private BookProgressStatus status;
 
+    @Column
+    private Integer pagesRead;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

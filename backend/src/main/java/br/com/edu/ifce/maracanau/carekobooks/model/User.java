@@ -44,12 +44,7 @@ public class User extends AbstractEntity {
     )
     private List<User> following;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_follow_relationship",
-            joinColumns = @JoinColumn(name = "user_followed_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_following_id")
-    )
+    @ManyToMany(mappedBy = "following")
     private List<User> followers;
 
 }
