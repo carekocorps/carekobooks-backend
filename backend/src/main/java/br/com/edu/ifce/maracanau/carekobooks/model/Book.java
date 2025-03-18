@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table
-public class Book extends AbstractEntity {
+public class Book extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
@@ -28,7 +28,7 @@ public class Book extends AbstractEntity {
     @Column(name = "published_at")
     private LocalDate publishedAt;
 
-    @Column(name = "total_pages")
+    @Column(name = "total_pages", nullable = false)
     private Integer totalPages;
 
     @Column(name = "score_sum", nullable = false)
@@ -44,6 +44,6 @@ public class Book extends AbstractEntity {
     private List<Activity> activities;
 
     @OneToMany(mappedBy = "book")
-    private List<Thread> threads;
+    private List<Forum> forums;
 
 }

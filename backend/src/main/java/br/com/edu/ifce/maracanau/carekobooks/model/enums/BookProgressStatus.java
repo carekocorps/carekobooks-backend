@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.enums;
+package br.com.edu.ifce.maracanau.carekobooks.model.enums;
 
 public enum BookProgressStatus {
 

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.util.page;
+package br.com.edu.ifce.maracanau.carekobooks.core.page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class AbstractApplicationPagedSearch {
+public abstract class BaseApplicationSearch {
 
     @Schema(defaultValue = "0")
     protected Integer pageNumber = 0;

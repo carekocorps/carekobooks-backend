@@ -16,7 +16,6 @@ public class BookRequestDTO {
     @Size(max = 255)
     private String title;
 
-    @NotBlank
     @Size(max = 1000)
     private String synopsis;
 
@@ -28,7 +27,6 @@ public class BookRequestDTO {
     @Size(max = 255)
     private String publisher;
 
-    @NotNull
     @PastOrPresent
     private LocalDate publishedAt;
 

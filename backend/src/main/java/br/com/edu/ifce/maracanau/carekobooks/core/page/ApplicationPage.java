@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.util.page;
+package br.com.edu.ifce.maracanau.carekobooks.core.page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

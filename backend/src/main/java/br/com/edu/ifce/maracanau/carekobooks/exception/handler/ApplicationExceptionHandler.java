@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.exception.handler;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.AbstractException;
+import br.com.edu.ifce.maracanau.carekobooks.exception.BaseException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.response.ExceptionResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ import java.util.List;
 @RestControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AbstractException.class)
-    public final ResponseEntity<Object> handleAbstract(AbstractException ex) {
+    @ExceptionHandler(BaseException.class)
+    public final ResponseEntity<Object> handleAbstract(BaseException ex) {
         return handleGeneric(ex, List.of());
     }
 

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.dto.thread;
+package br.com.edu.ifce.maracanau.carekobooks.dto.forum;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -6,9 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Schema(name = "ThreadRequest")
-public class ThreadRequestDTO {
+@Schema(name = "Forum")
+public class ForumDTO {
 
+    private Long id;
     private String title;
     private String description;
 
