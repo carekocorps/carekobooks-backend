@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.model.enums.BookProgressStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table
-public class Activity extends AbstractEntity {
+public class Activity extends BaseEntity {
 
     @Column
     private BookProgressStatus status;

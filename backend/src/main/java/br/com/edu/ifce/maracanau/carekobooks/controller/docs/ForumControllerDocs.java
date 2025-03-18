@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
 import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumSearchDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,11 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface BookControllerDocs {
+public interface ForumControllerDocs {
 
     @Operation(
-            summary = "Search all books",
-            tags = {"Book"},
+            summary = "Search all forums",
+            tags = {"Forum"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
@@ -32,56 +32,56 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookSearchDTO bookSearchDTO);
+    ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject ForumSearchDTO forumSearchDTO);
 
     @Operation(
-            summary = "Find a book by ID",
-            tags = {"Book"},
+            summary = "Find a forum by ID",
+            tags = {"Forum"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookDTO.class)
+                                    schema = @Schema(implementation = ForumDTO.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookDTO> findById(@PathVariable Long id);
+    ResponseEntity<ForumDTO> findById(@PathVariable Long id);
 
     @Operation(
-            summary = "Create a book",
-            tags = {"Book"},
+            summary = "Create a forum",
+            tags = {"Forum"},
             responses = {
                     @ApiResponse(
                             description = "Created",
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookDTO.class)
+                                    schema = @Schema(implementation = ForumDTO.class)
                             )
                     ),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequestDTO bookRequestDTO);
+    ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequestDTO forumRequestDTO);
 
     @Operation(
-            summary = "Update a book",
-            tags = {"Book"},
+            summary = "Update a forum",
+            tags = {"Forum"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequestDTO bookRequestDTO);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ForumRequestDTO forumRequestDTO);
 
     @Operation(
-            summary = "Delete a book by ID",
-            tags = {"Book"},
+            summary = "Delete a forum by ID",
+            tags = {"Forum"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)

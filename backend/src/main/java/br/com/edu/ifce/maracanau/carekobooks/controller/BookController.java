@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
 import br.com.edu.ifce.maracanau.carekobooks.service.BookService;
-import br.com.edu.ifce.maracanau.carekobooks.util.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/books")
 @Tag(name = "Book", description = "Endpoints for managing books")
-public class BookController extends AbstractController implements BookControllerDocs {
+public class BookController extends BaseController implements BookControllerDocs {
 
     private final BookService bookService;
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table
-public class User extends AbstractEntity {
+public class User extends BaseEntity {
 
     @Column(length = 50, nullable = false)
     private String username;
@@ -31,10 +31,10 @@ public class User extends AbstractEntity {
     private List<Activity> activities;
 
     @OneToMany(mappedBy = "user")
-    public List<Thread> threads;
+    public List<Forum> forums;
 
     @OneToMany(mappedBy = "user")
-    private List<ThreadReply> replies;
+    private List<ForumReply> replies;
 
     @ManyToMany
     @JoinTable(

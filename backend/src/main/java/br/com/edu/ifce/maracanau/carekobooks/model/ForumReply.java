@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "thread_reply")
-public class ThreadReply extends AbstractEntity {
+@Table(name = "forum Strin_reply")
+public class ForumReply extends BaseEntity {
 
     @Column(length = 1000, nullable = false)
     private String content;
@@ -18,7 +18,7 @@ public class ThreadReply extends AbstractEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "thread_id", nullable = false)
-    private Thread thread;
+    @JoinColumn(name = "forum_id", nullable = false)
+    private Forum forum;
 
 }
