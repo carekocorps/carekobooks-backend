@@ -18,6 +18,7 @@
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<lombok.version>1.18.36</lombok.version>
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+		<sprindoc.version>2.8.5</sprindoc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +47,12 @@
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${sprindoc.version}</version>
 		</dependency>
 
 		<dependency>

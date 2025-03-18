@@ -1,12 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.dto.book;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Schema(name = "Book")
 public class BookDTO {
 
     private Long id;
@@ -18,5 +21,7 @@ public class BookDTO {
     private Integer totalPages;
     private Integer scoreSum;
     private Integer scoreCount;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }
