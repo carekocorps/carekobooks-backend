@@ -1,12 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.util.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ public class BookService {
     public ApplicationPage<BookDTO> search(BookSearchDTO bookSearchDTO) {
         var specification = bookSearchDTO.getSpecification();
         var sort = bookSearchDTO.getSort();
-        var pageRequest = PageRequest.of(bookSearchDTO.getPageNumber(), bookSearchDTO.getPageSize(), sort);
+        var pageRequest = PageRequest.of(bookSearchDTO.getPageNumber(), bookSearchDTO.getPageSize());
         return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toDTO));
     }
 

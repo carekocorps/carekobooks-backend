@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.model.enums.BookProgressStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "book_progress")
-public class BookProgress extends AbstractEntity {
+public class BookProgress extends BaseEntity {
 
     @Column(nullable = false)
     private BookProgressStatus status = BookProgressStatus.READING;
@@ -19,6 +19,9 @@ public class BookProgress extends AbstractEntity {
 
     @Column
     private Integer score;
+
+    @Column
+    private Integer pagesRead;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

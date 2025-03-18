@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table
-public class Thread extends AbstractEntity {
+public class Forum extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
@@ -26,7 +26,7 @@ public class Thread extends AbstractEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @OneToMany(mappedBy = "thread")
-    private List<ThreadReply> replies;
+    @OneToMany(mappedBy = "forum")
+    private List<ForumReply> replies;
 
 }

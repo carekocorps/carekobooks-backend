@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public abstract class AbstractException extends RuntimeException {
+public class InternalServerException extends BaseException {
 
-    public AbstractException(String message) {
+    public InternalServerException(String message) {
         super(message);
     }
 
