@@ -18,9 +18,6 @@ public class BookProgress extends AbstractEntity {
     private Boolean isFavorited = false;
 
     @Column
-    private Integer pagesRead;
-
-    @Column
     private Integer score;
 
     @ManyToOne

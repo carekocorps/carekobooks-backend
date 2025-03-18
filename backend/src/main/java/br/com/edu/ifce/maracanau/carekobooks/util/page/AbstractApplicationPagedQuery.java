@@ -5,11 +5,11 @@ import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Hashtable;
+import java.util.List;
 
 @Getter
 @Setter
-public abstract class AbstractCustomPagedQuery<T> extends AbstractCustomPagedSearch {
+public abstract class AbstractApplicationPagedQuery<T> extends AbstractApplicationPagedSearch {
 
     public abstract Specification<T> getSpecification();
     public abstract Sort getSort();
@@ -18,12 +18,12 @@ public abstract class AbstractCustomPagedQuery<T> extends AbstractCustomPagedSea
         return Specification.where(null);
     }
 
-    protected Sort getSort(Hashtable<String, String> sortableFields) {
-        var sortField = sortableFields.containsKey(orderBy)
+    protected Sort getSort(List<String> fields) {
+        var sortField = fields.contains(orderBy)
                 ? orderBy
                 : "id";
 
-        var direction = isAscendent
+        var direction = isAscendingOrder
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
