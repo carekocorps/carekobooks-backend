@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookPageQueryDTO;
 import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,7 +32,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookSearchDTO bookSearchDTO);
+    ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookPageQueryDTO bookSearchDTO);
 
     @Operation(
             summary = "Find a book by ID",
@@ -64,6 +64,7 @@ public interface BookControllerDocs {
                                     schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )

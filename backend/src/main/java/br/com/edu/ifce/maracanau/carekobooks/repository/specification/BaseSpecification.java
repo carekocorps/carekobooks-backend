@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.repository.repository;
+package br.com.edu.ifce.maracanau.carekobooks.repository.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 

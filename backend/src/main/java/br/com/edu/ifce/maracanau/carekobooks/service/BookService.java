@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.service;
 import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookPageQueryDTO;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.repository.BookRepository;
@@ -22,10 +22,10 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
-    public ApplicationPage<BookDTO> search(BookSearchDTO bookSearchDTO) {
+    public ApplicationPage<BookDTO> search(BookPageQueryDTO bookSearchDTO) {
         var specification = bookSearchDTO.getSpecification();
         var sort = bookSearchDTO.getSort();
-        var pageRequest = PageRequest.of(bookSearchDTO.getPageNumber(), bookSearchDTO.getPageSize());
+        var pageRequest = PageRequest.of(bookSearchDTO.getPageNumber(), bookSearchDTO.getPageSize(), sort);
         return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toDTO));
     }
 
