@@ -8,8 +8,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Schema(name = "ForumRequest")
-public class ForumRequestDTO {
+@Schema(name = "ForumPageQuery")
+public class ForumPageQueryDTO {
 
     @NotBlank
     @Size(max = 255)

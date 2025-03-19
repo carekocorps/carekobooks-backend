@@ -1,10 +1,11 @@
-package br.com.edu.ifce.maracanau.carekobooks.core.page;
+package br.com.edu.ifce.maracanau.carekobooks.core.page.query;
 
-import br.com.edu.ifce.maracanau.carekobooks.core.page.annotations.Searchable;
-import br.com.edu.ifce.maracanau.carekobooks.core.page.annotations.Sortable;
-import br.com.edu.ifce.maracanau.carekobooks.core.page.enums.SearchType;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.BaseApplicationPageSearch;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.annotation.Searchable;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.annotation.Sortable;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.exception.InternalServerException;
-import br.com.edu.ifce.maracanau.carekobooks.repository.repository.BaseSpecification;
+import br.com.edu.ifce.maracanau.carekobooks.repository.specification.BaseSpecification;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class BaseApplicationQuery<T> extends BaseApplicationSearch {
+public abstract class BaseApplicationPageQuery<T> extends BaseApplicationPageSearch {
 
     public Specification<T> getSpecification() {
         List<Specification<T>> specs = new ArrayList<>();
@@ -24,6 +25,7 @@ public abstract class BaseApplicationQuery<T> extends BaseApplicationSearch {
                 try {
                     field.setAccessible(true);
                     var fieldValue = field.get(this);
+
                     if (fieldValue != null) {
                         var fieldName = field.getName();
                         var fieldSearchType = field.getAnnotation(Searchable.class).type();
@@ -44,9 +46,16 @@ public abstract class BaseApplicationQuery<T> extends BaseApplicationSearch {
         var sortField = "id";
         for (var field : this.getClass().getDeclaredFields()) {
             var annotation = field.getAnnotation(Sortable.class);
-            if (annotation != null && annotation.name().equals(orderBy)) {
-                sortField = field.getName();
-                break;
+            if (annotation != null) {
+                var fieldName = field.getName();
+                var annotationName = annotation.name().isEmpty()
+                        ? fieldName
+                        : annotation.name();
+
+                if (annotationName.equals(orderBy)) {
+                    sortField = fieldName;
+                    break;
+                }
             }
         }
 

@@ -1,6 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.core.page.annotations;
+package br.com.edu.ifce.maracanau.carekobooks.core.page.query.annotation;
 
-import br.com.edu.ifce.maracanau.carekobooks.core.page.enums.SearchType;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.enums.SearchType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
