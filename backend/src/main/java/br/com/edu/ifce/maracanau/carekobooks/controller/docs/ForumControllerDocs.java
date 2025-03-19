@@ -2,8 +2,8 @@ package br.com.edu.ifce.maracanau.carekobooks.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumRequestDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumSearchDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.forum.ForumPageQueryDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.forum.BookPageQueryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +32,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject ForumSearchDTO forumSearchDTO);
+    ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject BookPageQueryDTO forumSearchDTO);
 
     @Operation(
             summary = "Find a forum by ID",
@@ -67,7 +67,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequestDTO forumRequestDTO);
+    ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumPageQueryDTO forumPageQueryDTO);
 
     @Operation(
             summary = "Update a forum",
@@ -77,7 +77,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ForumRequestDTO forumRequestDTO);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ForumPageQueryDTO forumPageQueryDTO);
 
     @Operation(
             summary = "Delete a forum by ID",

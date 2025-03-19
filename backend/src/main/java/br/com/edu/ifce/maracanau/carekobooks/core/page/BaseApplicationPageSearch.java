@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class BaseApplicationSearch {
+public abstract class BaseApplicationPageSearch {
 
     @Schema(defaultValue = "0")
     protected Integer pageNumber = 0;

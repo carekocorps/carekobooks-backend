@@ -1,10 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.dto.book;
 
-import br.com.edu.ifce.maracanau.carekobooks.core.page.annotations.Searchable;
-import br.com.edu.ifce.maracanau.carekobooks.core.page.annotations.Sortable;
-import br.com.edu.ifce.maracanau.carekobooks.core.page.enums.SearchType;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.annotation.Searchable;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.annotation.Sortable;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.model.Book;
-import br.com.edu.ifce.maracanau.carekobooks.core.page.BaseApplicationQuery;
+import br.com.edu.ifce.maracanau.carekobooks.core.page.query.BaseApplicationPageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +13,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Schema(name = "BookSearch")
-public class BookSearchDTO extends BaseApplicationQuery<Book> {
+@Schema(name = "BookPageQuery")
+public class BookPageQueryDTO extends BaseApplicationPageQuery<Book> {
 
     @Sortable
     @Searchable(type = SearchType.TEXT_CONTAINS)

@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.controller;
 import br.com.edu.ifce.maracanau.carekobooks.controller.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookRequestDTO;
-import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookSearchDTO;
+import br.com.edu.ifce.maracanau.carekobooks.dto.book.BookPageQueryDTO;
 import br.com.edu.ifce.maracanau.carekobooks.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.core.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ public class BookController extends BaseController implements BookControllerDocs
 
     @GetMapping
     @Override
-    public ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookSearchDTO bookSearchDTO) {
+    public ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookPageQueryDTO bookSearchDTO) {
         var bookDTOs = bookService.search(bookSearchDTO);
         return ResponseEntity.ok(bookDTOs);
     }
