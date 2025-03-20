@@ -1,9 +1,8 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.activity.infra.model;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.infra.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infra.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model.enums.BookProgressStatus;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model.Book;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +11,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table
-public class Activity extends BaseModel {
+public class BookActivity extends BaseModel {
 
-    @Column
-    private BookProgressStatus status;
+    @Column(nullable = false)
+    private BookProgressStatus status = BookProgressStatus.READING;
 
     @Column
     private Integer pagesRead;

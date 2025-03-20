@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.activity.infra.model.Activity;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infra.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infra.model.Forum;
 import jakarta.persistence.*;
@@ -44,7 +43,7 @@ public class Book extends BaseModel {
     private List<BookProgress> progresses;
 
     @OneToMany(mappedBy = "book")
-    private List<Activity> activities;
+    private List<BookActivity> activities;
 
     @OneToMany(mappedBy = "book")
     private List<Forum> forums;
