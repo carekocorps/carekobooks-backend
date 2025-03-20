@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infra.model;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.infra.model.BaseModel;
-import br.com.edu.ifce.maracanau.carekobooks.module.activity.infra.model.Activity;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infra.model.Forum;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infra.model.ForumReply;
@@ -33,7 +33,7 @@ public class User extends BaseModel {
     private List<BookProgress> progresses;
 
     @OneToMany(mappedBy = "user")
-    private List<Activity> activities;
+    private List<BookActivity> activities;
 
     @OneToMany(mappedBy = "user")
     public List<Forum> forums;

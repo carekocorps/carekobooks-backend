@@ -15,4 +15,12 @@ public class ForumValidator {
 
     }
 
+    public boolean isUserEmpty(Forum forum) {
+        return false;
+    }
+
+    public boolean isBookEmpty(Forum forum) {
+        return false;
+    }
+
 }
