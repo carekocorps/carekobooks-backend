@@ -3,14 +3,14 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseMapper;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public abstract class BookMapper implements BaseMapper<Book, BookRequest> {
+public abstract class BookMapper implements BaseUpdateMapper<Book, BookRequest> {
 
     @Autowired
     protected BookRepository bookRepository;

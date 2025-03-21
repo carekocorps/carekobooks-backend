@@ -6,12 +6,12 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.Fo
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseMapper;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
-public abstract class ForumMapper implements BaseMapper<Forum, ForumRequest> {
+public abstract class ForumMapper implements BaseUpdateMapper<Forum, ForumRequest> {
 
     @Autowired
     protected ForumRepository forumRepository;
