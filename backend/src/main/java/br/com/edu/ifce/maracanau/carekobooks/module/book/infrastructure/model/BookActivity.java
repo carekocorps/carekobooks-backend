@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookActivityStatus;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 public class BookActivity extends BaseModel {
 
     @Column(nullable = false)
-    private BookProgressStatus status = BookProgressStatus.READING;
+    private BookActivityStatus status = BookActivityStatus.READING;
 
     @Column
     private Integer pagesRead;

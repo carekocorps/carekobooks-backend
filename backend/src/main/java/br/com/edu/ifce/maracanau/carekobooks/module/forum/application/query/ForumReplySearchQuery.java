@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Search;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +10,10 @@ import lombok.Setter;
 @Setter
 public class ForumReplySearchQuery extends BaseApplicationPageQuery<ForumReply> {
 
-    @Search(name = "user.id")
+    @Searchable(name = "user.id")
     private Long userId;
 
-    @Search(name = "book.id")
+    @Searchable(name = "book.id")
     private Long bookId;
 
 }

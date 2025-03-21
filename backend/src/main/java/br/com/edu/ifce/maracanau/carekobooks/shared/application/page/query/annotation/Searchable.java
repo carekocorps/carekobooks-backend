@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Search {
+public @interface Searchable {
 
     String name() default "";
     SearchType type() default SearchType.VALUE_EQUALS;

@@ -45,6 +45,20 @@ public class BookProgressController extends BaseController implements BookProgre
     }
 
     @Override
+    @PatchMapping("/{id}/favorite")
+    public ResponseEntity<Void> markAsFavoritedById(@PathVariable Long id) {
+        bookProgressService.updateIsFavoritedById(true, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PatchMapping("/{id}/unfavorite")
+    public ResponseEntity<Void> unmarkAsFavoritedById(@PathVariable Long id) {
+        bookProgressService.updateIsFavoritedById(false, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookProgressService.deleteById(id);

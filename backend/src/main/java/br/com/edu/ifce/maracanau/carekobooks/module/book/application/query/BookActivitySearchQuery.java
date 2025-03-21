@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.query;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookActivityStatus;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sortable;
@@ -10,15 +10,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookProgressSearchQuery extends BaseApplicationPageQuery<BookProgress> {
+public class BookActivitySearchQuery extends BaseApplicationPageQuery<BookActivity> {
 
     @Sortable
     @Searchable
-    private BookProgressStatus status;
-
-    @Sortable
-    @Searchable
-    private Integer score;
+    private BookActivityStatus status;
 
     @Sortable(name = "pages-read")
     @Searchable
@@ -27,7 +23,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageQuery<BookProgre
     @Searchable(name = "user.id")
     private Long userId;
 
-    @Searchable(name = "book.id")
+    @Searchable(name = "user.id")
     private Long bookId;
 
 }

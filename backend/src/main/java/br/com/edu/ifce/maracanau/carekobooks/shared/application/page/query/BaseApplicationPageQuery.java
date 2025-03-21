@@ -1,14 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearch;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Search;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sort;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sortable;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.exception.InternalServerException;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public abstract class BaseApplicationPageQuery<T extends BaseModel> extends Base
     public Specification<T> getSpecification() {
         List<Specification<T>> specs = new ArrayList<>();
         for (var field : this.getClass().getDeclaredFields()) {
-            var annotation = field.getAnnotation(Search.class);
+            var annotation = field.getAnnotation(Searchable.class);
             if (annotation != null) {
                 try {
                     field.setAccessible(true);
@@ -46,10 +47,10 @@ public abstract class BaseApplicationPageQuery<T extends BaseModel> extends Base
                 : specs.stream().reduce(Specification::and).get();
     }
 
-    public org.springframework.data.domain.Sort getSort() {
+    public Sort getSort() {
         var sortField = "id";
         for (var field : this.getClass().getDeclaredFields()) {
-            var annotation = field.getAnnotation(Sort.class);
+            var annotation = field.getAnnotation(Sortable.class);
             if (annotation != null) {
                 var fieldName = field.getName();
                 var annotationName = annotation.name().isEmpty()
@@ -64,10 +65,10 @@ public abstract class BaseApplicationPageQuery<T extends BaseModel> extends Base
         }
 
         var direction = isAscendingOrder
-                ? org.springframework.data.domain.Sort.Direction.ASC
-                : org.springframework.data.domain.Sort.Direction.DESC;
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
 
-        return org.springframework.data.domain.Sort.by(direction, sortField);
+        return Sort.by(direction, sortField);
     }
 
     private Specification<T> getSpecification(Object fieldValue, String fieldName, SearchType searchType) {
