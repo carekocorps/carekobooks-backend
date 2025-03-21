@@ -73,6 +73,28 @@ public interface BookProgressControllerDocs {
     ResponseEntity<BookProgressDTO> create(@RequestBody @Valid BookProgressRequest request);
 
     @Operation(
+            summary = "Mark a book as favorite by ID",
+            tags = {"Book Progress"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> markAsFavoritedById(@PathVariable Long id);
+
+    @Operation(
+            summary = "Unmark a book as favorite by ID",
+            tags = {"Book Progress"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> unmarkAsFavoritedById(@PathVariable Long id);
+
+    @Operation(
             summary = "Delete a book progress by ID",
             tags = {"Book Progress"},
             responses = {

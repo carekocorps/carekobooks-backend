@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseMod
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-public interface BaseMapper<T extends BaseModel, TRequest extends BaseRequest> {
+public interface BaseUpdateMapper<T extends BaseModel, TRequest extends BaseRequest> {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
