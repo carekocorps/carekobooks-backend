@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
@@ -22,36 +22,37 @@ public class BookController extends BaseController implements BookControllerDocs
 
     private final BookService bookService;
 
-    @GetMapping
     @Override
+    @GetMapping
     public ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookSearchQuery query) {
         var bookDTOs = bookService.search(query);
         return ResponseEntity.ok(bookDTOs);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> findById(@PathVariable Long id) {
         var bookDTO = bookService.findById(id);
         return bookDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
     @Override
-    public ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequestDTO request) {
+    @PostMapping
+    public ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequest request) {
         var bookDTO = bookService.create(request);
         var uri = getHeaderLocation(bookDTO.getId());
         return ResponseEntity.created(uri).body(bookDTO);
     }
 
-    @PutMapping("/{id}")
     @Override
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequestDTO request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request) {
         bookService.update(id, request);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
     @Override
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookService.deleteById(id);
         return ResponseEntity.noContent().build();

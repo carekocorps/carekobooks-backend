@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumReplyDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumReplySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,11 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-public interface ForumControllerDocs {
+public interface ForumReplyControllerDocs {
 
     @Operation(
-            summary = "Search all forums",
-            tags = {"Forum"},
+            summary = "Search all forum replies",
+            tags = {"Forum Reply"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
@@ -32,58 +32,58 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject ForumSearchQuery query);
+    ResponseEntity<ApplicationPage<ForumReplyDTO>> search(@ParameterObject ForumReplySearchQuery query);
 
     @Operation(
-            summary = "Find a forum by ID",
-            tags = {"Forum"},
+            summary = "Find a forum reply by ID",
+            tags = {"Forum Reply"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumDTO.class)
+                                    schema = @Schema(implementation = ForumReplyDTO.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumDTO> findById(@PathVariable Long id);
+    ResponseEntity<ForumReplyDTO> findById(@PathVariable Long id);
 
     @Operation(
-            summary = "Create a forum",
-            tags = {"Forum"},
+            summary = "Create a forum reply",
+            tags = {"Forum Reply"},
             responses = {
                     @ApiResponse(
                             description = "Created",
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumDTO.class)
+                                    schema = @Schema(implementation = ForumReplyDTO.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequest request);
+    ResponseEntity<ForumReplyDTO> create(@RequestBody @Valid ForumReplyRequest request);
 
     @Operation(
-            summary = "Update a forum",
-            tags = {"Forum"},
+            summary = "Update a forum reply",
+            tags = {"Forum Reply"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ForumRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ForumReplyRequest request);
 
     @Operation(
-            summary = "Delete a forum by ID",
-            tags = {"Forum"},
+            summary = "Delete a forum reply by ID",
+            tags = {"Forum Reply"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),

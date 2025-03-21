@@ -1,14 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearch;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sortable;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Search;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sort;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.exception.InternalServerException;
-import br.com.edu.ifce.maracanau.carekobooks.shared.infra.repository.specification.BaseSpecification;
+import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -16,20 +16,24 @@ import java.util.List;
 
 @Getter
 @Setter
-public abstract class BaseApplicationPageQuery<T> extends BaseApplicationPageSearch {
+public abstract class BaseApplicationPageQuery<T extends BaseModel> extends BaseApplicationPageSearch {
 
     public Specification<T> getSpecification() {
         List<Specification<T>> specs = new ArrayList<>();
         for (var field : this.getClass().getDeclaredFields()) {
-            if (field.isAnnotationPresent(Searchable.class)) {
+            var annotation = field.getAnnotation(Search.class);
+            if (annotation != null) {
                 try {
                     field.setAccessible(true);
                     var fieldValue = field.get(this);
-
                     if (fieldValue != null) {
                         var fieldName = field.getName();
-                        var fieldSearchType = field.getAnnotation(Searchable.class).type();
-                        specs.add(getSpecification(fieldValue, fieldName, fieldSearchType));
+                        var annotationName = annotation.name().isEmpty()
+                                ? fieldName
+                                : annotation.name();
+
+                        var fieldSearchType = annotation.type();
+                        specs.add(getSpecification(fieldValue, annotationName, fieldSearchType));
                     }
                 } catch (IllegalAccessException ex) {
                     throw new InternalServerException("Internal Server Error");
@@ -42,10 +46,10 @@ public abstract class BaseApplicationPageQuery<T> extends BaseApplicationPageSea
                 : specs.stream().reduce(Specification::and).get();
     }
 
-    public Sort getSort() {
+    public org.springframework.data.domain.Sort getSort() {
         var sortField = "id";
         for (var field : this.getClass().getDeclaredFields()) {
-            var annotation = field.getAnnotation(Sortable.class);
+            var annotation = field.getAnnotation(Sort.class);
             if (annotation != null) {
                 var fieldName = field.getName();
                 var annotationName = annotation.name().isEmpty()
@@ -60,10 +64,10 @@ public abstract class BaseApplicationPageQuery<T> extends BaseApplicationPageSea
         }
 
         var direction = isAscendingOrder
-                ? Sort.Direction.ASC
-                : Sort.Direction.DESC;
+                ? org.springframework.data.domain.Sort.Direction.ASC
+                : org.springframework.data.domain.Sort.Direction.DESC;
 
-        return Sort.by(direction, sortField);
+        return org.springframework.data.domain.Sort.by(direction, sortField);
     }
 
     private Specification<T> getSpecification(Object fieldValue, String fieldName, SearchType searchType) {

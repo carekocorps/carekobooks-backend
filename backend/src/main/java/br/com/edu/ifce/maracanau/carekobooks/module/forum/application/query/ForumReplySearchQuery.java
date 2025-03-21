@@ -1,19 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Search;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sort;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ForumSearchQuery extends BaseApplicationPageQuery<Forum> {
-
-    @Sort
-    @Search
-    private String title;
+public class ForumReplySearchQuery extends BaseApplicationPageQuery<ForumReply> {
 
     @Search(name = "user.id")
     private Long userId;

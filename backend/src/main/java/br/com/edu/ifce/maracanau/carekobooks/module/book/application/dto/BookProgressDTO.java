@@ -1,6 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -10,12 +10,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Schema(name = "Forum")
-public class ForumDTO {
+@Schema(name = "BookProgress")
+public class BookProgressDTO {
 
     private Long id;
-    private String title;
-    private String description;
+    private BookProgressStatus status;
+    private Boolean isFavorited;
+    private Integer score;
+    private Integer pagesRead;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserDTO user;
