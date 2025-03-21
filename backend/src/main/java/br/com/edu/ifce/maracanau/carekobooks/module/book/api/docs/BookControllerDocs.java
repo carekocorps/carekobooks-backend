@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
@@ -68,23 +68,25 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequestDTO request);
+    ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequest request);
 
     @Operation(
             summary = "Update a book",
             tags = {"Book"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequestDTO request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request);
 
     @Operation(
             summary = "Delete a book by ID",
             tags = {"Book"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )

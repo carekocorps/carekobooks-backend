@@ -1,16 +1,29 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infra.model.Forum;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring")
-public interface ForumMapper extends BaseMapper<Forum, ForumRequestDTO> {
+@Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
+public abstract class ForumMapper implements BaseMapper<Forum, ForumRequest> {
 
-    Forum toEntity(ForumRequestDTO forumRequestDTO);
+    @Autowired
+    protected ForumRepository forumRepository;
 
-    ForumDTO toDTO(Forum forum);
+    @Mapping(source = "userId", target = "user", qualifiedByName = "toUserModelFromId")
+    @Mapping(source = "bookId", target = "book", qualifiedByName = "toBookModelFromId")
+    public abstract Forum toModel(ForumRequest request);
+    public abstract ForumDTO toDTO(Forum forum);
+
+    @Named("toForumModelFromId")
+    public Forum toModel(Long id) {
+        return forumRepository.findById(id).orElse(null);
+    }
 
 }

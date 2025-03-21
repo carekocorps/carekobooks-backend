@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,13 +33,13 @@ public class BookService {
         return bookRepository.findById(id).map(bookMapper::toDTO);
     }
 
-    public BookDTO create(BookRequestDTO request) {
-        var book = bookMapper.toEntity(request);
+    public BookDTO create(BookRequest request) {
+        var book = bookMapper.toModel(request);
         bookValidator.validate(book);
         return bookMapper.toDTO(bookRepository.save(book));
     }
 
-    public void update(Long id, BookRequestDTO request) {
+    public void update(Long id, BookRequest request) {
         var book = bookRepository.findById(id).orElse(null);
         if (book == null) {
             throw new NotFoundException("Book not found");
