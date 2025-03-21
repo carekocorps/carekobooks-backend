@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Schema(name = "Forum")
-public class ForumDTO {
+@Schema(name = "ForumReply")
+public class ForumReplyDTO {
 
     private Long id;
-    private String title;
-    private String description;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserDTO user;

@@ -2,12 +2,12 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infra.repository.ForumRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.validator.ForumValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,13 +33,13 @@ public class ForumService {
         return forumRepository.findById(id).map(forumMapper::toDTO);
     }
 
-    public ForumDTO create(ForumRequestDTO request){
-        var forum = forumMapper.toEntity(request);
+    public ForumDTO create(ForumRequest request){
+        var forum = forumMapper.toModel(request);
         forumValidator.validate(forum);
         return forumMapper.toDTO(forumRepository.save(forum));
     }
 
-    public void update(Long id, ForumRequestDTO request) {
+    public void update(Long id, ForumRequest request) {
        var forum = forumRepository.findById(id).orElse(null);
         if(forum == null){
             throw new NotFoundException("Forum not found");

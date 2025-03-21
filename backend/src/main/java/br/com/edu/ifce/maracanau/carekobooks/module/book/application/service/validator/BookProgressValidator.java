@@ -1,0 +1,33 @@
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
+
+import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+@RequiredArgsConstructor
+@Component
+public class BookProgressValidator {
+
+    private final BookProgressRepository bookProgressRepository;
+
+    public void validate(BookProgress bookProgress) {
+        if (isUserEmpty(bookProgress)) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (isBookEmpty(bookProgress)) {
+            throw new NotFoundException("Book not found");
+        }
+    }
+
+    public boolean isUserEmpty(BookProgress bookProgress) {
+        return bookProgress.getUser() == null;
+    }
+
+    public boolean isBookEmpty(BookProgress bookProgress) {
+        return bookProgress.getBook() == null;
+    }
+
+}

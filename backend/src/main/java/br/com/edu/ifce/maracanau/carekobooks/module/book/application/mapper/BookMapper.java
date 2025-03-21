@@ -1,16 +1,26 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookRequestDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infra.model.Book;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import org.mapstruct.Mapper;
+import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public interface BookMapper extends BaseMapper<Book, BookRequestDTO> {
+public abstract class BookMapper implements BaseMapper<Book, BookRequest> {
 
-    Book toEntity(BookRequestDTO bookRequestDTO);
+    @Autowired
+    protected BookRepository bookRepository;
 
-    BookDTO toDTO(Book book);
+    public abstract Book toModel(BookRequest bookRequest);
+    public abstract BookDTO toDTO(Book book);
+
+    @Named("toBookModelFromId")
+    public Book toModel(Long id) {
+        return bookRepository.findById(id).orElse(null);
+    }
 
 }
