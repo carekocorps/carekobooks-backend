@@ -5,6 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.en
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sortable;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,10 @@ public class BookProgressSearchQuery extends BaseApplicationPageQuery<BookProgre
     @Sortable
     @Searchable
     private BookProgressStatus status;
+
+    @Sortable(name = "favorite")
+    @Searchable
+    private Boolean isMarkedAsFavorite;
 
     @Sortable
     @Searchable
@@ -29,5 +34,22 @@ public class BookProgressSearchQuery extends BaseApplicationPageQuery<BookProgre
 
     @Searchable(name = "book.id")
     private Long bookId;
+
+    @Override
+    @Schema(
+            defaultValue = "id",
+            allowableValues = {
+                    "id",
+                    "status",
+                    "favorite",
+                    "score",
+                    "pages-read",
+                    "created-at",
+                    "updated-at"
+            }
+    )
+    public String getOrderBy() {
+        return super.getOrderBy();
+    }
 
 }

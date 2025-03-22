@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumValidator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,14 @@ public class ForumService {
         return forumRepository.findById(id).map(forumMapper::toDTO);
     }
 
+    @Transactional
     public ForumDTO create(ForumRequest request){
         var forum = forumMapper.toModel(request);
         forumValidator.validate(forum);
         return forumMapper.toDTO(forumRepository.save(forum));
     }
 
+    @Transactional
     public void update(Long id, ForumRequest request) {
        var forum = forumRepository.findById(id).orElse(null);
         if(forum == null){
@@ -50,6 +53,7 @@ public class ForumService {
         forumRepository.save(forum);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (!forumRepository.existsById(id)) {
             throw new NotFoundException("Forum not found");

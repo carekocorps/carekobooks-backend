@@ -5,6 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annot
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class BookSearchQuery extends BaseApplicationPageQuery<Book> {
     @Searchable(type = SearchType.TEXT_CONTAINS)
     private String author;
 
+    @Sortable
     @Searchable(type = SearchType.TEXT_CONTAINS)
     private String publisher;
 
@@ -32,5 +34,23 @@ public class BookSearchQuery extends BaseApplicationPageQuery<Book> {
     @Sortable(name = "total-pages")
     @Searchable
     private Integer totalPages;
+
+    @Override
+    @Schema(
+            defaultValue = "id",
+            allowableValues = {
+                    "id",
+                    "title",
+                    "author",
+                    "publisher",
+                    "published-at",
+                    "total-pages",
+                    "created-at",
+                    "updated-at"
+            }
+    )
+    public String getOrderBy() {
+        return super.getOrderBy();
+    }
 
 }

@@ -14,7 +14,14 @@ public abstract class BaseApplicationPageSearch {
     @Schema(defaultValue = "10")
     protected Integer pageSize = 10;
 
-    @Schema(defaultValue = "id")
+    @Schema(
+            defaultValue = "id",
+            allowableValues = {
+                    "id",
+                    "created-at",
+                    "updated-at"
+            }
+    )
     protected String orderBy = "id";
 
     @Schema(defaultValue = "true")

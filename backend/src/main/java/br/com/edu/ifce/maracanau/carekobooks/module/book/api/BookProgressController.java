@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/book-progresses")
 @Tag(name = "Book Progress", description = "Endpoints for managing book progresses")
-public class BookProgressController extends BaseController implements BookProgressControllerDocs {
+public class BookProgressController implements BaseController, BookProgressControllerDocs {
 
     private final BookProgressService bookProgressService;
 
@@ -45,16 +45,23 @@ public class BookProgressController extends BaseController implements BookProgre
     }
 
     @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookProgressRequest request) {
+        bookProgressService.update(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
     @PatchMapping("/{id}/favorite")
     public ResponseEntity<Void> markAsFavoritedById(@PathVariable Long id) {
-        bookProgressService.updateIsFavoritedById(true, id);
+        bookProgressService.updateIsMarkedAsFavoriteById(true, id);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @PatchMapping("/{id}/unfavorite")
     public ResponseEntity<Void> unmarkAsFavoritedById(@PathVariable Long id) {
-        bookProgressService.updateIsFavoritedById(false, id);
+        bookProgressService.updateIsMarkedAsFavoriteById(false, id);
         return ResponseEntity.noContent().build();
     }
 

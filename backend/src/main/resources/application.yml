@@ -3,7 +3,7 @@ spring:
     name: carekobooks
   datasource:
     url: jdbc:mysql://localhost:3306/carekobooks?useTimezone=true&serverTimezone=UTC
-    username: joaopedro
+    username: root
     password: 123
   jpa:
     hibernate:

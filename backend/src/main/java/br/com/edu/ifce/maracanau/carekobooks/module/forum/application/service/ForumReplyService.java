@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.Fo
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumReplyRepository;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,14 @@ public class ForumReplyService {
         return forumReplyRepository.findById(id).map(forumReplyMapper::toDTO);
     }
 
+    @Transactional
     public ForumReplyDTO create(ForumReplyRequest request) {
         var forumReply = forumReplyMapper.toModel(request);
         forumReplyValidator.validate(forumReply);
         return forumReplyMapper.toDTO(forumReplyRepository.save(forumReply));
     }
 
+    @Transactional
     public void update(Long id, ForumReplyRequest request) {
         var forumReply = forumReplyRepository.findById(id).orElse(null);
         if (forumReply == null) {
@@ -50,6 +53,7 @@ public class ForumReplyService {
         forumReplyRepository.save(forumReply);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (!forumReplyRepository.existsById(id)) {
             throw new NotFoundException("Forum Reply not found");

@@ -15,8 +15,4 @@ public class ExceptionResponse {
     private String message;
     private List<String> errors;
 
-    public ExceptionResponse(int status, String message) {
-        this(status, message, List.of());
-    }
-
 }

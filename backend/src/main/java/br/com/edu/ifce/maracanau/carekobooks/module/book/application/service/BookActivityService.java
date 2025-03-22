@@ -4,9 +4,9 @@ import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookActivityDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookActivitySearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,6 @@ public class BookActivityService {
 
     private final BookActivityRepository bookActivityRepository;
     private final BookActivityMapper bookActivityMapper;
-    private final BookActivityValidator bookActivityValidator;
 
     public ApplicationPage<BookActivityDTO> search(BookActivitySearchQuery query) {
         var specification = query.getSpecification();
@@ -32,6 +31,7 @@ public class BookActivityService {
         return bookActivityRepository.findById(id).map(bookActivityMapper::toDTO);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (!bookActivityRepository.existsById(id)) {
             throw new NotFoundException("Book not found");
