@@ -9,9 +9,21 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BookProgressRepository extends JpaRepository<BookProgress, Long>, JpaSpecificationExecutor<BookProgress> {
 
+    @Query("""
+        SELECT AVG(bp.score)
+        FROM BookProgress bp
+        WHERE bp.book.id = :bookId
+        AND bp.score IS NOT NULL
+    """)
+    Double findAverageScoreByBookId(Long bookId);
+
     @Transactional
     @Modifying
-    @Query("UPDATE BookProgress bp SET bp.isFavorited = :isFavorited WHERE bp.id = :id")
-    void updateIsFavoritedById(Boolean isFavorited, Long id);
+    @Query("""
+        UPDATE BookProgress bp
+        SET bp.isMarkedAsFavorite = :isMarkedAsFavorite
+        WHERE bp.id = :id
+    """)
+    void updateIsMarkedAsFavorite(Boolean isMarkedAsFavorite, Long id);
 
 }

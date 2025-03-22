@@ -15,7 +15,7 @@ public class BookProgressDTO {
 
     private Long id;
     private BookProgressStatus status;
-    private Boolean isFavorited;
+    private Boolean isMarkedAsFavorite;
     private Integer score;
     private Integer pagesRead;
     private LocalDateTime createdAt;

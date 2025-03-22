@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/forum-replies")
 @Tag(name = "Forum Reply", description = "Endpoints for managing forum replies")
-public class ForumReplyController extends BaseController implements ForumReplyControllerDocs {
+public class ForumReplyController implements BaseController, ForumReplyControllerDocs {
 
     private final ForumReplyService forumReplyService;
 

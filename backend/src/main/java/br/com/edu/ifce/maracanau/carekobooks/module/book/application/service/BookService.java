@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,14 @@ public class BookService {
         return bookRepository.findById(id).map(bookMapper::toDTO);
     }
 
+    @Transactional
     public BookDTO create(BookRequest request) {
         var book = bookMapper.toModel(request);
         bookValidator.validate(book);
         return bookMapper.toDTO(bookRepository.save(book));
     }
 
+    @Transactional
     public void update(Long id, BookRequest request) {
         var book = bookRepository.findById(id).orElse(null);
         if (book == null) {
@@ -50,6 +53,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new NotFoundException("Book not found");

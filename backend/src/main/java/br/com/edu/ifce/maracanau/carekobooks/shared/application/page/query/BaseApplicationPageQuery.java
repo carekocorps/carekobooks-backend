@@ -7,16 +7,12 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.enums
 import br.com.edu.ifce.maracanau.carekobooks.exception.InternalServerException;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 public abstract class BaseApplicationPageQuery<T extends BaseModel> extends BaseApplicationPageSearch {
 
     public Specification<T> getSpecification() {
@@ -48,18 +44,25 @@ public abstract class BaseApplicationPageQuery<T extends BaseModel> extends Base
     }
 
     public Sort getSort() {
-        var sortField = "id";
-        for (var field : this.getClass().getDeclaredFields()) {
-            var annotation = field.getAnnotation(Sortable.class);
-            if (annotation != null) {
-                var fieldName = field.getName();
-                var annotationName = annotation.name().isEmpty()
-                        ? fieldName
-                        : annotation.name();
+        var targetField = "id";
+        switch (orderBy) {
+            case "id" -> {}
+            case "created-at" -> targetField = "createdAt";
+            case "updated-at" -> targetField = "updatedAt";
+            default -> {
+                for (var field : this.getClass().getDeclaredFields()) {
+                    var annotation = field.getAnnotation(Sortable.class);
+                    if (annotation != null) {
+                        var fieldName = field.getName();
+                        var annotationName = annotation.name().isEmpty()
+                                ? fieldName
+                                : annotation.name();
 
-                if (annotationName.equals(orderBy)) {
-                    sortField = fieldName;
-                    break;
+                        if (annotationName.equals(orderBy)) {
+                            targetField = fieldName;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -68,7 +71,7 @@ public abstract class BaseApplicationPageQuery<T extends BaseModel> extends Base
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
-        return Sort.by(direction, sortField);
+        return Sort.by(direction, targetField);
     }
 
     private Specification<T> getSpecification(Object fieldValue, String fieldName, SearchType searchType) {
