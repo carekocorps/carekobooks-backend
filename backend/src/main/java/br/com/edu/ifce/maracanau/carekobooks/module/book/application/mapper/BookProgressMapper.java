@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdat
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
-public interface BookProgressMapper {
+public interface BookProgressMapper extends BaseUpdateMapper<BookProgress, BookProgressRequest> {
 
     @Mapping(source = "userId", target = "user", qualifiedByName = "toUserModelFromId")
     @Mapping(source = "bookId", target = "book", qualifiedByName = "toBookModelFromId")

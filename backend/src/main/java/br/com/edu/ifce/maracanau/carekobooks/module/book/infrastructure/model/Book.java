@@ -33,11 +33,8 @@ public class Book extends BaseModel {
     @Column(name = "total_pages", nullable = false)
     private Integer totalPages;
 
-    @Column(name = "score_sum", nullable = false)
-    private Integer scoreSum = 0;
-
-    @Column(name = "score_count", nullable = false)
-    private Integer scoreCount = 0;
+    @Column(name = "average_score")
+    private Double averageScore;
 
     @OneToMany(mappedBy = "book")
     private List<BookProgress> progresses;

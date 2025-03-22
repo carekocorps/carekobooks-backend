@@ -2,15 +2,10 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.va
 
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class BookProgressValidator {
-
-    private final BookProgressRepository bookProgressRepository;
 
     public void validate(BookProgress bookProgress) {
         if (isUserEmpty(bookProgress)) {

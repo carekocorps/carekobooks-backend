@@ -19,8 +19,7 @@ public class BookDTO {
     private String publisher;
     private LocalDate publishedAt;
     private Integer totalPages;
-    private Integer scoreSum;
-    private Integer scoreCount;
+    private Integer averageScore;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

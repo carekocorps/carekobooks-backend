@@ -2,15 +2,10 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.v
 
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumReplyRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class ForumReplyValidator {
-
-    private final ForumReplyRepository forumReplyRepository;
 
     public void validate(ForumReply forumReply) {
         if (isUserEmpty(forumReply)) {
