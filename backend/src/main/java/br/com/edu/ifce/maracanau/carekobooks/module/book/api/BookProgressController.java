@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookProgressControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookProgressDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookProgressSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     @Override
     @HasUserRole
     @PatchMapping("/{id}/favorite")
-    public ResponseEntity<Void> markAsFavoritedById(@PathVariable Long id) {
+    public ResponseEntity<Void> markAsFavoriteById(@PathVariable Long id) {
         bookProgressService.updateIsMarkedAsFavoriteById(true, id);
         return ResponseEntity.noContent().build();
     }
@@ -65,7 +65,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     @Override
     @HasUserRole
     @PatchMapping("/{id}/unfavorite")
-    public ResponseEntity<Void> unmarkAsFavoritedById(@PathVariable Long id) {
+    public ResponseEntity<Void> unmarkAsFavoriteById(@PathVariable Long id) {
         bookProgressService.updateIsMarkedAsFavoriteById(false, id);
         return ResponseEntity.noContent().build();
     }

@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;

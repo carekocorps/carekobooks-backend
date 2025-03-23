@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.docs.AuthControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.TokenDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.LoginRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.RegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<TokenDTO> login(@RequestBody @Valid UserLoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
@@ -34,7 +34,7 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<TokenDTO> register(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 

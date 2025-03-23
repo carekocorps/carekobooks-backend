@@ -1,12 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthenticatedUser;
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumValidator;
@@ -22,8 +22,8 @@ import java.util.Optional;
 public class ForumService {
 
     private final ForumRepository forumRepository;
-    private final ForumMapper forumMapper;
     private final ForumValidator forumValidator;
+    private final ForumMapper forumMapper;
 
     public ApplicationPage<ForumDTO> search(ForumSearchQuery query) {
         var specification = query.getSpecification();
@@ -38,10 +38,6 @@ public class ForumService {
 
     @Transactional
     public ForumDTO create(ForumRequest request) {
-        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
-            throw new ForbiddenException("Forbidden");
-        }
-
         var forum = forumMapper.toModel(request);
         forumValidator.validate(forum);
         return forumMapper.toDTO(forumRepository.save(forum));
@@ -49,13 +45,13 @@ public class ForumService {
 
     @Transactional
     public void update(Long id, ForumRequest request) {
-        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
-            throw new ForbiddenException("Forbidden");
-        }
-
         var forum = forumRepository.findById(id).orElse(null);
         if (forum == null){
             throw new NotFoundException("Forum not found");
+        }
+
+        if (!AuthUtils.isAuthorizedUser(forum.getUser().getUsername())) {
+            throw new ForbiddenException("You are not allowed to update this forum");
         }
 
         forumMapper.updateEntity(forum, request);
@@ -70,8 +66,8 @@ public class ForumService {
             throw new NotFoundException("Forum not found");
         }
 
-        if (!AuthenticatedUser.isAuthorOrAdmin(forum.getUser().getId())) {
-            throw new ForbiddenException("Forbidden");
+        if (!AuthUtils.isAuthorizedUser(forum.getUser().getUsername())) {
+            throw new ForbiddenException("You are not allowed to delete this forum");
         }
 
         forumRepository.deleteById(id);

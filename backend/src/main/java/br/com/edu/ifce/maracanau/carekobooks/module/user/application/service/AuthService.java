@@ -1,11 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.TokenDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.LoginRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.RegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +20,13 @@ public class AuthService {
 
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final UserValidator userValidator;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public TokenDTO login(LoginRequest request) {
+    public TokenDTO login(UserLoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
@@ -37,7 +38,7 @@ public class AuthService {
         }
 
         return tokenService.createAccessToken(
-                request.getUsername(),
+                user.getUsername(),
                 user.getRoles()
         );
     }
@@ -50,12 +51,11 @@ public class AuthService {
         return tokenService.refreshToken(refreshToken);
     }
 
-    public TokenDTO register(RegisterRequest request) {
+    @Transactional
+    public TokenDTO register(UserRegisterRequest request) {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         userValidator.validate(user);
-        userRepository.save(user);
 
         return tokenService.createAccessToken(
                 user.getUsername(),
