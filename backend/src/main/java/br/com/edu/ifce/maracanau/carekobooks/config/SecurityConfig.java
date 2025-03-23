@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
+                .anonymous(AbstractHttpConfigurer::disable)
                 .cors(cors -> {})
                 .build();
     }

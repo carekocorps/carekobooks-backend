@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookActivityDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookActivitySearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -56,6 +56,8 @@ public interface BookActivityControllerDocs {
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }

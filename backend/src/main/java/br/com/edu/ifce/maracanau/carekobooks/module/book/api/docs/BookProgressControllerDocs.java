@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookProgressDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookProgressSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,6 +66,8 @@ public interface BookProgressControllerDocs {
                                     schema = @Schema(implementation = BookProgressDTO.class)
                             )
                     ),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
@@ -79,6 +81,8 @@ public interface BookProgressControllerDocs {
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -91,11 +95,13 @@ public interface BookProgressControllerDocs {
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> markAsFavoritedById(@PathVariable Long id);
+    ResponseEntity<Void> markAsFavoriteById(@PathVariable Long id);
 
     @Operation(
             summary = "Unmark a book as favorite by ID",
@@ -103,11 +109,13 @@ public interface BookProgressControllerDocs {
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unmarkAsFavoritedById(@PathVariable Long id);
+    ResponseEntity<Void> unmarkAsFavoriteById(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a book progress by ID",
@@ -115,6 +123,8 @@ public interface BookProgressControllerDocs {
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
