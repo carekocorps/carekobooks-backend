@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs.ForumReplyControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumReplyDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumReplySearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumReplyDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.ForumReplyService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

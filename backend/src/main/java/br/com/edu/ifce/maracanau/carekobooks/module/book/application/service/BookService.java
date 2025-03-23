@@ -1,10 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;

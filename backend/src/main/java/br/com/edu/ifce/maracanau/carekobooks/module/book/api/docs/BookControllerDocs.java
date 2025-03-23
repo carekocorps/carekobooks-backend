@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,6 +66,8 @@ public interface BookControllerDocs {
                                     schema = @Schema(implementation = BookDTO.class)
                             )
                     ),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -77,6 +79,8 @@ public interface BookControllerDocs {
             tags = {"Book"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
@@ -89,6 +93,8 @@ public interface BookControllerDocs {
             tags = {"Book"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)

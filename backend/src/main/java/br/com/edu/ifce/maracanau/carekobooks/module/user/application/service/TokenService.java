@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -32,8 +32,8 @@ public class TokenService {
     private final Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
     public TokenDTO createAccessToken(String username, List<String> roles) {
-        Date createdAt = new Date();
-        Date expiresAt = new Date(createdAt.getTime() + expirationTimeInMs);
+        var createdAt = new Date();
+        var expiresAt = new Date(createdAt.getTime() + expirationTimeInMs);
 
         var tokenDTO = new TokenDTO();
         tokenDTO.setUsername(username);

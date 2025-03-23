@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.DuplicatedEntryException;
+import br.com.edu.ifce.maracanau.carekobooks.exception.ConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,11 @@ public class UserValidator {
 
     public void validate(User user) {
         if (isUsernameDuplicated(user)) {
-            throw new DuplicatedEntryException("A user with the same name already exists");
+            throw new ConflictException("A user with the same name already exists");
         }
 
         if (isEmailDuplicated(user)) {
-            throw new DuplicatedEntryException("A user with the same email already exists");
+            throw new ConflictException("A user with the same email already exists");
         }
     }
 

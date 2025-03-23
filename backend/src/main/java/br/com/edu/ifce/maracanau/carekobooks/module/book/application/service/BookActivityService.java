@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthenticatedUser;
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.shared.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookActivitySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,8 +40,8 @@ public class BookActivityService {
             throw new NotFoundException("Book not found");
         }
 
-        if (!AuthenticatedUser.isAuthorOrAdmin(bookActivity.getUser().getId())) {
-            throw new ForbiddenException("Forbidden");
+        if (!AuthUtils.isAuthorizedUser(bookActivity.getUser().getUsername())) {
+            throw new ForbiddenException("You are not allowed to delete this book activity");
         }
 
         bookActivityRepository.deleteById(id);

@@ -1,25 +1,20 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.RegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.UserDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public abstract class UserMapper {
+public abstract class UserMapper implements BaseUpdateMapper<User, UserRegisterRequest> {
 
-    @Autowired
-    protected UserRepository userRepository;
-
-    public abstract User toModel(RegisterRequest request);
+    public abstract User toModel(UserRegisterRequest request);
     public abstract UserDTO toDTO(User user);
 
-    @Named("toUserModelFromId")
-    public User toModel(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public User toModel() {
+        return AuthUtils.getAuthenticatedUser();
     }
 
 }
