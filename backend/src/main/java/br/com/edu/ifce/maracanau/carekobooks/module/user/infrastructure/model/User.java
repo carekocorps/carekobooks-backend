@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
@@ -8,16 +9,20 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.F
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table
-public class User extends BaseModel {
+public class User extends BaseModel implements UserDetails {
 
-    @Column(length = 50, nullable = false)
+    @Column(unique = true, length = 50, nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -28,6 +33,9 @@ public class User extends BaseModel {
 
     @Column(length = 1000)
     private String description;
+
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
 
     @OneToMany(mappedBy = "user")
     private List<BookProgress> progresses;
@@ -51,5 +59,38 @@ public class User extends BaseModel {
 
     @ManyToMany(mappedBy = "following")
     private List<User> followers;
+
+    public List<String> getRoles() {
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        var userAuthority = new SimpleGrantedAuthority("ROLE_USER");
+        var adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
+        return role == UserRole.USER
+                ? List.of(userAuthority)
+                : List.of(userAuthority, adminAuthority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 
 }

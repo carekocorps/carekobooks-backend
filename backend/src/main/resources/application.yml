@@ -9,3 +9,8 @@ spring:
     hibernate:
       ddl-auto: update # Temporário, será alterado para "none" em breve
     open-in-view: false
+security:
+  jwt:
+    token:
+      secret-key: NTNjcjM3
+      expiration-time-in-ms: 3600000

@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.RegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.dto.UserDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.request.UserRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.mapstruct.Mapper;
@@ -14,7 +14,7 @@ public abstract class UserMapper {
     @Autowired
     protected UserRepository userRepository;
 
-    public abstract User toModel(UserRequest request);
+    public abstract User toModel(RegisterRequest request);
     public abstract UserDTO toDTO(User user);
 
     @Named("toUserModelFromId")

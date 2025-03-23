@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.controller.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs.ForumControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
@@ -37,6 +38,7 @@ public class ForumController implements BaseController, ForumControllerDocs {
     }
 
     @Override
+    @HasUserRole
     @PostMapping
     public ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequest request) {
         var forumDTO = forumService.create(request);
@@ -45,6 +47,7 @@ public class ForumController implements BaseController, ForumControllerDocs {
     }
 
     @Override
+    @HasUserRole
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ForumRequest request) {
         forumService.update(id, request);
@@ -52,6 +55,7 @@ public class ForumController implements BaseController, ForumControllerDocs {
     }
 
     @Override
+    @HasUserRole
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         forumService.deleteById(id);

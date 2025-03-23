@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.request.BaseRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
