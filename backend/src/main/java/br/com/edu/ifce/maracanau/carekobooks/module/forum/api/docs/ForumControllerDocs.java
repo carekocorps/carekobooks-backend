@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
@@ -55,6 +56,7 @@ public interface ForumControllerDocs {
     @Operation(
             summary = "Create a forum",
             tags = {"Forum"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -73,6 +75,7 @@ public interface ForumControllerDocs {
     @Operation(
             summary = "Update a forum",
             tags = {"Forum"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -84,6 +87,7 @@ public interface ForumControllerDocs {
     @Operation(
             summary = "Delete a forum by ID",
             tags = {"Forum"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),

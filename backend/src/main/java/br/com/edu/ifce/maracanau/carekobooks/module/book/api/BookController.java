@@ -1,12 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.controller.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasAdminRole;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
+    @HasAdminRole
     @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequest request) {
         var bookDTO = bookService.create(request);
@@ -45,6 +47,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
+    @HasAdminRole
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request) {
         bookService.update(id, request);
@@ -52,6 +55,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
+    @HasAdminRole
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookService.deleteById(id);

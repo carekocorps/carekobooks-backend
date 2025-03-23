@@ -3,11 +3,12 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookProgressDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
@@ -55,6 +56,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Create a book progress",
             tags = {"Book Progress"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -74,6 +76,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Update a book progress",
             tags = {"Book Progress"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -85,6 +88,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Mark a book as favorite by ID",
             tags = {"Book Progress"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -96,6 +100,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Unmark a book as favorite by ID",
             tags = {"Book Progress"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -107,6 +112,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Delete a book progress by ID",
             tags = {"Book Progress"},
+            security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),

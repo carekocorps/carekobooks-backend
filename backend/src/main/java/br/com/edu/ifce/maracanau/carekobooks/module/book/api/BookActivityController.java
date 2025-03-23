@@ -4,8 +4,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookActivityCo
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookActivityDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.controller.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -35,6 +36,7 @@ public class BookActivityController implements BaseController, BookActivityContr
     }
 
     @Override
+    @HasUserRole
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookActivityService.deleteById(id);
