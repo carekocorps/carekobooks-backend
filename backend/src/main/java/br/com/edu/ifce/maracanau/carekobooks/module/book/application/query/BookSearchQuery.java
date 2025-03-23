@@ -1,10 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.query;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Searchable;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.annotation.Sortable;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.enums.SearchType;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.query.annotation.Searchable;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.query.annotation.Sortable;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.query.enums.SearchType;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.query.BaseApplicationPageQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.query.BaseApplicationPageQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

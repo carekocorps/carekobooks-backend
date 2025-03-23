@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.query.BookSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.exception.DuplicatedEntryException;
+import br.com.edu.ifce.maracanau.carekobooks.shared.exception.DuplicatedEntryException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import lombok.RequiredArgsConstructor;

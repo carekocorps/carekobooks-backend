@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.mapper.BaseUpdateMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

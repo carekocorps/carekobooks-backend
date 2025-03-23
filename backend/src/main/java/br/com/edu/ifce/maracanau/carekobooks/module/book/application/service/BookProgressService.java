@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthenticatedUser;
+import br.com.edu.ifce.maracanau.carekobooks.shared.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.shared.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.dto.BookProgressDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
@@ -11,7 +13,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +48,10 @@ public class BookProgressService {
 
     @Transactional
     public BookProgressDTO create(BookProgressRequest request) {
+        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         var bookActivity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(bookActivity);
         bookActivityRepository.save(bookActivity);
@@ -65,6 +71,10 @@ public class BookProgressService {
 
     @Transactional
     public void update(Long id, BookProgressRequest request) {
+        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         var bookProgress = bookProgressRepository.findById(id).orElse(null);
         if (bookProgress == null) {
             throw new NotFoundException("Book Progress not found");
@@ -82,8 +92,13 @@ public class BookProgressService {
 
     @Transactional
     public void updateIsMarkedAsFavoriteById(Boolean isMarkedAsFavorite, Long id) {
-        if (!bookProgressRepository.existsById(id)) {
+        var bookProgress = bookProgressRepository.findById(id).orElse(null);
+        if (bookProgress == null) {
             throw new NotFoundException("Book Progress not found");
+        }
+
+        if (!AuthenticatedUser.isAuthorOrAdmin(bookProgress.getUser().getId())) {
+            throw new ForbiddenException("Forbidden");
         }
 
         bookProgressRepository.updateIsMarkedAsFavorite(isMarkedAsFavorite, id);
@@ -91,8 +106,13 @@ public class BookProgressService {
 
     @Transactional
     public void deleteById(Long id) {
-        if (!bookProgressRepository.existsById(id)) {
-            throw new NotFoundException("Book not found");
+        var bookProgress = bookProgressRepository.findById(id).orElse(null);
+        if (bookProgress == null) {
+            throw new NotFoundException("Book Progress not found");
+        }
+
+        if (!AuthenticatedUser.isAuthorOrAdmin(bookProgress.getUser().getId())) {
+            throw new ForbiddenException("Forbidden");
         }
 
         bookProgressRepository.deleteById(id);

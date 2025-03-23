@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumReplyDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumReplySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumReplyRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

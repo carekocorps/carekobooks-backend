@@ -1,10 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthenticatedUser;
+import br.com.edu.ifce.maracanau.carekobooks.shared.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.shared.module.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.dto.ForumDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.query.ForumSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.shared.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumValidator;
@@ -35,7 +37,11 @@ public class ForumService {
     }
 
     @Transactional
-    public ForumDTO create(ForumRequest request){
+    public ForumDTO create(ForumRequest request) {
+        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         var forum = forumMapper.toModel(request);
         forumValidator.validate(forum);
         return forumMapper.toDTO(forumRepository.save(forum));
@@ -43,8 +49,12 @@ public class ForumService {
 
     @Transactional
     public void update(Long id, ForumRequest request) {
-       var forum = forumRepository.findById(id).orElse(null);
-        if(forum == null){
+        if (!AuthenticatedUser.isAuthorOrAdmin(request.getUserId())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
+        var forum = forumRepository.findById(id).orElse(null);
+        if (forum == null){
             throw new NotFoundException("Forum not found");
         }
 
@@ -55,8 +65,13 @@ public class ForumService {
 
     @Transactional
     public void deleteById(Long id) {
-        if (!forumRepository.existsById(id)) {
+        var forum = forumRepository.findById(id).orElse(null);
+        if (forum == null) {
             throw new NotFoundException("Forum not found");
+        }
+
+        if (!AuthenticatedUser.isAuthorOrAdmin(forum.getUser().getId())) {
+            throw new ForbiddenException("Forbidden");
         }
 
         forumRepository.deleteById(id);
