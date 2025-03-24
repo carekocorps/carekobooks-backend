@@ -10,7 +10,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {UserMapper.class, ForumMapper.class})
 public interface ForumReplyMapper extends BaseUpdateMapper<ForumReply, ForumReplyRequest> {
 
-    @Mapping(target = "user", expression = "java(userMapper.toModel())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(true))")
     @Mapping(target = "forum", expression = "java(forumMapper.toModel(request.getForumId()))")
     ForumReply toModel(ForumReplyRequest request);
     ForumReplyDTO toDTO(ForumReply forumReply);

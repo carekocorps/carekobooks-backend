@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PostMapping
     public ResponseEntity<BookProgressDTO> create(@RequestBody @Valid BookProgressRequest request) {
         var bookDTO = bookProgressService.create(request);
@@ -47,7 +47,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookProgressRequest request) {
         bookProgressService.update(id, request);
@@ -55,7 +55,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PatchMapping("/{id}/favorite")
     public ResponseEntity<Void> markAsFavoriteById(@PathVariable Long id) {
         bookProgressService.updateIsMarkedAsFavoriteById(true, id);
@@ -63,7 +63,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PatchMapping("/{id}/unfavorite")
     public ResponseEntity<Void> unmarkAsFavoriteById(@PathVariable Long id) {
         bookProgressService.updateIsMarkedAsFavoriteById(false, id);
@@ -71,7 +71,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookProgressService.deleteById(id);

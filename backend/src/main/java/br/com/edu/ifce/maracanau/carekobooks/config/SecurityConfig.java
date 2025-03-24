@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.filter.TokenFilter;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter.TokenFilter;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -37,16 +37,15 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        var filter = new TokenFilter(tokenService);
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> {
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                })
+                .formLogin(AbstractHttpConfigurer::disable)
                 .anonymous(AbstractHttpConfigurer::disable)
                 .cors(cors -> {})
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new TokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
