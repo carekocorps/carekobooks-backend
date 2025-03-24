@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
@@ -52,7 +52,7 @@ public class BookProgressService {
         bookProgressValidator.validate(bookProgress);
         bookProgress = bookProgressRepository.save(bookProgress);
 
-        if (!AuthUtils.isAuthorizedUser(bookProgress.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
@@ -76,7 +76,7 @@ public class BookProgressService {
             throw new NotFoundException("Book Progress not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(bookProgress.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -97,7 +97,7 @@ public class BookProgressService {
             throw new NotFoundException("Book Progress not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(bookProgress.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -111,7 +111,7 @@ public class BookProgressService {
             throw new NotFoundException("Book Progress not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(bookProgress.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book progress");
         }
 

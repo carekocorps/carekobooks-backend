@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
@@ -14,16 +14,13 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.Application
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
@@ -47,7 +44,7 @@ public class UserService implements UserDetailsService {
             throw new NotFoundException("User not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(username)) {
+        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to update this user");
         }
 
@@ -58,7 +55,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, boolean isFollowing) {
-        if (!AuthUtils.isAuthorizedUser(username)) {
+        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to follow this user");
         }
 
@@ -87,18 +84,11 @@ public class UserService implements UserDetailsService {
             throw new NotFoundException("User not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(username)) {
+        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to delete this user");
         }
 
         userRepository.deleteByUsername(username);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 
 }

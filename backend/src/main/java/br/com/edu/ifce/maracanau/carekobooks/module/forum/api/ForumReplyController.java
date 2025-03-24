@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representa
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.ForumReplyService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class ForumReplyController implements BaseController, ForumReplyControlle
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PostMapping
     public ResponseEntity<ForumReplyDTO> create(@RequestBody @Valid ForumReplyRequest request) {
         var forumReplyDTO = forumReplyService.create(request);
@@ -47,7 +47,7 @@ public class ForumReplyController implements BaseController, ForumReplyControlle
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ForumReplyRequest request) {
         forumReplyService.update(id, request);
@@ -55,7 +55,7 @@ public class ForumReplyController implements BaseController, ForumReplyControlle
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         forumReplyService.deleteById(id);

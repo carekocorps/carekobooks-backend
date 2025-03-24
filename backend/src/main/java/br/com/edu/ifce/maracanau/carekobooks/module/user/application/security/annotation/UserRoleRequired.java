@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('ROLE_' + T(br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole).ADMIN.name())")
-public @interface HasAdminRole {
+@PreAuthorize("hasRole('ROLE_' + T(br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole).USER.name())")
+public @interface UserRoleRequired {
 }

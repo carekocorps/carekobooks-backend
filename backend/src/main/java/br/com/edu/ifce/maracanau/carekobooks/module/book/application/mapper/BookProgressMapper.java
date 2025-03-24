@@ -10,7 +10,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
 public interface BookProgressMapper extends BaseUpdateMapper<BookProgress, BookProgressRequest> {
 
-    @Mapping(target = "user", expression = "java(userMapper.toModel())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(true))")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookProgress toModel(BookProgressRequest request);
     BookProgressDTO toDTO(BookProgress bookProgress);
