@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
 public interface BookActivityMapper {
 
-    @Mapping(target = "user", expression = "java(userMapper.toModel())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(true))")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookActivity toModel(BookProgressRequest request);
     BookActivityDTO toDTO(BookActivity bookActivity);

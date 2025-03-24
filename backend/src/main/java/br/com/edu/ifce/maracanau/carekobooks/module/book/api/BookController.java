@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasAdminRole;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
@@ -38,7 +38,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @HasAdminRole
+    @AdminRoleRequired
     @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequest request) {
         var bookDTO = bookService.create(request);
@@ -47,7 +47,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @HasAdminRole
+    @AdminRoleRequired
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request) {
         bookService.update(id, request);
@@ -55,7 +55,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @HasAdminRole
+    @AdminRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookService.deleteById(id);

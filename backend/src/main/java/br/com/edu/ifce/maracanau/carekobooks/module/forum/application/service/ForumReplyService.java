@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumReplyDTO;
@@ -50,7 +50,7 @@ public class ForumReplyService {
             throw new NotFoundException("Forum Reply not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(forumReply.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(forumReply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum reply");
         }
 
@@ -66,7 +66,7 @@ public class ForumReplyService {
             throw new NotFoundException("Forum Reply not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(forumReply.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(forumReply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum reply");
         }
 

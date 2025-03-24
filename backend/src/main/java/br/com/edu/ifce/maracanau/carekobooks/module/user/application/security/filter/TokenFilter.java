@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.filter;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
 import jakarta.servlet.FilterChain;

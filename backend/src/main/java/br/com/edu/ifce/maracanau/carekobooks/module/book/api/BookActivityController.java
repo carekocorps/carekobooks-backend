@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookActivityCo
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +36,7 @@ public class BookActivityController implements BaseController, BookActivityContr
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         bookActivityService.deleteById(id);

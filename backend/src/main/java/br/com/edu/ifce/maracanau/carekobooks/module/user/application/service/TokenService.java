@@ -5,6 +5,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.micrometer.common.util.StringUtils;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +25,19 @@ import java.util.Optional;
 public class TokenService {
 
     @Value("${security.jwt.token.secret-key}")
-    private String secretKey = "secret";
+    private String secretKey;
 
     @Value("${security.jwt.token.expiration-time-in-ms}")
     private Long expirationTimeInMs;
 
     private final UserDetailsService userDetailsService;
-    private final Algorithm algorithm = Algorithm.HMAC256(secretKey);
+    private Algorithm algorithm = null;
+
+    @PostConstruct
+    public void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        algorithm = Algorithm.HMAC256(secretKey);
+    }
 
     public TokenDTO createAccessToken(String username, List<String> roles) {
         var createdAt = new Date();

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.AuthUtils;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
@@ -50,7 +50,7 @@ public class ForumService {
             throw new NotFoundException("Forum not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(forum.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum");
         }
 
@@ -66,7 +66,7 @@ public class ForumService {
             throw new NotFoundException("Forum not found");
         }
 
-        if (!AuthUtils.isAuthorizedUser(forum.getUser().getUsername())) {
+        if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum");
         }
 

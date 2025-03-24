@@ -20,11 +20,11 @@ public class AuthService {
 
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
 
     public TokenDTO login(UserLoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -32,10 +32,9 @@ public class AuthService {
                 request.getPassword()
         ));
 
-        var user = userRepository.findByUsername(request.getUsername()).orElse(null);
-        if (user == null) {
-            throw new UsernameNotFoundException("Username not found");
-        }
+        var user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
         return tokenService.createAccessToken(
                 user.getUsername(),
@@ -56,6 +55,7 @@ public class AuthService {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userValidator.validate(user);
+        userRepository.save(user);
 
         return tokenService.createAccessToken(
                 user.getUsername(),

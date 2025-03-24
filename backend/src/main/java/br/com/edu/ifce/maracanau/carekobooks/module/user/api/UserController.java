@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.shared.annotation.HasUserRole;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +37,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PutMapping("/{username}")
     public ResponseEntity<Void> update(@PathVariable String username, @RequestBody UserRegisterRequest request) {
         userService.update(username, request);
@@ -45,7 +45,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @PostMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> followByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
         userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, true);
@@ -53,7 +53,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @DeleteMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> unfollowByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
         userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, false);
@@ -61,7 +61,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @HasUserRole
+    @UserRoleRequired
     @DeleteMapping("/{username}")
     public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
         userService.deleteByUsername(username);
