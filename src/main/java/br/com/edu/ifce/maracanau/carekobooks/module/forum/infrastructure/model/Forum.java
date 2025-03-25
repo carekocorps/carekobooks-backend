@@ -29,7 +29,7 @@ public class Forum extends BaseModel {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @OneToMany(mappedBy = "forum")
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.REMOVE)
     private List<ForumReply> replies;
 
 }

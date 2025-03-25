@@ -23,11 +23,13 @@ public class UserValidator {
     }
 
     private boolean isUsernameDuplicated(User user) {
-        return userRepository.existsByUsername(user.getUsername());
+        var existingUser = userRepository.findByUsername(user.getUsername());
+        return existingUser.isPresent() && !existingUser.get().getId().equals(user.getId());
     }
 
     private boolean isEmailDuplicated(User user) {
-        return userRepository.existsByEmail(user.getEmail());
+        var existingUser = userRepository.findByEmail(user.getEmail());
+        return existingUser.isPresent() && !existingUser.get().getId().equals(user.getId());
     }
 
 }

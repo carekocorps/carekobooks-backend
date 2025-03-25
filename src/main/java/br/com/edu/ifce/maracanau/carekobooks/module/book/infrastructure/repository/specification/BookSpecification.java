@@ -9,27 +9,27 @@ public class BookSpecification {
 
     public static Specification<Book> titleContains(String title) {
         return (root, query, cb) ->
-                cb.equal(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");
     }
 
     public static Specification<Book> authorContains(String author) {
         return (root, query, cb) ->
-                cb.equal(cb.upper(root.get("author")), "%" + author.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("author")), "%" + author.toUpperCase() + "%");
     }
 
     public static Specification<Book> publisherContains(String publisher) {
         return (root, query, cb) ->
-                cb.equal(cb.upper(root.get("publisher")), "%" + publisher.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("publisher")), "%" + publisher.toUpperCase() + "%");
     }
 
     public static Specification<Book> publishedBefore(LocalDate publishedBefore) {
         return (root, query, cb) ->
-                cb.lessThanOrEqualTo(root.get("publishedBefore"), publishedBefore);
+                cb.lessThanOrEqualTo(root.get("publishedAt"), publishedBefore);
     }
 
     public static Specification<Book> publishedAfter(LocalDate publishedAfter) {
         return (root, query, cb) ->
-                cb.greaterThanOrEqualTo(root.get("publishedAfter"), publishedAfter);
+                cb.greaterThanOrEqualTo(root.get("publishedAt"), publishedAfter);
     }
 
     public static Specification<Book> totalPagesEqual(Integer totalPages) {
