@@ -7,7 +7,7 @@ public class UserSpecification {
 
     public static Specification<User> usernameContains(String username) {
         return (root, query, cb) ->
-                cb.equal(cb.upper(root.get("username")), "%" + username.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("username")), "%" + username.toUpperCase() + "%");
     }
 
     public static Specification<User> followingUsernameEqual(String username) {

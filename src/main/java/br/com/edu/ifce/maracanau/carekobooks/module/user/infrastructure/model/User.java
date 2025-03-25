@@ -37,16 +37,16 @@ public class User extends BaseModel implements UserDetails {
     @Column(nullable = false)
     private UserRole role = UserRole.USER;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<BookProgress> progresses;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<BookActivity> activities;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     public List<Forum> forums;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ForumReply> replies;
 
     @ManyToMany

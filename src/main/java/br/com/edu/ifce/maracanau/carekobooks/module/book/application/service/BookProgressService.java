@@ -56,16 +56,15 @@ public class BookProgressService {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
-        var bookActivity = bookActivityMapper.toModel(request);
-        bookActivityValidator.validate(bookActivity);
-        bookActivityRepository.save(bookActivity);
-
         if (bookRepository.existsById(request.getBookId()) && request.getScore() != null) {
             var averageScore = bookProgressRepository.findAverageScoreByBookId(request.getBookId());
             bookProgress.getBook().setAverageScore(averageScore);
             bookRepository.updateAverageScoreById(averageScore, request.getBookId());
         }
 
+        var bookActivity = bookActivityMapper.toModel(request);
+        bookActivityValidator.validate(bookActivity);
+        bookActivityRepository.save(bookActivity);
         return bookProgressMapper.toDTO(bookProgress);
     }
 
@@ -88,6 +87,10 @@ public class BookProgressService {
             var averageScore = bookProgressRepository.findAverageScoreByBookId(request.getBookId());
             bookRepository.updateAverageScoreById(averageScore, request.getBookId());
         }
+
+        var bookActivity = bookActivityMapper.toModel(request);
+        bookActivityValidator.validate(bookActivity);
+        bookActivityRepository.save(bookActivity);
     }
 
     @Transactional
