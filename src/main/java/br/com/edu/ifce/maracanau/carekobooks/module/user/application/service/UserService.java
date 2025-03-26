@@ -6,7 +6,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.enums.UserRelationshipAction;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
@@ -17,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -62,27 +66,37 @@ public class UserService {
     }
 
     @Transactional
-    public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, boolean isFollowRequested) {
+    public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, UserRelationshipAction action) {
         if (!UserContextProvider.isCurrentUserAuthorized(username)) {
-            throw new ForbiddenException("You are not allowed to follow this user");
+            throw new ForbiddenException("You are not allowed to perform this action");
         }
 
         if (username.equals(targetUsername)) {
-            throw new BadRequestException("You cannot follow yourself");
+            throw new BadRequestException("You cannot follow/unfollow yourself");
         }
 
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        var userMap = userRepository
+                .findByUsernameIn(List.of(username, targetUsername))
+                .stream()
+                .collect(Collectors.toMap(User::getUsername, user -> user));
 
-        var target = userRepository
-                .findByUsername(targetUsername)
-                .orElseThrow(() -> new NotFoundException("Target not found"));
+        var user = userMap.get(username);
+        var target = userMap.get(targetUsername);
+        if (user == null || target == null) {
+            throw new NotFoundException("One or both users not found");
+        }
 
-        var isUserFollowingTarget = user.getFollowing().contains(target);
-        if (isFollowRequested && !isUserFollowingTarget) user.getFollowing().add(target);
-        else if (!isFollowRequested && isUserFollowingTarget) user.getFollowing().remove(target);
-        else throw new BadRequestException("Operation has already been performed");
+        var isUserFollowing = user.getFollowing().contains(target);
+        var isFollowingRequested = action == UserRelationshipAction.FOLLOW;
+        if (isUserFollowing == isFollowingRequested) {
+            throw new BadRequestException(isFollowingRequested
+                    ? "User is already following the target"
+                    : "User does not follow the target"
+            );
+        }
+
+        if (isFollowingRequested) user.getFollowing().add(target);
+        else user.getFollowing().remove(target);
         userRepository.save(user);
     }
 

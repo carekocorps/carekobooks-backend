@@ -4,10 +4,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.docs.UserController
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationshipStatus;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.enums.UserRelationshipAction;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @GetMapping("/{username}/followers")
     public ResponseEntity<ApplicationPage<UserDTO>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
         query.setUsername(username);
-        query.setUserRelationship(UserRelationship.FOLLOWERS);
+        query.setStatus(UserRelationshipStatus.FOLLOWER);
         var userDTOs = userService.search(query);
         return ResponseEntity.ok(userDTOs);
     }
@@ -44,7 +45,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @GetMapping("/{username}/following")
     public ResponseEntity<ApplicationPage<UserDTO>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
         query.setUsername(username);
-        query.setUserRelationship(UserRelationship.FOLLOWING);
+        query.setStatus(UserRelationshipStatus.FOLLOWING);
         var userDTOs = userService.search(query);
         return ResponseEntity.ok(userDTOs);
     }
@@ -68,7 +69,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @UserRoleRequired
     @PostMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> followByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, true);
+        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, UserRelationshipAction.FOLLOW);
         return ResponseEntity.noContent().build();
     }
 
@@ -76,7 +77,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @UserRoleRequired
     @DeleteMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> unfollowByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, false);
+        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, UserRelationshipAction.UNFOLLOW);
         return ResponseEntity.noContent().build();
     }
 

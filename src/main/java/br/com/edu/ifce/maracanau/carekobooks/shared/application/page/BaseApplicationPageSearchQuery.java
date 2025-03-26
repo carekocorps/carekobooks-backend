@@ -1,15 +1,28 @@
 package br.com.edu.ifce.maracanau.carekobooks.shared.application.page;
 
+import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
+
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.Map;
 
+@Getter
+@Setter
 public abstract class BaseApplicationPageSearchQuery<T extends BaseModel> extends BaseApplicationPageSearch {
 
+    protected LocalDate createdBefore;
+    protected LocalDate createdAfter;
+
     public Specification<T> getSpecification() {
-        return Specification.where(null);
+        Specification<T> specs = Specification.where(null);
+        if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
+        if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
+        return specs;
     }
 
     public Sort getSort() {
