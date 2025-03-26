@@ -1,14 +1,15 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query;
 
-import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumSpecification.*;
+import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSocialSpecification.*;
 import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -17,29 +18,31 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
+public class UserSocialSearchQuery extends BaseApplicationPageSearchQuery<User> {
 
-    private String title;
+    @JsonIgnore
     private String username;
+
+    @JsonIgnore
+    private UserRelationship userRelationship;
+
     private LocalDate createdBefore;
     private LocalDate createdAfter;
-    private Long bookId;
 
     @Override
-    public Specification<Forum> getSpecification() {
+    public Specification<User> getSpecification() {
         var specs = super.getSpecification();
-        if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
-        if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
         if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
         if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
-        if (bookId != null) specs = specs.and(bookIdEqual(bookId));
-        return specs;
+        return userRelationship == UserRelationship.FOLLOWING
+                ? specs.and(followingUsernameEqual(username))
+                : specs.and(followersUsernameEqual(username));
     }
 
     @Override
     public Sort getSort() {
         return getSort(Map.of(
-                "title", "title",
+                "username", "username",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -50,7 +53,7 @@ public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
             defaultValue = "id",
             allowableValues = {
                     "id",
-                    "title",
+                    "username",
                     "created-at",
                     "updated-at"
             }

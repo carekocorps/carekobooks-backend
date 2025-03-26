@@ -1,17 +1,17 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query;
 
+import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
 import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
@@ -19,21 +19,15 @@ import java.util.Map;
 public class UserSearchQuery extends BaseApplicationPageSearchQuery<User> {
 
     private String username;
-
-    @Schema(description = "Only applies if 'username' is provided")
-    private UserRelationship userRelationship;
+    private LocalDate createdBefore;
+    private LocalDate createdAfter;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
-        if (StringUtils.isNotBlank(username)) {
-            specs = switch(userRelationship) {
-                case FOLLOWING -> specs.and(followingUsernameEqual(username));
-                case FOLLOWERS -> specs.and(followersUsernameEqual(username));
-                case null -> specs.and(usernameContains(username));
-            };
-        }
-
+        if (username != null) specs = specs.and(usernameContains(username));
+        if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
+        if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
         return specs;
     }
 

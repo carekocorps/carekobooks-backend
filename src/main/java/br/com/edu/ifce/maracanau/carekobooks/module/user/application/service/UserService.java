@@ -1,13 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
@@ -27,6 +28,13 @@ public class UserService {
     private final UserMapper userMapper;
 
     public ApplicationPage<UserDTO> search(UserSearchQuery query) {
+        var specification = query.getSpecification();
+        var sort = query.getSort();
+        var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
+        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toDTO));
+    }
+
+    public ApplicationPage<UserDTO> search(UserSocialSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
@@ -54,7 +62,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, boolean isFollowing) {
+    public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, boolean isFollowRequested) {
         if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to follow this user");
         }
@@ -71,9 +79,9 @@ public class UserService {
                 .findByUsername(targetUsername)
                 .orElseThrow(() -> new NotFoundException("Target not found"));
 
-        var userContainsTarget = user.getFollowing().contains(target);
-        if (isFollowing && !userContainsTarget) user.getFollowing().add(target);
-        else if (!isFollowing && userContainsTarget) user.getFollowing().remove(target);
+        var isUserFollowingTarget = user.getFollowing().contains(target);
+        if (isFollowRequested && !isUserFollowingTarget) user.getFollowing().add(target);
+        else if (!isFollowRequested && isUserFollowingTarget) user.getFollowing().remove(target);
         else throw new BadRequestException("Operation has already been performed");
         userRepository.save(user);
     }

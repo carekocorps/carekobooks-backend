@@ -28,8 +28,8 @@ public class BookValidator {
         query.setPublishedAfter(book.getPublishedAt());
         query.setTotalPages(book.getTotalPages());
 
-        var bookFound = bookRepository.findOne(query.getSpecification());
-        return bookFound.isPresent() && !bookFound.get().getId().equals(book.getId());
+        var books = bookRepository.findAll(query.getSpecification());
+        return books.stream().anyMatch(b -> !b.getId().equals(book.getId()));
     }
 
 }
