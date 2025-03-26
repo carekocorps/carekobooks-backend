@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query;
 
-import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
 import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
@@ -11,7 +10,6 @@ import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
@@ -19,15 +17,11 @@ import java.util.Map;
 public class UserSearchQuery extends BaseApplicationPageSearchQuery<User> {
 
     private String username;
-    private LocalDate createdBefore;
-    private LocalDate createdAfter;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
         if (username != null) specs = specs.and(usernameContains(username));
-        if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
-        if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
         return specs;
     }
 
