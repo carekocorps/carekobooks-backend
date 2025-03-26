@@ -1,7 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query;
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookProgressSpecification.*;
-import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
@@ -25,8 +23,6 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
     private Boolean isMarkedAsFavorite;
     private Integer score;
     private Integer pagesRead;
-    private LocalDate createdBefore;
-    private LocalDate createdAfter;
     private Long bookId;
 
     @Override
@@ -37,8 +33,6 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
         if (isMarkedAsFavorite != null) specs = specs.and(markedAsFavoriteEqual(isMarkedAsFavorite));
         if (score != null) specs = specs.and(scoreEqual(score));
         if (pagesRead != null) specs = specs.and(pagesReadEqual(pagesRead));
-        if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
-        if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }

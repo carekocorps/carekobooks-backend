@@ -1,7 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query;
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumSpecification.*;
-import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
@@ -12,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Getter
@@ -21,8 +19,6 @@ public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
 
     private String title;
     private String username;
-    private LocalDate createdBefore;
-    private LocalDate createdAfter;
     private Long bookId;
 
     @Override
@@ -30,8 +26,6 @@ public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
-        if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
-        if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
