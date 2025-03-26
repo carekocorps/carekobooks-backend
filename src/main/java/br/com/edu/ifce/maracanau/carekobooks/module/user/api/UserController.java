@@ -3,6 +3,8 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.docs.UserControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
@@ -25,6 +27,24 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @GetMapping
     public ResponseEntity<ApplicationPage<UserDTO>> search(@ParameterObject UserSearchQuery query) {
+        var userDTOs = userService.search(query);
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @Override
+    @GetMapping("/{username}/followers")
+    public ResponseEntity<ApplicationPage<UserDTO>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
+        query.setUsername(username);
+        query.setUserRelationship(UserRelationship.FOLLOWERS);
+        var userDTOs = userService.search(query);
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @Override
+    @GetMapping("/{username}/following")
+    public ResponseEntity<ApplicationPage<UserDTO>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
+        query.setUsername(username);
+        query.setUserRelationship(UserRelationship.FOLLOWING);
         var userDTOs = userService.search(query);
         return ResponseEntity.ok(userDTOs);
     }

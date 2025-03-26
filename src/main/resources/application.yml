@@ -2,9 +2,9 @@ spring:
   application:
     name: carekobooks
   datasource:
-    url: jdbc:mysql://localhost:3306/carekobooks?useTimezone=true&serverTimezone=UTC
-    username: root
-    password: 123
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update # Temporário, será alterado para "none" em breve
@@ -12,5 +12,5 @@ spring:
 security:
   jwt:
     token:
-      secret-key: NTNjcjM3
+      secret-key: ${SECRET_KEY}
       expiration-time-in-ms: 3600000
