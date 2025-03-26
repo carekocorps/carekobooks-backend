@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
+import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ public class BookProgressValidator {
         if (isBookEmpty(bookProgress)) {
             throw new NotFoundException("Book not found");
         }
+
+        if (isPagesReadInvalid(bookProgress)) {
+            throw new BadRequestException("Pages read cannot exceed total pages of the book");
+        }
     }
 
     public boolean isUserEmpty(BookProgress bookProgress) {
@@ -23,6 +28,10 @@ public class BookProgressValidator {
 
     public boolean isBookEmpty(BookProgress bookProgress) {
         return bookProgress.getBook() == null;
+    }
+
+    public boolean isPagesReadInvalid(BookProgress bookProgress) {
+        return bookProgress.getPagesRead() != null && bookProgress.getPagesRead() > bookProgress.getBook().getTotalPages();
     }
 
 }
