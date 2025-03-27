@@ -57,9 +57,9 @@ public class BookProgressService {
         }
 
         if (bookRepository.existsById(request.getBookId()) && request.getScore() != null) {
-            var averageScore = bookProgressRepository.findAverageScoreByBookId(request.getBookId());
-            bookProgress.getBook().setAverageScore(averageScore);
-            bookRepository.updateAverageScoreById(averageScore, request.getBookId());
+            var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
+            bookProgress.getBook().setUserAverageScore(userAverageScore);
+            bookRepository.updateUserAverageScoreById(userAverageScore, request.getBookId());
         }
 
         var bookActivity = bookActivityMapper.toModel(request);
@@ -83,9 +83,9 @@ public class BookProgressService {
         bookProgressValidator.validate(bookProgress);
         bookProgressRepository.save(bookProgress);
 
-        if (bookRepository.existsById(request.getBookId()) && request.getScore() != null) {
-            var averageScore = bookProgressRepository.findAverageScoreByBookId(request.getBookId());
-            bookRepository.updateAverageScoreById(averageScore, request.getBookId());
+        if (bookRepository.existsById(request.getBookId())) {
+            var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
+            bookRepository.updateUserAverageScoreById(userAverageScore, request.getBookId());
         }
 
         var bookActivity = bookActivityMapper.toModel(request);

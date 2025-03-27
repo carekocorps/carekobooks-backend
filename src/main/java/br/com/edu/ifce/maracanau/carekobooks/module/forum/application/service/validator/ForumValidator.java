@@ -17,11 +17,11 @@ public class ForumValidator {
         }
     }
 
-    public boolean isUserEmpty(Forum forum) {
+    private boolean isUserEmpty(Forum forum) {
         return forum.getUser() == null;
     }
 
-    public boolean isBookEmpty(Forum forum) {
+    private boolean isBookEmpty(Forum forum) {
         return forum.getBook() == null;
     }
 

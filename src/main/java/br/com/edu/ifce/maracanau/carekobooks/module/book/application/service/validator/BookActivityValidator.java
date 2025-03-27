@@ -17,11 +17,11 @@ public class BookActivityValidator {
         }
     }
 
-    public boolean isUserEmpty(BookActivity bookActivity) {
+    private boolean isUserEmpty(BookActivity bookActivity) {
         return bookActivity.getUser() == null;
     }
 
-    public boolean isBookEmpty(BookActivity bookActivity) {
+    private boolean isBookEmpty(BookActivity bookActivity) {
         return bookActivity.getBook() == null;
     }
 

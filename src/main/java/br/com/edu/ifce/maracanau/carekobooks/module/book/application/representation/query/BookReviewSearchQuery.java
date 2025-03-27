@@ -1,9 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query;
 
-import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookProgressSpecification.*;
+import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookReviewSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -16,23 +15,17 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<BookProgress> {
+public class BookReviewSearchQuery extends BaseApplicationPageSearchQuery<BookReview> {
 
     private String username;
-    private BookProgressStatus status;
-    private Boolean isMarkedAsFavorite;
     private Integer score;
-    private Integer pagesRead;
     private Long bookId;
 
     @Override
-    public Specification<BookProgress> getSpecification() {
+    public Specification<BookReview> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
-        if (status != null) specs = specs.and(statusEqual(status));
-        if (isMarkedAsFavorite != null) specs = specs.and(markedAsFavoriteEqual(isMarkedAsFavorite));
         if (score != null) specs = specs.and(scoreEqual(score));
-        if (pagesRead != null) specs = specs.and(pagesReadEqual(pagesRead));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
@@ -41,10 +34,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
     public Sort getSort() {
         return getSort(Map.of(
                 "username", "user.username",
-                "status", "status",
-                "favorite", "isMarkedAsFavorite",
                 "score", "score",
-                "pages-read", "pagesRead",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -56,10 +46,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
             allowableValues = {
                     "id",
                     "username",
-                    "status",
-                    "favorite",
                     "score",
-                    "pages-read",
                     "created-at",
                     "updated-at"
             }

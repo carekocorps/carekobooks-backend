@@ -22,15 +22,15 @@ public class BookProgressValidator {
         }
     }
 
-    public boolean isUserEmpty(BookProgress bookProgress) {
+    private boolean isUserEmpty(BookProgress bookProgress) {
         return bookProgress.getUser() == null;
     }
 
-    public boolean isBookEmpty(BookProgress bookProgress) {
+    private boolean isBookEmpty(BookProgress bookProgress) {
         return bookProgress.getBook() == null;
     }
 
-    public boolean isPagesReadInvalid(BookProgress bookProgress) {
+    private boolean isPagesReadInvalid(BookProgress bookProgress) {
         return bookProgress.getPagesRead() != null && bookProgress.getPagesRead() > bookProgress.getBook().getTotalPages();
     }
 
