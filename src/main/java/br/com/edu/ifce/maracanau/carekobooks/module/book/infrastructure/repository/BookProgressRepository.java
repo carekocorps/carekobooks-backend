@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface BookProgressRepository extends JpaRepository<BookProgress, Long>, JpaSpecificationExecutor<BookProgress> {
 
     @Query("""
@@ -15,7 +17,7 @@ public interface BookProgressRepository extends JpaRepository<BookProgress, Long
         WHERE bp.book.id = :bookId
         AND bp.score IS NOT NULL
     """)
-    Double findAverageScoreByBookId(Long bookId);
+    Double findUserAverageScoreByBookId(Long bookId);
 
     @Transactional
     @Modifying

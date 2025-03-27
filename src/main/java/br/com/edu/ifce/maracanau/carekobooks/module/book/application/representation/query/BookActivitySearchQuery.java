@@ -36,7 +36,7 @@ public class BookActivitySearchQuery extends BaseApplicationPageSearchQuery<Book
     @Override
     public Sort getSort() {
         return getSort(Map.of(
-                "username", "username",
+                "username", "user.username",
                 "status", "status",
                 "pages-read", "pagesRead",
                 "created-at", "createdAt",

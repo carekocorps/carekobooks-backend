@@ -33,14 +33,20 @@ public class Book extends BaseModel {
     @Column(name = "total_pages", nullable = false)
     private Integer totalPages;
 
-    @Column(name = "average_score")
-    private Double averageScore;
+    @Column(name = "user_average_score")
+    private Double userAverageScore;
+
+    @Column(name = "review_average_socre")
+    private Double reviewAverageScore;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookProgress> progresses;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookActivity> activities;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
+    private List<BookReview> reviews;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<Forum> forums;
