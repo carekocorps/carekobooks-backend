@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
 import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
@@ -42,6 +43,9 @@ public class User extends BaseModel implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<BookActivity> activities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<BookReview> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     public List<Forum> forums;

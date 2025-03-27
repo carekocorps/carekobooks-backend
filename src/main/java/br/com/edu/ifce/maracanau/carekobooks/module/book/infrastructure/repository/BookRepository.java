@@ -17,9 +17,18 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Modifying
     @Query("""
         UPDATE Book b
-        SET b.averageScore = :averageScore
+        SET b.userAverageScore = :userAverageScore
         WHERE b.id = :id
     """)
-    void updateAverageScoreById(Double averageScore, Long id);
+    void updateUserAverageScoreById(Double userAverageScore, Long id);
+
+    @Transactional
+    @Modifying
+    @Query("""
+        UPDATE Book b
+        SET b.reviewAverageScore = :reviewAverageScore
+        WHERE b.id = :id
+    """)
+    void updateReviewAverageScoreById(Double reviewAverageScore, Long id);
 
 }
