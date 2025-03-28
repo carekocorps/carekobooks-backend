@@ -42,7 +42,6 @@ public class TokenService {
     public TokenDTO createAccessToken(String username, List<String> roles) {
         var createdAt = new Date();
         var expiresAt = new Date(createdAt.getTime() + expirationTimeInMs);
-
         var tokenDTO = new TokenDTO();
         tokenDTO.setUsername(username);
         tokenDTO.setIsAuthenticated(true);
@@ -73,9 +72,13 @@ public class TokenService {
     }
 
     public Authentication getAuthentication(String token) {
-        var decodedJWT = getDecodedJWT(token);
-        var userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        try {
+            var decodedJWT = getDecodedJWT(token);
+            var userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
+            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     private String getAccessToken(String username, List<String> roles, Date createdAt, Date expiresAt) {

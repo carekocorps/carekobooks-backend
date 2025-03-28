@@ -12,6 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PutMapping("/{username}")
-    public ResponseEntity<Void> update(@PathVariable String username, @RequestBody UserRegisterRequest request) {
+    public ResponseEntity<Void> update(@PathVariable String username, @RequestBody @Valid UserRegisterRequest request) {
         userService.update(username, request);
         return ResponseEntity.noContent().build();
     }

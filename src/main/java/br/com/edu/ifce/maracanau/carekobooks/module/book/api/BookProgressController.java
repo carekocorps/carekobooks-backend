@@ -50,7 +50,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     @Override
     @UserRoleRequired
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookProgressRequest request) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookProgressRequest request) {
         bookProgressService.update(id, request);
         return ResponseEntity.noContent().build();
     }

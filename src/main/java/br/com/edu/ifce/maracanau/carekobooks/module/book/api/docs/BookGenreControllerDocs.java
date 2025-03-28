@@ -66,7 +66,7 @@ public interface BookGenreControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable String name, @RequestBody BookGenreRequest request);
+    ResponseEntity<Void> update(@PathVariable String name, @RequestBody @Valid BookGenreRequest request);
 
     @Operation(
             summary = "Delete a book genre by name",
