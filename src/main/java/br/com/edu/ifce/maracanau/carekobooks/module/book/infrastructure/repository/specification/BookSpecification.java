@@ -37,4 +37,9 @@ public class BookSpecification {
                 cb.equal(root.get("totalPages"), totalPages);
     }
 
+    public static Specification<Book> genreEquals(String genre) {
+        return (root, query, cb) ->
+                cb.equal(root.join("genres").get("name"), genre);
+    }
+
 }

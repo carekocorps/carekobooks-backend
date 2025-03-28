@@ -39,6 +39,14 @@ public class Book extends BaseModel {
     @Column(name = "review_average_socre")
     private Double reviewAverageScore;
 
+    @ManyToMany
+    @JoinTable(
+            name = "book_genre_relationship",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<BookGenre> genres;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookProgress> progresses;
 

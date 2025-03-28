@@ -14,6 +14,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -94,7 +95,7 @@ public class BookProgressService {
     }
 
     @Transactional
-    public void updateIsMarkedAsFavoriteById(Boolean isMarkedAsFavorite, Long id) {
+    public void updateIsFavoriteById(Long id, ToggleAction action) {
         var bookProgress = bookProgressRepository.findById(id).orElse(null);
         if (bookProgress == null) {
             throw new NotFoundException("Book Progress not found");
@@ -104,7 +105,8 @@ public class BookProgressService {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
-        bookProgressRepository.updateIsMarkedAsFavorite(isMarkedAsFavorite, id);
+        var isAssignRequested = action == ToggleAction.ASSIGN;
+        bookProgressRepository.updateIsFavoriteById(isAssignRequested, id);
     }
 
     @Transactional

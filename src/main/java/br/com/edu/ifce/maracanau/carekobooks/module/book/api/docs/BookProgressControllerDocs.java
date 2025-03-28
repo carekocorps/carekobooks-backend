@@ -90,7 +90,7 @@ public interface BookProgressControllerDocs {
     ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookProgressRequest request);
 
     @Operation(
-            summary = "Mark a book as favorite by ID",
+            summary = "Assign a book as favorite by ID",
             tags = {"Book Progress"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
@@ -101,10 +101,10 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> markAsFavoriteById(@PathVariable Long id);
+    ResponseEntity<Void> assignAsFavoriteById(@PathVariable Long id);
 
     @Operation(
-            summary = "Unmark a book as favorite by ID",
+            summary = "Unassign a book as favorite by ID",
             tags = {"Book Progress"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
@@ -115,7 +115,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unmarkAsFavoriteById(@PathVariable Long id);
+    ResponseEntity<Void> unassignAsFavoriteById(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a book progress by ID",

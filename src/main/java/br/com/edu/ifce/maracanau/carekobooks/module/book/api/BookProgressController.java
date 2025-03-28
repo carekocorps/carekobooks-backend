@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.Boo
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,17 +57,17 @@ public class BookProgressController implements BaseController, BookProgressContr
 
     @Override
     @UserRoleRequired
-    @PatchMapping("/{id}/favorite")
-    public ResponseEntity<Void> markAsFavoriteById(@PathVariable Long id) {
-        bookProgressService.updateIsMarkedAsFavoriteById(true, id);
+    @PostMapping("/{id}/favorites")
+    public ResponseEntity<Void> assignAsFavoriteById(@PathVariable Long id) {
+        bookProgressService.updateIsFavoriteById(id, ToggleAction.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
-    @PatchMapping("/{id}/unfavorite")
-    public ResponseEntity<Void> unmarkAsFavoriteById(@PathVariable Long id) {
-        bookProgressService.updateIsMarkedAsFavoriteById(false, id);
+    @DeleteMapping("/{id}/favorites")
+    public ResponseEntity<Void> unassignAsFavoriteById(@PathVariable Long id) {
+        bookProgressService.updateIsFavoriteById(id, ToggleAction.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 
