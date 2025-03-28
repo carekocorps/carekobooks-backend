@@ -50,7 +50,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @AdminRoleRequired
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookRequest request) {
         bookService.update(id, request);
         return ResponseEntity.noContent().build();
     }

@@ -26,6 +26,9 @@ public class User extends BaseModel implements UserDetails {
     @Column(unique = true, length = 50, nullable = false)
     private String username;
 
+    @Column(length = 50)
+    private String name;
+
     @Column(unique = true, nullable = false)
     private String email;
 

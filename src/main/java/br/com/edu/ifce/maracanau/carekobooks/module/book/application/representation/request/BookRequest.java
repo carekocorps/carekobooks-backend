@@ -34,6 +34,10 @@ public class BookRequest implements BaseRequest {
     @Min(1)
     private Integer totalPages;
 
-    private List<String> genres;
+    private List<
+            @NotBlank
+            @Size(max = 50)
+            String
+    > genres;
 
 }

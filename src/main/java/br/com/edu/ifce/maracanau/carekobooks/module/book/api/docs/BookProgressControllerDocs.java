@@ -87,7 +87,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookProgressRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookProgressRequest request);
 
     @Operation(
             summary = "Assign a book as favorite by ID",

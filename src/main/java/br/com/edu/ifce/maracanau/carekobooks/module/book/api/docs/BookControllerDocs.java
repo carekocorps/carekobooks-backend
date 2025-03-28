@@ -87,7 +87,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookRequest request);
 
     @Operation(
             summary = "Assign a book genre to a book by ID",
