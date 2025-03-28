@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Bo
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {BookGenreMapper.class})
 public abstract class BookMapper implements BaseUpdateMapper<Book, BookRequest> {
 
     @Autowired

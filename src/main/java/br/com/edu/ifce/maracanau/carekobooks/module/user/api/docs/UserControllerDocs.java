@@ -113,7 +113,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> followByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername);
+    ResponseEntity<Void> assignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername);
 
     @Operation(
             summary = "Unfollow a user by username",
@@ -127,7 +127,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unfollowByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername);
+    ResponseEntity<Void> unassignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername);
 
     @Operation(
             summary = "Delete a user by username",

@@ -6,7 +6,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.enums.UserRelationshipAction;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -14,6 +13,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.pr
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateFollowingByUsernameAndTargetUsername(String username, String targetUsername, UserRelationshipAction action) {
+    public void updateFollowingByUsername(String username, String targetUsername, ToggleAction action) {
         if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
@@ -86,9 +86,9 @@ public class UserService {
             throw new NotFoundException("One or both users not found");
         }
 
+        var isFollowingRequested = action == ToggleAction.ASSIGN;
         var isUserFollowing = user.getFollowing().contains(target);
-        var isFollowingRequested = action == UserRelationshipAction.FOLLOW;
-        if (isUserFollowing == isFollowingRequested) {
+        if (isFollowingRequested == isUserFollowing) {
             throw new BadRequestException(isFollowingRequested
                     ? "User is already following the target"
                     : "User does not follow the target"

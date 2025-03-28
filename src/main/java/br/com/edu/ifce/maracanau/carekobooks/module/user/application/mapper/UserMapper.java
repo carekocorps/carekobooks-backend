@@ -2,7 +2,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
@@ -12,9 +11,5 @@ public abstract class UserMapper implements BaseUpdateMapper<User, UserRegisterR
 
     public abstract User toModel(UserRegisterRequest request);
     public abstract UserDTO toDTO(User user);
-
-    public User toModel(boolean dummy) {
-        return (User) UserContextProvider.getUserDetails();
-    }
 
 }

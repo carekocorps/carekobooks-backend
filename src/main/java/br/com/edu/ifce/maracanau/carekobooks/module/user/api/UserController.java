@@ -8,9 +8,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.enums.UserRelationshipAction;
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -68,16 +68,16 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> followByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, UserRelationshipAction.FOLLOW);
+    public ResponseEntity<Void> assignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername) {
+        userService.updateFollowingByUsername(username, targetUsername, ToggleAction.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> unfollowByUsernameAndTargetUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsernameAndTargetUsername(username, targetUsername, UserRelationshipAction.UNFOLLOW);
+    public ResponseEntity<Void> unassignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername) {
+        userService.updateFollowingByUsername(username, targetUsername, ToggleAction.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 

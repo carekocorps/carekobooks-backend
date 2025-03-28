@@ -23,9 +23,9 @@ public interface BookProgressRepository extends JpaRepository<BookProgress, Long
     @Modifying
     @Query("""
         UPDATE BookProgress bp
-        SET bp.isMarkedAsFavorite = :isMarkedAsFavorite
+        SET bp.isFavorite = :isFavorite
         WHERE bp.id = :id
     """)
-    void updateIsMarkedAsFavorite(Boolean isMarkedAsFavorite, Long id);
+    void updateIsFavoriteById(Boolean isFavorite, Long id);
 
 }
