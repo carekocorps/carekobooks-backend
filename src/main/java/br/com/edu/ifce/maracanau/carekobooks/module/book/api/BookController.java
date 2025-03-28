@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,22 @@ public class BookController implements BaseController, BookControllerDocs {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookRequest request) {
         bookService.update(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @AdminRoleRequired
+    @PostMapping("/{id}/genres/{genreName}")
+    public ResponseEntity<Void> assignGenreById(@PathVariable Long id, @PathVariable String genreName) {
+        bookService.updateBookGenresById(id, genreName, ToggleAction.ASSIGN);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @AdminRoleRequired
+    @DeleteMapping("/{id}/genres/{genreName}")
+    public ResponseEntity<Void> unassignGenreById(@PathVariable Long id, @PathVariable String genreName) {
+        bookService.updateBookGenresById(id, genreName, ToggleAction.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 

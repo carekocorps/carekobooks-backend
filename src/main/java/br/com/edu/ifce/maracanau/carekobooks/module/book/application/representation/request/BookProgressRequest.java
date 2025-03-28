@@ -16,7 +16,7 @@ public class BookProgressRequest implements BaseRequest {
     private BookProgressStatus status;
 
     @NotNull
-    private Boolean isMarkedAsFavorite;
+    private Boolean isFavorite;
 
     @Min(0)
     @Max(100)

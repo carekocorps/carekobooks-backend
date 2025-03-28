@@ -16,8 +16,8 @@ public class BookProgress extends BaseModel {
     @Column(nullable = false)
     private BookProgressStatus status = BookProgressStatus.READING;
 
-    @Column(name = "is_marked_as_favorite", nullable = false)
-    private Boolean isMarkedAsFavorite = false;
+    @Column(name = "is_favorite", nullable = false)
+    private Boolean isFavorite = false;
 
     @Column
     private Integer score;

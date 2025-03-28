@@ -21,6 +21,7 @@ public class BookSearchQuery extends BaseApplicationPageSearchQuery<Book> {
     private String title;
     private String author;
     private String publisher;
+    private String genre;
     private LocalDate publishedBefore;
     private LocalDate publishedAfter;
     private Integer totalPages;
@@ -31,6 +32,7 @@ public class BookSearchQuery extends BaseApplicationPageSearchQuery<Book> {
         if (StringUtils.isNotBlank(author)) specs = specs.and(authorContains(author));
         if (StringUtils.isNotBlank(publisher)) specs = specs.and(publisherContains(publisher));
         if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
+        if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));
         if (publishedBefore != null) specs = specs.and(publishedBefore(publishedBefore));
         if (publishedAfter != null) specs = specs.and(publishedAfter(publishedAfter));
         if (totalPages != null) specs = specs.and(totalPagesEqual(totalPages));

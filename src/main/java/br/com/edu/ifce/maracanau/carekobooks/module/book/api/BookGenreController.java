@@ -1,0 +1,55 @@
+package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
+
+import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookGenreControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1/book-genres")
+@Tag(name = "Book Genre", description = "Endpoints for managing book genres")
+public class BookGenreController implements BaseController, BookGenreControllerDocs {
+
+    private final BookGenreService bookGenreService;
+
+    @Override
+    @GetMapping("/{name}")
+    public ResponseEntity<BookGenreDTO> findByName(@PathVariable String name) {
+        var bookGenreDTO = bookGenreService.findById(name);
+        return bookGenreDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Override
+    @AdminRoleRequired
+    @PostMapping
+    public ResponseEntity<BookGenreDTO> create(@RequestBody @Valid BookGenreRequest request) {
+        var bookDTO = bookGenreService.create(request);
+        var uri = getHeaderLocation(bookDTO.getId());
+        return ResponseEntity.created(uri).body(bookDTO);
+    }
+
+    @Override
+    @AdminRoleRequired
+    @PutMapping("/{name}")
+    public ResponseEntity<Void> update(@PathVariable String name, @RequestBody BookGenreRequest request) {
+        bookGenreService.update(name, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @AdminRoleRequired
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Void> deleteByName(@PathVariable String name) {
+        bookGenreService.deleteByName(name);
+        return ResponseEntity.noContent().build();
+    }
+
+}

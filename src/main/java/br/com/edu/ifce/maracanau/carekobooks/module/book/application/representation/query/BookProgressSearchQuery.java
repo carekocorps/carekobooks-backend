@@ -20,7 +20,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
 
     private String username;
     private BookProgressStatus status;
-    private Boolean isMarkedAsFavorite;
+    private Boolean isFavorite;
     private Integer score;
     private Integer pagesRead;
     private Long bookId;
@@ -30,7 +30,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
         if (status != null) specs = specs.and(statusEqual(status));
-        if (isMarkedAsFavorite != null) specs = specs.and(markedAsFavoriteEqual(isMarkedAsFavorite));
+        if (isFavorite != null) specs = specs.and(isFavoriteEqual(isFavorite));
         if (score != null) specs = specs.and(scoreEqual(score));
         if (pagesRead != null) specs = specs.and(pagesReadEqual(pagesRead));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
@@ -42,7 +42,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
         return getSort(Map.of(
                 "username", "user.username",
                 "status", "status",
-                "favorite", "isMarkedAsFavorite",
+                "is-favorite", "isFavorite",
                 "score", "score",
                 "pages-read", "pagesRead",
                 "created-at", "createdAt",
@@ -57,7 +57,7 @@ public class BookProgressSearchQuery extends BaseApplicationPageSearchQuery<Book
                     "id",
                     "username",
                     "status",
-                    "favorite",
+                    "is-favorite",
                     "score",
                     "pages-read",
                     "created-at",

@@ -3,16 +3,21 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
-public interface BookActivityMapper {
+public abstract class BookActivityMapper {
 
-    @Mapping(target = "user", expression = "java(userMapper.toModel(true))")
+    @Autowired
+    protected UserContextMapper userContextMapper;
+
+    @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    BookActivity toModel(BookProgressRequest request);
-    BookActivityDTO toDTO(BookActivity bookActivity);
+    public abstract BookActivity toModel(BookProgressRequest request);
+    public abstract BookActivityDTO toDTO(BookActivity bookActivity);
 
 }

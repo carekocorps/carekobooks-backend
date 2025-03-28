@@ -11,9 +11,9 @@ public class BookProgressSpecification {
                 cb.equal(root.get("status"), status);
     }
 
-    public static Specification<BookProgress> markedAsFavoriteEqual(Boolean isMarkedAsFavorite) {
+    public static Specification<BookProgress> isFavoriteEqual(Boolean isFavorite) {
         return (root, query, cb) ->
-                cb.equal(root.get("isMarkedAsFavorite"), isMarkedAsFavorite);
+                cb.equal(root.get("isFavorite"), isFavorite);
     }
 
     public static Specification<BookProgress> scoreEqual(Integer score) {
