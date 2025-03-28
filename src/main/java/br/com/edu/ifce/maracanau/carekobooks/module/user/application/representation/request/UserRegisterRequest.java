@@ -14,8 +14,11 @@ public class UserRegisterRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 50)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username should only contain letters and numbers")
+    @Pattern(regexp = "^[a-z_0-9]+$", message = "Username should only contain letters and numbers")
     private String username;
+
+    @Size(max = 50)
+    private String name;
 
     @NotBlank
     @Email

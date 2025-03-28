@@ -86,7 +86,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ForumRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ForumRequest request);
 
     @Operation(
             summary = "Delete a forum by ID",

@@ -49,7 +49,7 @@ public class BookReviewController implements BaseController, BookReviewControlle
     @Override
     @UserRoleRequired
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookReviewRequest request) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookReviewRequest request) {
         bookReviewService.update(id, request);
         return ResponseEntity.noContent().build();
     }

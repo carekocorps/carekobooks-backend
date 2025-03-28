@@ -87,7 +87,7 @@ public interface BookReviewControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody BookReviewRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookReviewRequest request);
 
     @Operation(
             summary = "Delete a book review by ID",

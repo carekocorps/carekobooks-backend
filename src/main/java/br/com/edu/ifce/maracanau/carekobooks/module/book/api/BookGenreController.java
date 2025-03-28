@@ -39,7 +39,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     @Override
     @AdminRoleRequired
     @PutMapping("/{name}")
-    public ResponseEntity<Void> update(@PathVariable String name, @RequestBody BookGenreRequest request) {
+    public ResponseEntity<Void> update(@PathVariable String name, @RequestBody @Valid BookGenreRequest request) {
         bookGenreService.update(name, request);
         return ResponseEntity.noContent().build();
     }
