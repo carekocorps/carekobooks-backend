@@ -2,13 +2,13 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -10,7 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

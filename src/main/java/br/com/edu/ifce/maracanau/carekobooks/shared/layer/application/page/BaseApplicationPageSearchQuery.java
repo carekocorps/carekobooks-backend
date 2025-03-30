@@ -1,8 +1,8 @@
-package br.com.edu.ifce.maracanau.carekobooks.shared.application.page;
+package br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page;
 
-import static br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification.BaseSpecification.*;
+import static br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.repository.specification.BaseSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;

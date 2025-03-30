@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

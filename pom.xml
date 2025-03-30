@@ -19,7 +19,8 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<sprindoc.version>2.8.5</sprindoc.version>
 		<java-jwt.version>4.5.0</java-jwt.version>
-		<error-handling-spring-boot-starter.version>4.5.0</error-handling-spring-boot-starter.version>
+		<error-handling-wimdeblauwe.version>4.5.0</error-handling-wimdeblauwe.version>
+		<minio.version>8.5.16</minio.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -82,7 +83,13 @@
 		<dependency>
 			<groupId>io.github.wimdeblauwe</groupId>
 			<artifactId>error-handling-spring-boot-starter</artifactId>
-			<version>${error-handling-spring-boot-starter.version}</version>
+			<version>${error-handling-wimdeblauwe.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>${minio.version}</version>
 		</dependency>
 
 		<dependency>
