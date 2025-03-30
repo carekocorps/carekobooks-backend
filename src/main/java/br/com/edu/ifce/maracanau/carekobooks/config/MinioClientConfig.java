@@ -22,6 +22,9 @@ public class MinioClientConfig {
     @Value("${minio.bucket}")
     private String bucket;
 
+    @Value("${minio.secure:false}")
+    private boolean secure;
+
     @Bean
     MinioClient minioClient() {
 

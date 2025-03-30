@@ -18,7 +18,7 @@ public class StoredFile extends BaseModel {
     @Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1024)
     private String url;
 
     public StoredFile(String url, String fileName) {

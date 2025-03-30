@@ -7,6 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.an
 import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ public class StoredFileController implements BaseController, StoredFileControlle
 
     @Override
     @AdminRoleRequired
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<StoredFileDTO> create(@RequestParam("file") MultipartFile file) throws Exception {
         var storedFileDTO = storedFileService.create(file);
         var uri = getHeaderLocation(storedFileDTO.getId());
@@ -36,7 +37,7 @@ public class StoredFileController implements BaseController, StoredFileControlle
     }
 
     @Override
-    @AdminRoleRequired
+    //@AdminRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) throws Exception {
         storedFileService.deleteById(id);
