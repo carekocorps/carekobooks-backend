@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.request.BaseRequest;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

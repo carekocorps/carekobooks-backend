@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.shared.api;
+package br.com.edu.ifce.maracanau.carekobooks.shared.layer.api;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

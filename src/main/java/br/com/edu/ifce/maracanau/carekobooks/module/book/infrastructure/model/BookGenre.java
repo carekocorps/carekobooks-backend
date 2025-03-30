@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model.BaseModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;

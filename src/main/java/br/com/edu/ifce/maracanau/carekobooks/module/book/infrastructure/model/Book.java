@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import jakarta.persistence.*;
 import lombok.Getter;
