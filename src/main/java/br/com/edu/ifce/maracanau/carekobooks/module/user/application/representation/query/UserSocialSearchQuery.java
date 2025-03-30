@@ -4,7 +4,7 @@ import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.r
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationshipStatus;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.BaseApplicationPageSearchQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

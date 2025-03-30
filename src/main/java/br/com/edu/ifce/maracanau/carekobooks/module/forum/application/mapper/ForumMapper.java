@@ -7,7 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.reposit
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
