@@ -8,9 +8,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

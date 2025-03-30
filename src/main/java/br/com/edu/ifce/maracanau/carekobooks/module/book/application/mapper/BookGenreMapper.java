@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 

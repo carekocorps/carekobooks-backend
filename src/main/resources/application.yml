@@ -9,8 +9,17 @@ spring:
     hibernate:
       ddl-auto: update # Temporário, será alterado para "none" em breve
     open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
 security:
   jwt:
     token:
-      secret-key: ${SECRET_KEY}
+      secret-key: ${JWT_SECRET_KEY}
       expiration-time-in-ms: 3600000
+minio:
+  endpoint: ${MINIO_ENDPOINT}
+  username: ${MINIO_USERNAME}
+  password: ${MINIO_PASSWORD}
+  bucket: ${MINIO_BUCKET}

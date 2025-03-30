@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.docs.ForumControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;

@@ -1,7 +1,7 @@
-package br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper;
+package br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.request.BaseRequest;
-import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model.BaseModel;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 

@@ -13,8 +13,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
