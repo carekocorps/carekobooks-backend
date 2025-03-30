@@ -14,3 +14,8 @@ security:
     token:
       secret-key: ${SECRET_KEY}
       expiration-time-in-ms: 3600000
+minio:
+  url: http://localhost:9001
+  accessKey: 0F2qdlYIBkMIgBBVIU2J
+  secretKey: DagfKSSRGZ5efmW8U8VNyMztdbZyOtqjvpFGrMe1
+  bucket: development
