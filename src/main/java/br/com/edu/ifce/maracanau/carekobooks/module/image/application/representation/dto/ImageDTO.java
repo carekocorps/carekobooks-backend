@@ -15,7 +15,7 @@ public class ImageDTO {
     private String name;
     private String url;
     private String contentType;
-    private Long size;
+    private Long sizeInBytes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

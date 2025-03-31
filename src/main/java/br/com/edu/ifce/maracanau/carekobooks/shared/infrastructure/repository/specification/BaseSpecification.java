@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.repository.specification;
+package br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.repository.specification;
 
 import jakarta.persistence.criteria.Expression;
 import org.springframework.data.jpa.domain.Specification;

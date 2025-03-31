@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
+import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
@@ -17,6 +18,10 @@ public class BookValidator {
         if (isBookDuplicated(book)) {
             throw new ConflictException("A book with the same information already exists");
         }
+
+        if (isBookExceedingGenreLimit(book)) {
+            throw new BadRequestException("A book can have at most 5 genres");
+        }
     }
 
     private boolean isBookDuplicated(Book book) {
@@ -30,6 +35,10 @@ public class BookValidator {
 
         var books = bookRepository.findAll(query.getSpecification());
         return books.stream().anyMatch(b -> !b.getId().equals(book.getId()));
+    }
+
+    private boolean isBookExceedingGenreLimit(Book book) {
+        return book.getGenres() != null && book.getGenres().size() > 5;
     }
 
 }

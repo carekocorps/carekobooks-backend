@@ -13,6 +13,10 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
 security:
   jwt:
     token:

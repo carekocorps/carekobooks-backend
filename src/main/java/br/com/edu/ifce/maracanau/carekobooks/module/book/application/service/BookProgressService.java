@@ -4,17 +4,13 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.pr
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,15 +22,12 @@ import java.util.Optional;
 @Service
 public class BookProgressService {
 
-    private final BookRepository bookRepository;
+    private final BookService bookService;
+    private final BookActivityService bookActivityService;
 
     private final BookProgressRepository bookProgressRepository;
     private final BookProgressValidator bookProgressValidator;
     private final BookProgressMapper bookProgressMapper;
-
-    private final BookActivityRepository bookActivityRepository;
-    private final BookActivityValidator bookActivityValidator;
-    private final BookActivityMapper bookActivityMapper;
 
     public ApplicationPage<BookProgressDTO> search(BookProgressSearchQuery query) {
         var specification = query.getSpecification();
@@ -57,15 +50,13 @@ public class BookProgressService {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
-        if (bookRepository.existsById(request.getBookId()) && request.getScore() != null) {
+        if (request.getScore() != null) {
             var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
+            bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
             bookProgress.getBook().setUserAverageScore(userAverageScore);
-            bookRepository.updateUserAverageScoreById(userAverageScore, request.getBookId());
         }
 
-        var bookActivity = bookActivityMapper.toModel(request);
-        bookActivityValidator.validate(bookActivity);
-        bookActivityRepository.save(bookActivity);
+        bookActivityService.create(request);
         return bookProgressMapper.toDTO(bookProgress);
     }
 
@@ -76,22 +67,19 @@ public class BookProgressService {
             throw new NotFoundException("Book Progress not found");
         }
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to update this book progress");
-        }
-
         bookProgressMapper.updateEntity(bookProgress, request);
         bookProgressValidator.validate(bookProgress);
         bookProgressRepository.save(bookProgress);
 
-        if (bookRepository.existsById(request.getBookId())) {
-            var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
-            bookRepository.updateUserAverageScoreById(userAverageScore, request.getBookId());
+        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
+            throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
-        var bookActivity = bookActivityMapper.toModel(request);
-        bookActivityValidator.validate(bookActivity);
-        bookActivityRepository.save(bookActivity);
+        var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
+        bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
+        bookProgress.getBook().setUserAverageScore(userAverageScore);
+
+        bookActivityService.create(request);
     }
 
     @Transactional
