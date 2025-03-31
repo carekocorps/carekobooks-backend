@@ -4,7 +4,7 @@ import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.r
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

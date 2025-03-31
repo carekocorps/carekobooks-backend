@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model;
+package br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

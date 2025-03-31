@@ -8,15 +8,17 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -60,8 +62,8 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @UserRoleRequired
-    @PutMapping("/{username}")
-    public ResponseEntity<Void> update(@PathVariable String username, @RequestBody @Valid UserRegisterRequest request) {
+    @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(@PathVariable String username, @ModelAttribute @Valid UserRegisterRequest request) throws Exception {
         userService.update(username, request);
         return ResponseEntity.noContent().build();
     }
@@ -79,6 +81,22 @@ public class UserController implements BaseController, UserControllerDocs {
     @DeleteMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> unassignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername) {
         userService.updateFollowingByUsername(username, targetUsername, ToggleAction.UNASSIGN);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @UserRoleRequired
+    @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateImageByUsername(@PathVariable String username, @RequestParam MultipartFile image) throws Exception {
+        userService.updateImageByUsername(username, image);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @UserRoleRequired
+    @DeleteMapping(value = "/{username}/images")
+    public ResponseEntity<Void> deleteImageByUsername(@PathVariable String username) throws Exception {
+        userService.deleteImageByUsername(username);
         return ResponseEntity.noContent().build();
     }
 

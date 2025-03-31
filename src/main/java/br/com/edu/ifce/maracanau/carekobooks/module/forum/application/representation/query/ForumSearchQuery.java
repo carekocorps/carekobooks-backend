@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.represent
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.BaseApplicationPageSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

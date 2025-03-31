@@ -1,5 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
@@ -7,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,7 @@ public class BookActivityService {
 
     private final BookActivityRepository bookActivityRepository;
     private final BookActivityMapper bookActivityMapper;
+    private final BookActivityValidator bookActivityValidator;
 
     public ApplicationPage<BookActivityDTO> search(BookActivitySearchQuery query) {
         var specification = query.getSpecification();
@@ -31,6 +34,13 @@ public class BookActivityService {
 
     public Optional<BookActivityDTO> findById(Long id) {
         return bookActivityRepository.findById(id).map(bookActivityMapper::toDTO);
+    }
+
+    @Transactional
+    public void create(BookProgressRequest request) {
+        var bookActivity = bookActivityMapper.toModel(request);
+        bookActivityValidator.validate(bookActivity);
+        bookActivityRepository.save(bookActivity);
     }
 
     @Transactional

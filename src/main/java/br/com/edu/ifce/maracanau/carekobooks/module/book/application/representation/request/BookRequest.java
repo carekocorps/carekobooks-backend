@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.request.BaseRequest;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,10 +34,7 @@ public class BookRequest implements BaseRequest {
     @Min(1)
     private Integer totalPages;
 
-    private List<
-            @NotBlank
-            @Size(max = 50)
-            String
-    > genres;
+    @Size(max = 5)
+    private List<@NotBlank @Size(max = 50) String> genres;
 
 }
