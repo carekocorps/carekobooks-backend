@@ -5,7 +5,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representa
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.util.MinioUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.Optional;
 @Service
 public class ImageService {
 
-    private final MinioUtils minioUtils;
+    private final MinioService minioService;
 
     private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
@@ -40,7 +39,7 @@ public class ImageService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("File not found"));
 
-        minioUtils.delete(image.getName());
+        minioService.deleteByFilename(image.getName());
         imageRepository.deleteById(id);
     }
 

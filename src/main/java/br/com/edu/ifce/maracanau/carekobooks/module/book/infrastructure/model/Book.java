@@ -1,10 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model;
 
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
+import br.com.edu.ifce.maracanau.carekobooks.shared.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +42,12 @@ public class Book extends BaseModel {
     @Column(name = "review_average_socre")
     private Double reviewAverageScore;
 
-    @ManyToMany
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private Image image;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_genre_relationship",
             joinColumns = @JoinColumn(name = "book_id"),

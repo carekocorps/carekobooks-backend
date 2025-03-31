@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class BookDTO {
     private Double reviewAverageScore;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private ImageDTO image;
     private List<BookGenreDTO> genres;
 
 }

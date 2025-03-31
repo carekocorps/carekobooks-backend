@@ -7,10 +7,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,7 @@ import java.util.Optional;
 @Service
 public class BookReviewService {
 
-    private final BookRepository bookRepository;
+    private final BookService bookService;
 
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewValidator bookReviewValidator;
@@ -45,11 +44,9 @@ public class BookReviewService {
         bookReviewValidator.validate(bookReview);
         bookReview = bookReviewRepository.save(bookReview);
 
-        if (bookRepository.existsById(request.getBookId())) {
-            var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
-            bookReview.getBook().setReviewAverageScore(reviewAverageScore);
-            bookRepository.updateReviewAverageScoreById(reviewAverageScore, request.getBookId());
-        }
+        var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
+        bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
+        bookReview.getBook().setReviewAverageScore(reviewAverageScore);
 
         return bookReviewMapper.toDTO(bookReview);
     }
@@ -61,18 +58,17 @@ public class BookReviewService {
             throw new NotFoundException("Book Review not found");
         }
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookReview.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to create this book review");
-        }
-
         bookReviewMapper.updateEntity(bookReview, request);
         bookReviewValidator.validate(bookReview);
         bookReviewRepository.save(bookReview);
 
-        if (bookRepository.existsById(request.getBookId())) {
-            var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
-            bookRepository.updateReviewAverageScoreById(reviewAverageScore, request.getBookId());
+        if (!UserContextProvider.isCurrentUserAuthorized(bookReview.getUser().getUsername())) {
+            throw new ForbiddenException("You are not allowed to create this book review");
         }
+
+        var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
+        bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
+        bookReview.getBook().setReviewAverageScore(reviewAverageScore);
     }
 
     @Transactional

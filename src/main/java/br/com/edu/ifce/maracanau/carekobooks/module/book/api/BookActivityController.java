@@ -5,8 +5,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;

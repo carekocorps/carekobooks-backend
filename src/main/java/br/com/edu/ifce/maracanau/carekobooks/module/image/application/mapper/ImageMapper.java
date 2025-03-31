@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.MinioService;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
-import br.com.edu.ifce.maracanau.carekobooks.shared.util.MinioUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 public abstract class ImageMapper {
 
     @Autowired
-    protected MinioUtils minioUtils;
+    protected MinioService minioService;
 
-    @Mapping(target = "name", expression = "java(minioUtils.upload(file))")
-    @Mapping(target = "url", expression = "java(minioUtils.getUrl(image.getName()))")
-    @Mapping(target = "size", expression = "java((Long) file.getSize())")
+    @Mapping(target = "name", expression = "java(minioService.upload(file))")
+    @Mapping(target = "url", expression = "java(minioService.findUrlByFilename(image.getName()))")
+    @Mapping(target = "sizeInBytes", source = "size")
     public abstract Image toModel(MultipartFile file) throws Exception;
+    public abstract Image toModel(ImageDTO imageDTO);
     public abstract ImageDTO toDTO(Image file);
 
 }

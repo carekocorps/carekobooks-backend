@@ -20,7 +20,7 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
-    public Optional<BookGenreDTO> findById(String name) {
+    public Optional<BookGenreDTO> findByName(String name) {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toDTO);
     }
 

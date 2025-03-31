@@ -5,10 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
-import br.com.edu.ifce.maracanau.carekobooks.shared.layer.api.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.shared.api.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegisterRequest request) {
+    public ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegisterRequest request) throws Exception {
         return ResponseEntity.ok(authService.register(request));
     }
 
