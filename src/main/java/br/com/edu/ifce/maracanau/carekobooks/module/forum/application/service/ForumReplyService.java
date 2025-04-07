@@ -1,15 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumReplyDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumReplyMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumReplyRepository;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.request.BaseRequest;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

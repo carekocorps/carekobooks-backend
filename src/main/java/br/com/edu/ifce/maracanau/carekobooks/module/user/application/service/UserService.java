@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
@@ -12,10 +12,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

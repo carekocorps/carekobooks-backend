@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookReviewDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewSearchQuery;
@@ -9,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

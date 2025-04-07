@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import org.springframework.stereotype.Component;
 

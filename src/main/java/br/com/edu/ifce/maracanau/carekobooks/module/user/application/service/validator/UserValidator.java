@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.ConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

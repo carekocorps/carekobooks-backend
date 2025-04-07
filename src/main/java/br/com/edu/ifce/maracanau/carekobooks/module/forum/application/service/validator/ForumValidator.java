@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import org.springframework.stereotype.Component;
 

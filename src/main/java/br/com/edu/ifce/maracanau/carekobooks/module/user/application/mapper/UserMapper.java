@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.Ima
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;

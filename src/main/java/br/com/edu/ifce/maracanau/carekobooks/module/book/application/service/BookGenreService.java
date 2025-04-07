@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
