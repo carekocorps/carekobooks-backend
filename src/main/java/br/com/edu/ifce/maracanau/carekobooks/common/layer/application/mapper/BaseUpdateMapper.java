@@ -10,6 +10,6 @@ public interface BaseUpdateMapper<T extends BaseModel, TRequest extends BaseRequ
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    void updateEntity(@MappingTarget T model, TRequest request);
+    void updateModel(@MappingTarget T model, TRequest request);
 
 }

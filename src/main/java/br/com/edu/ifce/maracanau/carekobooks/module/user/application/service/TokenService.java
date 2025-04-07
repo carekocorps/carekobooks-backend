@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -39,20 +39,20 @@ public class TokenService {
         algorithm = Algorithm.HMAC256(secretKey);
     }
 
-    public TokenDTO createAccessToken(String username, List<String> roles) {
+    public TokenResponse createAccessToken(String username, List<String> roles) {
         var createdAt = new Date();
         var expiresAt = new Date(createdAt.getTime() + expirationTimeInMs);
-        var tokenDTO = new TokenDTO();
-        tokenDTO.setUsername(username);
-        tokenDTO.setIsAuthenticated(true);
-        tokenDTO.setCreatedAt(createdAt);
-        tokenDTO.setExpiresAt(expiresAt);
-        tokenDTO.setAccessToken(getAccessToken(username, roles, createdAt, expiresAt));
-        tokenDTO.setRefreshToken(getRefreshToken(username, roles, createdAt));
-        return tokenDTO;
+        var response = new TokenResponse();
+        response.setUsername(username);
+        response.setIsAuthenticated(true);
+        response.setCreatedAt(createdAt);
+        response.setExpiresAt(expiresAt);
+        response.setAccessToken(getAccessToken(username, roles, createdAt, expiresAt));
+        response.setRefreshToken(getRefreshToken(username, roles, createdAt));
+        return response;
     }
 
-    public TokenDTO refreshToken(String refreshToken) {
+    public TokenResponse refreshToken(String refreshToken) {
         var token = getTokenFromBearer(refreshToken).orElse("");
         var decodedJWT = getDecodedJWT(token);
         return createAccessToken(decodedJWT.getSubject(), decodedJWT.getClaim("roles").asList(String.class));

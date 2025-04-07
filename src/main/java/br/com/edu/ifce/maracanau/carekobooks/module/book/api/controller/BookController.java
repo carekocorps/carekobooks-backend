@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.an
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
@@ -29,25 +29,25 @@ public class BookController implements BaseController, BookControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookDTO>> search(@ParameterObject BookSearchQuery query) {
-        var bookDTOs = bookService.search(query);
-        return ResponseEntity.ok(bookDTOs);
+    public ResponseEntity<ApplicationPage<BookResponse>> search(@ParameterObject BookSearchQuery query) {
+        var responses = bookService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> findById(@PathVariable Long id) {
-        var bookDTO = bookService.findById(id);
-        return bookDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookResponse> findById(@PathVariable Long id) {
+        var response = bookService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @AdminRoleRequired
     @PostMapping
-    public ResponseEntity<BookDTO> create(@RequestBody @Valid BookRequest request) {
-        var bookDTO = bookService.create(request);
-        var uri = getHeaderLocation(bookDTO.getId());
-        return ResponseEntity.created(uri).body(bookDTO);
+    public ResponseEntity<BookResponse> create(@RequestBody @Valid BookRequest request) {
+        var response = bookService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
@@ -18,6 +18,6 @@ public abstract class BookActivityMapper {
     @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     public abstract BookActivity toModel(BookProgressRequest request);
-    public abstract BookActivityDTO toDTO(BookActivity bookActivity);
+    public abstract BookActivityResponse toResponse(BookActivity bookActivity);
 
 }

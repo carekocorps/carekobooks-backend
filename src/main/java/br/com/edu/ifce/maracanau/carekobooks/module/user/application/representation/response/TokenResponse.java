@@ -1,6 +1,5 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Schema(name = "Token")
-public class TokenDTO {
+public class TokenResponse {
 
     private String username;
     private Boolean isAuthenticated;

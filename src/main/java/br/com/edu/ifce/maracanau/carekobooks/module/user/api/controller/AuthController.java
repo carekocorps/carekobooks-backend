@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.AuthControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
@@ -22,19 +22,19 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@RequestBody @Valid UserLoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid UserLoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @Override
     @PostMapping("/refresh/{username}")
-    public ResponseEntity<TokenDTO> refresh(@PathVariable String username, @RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<TokenResponse> refresh(@PathVariable String username, @RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(authService.refreshToken(username, refreshToken));
     }
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegisterRequest request) throws Exception {
+    public ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request) throws Exception {
         return ResponseEntity.ok(authService.register(request));
     }
 

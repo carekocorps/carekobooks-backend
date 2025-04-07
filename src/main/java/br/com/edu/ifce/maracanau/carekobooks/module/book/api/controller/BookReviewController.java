@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookReviewControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookReviewDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;
@@ -25,25 +25,25 @@ public class BookReviewController implements BaseController, BookReviewControlle
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookReviewDTO>> search(@ParameterObject BookReviewSearchQuery query) {
-        var bookReviewDTOs = bookReviewService.search(query);
-        return ResponseEntity.ok(bookReviewDTOs);
+    public ResponseEntity<ApplicationPage<BookReviewResponse>> search(@ParameterObject BookReviewSearchQuery query) {
+        var responses = bookReviewService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookReviewDTO> findById(@PathVariable Long id) {
-        var bookReviewDTO = bookReviewService.findById(id);
-        return bookReviewDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookReviewResponse> findById(@PathVariable Long id) {
+        var response = bookReviewService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @UserRoleRequired
     @PostMapping
-    public ResponseEntity<BookReviewDTO> create(@RequestBody @Valid BookReviewRequest request) {
-        var bookReviewDTO = bookReviewService.create(request);
-        var uri = getHeaderLocation(bookReviewDTO.getId());
-        return ResponseEntity.created(uri).body(bookReviewDTO);
+    public ResponseEntity<BookReviewResponse> create(@RequestBody @Valid BookReviewRequest request) {
+        var response = bookReviewService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Override

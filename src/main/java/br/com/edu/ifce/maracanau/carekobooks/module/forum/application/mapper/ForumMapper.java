@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
@@ -23,7 +23,7 @@ public abstract class ForumMapper implements BaseUpdateMapper<Forum, ForumReques
     @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     public abstract Forum toModel(ForumRequest request);
-    public abstract ForumDTO toDTO(Forum forum);
+    public abstract ForumResponse toResponse(Forum forum);
 
     public Forum toModel(Long id) {
         return forumRepository.findById(id).orElse(null);

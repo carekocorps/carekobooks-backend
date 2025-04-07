@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumReplyDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
@@ -33,7 +33,7 @@ public interface ForumReplyControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<ForumReplyDTO>> search(@ParameterObject ForumReplySearchQuery query);
+    ResponseEntity<ApplicationPage<ForumReplyResponse>> search(@ParameterObject ForumReplySearchQuery query);
 
     @Operation(
             summary = "Find a forum reply by ID",
@@ -44,14 +44,14 @@ public interface ForumReplyControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumReplyDTO.class)
+                                    schema = @Schema(implementation = ForumReplyResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumReplyDTO> findById(@PathVariable Long id);
+    ResponseEntity<ForumReplyResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Create a forum reply",
@@ -63,7 +63,7 @@ public interface ForumReplyControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumReplyDTO.class)
+                                    schema = @Schema(implementation = ForumReplyResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
@@ -72,7 +72,7 @@ public interface ForumReplyControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumReplyDTO> create(@RequestBody @Valid ForumReplyRequest request);
+    ResponseEntity<ForumReplyResponse> create(@RequestBody @Valid ForumReplyRequest request);
 
     @Operation(
             summary = "Update a forum reply",

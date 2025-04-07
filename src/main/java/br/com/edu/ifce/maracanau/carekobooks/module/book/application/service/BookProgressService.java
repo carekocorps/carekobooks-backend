@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
@@ -29,19 +29,19 @@ public class BookProgressService {
     private final BookProgressValidator bookProgressValidator;
     private final BookProgressMapper bookProgressMapper;
 
-    public ApplicationPage<BookProgressDTO> search(BookProgressSearchQuery query) {
+    public ApplicationPage<BookProgressResponse> search(BookProgressSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(bookProgressRepository.findAll(specification, pageRequest).map(bookProgressMapper::toDTO));
+        return new ApplicationPage<>(bookProgressRepository.findAll(specification, pageRequest).map(bookProgressMapper::toResponse));
     }
 
-    public Optional<BookProgressDTO> findById(Long id) {
-        return bookProgressRepository.findById(id).map(bookProgressMapper::toDTO);
+    public Optional<BookProgressResponse> findById(Long id) {
+        return bookProgressRepository.findById(id).map(bookProgressMapper::toResponse);
     }
 
     @Transactional
-    public BookProgressDTO create(BookProgressRequest request) {
+    public BookProgressResponse create(BookProgressRequest request) {
         var bookProgress = bookProgressMapper.toModel(request);
         bookProgressValidator.validate(bookProgress);
         bookProgress = bookProgressRepository.save(bookProgress);
@@ -57,7 +57,7 @@ public class BookProgressService {
         }
 
         bookActivityService.create(request);
-        return bookProgressMapper.toDTO(bookProgress);
+        return bookProgressMapper.toResponse(bookProgress);
     }
 
     @Transactional
@@ -67,7 +67,7 @@ public class BookProgressService {
             throw new NotFoundException("Book Progress not found");
         }
 
-        bookProgressMapper.updateEntity(bookProgress, request);
+        bookProgressMapper.updateModel(bookProgress, request);
         bookProgressValidator.validate(bookProgress);
         bookProgressRepository.save(bookProgress);
 

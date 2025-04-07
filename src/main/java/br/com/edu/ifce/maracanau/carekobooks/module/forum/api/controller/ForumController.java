@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.an
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs.ForumControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.ForumService;
@@ -25,25 +25,25 @@ public class ForumController implements BaseController, ForumControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject ForumSearchQuery query) {
-        var forumDTOs = forumService.search(query);
-        return ResponseEntity.ok(forumDTOs);
+    public ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumSearchQuery query) {
+        var responses = forumService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ForumDTO> findById(@PathVariable Long id) {
-        var forumDTO = forumService.findById(id);
-        return forumDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ForumResponse> findById(@PathVariable Long id) {
+        var response = forumService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @UserRoleRequired
     @PostMapping
-    public ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequest request) {
-        var forumDTO = forumService.create(request);
-        var uri = getHeaderLocation(forumDTO.getId());
-        return ResponseEntity.created(uri).body(forumDTO);
+    public ResponseEntity<ForumResponse> create(@RequestBody @Valid ForumRequest request) {
+        var response = forumService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Override

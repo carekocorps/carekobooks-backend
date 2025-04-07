@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<ForumDTO>> search(@ParameterObject ForumSearchQuery query);
+    ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumSearchQuery query);
 
     @Operation(
             summary = "Find a forum by ID",
@@ -44,14 +44,14 @@ public interface ForumControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumDTO.class)
+                                    schema = @Schema(implementation = ForumResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumDTO> findById(@PathVariable Long id);
+    ResponseEntity<ForumResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Create a forum",
@@ -63,7 +63,7 @@ public interface ForumControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ForumDTO.class)
+                                    schema = @Schema(implementation = ForumResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -72,7 +72,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumDTO> create(@RequestBody @Valid ForumRequest request);
+    ResponseEntity<ForumResponse> create(@RequestBody @Valid ForumRequest request);
 
     @Operation(
             summary = "Update a forum",
