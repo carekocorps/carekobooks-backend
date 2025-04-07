@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
@@ -25,15 +25,15 @@ public class BookActivityService {
     private final BookActivityMapper bookActivityMapper;
     private final BookActivityValidator bookActivityValidator;
 
-    public ApplicationPage<BookActivityDTO> search(BookActivitySearchQuery query) {
+    public ApplicationPage<BookActivityResponse> search(BookActivitySearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toDTO));
+        return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
     }
 
-    public Optional<BookActivityDTO> findById(Long id) {
-        return bookActivityRepository.findById(id).map(bookActivityMapper::toDTO);
+    public Optional<BookActivityResponse> findById(Long id) {
+        return bookActivityRepository.findById(id).map(bookActivityMapper::toResponse);
     }
 
     @Transactional

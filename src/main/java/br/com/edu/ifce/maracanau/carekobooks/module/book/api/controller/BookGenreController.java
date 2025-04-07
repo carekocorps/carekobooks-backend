@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookGenreControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
@@ -22,18 +22,18 @@ public class BookGenreController implements BaseController, BookGenreControllerD
 
     @Override
     @GetMapping("/{name}")
-    public ResponseEntity<BookGenreDTO> findByName(@PathVariable String name) {
-        var bookGenreDTO = bookGenreService.findByName(name);
-        return bookGenreDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookGenreResponse> findByName(@PathVariable String name) {
+        var response = bookGenreService.findByName(name);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @AdminRoleRequired
     @PostMapping
-    public ResponseEntity<BookGenreDTO> create(@RequestBody @Valid BookGenreRequest request) {
-        var bookDTO = bookGenreService.create(request);
-        var uri = getHeaderLocation(bookDTO.getId());
-        return ResponseEntity.created(uri).body(bookDTO);
+    public ResponseEntity<BookGenreResponse> create(@RequestBody @Valid BookGenreRequest request) {
+        var response = bookGenreService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Override

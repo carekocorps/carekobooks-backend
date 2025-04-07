@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.TokenDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,14 +25,14 @@ public interface AuthControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TokenDTO.class)
+                                    schema = @Schema(implementation = TokenResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<TokenDTO> login(@RequestBody @Valid UserLoginRequest request);
+    ResponseEntity<TokenResponse> login(@RequestBody @Valid UserLoginRequest request);
 
     @Operation(
             summary = "Refresh a user authentication token",
@@ -43,14 +43,14 @@ public interface AuthControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TokenDTO.class)
+                                    schema = @Schema(implementation = TokenResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<TokenDTO> refresh(@PathVariable String username, @RequestHeader("Authorization") String refreshToken);
+    ResponseEntity<TokenResponse> refresh(@PathVariable String username, @RequestHeader("Authorization") String refreshToken);
 
     @Operation(
             summary = "Register a user",
@@ -61,7 +61,7 @@ public interface AuthControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TokenDTO.class)
+                                    schema = @Schema(implementation = TokenResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -69,6 +69,6 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<TokenDTO> register(@RequestBody @Valid UserRegisterRequest request) throws Exception;
+    ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request) throws Exception;
 
 }

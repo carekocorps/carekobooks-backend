@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
@@ -25,22 +25,22 @@ public class ForumService {
     private final ForumValidator forumValidator;
     private final ForumMapper forumMapper;
 
-    public ApplicationPage<ForumDTO> search(ForumSearchQuery query) {
+    public ApplicationPage<ForumResponse> search(ForumSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(forumRepository.findAll(specification, pageRequest).map(forumMapper::toDTO));
+        return new ApplicationPage<>(forumRepository.findAll(specification, pageRequest).map(forumMapper::toResponse));
     }
 
-    public Optional<ForumDTO> findById(Long id) {
-        return forumRepository.findById(id).map(forumMapper::toDTO);
+    public Optional<ForumResponse> findById(Long id) {
+        return forumRepository.findById(id).map(forumMapper::toResponse);
     }
 
     @Transactional
-    public ForumDTO create(ForumRequest request) {
+    public ForumResponse create(ForumRequest request) {
         var forum = forumMapper.toModel(request);
         forumValidator.validate(forum);
-        return forumMapper.toDTO(forumRepository.save(forum));
+        return forumMapper.toResponse(forumRepository.save(forum));
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class ForumService {
             throw new ForbiddenException("You are not allowed to update this forum");
         }
 
-        forumMapper.updateEntity(forum, request);
+        forumMapper.updateModel(forum, request);
         forumValidator.validate(forum);
         forumRepository.save(forum);
     }

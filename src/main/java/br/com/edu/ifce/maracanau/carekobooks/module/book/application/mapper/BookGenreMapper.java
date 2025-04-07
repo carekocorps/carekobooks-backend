@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -20,8 +20,8 @@ public abstract class BookGenreMapper implements BaseUpdateMapper<BookGenre, Boo
     protected BookGenreRepository bookGenreRepository;
 
     public abstract BookGenre toModel(BookGenreRequest request);
-    public abstract BookGenre toModel(BookGenreDTO bookGenreDTO);
-    public abstract BookGenreDTO toDTO(BookGenre bookGenre);
+    public abstract BookGenre toModel(BookGenreResponse bookGenreResponse);
+    public abstract BookGenreResponse toResponse(BookGenre bookGenre);
 
     public List<BookGenre> toModel(List<String> genreNames) {
         var uniqueGenreNames = new HashSet<>(genreNames);

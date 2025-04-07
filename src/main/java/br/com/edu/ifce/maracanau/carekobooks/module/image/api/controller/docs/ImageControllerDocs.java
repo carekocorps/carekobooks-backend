@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,14 +21,14 @@ public interface ImageControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ImageDTO.class)
+                                    schema = @Schema(implementation = ImageResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ImageDTO> findById(@PathVariable Long id);
+    ResponseEntity<ImageResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a image by ID",

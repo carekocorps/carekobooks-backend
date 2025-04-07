@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookReviewDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
@@ -27,19 +27,19 @@ public class BookReviewService {
     private final BookReviewValidator bookReviewValidator;
     private final BookReviewMapper bookReviewMapper;
 
-    public ApplicationPage<BookReviewDTO> search(BookReviewSearchQuery query) {
+    public ApplicationPage<BookReviewResponse> search(BookReviewSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(bookReviewRepository.findAll(specification, pageRequest).map(bookReviewMapper::toDTO));
+        return new ApplicationPage<>(bookReviewRepository.findAll(specification, pageRequest).map(bookReviewMapper::toResponse));
     }
 
-    public Optional<BookReviewDTO> findById(Long id) {
-        return bookReviewRepository.findById(id).map(bookReviewMapper::toDTO);
+    public Optional<BookReviewResponse> findById(Long id) {
+        return bookReviewRepository.findById(id).map(bookReviewMapper::toResponse);
     }
 
     @Transactional
-    public BookReviewDTO create(BookReviewRequest request) {
+    public BookReviewResponse create(BookReviewRequest request) {
         var bookReview = bookReviewMapper.toModel(request);
         bookReviewValidator.validate(bookReview);
         bookReview = bookReviewRepository.save(bookReview);
@@ -48,7 +48,7 @@ public class BookReviewService {
         bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
         bookReview.getBook().setReviewAverageScore(reviewAverageScore);
 
-        return bookReviewMapper.toDTO(bookReview);
+        return bookReviewMapper.toResponse(bookReview);
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class BookReviewService {
             throw new NotFoundException("Book Review not found");
         }
 
-        bookReviewMapper.updateEntity(bookReview, request);
+        bookReviewMapper.updateModel(bookReview, request);
         bookReviewValidator.validate(bookReview);
         bookReviewRepository.save(bookReview);
 

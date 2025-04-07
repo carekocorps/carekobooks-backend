@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestExceptio
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
@@ -37,22 +37,22 @@ public class UserService {
     private final UserValidator userValidator;
     private final UserMapper userMapper;
 
-    public ApplicationPage<UserDTO> search(UserSearchQuery query) {
+    public ApplicationPage<UserResponse> search(UserSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toDTO));
+        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
-    public ApplicationPage<UserDTO> search(UserSocialSearchQuery query) {
+    public ApplicationPage<UserResponse> search(UserSocialSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toDTO));
+        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
-    public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username).map(userMapper::toDTO);
+    public Optional<UserResponse> findByUsername(String username) {
+        return userRepository.findByUsername(username).map(userMapper::toResponse);
     }
 
     @Transactional
@@ -66,7 +66,7 @@ public class UserService {
             throw new ForbiddenException("You are not allowed to update this user");
         }
 
-        userMapper.updateEntity(user, request);
+        userMapper.updateModel(user, request);
         userValidator.validate(user);
         userRepository.save(user);
     }

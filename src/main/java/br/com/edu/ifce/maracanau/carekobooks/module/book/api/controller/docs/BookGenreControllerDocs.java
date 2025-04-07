@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,14 +24,14 @@ public interface BookGenreControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookGenreDTO.class)
+                                    schema = @Schema(implementation = BookGenreResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookGenreDTO> findByName(@PathVariable String name);
+    ResponseEntity<BookGenreResponse> findByName(@PathVariable String name);
 
     @Operation(
             summary = "Create a book genre",
@@ -43,7 +43,7 @@ public interface BookGenreControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookGenreDTO.class)
+                                    schema = @Schema(implementation = BookGenreResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -52,7 +52,7 @@ public interface BookGenreControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookGenreDTO> create(@RequestBody @Valid BookGenreRequest request);
+    ResponseEntity<BookGenreResponse> create(@RequestBody @Valid BookGenreRequest request);
 
     @Operation(
             summary = "Update a book genre",

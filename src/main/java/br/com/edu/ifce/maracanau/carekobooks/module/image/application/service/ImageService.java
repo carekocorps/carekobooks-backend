@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
@@ -22,15 +22,15 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final ImageValidator imageValidator;
 
-    public Optional<ImageDTO> findById(Long id) {
-        return imageRepository.findById(id).map(imageMapper::toDTO);
+    public Optional<ImageResponse> findById(Long id) {
+        return imageRepository.findById(id).map(imageMapper::toResponse);
     }
 
     @Transactional
-    public ImageDTO create(MultipartFile file) throws Exception {
+    public ImageResponse create(MultipartFile file) throws Exception {
         var image = imageMapper.toModel(file);
         imageValidator.validate(image);
-        return imageMapper.toDTO(imageRepository.save(image));
+        return imageMapper.toResponse(imageRepository.save(image));
     }
 
     @Transactional

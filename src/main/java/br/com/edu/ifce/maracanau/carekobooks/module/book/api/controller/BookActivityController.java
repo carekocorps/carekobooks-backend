@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookActivityControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
@@ -23,16 +23,16 @@ public class BookActivityController implements BaseController, BookActivityContr
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookActivityDTO>> search(@ParameterObject BookActivitySearchQuery query) {
-        var bookActivityDTOs = bookActivityService.search(query);
-        return ResponseEntity.ok(bookActivityDTOs);
+    public ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivitySearchQuery query) {
+        var responses = bookActivityService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookActivityDTO> findById(@PathVariable Long id) {
-        var bookActivityDTO = bookActivityService.findById(id);
-        return bookActivityDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookActivityResponse> findById(@PathVariable Long id) {
+        var response = bookActivityService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
