@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import org.springframework.stereotype.Component;
 

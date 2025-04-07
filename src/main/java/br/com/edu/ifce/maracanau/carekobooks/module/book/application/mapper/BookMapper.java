@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
-import br.com.edu.ifce.maracanau.carekobooks.shared.application.mapper.BaseUpdateMapper;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
