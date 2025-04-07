@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
@@ -33,7 +33,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookProgressDTO>> search(@ParameterObject BookProgressSearchQuery query);
+    ResponseEntity<ApplicationPage<BookProgressResponse>> search(@ParameterObject BookProgressSearchQuery query);
 
     @Operation(
             summary = "Find a book progress by ID",
@@ -44,14 +44,14 @@ public interface BookProgressControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookProgressDTO.class)
+                                    schema = @Schema(implementation = BookProgressResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookProgressDTO> findById(@PathVariable Long id);
+    ResponseEntity<BookProgressResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Create a book progress",
@@ -63,7 +63,7 @@ public interface BookProgressControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookProgressDTO.class)
+                                    schema = @Schema(implementation = BookProgressResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -73,7 +73,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookProgressDTO> create(@RequestBody @Valid BookProgressRequest request);
+    ResponseEntity<BookProgressResponse> create(@RequestBody @Valid BookProgressRequest request);
 
     @Operation(
             summary = "Update a book progress",

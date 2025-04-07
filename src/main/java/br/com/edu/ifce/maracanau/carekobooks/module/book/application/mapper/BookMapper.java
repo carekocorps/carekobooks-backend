@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
@@ -21,8 +21,8 @@ public abstract class BookMapper implements BaseUpdateMapper<Book, BookRequest> 
 
     public abstract Book toModel(BookRequest bookRequest);
 
-    @Mapping(target = "image", expression = "java(imageMapper.toDTO(book.getImage()))")
-    public abstract BookDTO toDTO(Book book);
+    @Mapping(target = "image", expression = "java(imageMapper.toResponse(book.getImage()))")
+    public abstract BookResponse toResponse(Book book);
 
     public Book toModel(Long id) {
         return bookRepository.findById(id).orElse(null);

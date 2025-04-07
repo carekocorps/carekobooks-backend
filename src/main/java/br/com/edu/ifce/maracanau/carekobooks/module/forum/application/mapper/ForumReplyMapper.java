@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.dto.ForumReplyDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
@@ -18,6 +18,6 @@ public abstract class ForumReplyMapper implements BaseUpdateMapper<ForumReply, F
     @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "forum", expression = "java(forumMapper.toModel(request.getForumId()))")
     public abstract ForumReply toModel(ForumReplyRequest request);
-    public abstract ForumReplyDTO toDTO(ForumReply forumReply);
+    public abstract ForumReplyResponse toResponse(ForumReply forumReply);
 
 }

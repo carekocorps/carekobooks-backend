@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookActivityDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +30,7 @@ public interface BookActivityControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookActivityDTO>> search(@ParameterObject BookActivitySearchQuery query);
+    ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivitySearchQuery query);
 
     @Operation(
             summary = "Find a book activity by ID",
@@ -41,14 +41,14 @@ public interface BookActivityControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookActivityDTO.class)
+                                    schema = @Schema(implementation = BookActivityResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookActivityDTO> findById(@PathVariable Long id);
+    ResponseEntity<BookActivityResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a book by ID",

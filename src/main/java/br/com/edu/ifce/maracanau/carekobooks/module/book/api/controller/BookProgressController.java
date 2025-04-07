@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookProgressControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
@@ -26,25 +26,25 @@ public class BookProgressController implements BaseController, BookProgressContr
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookProgressDTO>> search(@ParameterObject BookProgressSearchQuery query) {
-        var bookDTOs = bookProgressService.search(query);
-        return ResponseEntity.ok(bookDTOs);
+    public ResponseEntity<ApplicationPage<BookProgressResponse>> search(@ParameterObject BookProgressSearchQuery query) {
+        var responses = bookProgressService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookProgressDTO> findById(@PathVariable Long id) {
-        var bookDTO = bookProgressService.findById(id);
-        return bookDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<BookProgressResponse> findById(@PathVariable Long id) {
+        var response = bookProgressService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @UserRoleRequired
     @PostMapping
-    public ResponseEntity<BookProgressDTO> create(@RequestBody @Valid BookProgressRequest request) {
-        var bookDTO = bookProgressService.create(request);
-        var uri = getHeaderLocation(bookDTO.getId());
-        return ResponseEntity.created(uri).body(bookDTO);
+    public ResponseEntity<BookProgressResponse> create(@RequestBody @Valid BookProgressRequest request) {
+        var response = bookProgressService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @Override

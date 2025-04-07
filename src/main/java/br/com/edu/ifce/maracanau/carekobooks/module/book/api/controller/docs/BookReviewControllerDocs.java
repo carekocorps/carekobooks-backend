@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookReviewDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
@@ -33,7 +33,7 @@ public interface BookReviewControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookReviewDTO>> search(@ParameterObject BookReviewSearchQuery query);
+    ResponseEntity<ApplicationPage<BookReviewResponse>> search(@ParameterObject BookReviewSearchQuery query);
 
     @Operation(
             summary = "Find a book review by ID",
@@ -44,14 +44,14 @@ public interface BookReviewControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookReviewDTO.class)
+                                    schema = @Schema(implementation = BookReviewResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookReviewDTO> findById(@PathVariable Long id);
+    ResponseEntity<BookReviewResponse> findById(@PathVariable Long id);
 
     @Operation(
             summary = "Create a book review",
@@ -63,7 +63,7 @@ public interface BookReviewControllerDocs {
                             responseCode = "201",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = BookReviewDTO.class)
+                                    schema = @Schema(implementation = BookReviewResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -73,7 +73,7 @@ public interface BookReviewControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookReviewDTO> create(@RequestBody @Valid BookReviewRequest request);
+    ResponseEntity<BookReviewResponse> create(@RequestBody @Valid BookReviewRequest request);
 
     @Operation(
             summary = "Update a book review",

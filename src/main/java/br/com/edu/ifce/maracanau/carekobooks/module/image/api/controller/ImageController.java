@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller.docs.ImageControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
@@ -20,9 +20,9 @@ public class ImageController implements BaseController, ImageControllerDocs {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ImageDTO> findById(@PathVariable Long id) {
-        var imageDTO = imageService.findById(id);
-        return imageDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ImageResponse> findById(@PathVariable Long id) {
+        var response = imageService.findById(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override

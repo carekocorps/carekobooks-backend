@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookGenreDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookGenreValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -20,15 +20,15 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
-    public Optional<BookGenreDTO> findByName(String name) {
-        return bookGenreRepository.findByName(name).map(bookGenreMapper::toDTO);
+    public Optional<BookGenreResponse> findByName(String name) {
+        return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }
 
     @Transactional
-    public BookGenreDTO create(BookGenreRequest request) {
+    public BookGenreResponse create(BookGenreRequest request) {
         var book = bookGenreMapper.toModel(request);
         bookGenreValidator.validate(book);
-        return bookGenreMapper.toDTO(bookGenreRepository.save(book));
+        return bookGenreMapper.toResponse(bookGenreRepository.save(book));
     }
 
     @Transactional
@@ -36,7 +36,7 @@ public class BookGenreService {
         var book = bookGenreRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        bookGenreMapper.updateEntity(book, request);
+        bookGenreMapper.updateModel(book, request);
         bookGenreValidator.validate(book);
         bookGenreRepository.save(book);
     }

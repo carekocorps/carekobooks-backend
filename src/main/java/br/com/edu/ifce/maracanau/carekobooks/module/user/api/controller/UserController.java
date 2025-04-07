@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationshipStatus;
@@ -30,34 +30,34 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<UserDTO>> search(@ParameterObject UserSearchQuery query) {
-        var userDTOs = userService.search(query);
-        return ResponseEntity.ok(userDTOs);
+    public ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserSearchQuery query) {
+        var responses = userService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{username}/followers")
-    public ResponseEntity<ApplicationPage<UserDTO>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
+    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
         query.setUsername(username);
         query.setStatus(UserRelationshipStatus.FOLLOWER);
-        var userDTOs = userService.search(query);
-        return ResponseEntity.ok(userDTOs);
+        var responses = userService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{username}/following")
-    public ResponseEntity<ApplicationPage<UserDTO>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
+    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query) {
         query.setUsername(username);
         query.setStatus(UserRelationshipStatus.FOLLOWING);
-        var userDTOs = userService.search(query);
-        return ResponseEntity.ok(userDTOs);
+        var responses = userService.search(query);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> findByUsername(@PathVariable String username) {
-        var userDTO = userService.findByUsername(username);
-        return userDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponse> findByUsername(@PathVariable String username) {
+        var response = userService.findByUsername(username);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override

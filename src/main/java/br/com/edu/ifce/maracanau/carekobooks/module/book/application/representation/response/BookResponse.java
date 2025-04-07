@@ -1,7 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.dto.ImageDTO;
-import io.swagger.v3.oas.annotations.media.Schema;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Schema(name = "Book")
-public class BookDTO {
+public class BookResponse {
 
     private Long id;
     private String title;
@@ -25,7 +23,7 @@ public class BookDTO {
     private Double reviewAverageScore;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private ImageDTO image;
-    private List<BookGenreDTO> genres;
+    private ImageResponse image;
+    private List<BookGenreResponse> genres;
 
 }

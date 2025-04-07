@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
@@ -35,22 +35,22 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
-    public ApplicationPage<BookDTO> search(BookSearchQuery query) {
+    public ApplicationPage<BookResponse> search(BookSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toDTO));
+        return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toResponse));
     }
 
-    public Optional<BookDTO> findById(Long id) {
-        return bookRepository.findById(id).map(bookMapper::toDTO);
+    public Optional<BookResponse> findById(Long id) {
+        return bookRepository.findById(id).map(bookMapper::toResponse);
     }
 
     @Transactional
-    public BookDTO create(BookRequest request) {
+    public BookResponse create(BookRequest request) {
         var book = bookMapper.toModel(request);
         bookValidator.validate(book);
-        return bookMapper.toDTO(bookRepository.save(book));
+        return bookMapper.toResponse(bookRepository.save(book));
     }
 
     @Transactional
@@ -59,7 +59,7 @@ public class BookService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        bookMapper.updateEntity(book, request);
+        bookMapper.updateModel(book, request);
         bookValidator.validate(book);
         bookRepository.save(book);
     }

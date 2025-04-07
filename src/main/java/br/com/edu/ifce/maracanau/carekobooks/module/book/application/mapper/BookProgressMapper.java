@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookProgressDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
@@ -18,6 +18,6 @@ public abstract class BookProgressMapper implements BaseUpdateMapper<BookProgres
     @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     public abstract BookProgress toModel(BookProgressRequest request);
-    public abstract BookProgressDTO toDTO(BookProgress bookProgress);
+    public abstract BookProgressResponse toResponse(BookProgress bookProgress);
 
 }

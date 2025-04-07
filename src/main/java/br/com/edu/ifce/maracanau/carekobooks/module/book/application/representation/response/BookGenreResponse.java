@@ -1,6 +1,5 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Schema(name = "BookGenre")
-public class BookGenreDTO {
+public class BookGenreResponse {
 
     private Long id;
     private String name;

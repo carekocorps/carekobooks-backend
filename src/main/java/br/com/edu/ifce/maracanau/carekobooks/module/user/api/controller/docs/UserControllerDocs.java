@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.dto.UserDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
@@ -36,7 +36,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserDTO>> search(@ParameterObject UserSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserSearchQuery query);
 
     @Operation(
             summary = "Search all users that follow someone",
@@ -53,7 +53,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserDTO>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
 
     @Operation(
             summary = "Search all users that someone follows",
@@ -70,7 +70,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserDTO>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
 
     @Operation(
             summary = "Find a user by username",
@@ -81,14 +81,14 @@ public interface UserControllerDocs {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserDTO.class)
+                                    schema = @Schema(implementation = UserResponse.class)
                             )
                     ),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<UserDTO> findByUsername(@PathVariable String username);
+    ResponseEntity<UserResponse> findByUsername(@PathVariable String username);
 
     @Operation(
             summary = "Update a user",

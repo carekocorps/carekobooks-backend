@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.dto.BookReviewDTO;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserContextMapper;
@@ -19,6 +19,6 @@ public abstract class BookReviewMapper implements BaseUpdateMapper<BookReview, B
     @Mapping(target = "user", expression = "java(userContextMapper.toModel())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     public abstract BookReview toModel(BookReviewRequest request);
-    public abstract BookReviewDTO toDTO(BookReview bookReview);
+    public abstract BookReviewResponse toResponse(BookReview bookReview);
 
 }
