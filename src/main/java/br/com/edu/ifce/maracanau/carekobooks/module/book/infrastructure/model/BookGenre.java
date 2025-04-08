@@ -19,6 +19,9 @@ public class BookGenre extends BaseModel {
     @Column(length = 50, unique = true, nullable = false)
     private String name;
 
+    @Column(name = "friendly_name", length = 100, nullable = false)
+    private String friendlyName;
+
     @Column
     private String description;
 

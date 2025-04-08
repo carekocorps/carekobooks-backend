@@ -12,6 +12,7 @@ public class BookGenreResponse implements BaseResponse {
 
     private Long id;
     private String name;
+    private String friendlyName;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
