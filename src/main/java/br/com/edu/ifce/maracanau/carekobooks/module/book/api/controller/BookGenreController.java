@@ -52,4 +52,12 @@ public class BookGenreController implements BaseController, BookGenreControllerD
         return ResponseEntity.noContent().build();
     }
 
+    @Override
+    @AdminRoleRequired
+    @DeleteMapping("/cache")
+    public ResponseEntity<Void> clearCache() {
+        bookGenreService.clearCache();
+        return ResponseEntity.noContent().build();
+    }
+
 }

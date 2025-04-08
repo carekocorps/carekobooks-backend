@@ -45,10 +45,9 @@ public class BookActivityService {
 
     @Transactional
     public void deleteById(Long id) {
-        var bookActivity = bookActivityRepository.findById(id).orElse(null);
-        if (bookActivity == null) {
-            throw new NotFoundException("Book not found");
-        }
+        var bookActivity = bookActivityRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(bookActivity.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book activity");

@@ -15,6 +15,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +38,7 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
+    @Cacheable("books")
     public ApplicationPage<BookResponse> search(BookSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -42,10 +46,12 @@ public class BookService {
         return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toResponse));
     }
 
+    @Cacheable(value = "books", key = "#id")
     public Optional<BookResponse> findById(Long id) {
         return bookRepository.findById(id).map(bookMapper::toResponse);
     }
 
+    @CacheEvict(value = "books", allEntries = true)
     @Transactional
     public BookResponse create(BookRequest request) {
         var book = bookMapper.toModel(request);
@@ -53,8 +59,9 @@ public class BookService {
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
+    @CachePut(value = "books", key = "#id")
     @Transactional
-    public void update(Long id, BookRequest request) {
+    public BookResponse update(Long id, BookRequest request) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
@@ -62,8 +69,10 @@ public class BookService {
         bookMapper.updateModel(book, request);
         bookValidator.validate(book);
         bookRepository.save(book);
+        return bookMapper.toResponse(book);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void updateGenreById(Long id, String genreName, ToggleAction action) {
         var book = bookRepository
@@ -89,6 +98,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void updateUserAverageScoreById(Long id, Double userAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -98,6 +108,7 @@ public class BookService {
         bookRepository.updateUserAverageScoreById(userAverageScore, id);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void updateReviewAverageScoreById(Long id, Double reviewAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -107,6 +118,7 @@ public class BookService {
         bookRepository.updateReviewAverageScoreById(reviewAverageScore, id);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void updateImageById(Long id, MultipartFile image) throws Exception {
         var book = bookRepository
@@ -117,6 +129,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void deleteImageById(Long id) throws Exception {
         var book = bookRepository
@@ -132,6 +145,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
+    @CacheEvict(value = "books", key = "#id")
     @Transactional
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
@@ -139,6 +153,10 @@ public class BookService {
         }
 
         bookRepository.deleteById(id);
+    }
+
+    @CacheEvict(value = "books", allEntries = true)
+    public void clearCache() {
     }
 
 }

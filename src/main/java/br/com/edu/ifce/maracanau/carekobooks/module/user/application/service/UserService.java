@@ -56,11 +56,10 @@ public class UserService {
     }
 
     @Transactional
-    public void update(String username, UserRegisterRequest request) throws Exception {
-        var user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
+    public UserResponse update(String username, UserRegisterRequest request) throws Exception {
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(username)) {
             throw new ForbiddenException("You are not allowed to update this user");
@@ -69,6 +68,7 @@ public class UserService {
         userMapper.updateModel(user, request);
         userValidator.validate(user);
         userRepository.save(user);
+        return userMapper.toResponse(user);
     }
 
     @Transactional
