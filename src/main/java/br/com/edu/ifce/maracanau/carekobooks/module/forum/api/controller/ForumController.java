@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs.ForumControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;

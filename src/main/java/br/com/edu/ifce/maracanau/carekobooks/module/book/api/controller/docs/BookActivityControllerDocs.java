@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

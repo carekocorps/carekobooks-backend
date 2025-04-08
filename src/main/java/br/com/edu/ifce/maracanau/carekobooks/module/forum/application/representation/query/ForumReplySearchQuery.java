@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.represent
 import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumReplySpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationPageSearchQuery;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;

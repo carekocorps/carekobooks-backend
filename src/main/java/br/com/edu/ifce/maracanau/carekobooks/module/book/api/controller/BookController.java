@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.Boo
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page;
+package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query;
 
 import static br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.repository.specification.BaseSpecification.*;
 
