@@ -164,4 +164,17 @@ public interface BookControllerDocs {
     )
     ResponseEntity<Void> deleteById(@PathVariable Long id);
 
+    @Operation(
+            summary = "Clear book cache",
+            tags = {"Book"},
+            security = @SecurityRequirement(name = "Bearer"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> clearCache();
+
 }

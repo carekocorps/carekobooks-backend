@@ -69,6 +69,6 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request) throws Exception;
+    ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request);
 
 }

@@ -8,6 +8,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.val
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,27 +23,33 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
+    @Cacheable("book_genres")
     public Optional<BookGenreResponse> findByName(String name) {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }
 
+    @CacheEvict(value = "book_genres", allEntries = true)
     @Transactional
     public BookGenreResponse create(BookGenreRequest request) {
-        var book = bookGenreMapper.toModel(request);
-        bookGenreValidator.validate(book);
-        return bookGenreMapper.toResponse(bookGenreRepository.save(book));
+        var bookGenre = bookGenreMapper.toModel(request);
+        bookGenreValidator.validate(bookGenre);
+        return bookGenreMapper.toResponse(bookGenreRepository.save(bookGenre));
     }
 
+    @CachePut(value = "book_genres", key = "#name")
     @Transactional
-    public void update(String name, BookGenreRequest request) {
-        var book = bookGenreRepository.findByName(name)
+    public BookGenreResponse update(String name, BookGenreRequest request) {
+        var bookGenre = bookGenreRepository
+                .findByName(name)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        bookGenreMapper.updateModel(book, request);
-        bookGenreValidator.validate(book);
-        bookGenreRepository.save(book);
+        bookGenreMapper.updateModel(bookGenre, request);
+        bookGenreValidator.validate(bookGenre);
+        bookGenreRepository.save(bookGenre);
+        return bookGenreMapper.toResponse(bookGenre);
     }
 
+    @CacheEvict(value = "book_genres", key = "#name")
     @Transactional
     public void deleteByName(String name) {
         if (!bookGenreRepository.existsByName(name)) {
@@ -48,6 +57,10 @@ public class BookGenreService {
         }
 
         bookGenreRepository.deleteByName(name);
+    }
+
+    @CacheEvict(value = "book_genres", allEntries = true)
+    public void clearCache() {
     }
 
 }

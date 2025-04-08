@@ -34,7 +34,7 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request) throws Exception {
+    public ResponseEntity<TokenResponse> register(@RequestBody @Valid UserRegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
