@@ -1,7 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
@@ -19,9 +17,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-
-    private final ImageService imageService;
-    private final ImageMapper imageMapper;
 
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
@@ -56,7 +51,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenResponse register(UserRegisterRequest request) throws Exception {
+    public TokenResponse register(UserRegisterRequest request) {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userValidator.validate(user);

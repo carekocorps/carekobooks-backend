@@ -2,18 +2,27 @@ spring:
   application:
     name: carekobooks
   datasource:
-    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useTimezone=true&serverTimezone=UTC
-    username: ${DB_USERNAME}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update # Temporário, será alterado para "none" em breve
     open-in-view: false
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
   servlet:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
-springdoc:
+  devtools:
+    restart:
+      enabled: false
+:springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: method
@@ -21,9 +30,9 @@ security:
   jwt:
     token:
       secret-key: ${JWT_SECRET_KEY}
-      expiration-time-in-ms: 3600000
+      expiration-time-in-ms: ${JWT_EXPIRATION_TIME_IN_MS:3600000}
 minio:
-  endpoint: ${MINIO_ENDPOINT}
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
   username: ${MINIO_USERNAME}
   password: ${MINIO_PASSWORD}
   bucket: ${MINIO_BUCKET}

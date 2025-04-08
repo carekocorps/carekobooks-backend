@@ -61,11 +61,10 @@ public class BookProgressService {
     }
 
     @Transactional
-    public void update(Long id, BookProgressRequest request) {
-        var bookProgress = bookProgressRepository.findById(id).orElse(null);
-        if (bookProgress == null) {
-            throw new NotFoundException("Book Progress not found");
-        }
+    public BookProgressResponse update(Long id, BookProgressRequest request) {
+        var bookProgress = bookProgressRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
         bookProgressMapper.updateModel(bookProgress, request);
         bookProgressValidator.validate(bookProgress);
@@ -80,14 +79,14 @@ public class BookProgressService {
         bookProgress.getBook().setUserAverageScore(userAverageScore);
 
         bookActivityService.create(request);
+        return bookProgressMapper.toResponse(bookProgress);
     }
 
     @Transactional
     public void updateIsFavoriteById(Long id, ToggleAction action) {
-        var bookProgress = bookProgressRepository.findById(id).orElse(null);
-        if (bookProgress == null) {
-            throw new NotFoundException("Book Progress not found");
-        }
+        var bookProgress = bookProgressRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
@@ -99,10 +98,9 @@ public class BookProgressService {
 
     @Transactional
     public void deleteById(Long id) {
-        var bookProgress = bookProgressRepository.findById(id).orElse(null);
-        if (bookProgress == null) {
-            throw new NotFoundException("Book Progress not found");
-        }
+        var bookProgress = bookProgressRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book progress");

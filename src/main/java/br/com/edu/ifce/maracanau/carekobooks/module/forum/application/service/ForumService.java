@@ -44,11 +44,10 @@ public class ForumService {
     }
 
     @Transactional
-    public void update(Long id, ForumRequest request) {
-        var forum = forumRepository.findById(id).orElse(null);
-        if (forum == null){
-            throw new NotFoundException("Forum not found");
-        }
+    public ForumResponse update(Long id, ForumRequest request) {
+        var forum = forumRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Forum not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum");
@@ -57,14 +56,14 @@ public class ForumService {
         forumMapper.updateModel(forum, request);
         forumValidator.validate(forum);
         forumRepository.save(forum);
+        return forumMapper.toResponse(forum);
     }
 
     @Transactional
     public void deleteById(Long id) {
-        var forum = forumRepository.findById(id).orElse(null);
-        if (forum == null) {
-            throw new NotFoundException("Forum not found");
-        }
+        var forum = forumRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Forum not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum");

@@ -52,11 +52,10 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void update(Long id, BookReviewRequest request) {
-        var bookReview = bookReviewRepository.findById(id).orElse(null);
-        if (bookReview == null) {
-            throw new NotFoundException("Book Review not found");
-        }
+    public BookReviewResponse update(Long id, BookReviewRequest request) {
+        var bookReview = bookReviewRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
         bookReviewMapper.updateModel(bookReview, request);
         bookReviewValidator.validate(bookReview);
@@ -69,14 +68,14 @@ public class BookReviewService {
         var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
         bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
         bookReview.getBook().setReviewAverageScore(reviewAverageScore);
+        return bookReviewMapper.toResponse(bookReview);
     }
 
     @Transactional
     public void deleteById(Long id) {
-        var bookReview = bookReviewRepository.findById(id).orElse(null);
-        if (bookReview == null) {
-            throw new NotFoundException("Book Review not found");
-        }
+        var bookReview = bookReviewRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
         if (!UserContextProvider.isCurrentUserAuthorized(bookReview.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book review");

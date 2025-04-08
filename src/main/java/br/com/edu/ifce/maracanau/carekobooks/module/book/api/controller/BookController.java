@@ -98,4 +98,12 @@ public class BookController implements BaseController, BookControllerDocs {
         return ResponseEntity.noContent().build();
     }
 
+    @Override
+    @AdminRoleRequired
+    @DeleteMapping("/cache")
+    public ResponseEntity<Void> clearCache() {
+        bookService.clearCache();
+        return ResponseEntity.noContent().build();
+    }
+
 }
