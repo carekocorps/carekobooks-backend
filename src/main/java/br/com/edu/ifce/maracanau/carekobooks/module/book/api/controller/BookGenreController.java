@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookGenreControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreSearchQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
@@ -9,6 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseCon
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,13 @@ import org.springframework.web.bind.annotation.*;
 public class BookGenreController implements BaseController, BookGenreControllerDocs {
 
     private final BookGenreService bookGenreService;
+
+    @Override
+    @GetMapping
+    public ResponseEntity<ApplicationPage<BookGenreResponse>> search(@ParameterObject BookGenreSearchQuery query) {
+        var responses = bookGenreService.search(query);
+        return ResponseEntity.ok(responses);
+    }
 
     @Override
     @GetMapping("/{name}")
