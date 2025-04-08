@@ -1,6 +1,5 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page;
+package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@Schema(name = "Pageable")
 public class ApplicationPageable {
 
     @Min(0)

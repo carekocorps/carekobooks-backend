@@ -9,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.Bas
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, ForumMapper.class})
+@Mapper(componentModel = "spring", config = BaseUpdateMapper.class, uses = {UserMapper.class, ForumMapper.class})
 public abstract class ForumReplyMapper implements BaseUpdateMapper<ForumReply, ForumReplyRequest> {
 
     @Autowired

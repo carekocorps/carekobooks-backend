@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.response.BaseResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ForumResponse {
+public class ForumResponse implements BaseResponse {
 
     private Long id;
     private String title;

@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
+@Mapper(componentModel = "spring", config = BaseUpdateMapper.class, uses = {UserMapper.class, BookMapper.class})
 public abstract class BookReviewMapper implements BaseUpdateMapper<BookReview, BookReviewRequest> {
 
     @Autowired
