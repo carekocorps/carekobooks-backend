@@ -1,6 +1,5 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.page;
+package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Schema(name = "Page")
 public class ApplicationPage<T> {
 
     private List<T> content;

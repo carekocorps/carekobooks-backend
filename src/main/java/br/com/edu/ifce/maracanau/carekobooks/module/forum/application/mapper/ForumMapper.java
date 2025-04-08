@@ -11,7 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.Bas
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
+@Mapper(componentModel = "spring", config = BaseUpdateMapper.class, uses = {UserMapper.class, BookMapper.class})
 public abstract class ForumMapper implements BaseUpdateMapper<Forum, ForumRequest> {
 
     @Autowired
