@@ -38,7 +38,6 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
-    @Cacheable("books")
     public ApplicationPage<BookResponse> search(BookSearchQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();

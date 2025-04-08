@@ -18,6 +18,10 @@ public class BookGenreRequest implements BaseRequest {
     @Schema(example = "string")
     private String name;
 
+    @NotBlank
+    @Size(max = 100)
+    private String friendlyName;
+
     @Size(max = 255)
     @Schema(example = "string")
     private String description;
