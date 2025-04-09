@@ -19,10 +19,7 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
-  devtools:
-    restart:
-      enabled: false
-:springdoc:
+springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: method
