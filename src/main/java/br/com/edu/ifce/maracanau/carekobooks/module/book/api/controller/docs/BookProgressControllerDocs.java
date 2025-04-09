@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +33,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookProgressResponse>> search(@ParameterObject BookProgressSearchQuery query);
+    ResponseEntity<ApplicationPage<BookProgressResponse>> search(@ParameterObject BookProgressQuery query);
 
     @Operation(
             summary = "Find a book progress by ID",

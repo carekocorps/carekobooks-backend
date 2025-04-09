@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query;
+package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page;
 
 import lombok.Getter;
 import lombok.Setter;

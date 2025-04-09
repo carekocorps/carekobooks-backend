@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.represent
 
 import static br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.repository.specification.BaseSpecification.*;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.BaseApplicationSearch;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.model.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public abstract class BaseApplicationPageSearchQuery<T extends BaseModel> extends BaseApplicationPageSearch {
+public abstract class BaseApplicationQuery<T extends BaseModel> extends BaseApplicationSearch {
 
     protected LocalDate createdBefore;
     protected LocalDate createdAfter;
@@ -37,7 +38,7 @@ public abstract class BaseApplicationPageSearchQuery<T extends BaseModel> extend
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
-        return Sort.by(direction, fieldMapping.getOrDefault(orderBy, "id"));
+        return Sort.by(direction, fieldMapping.getOrDefault(orderBy, DEFAULT_ORDER_BY));
     }
 
 }

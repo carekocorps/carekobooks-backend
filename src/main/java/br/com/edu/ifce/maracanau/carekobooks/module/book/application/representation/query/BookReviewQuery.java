@@ -1,9 +1,9 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query;
 
-import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumSpecification.*;
+import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookReviewSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationPageSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,17 +15,17 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
+public class BookReviewQuery extends BaseApplicationQuery<BookReview> {
 
-    private String title;
     private String username;
+    private Integer score;
     private Long bookId;
 
     @Override
-    public Specification<Forum> getSpecification() {
+    public Specification<BookReview> getSpecification() {
         var specs = super.getSpecification();
-        if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
+        if (score != null) specs = specs.and(scoreEqual(score));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
@@ -33,7 +33,8 @@ public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
     @Override
     public Sort getSort() {
         return getSort(Map.of(
-                "title", "title",
+                "username", "user.username",
+                "score", "score",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -44,7 +45,8 @@ public class ForumSearchQuery extends BaseApplicationPageSearchQuery<Forum> {
             defaultValue = "id",
             allowableValues = {
                     "id",
-                    "title",
+                    "username",
+                    "score",
                     "created-at",
                     "updated-at"
             }

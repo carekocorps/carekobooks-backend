@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.va
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class BookValidator {
     }
 
     private boolean isBookDuplicated(Book book) {
-        var query = new BookSearchQuery();
+        var query = new BookQuery();
         query.setTitle(book.getTitle());
         query.setAuthor(book.getAuthor());
         query.setPublisher(book.getPublisher());

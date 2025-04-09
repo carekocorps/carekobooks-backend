@@ -5,11 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.mapper.ForumReplyMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumReplyQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.validator.ForumReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.ForumReplyRepository;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ public class ForumReplyService {
     private final ForumReplyValidator forumReplyValidator;
     private final ForumReplyMapper forumReplyMapper;
 
-    public ApplicationPage<ForumReplyResponse> search(ForumReplySearchQuery query) {
+    public ApplicationPage<ForumReplyResponse> search(ForumReplyQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);

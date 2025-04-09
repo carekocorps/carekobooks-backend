@@ -22,8 +22,10 @@ public class RedisCacheConfig {
         var defaultConfig = RedisCacheConfiguration.defaultCacheConfig();
 
         Map<String, RedisCacheConfiguration> configs = new HashMap<>();
-        configs.put("books", defaultConfig.entryTtl(Duration.ofHours(1)));
-        configs.put("book_genres", defaultConfig);
+        configs.put("book", defaultConfig.entryTtl(Duration.ofHours(1)));
+        configs.put("book:search", defaultConfig.entryTtl(Duration.ofMinutes(10)));
+        configs.put("book:genre", defaultConfig);
+        configs.put("book:genre:search", defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultConfig)

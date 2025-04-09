@@ -5,9 +5,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,19 +39,27 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
-    public ApplicationPage<BookResponse> search(BookSearchQuery query) {
+    @Cacheable(
+            value = "book:genre:search",
+            key = "#query.getCacheKey()",
+            condition = "#query.isDefaultCacheSearch()"
+    )
+    public ApplicationPage<BookResponse> search(BookQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
         return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toResponse));
     }
 
-    @Cacheable(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", allEntries = true),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     public Optional<BookResponse> findById(Long id) {
         return bookRepository.findById(id).map(bookMapper::toResponse);
     }
 
-    @CacheEvict(value = "books", allEntries = true)
+    @CacheEvict(value = "book", allEntries = true)
     @Transactional
     public BookResponse create(BookRequest request) {
         var book = bookMapper.toModel(request);
@@ -58,7 +67,10 @@ public class BookService {
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
-    @CachePut(value = "books", key = "#id")
+    @Caching(
+            put = @CachePut(value = "book", key = "#id"),
+            evict = @CacheEvict(value = "book:search", allEntries = true)
+    )
     @Transactional
     public BookResponse update(Long id, BookRequest request) {
         var book = bookRepository
@@ -71,7 +83,10 @@ public class BookService {
         return bookMapper.toResponse(book);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", key = "#id"),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     @Transactional
     public void updateGenreById(Long id, String genreName, ToggleAction action) {
         var book = bookRepository
@@ -97,7 +112,10 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", key = "#id"),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     @Transactional
     public void updateUserAverageScoreById(Long id, Double userAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -107,7 +125,10 @@ public class BookService {
         bookRepository.updateUserAverageScoreById(userAverageScore, id);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", key = "#id"),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     @Transactional
     public void updateReviewAverageScoreById(Long id, Double reviewAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -117,7 +138,10 @@ public class BookService {
         bookRepository.updateReviewAverageScoreById(reviewAverageScore, id);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", key = "#id"),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     @Transactional
     public void updateImageById(Long id, MultipartFile image) throws Exception {
         var book = bookRepository
@@ -128,7 +152,10 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "book", key = "#id"),
+            @CacheEvict(value = "book:search", allEntries = true)
+    })
     @Transactional
     public void deleteImageById(Long id) throws Exception {
         var book = bookRepository
@@ -144,7 +171,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    @CacheEvict(value = "books", key = "#id")
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void deleteById(Long id) {
         if (!bookRepository.existsById(id)) {
@@ -154,7 +181,13 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    @CacheEvict(value = "books", allEntries = true)
+    @CacheEvict(
+            value = {
+                    "book",
+                    "book:search"
+            },
+            allEntries = true
+    )
     public void clearCache() {
     }
 

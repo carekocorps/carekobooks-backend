@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookGenreValidator;
@@ -27,19 +27,32 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
-    public ApplicationPage<BookGenreResponse> search(BookGenreSearchQuery query) {
+    @Cacheable(
+            value = "book:genre:search",
+            key = "#query.getCacheKey()",
+            condition = "#query.isDefaultCacheSearch()"
+    )
+    public ApplicationPage<BookGenreResponse> search(BookGenreQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
         return new ApplicationPage<>(bookGenreRepository.findAll(specification, pageRequest).map(bookGenreMapper::toResponse));
     }
 
-    @Cacheable(value = "book_genres", key = "#name")
+    @Cacheable(value = "book:genre", key = "#name")
     public Optional<BookGenreResponse> findByName(String name) {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }
 
-    @CacheEvict(value = {"books", "book_genres"}, allEntries = true)
+    @CacheEvict(
+            value = {
+                    "book",
+                    "book:search",
+                    "book:genre",
+                    "book:genre:search"
+            },
+            allEntries = true
+    )
     @Transactional
     public BookGenreResponse create(BookGenreRequest request) {
         var bookGenre = bookGenreMapper.toModel(request);
@@ -48,8 +61,12 @@ public class BookGenreService {
     }
 
     @Caching(
-            put = @CachePut(value = "book_genres", key = "#name"),
-            evict = @CacheEvict(value = "books", allEntries = true)
+            put = @CachePut(value = "book:genre", key = "#name"),
+            evict = {
+                    @CacheEvict(value = "book", allEntries = true),
+                    @CacheEvict(value = "book:search", allEntries = true),
+                    @CacheEvict(value = "book:genre:search", allEntries = true)
+            }
     )
     @Transactional
     public BookGenreResponse update(String name, BookGenreRequest request) {
@@ -64,8 +81,10 @@ public class BookGenreService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "book_genres", key = "#name"),
-            @CacheEvict(value = "books", allEntries = true)
+            @CacheEvict(value = "book:genre", key = "#name"),
+            @CacheEvict(value = "book", allEntries = true),
+            @CacheEvict(value = "book:search", allEntries = true),
+            @CacheEvict(value = "book:genre:search", allEntries = true)
     })
     @Transactional
     public void deleteByName(String name) {
@@ -76,7 +95,15 @@ public class BookGenreService {
         bookGenreRepository.deleteByName(name);
     }
 
-    @CacheEvict(value = {"books", "book_genres"}, allEntries = true)
+    @CacheEvict(
+            value = {
+                    "books",
+                    "book:search",
+                    "book:genre",
+                    "book:genre:search"
+            },
+            allEntries = true
+    )
     public void clearCache() {
     }
 

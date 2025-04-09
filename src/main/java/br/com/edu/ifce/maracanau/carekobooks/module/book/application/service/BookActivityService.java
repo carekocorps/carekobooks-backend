@@ -7,9 +7,9 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivitySearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ public class BookActivityService {
     private final BookActivityMapper bookActivityMapper;
     private final BookActivityValidator bookActivityValidator;
 
-    public ApplicationPage<BookActivityResponse> search(BookActivitySearchQuery query) {
+    public ApplicationPage<BookActivityResponse> search(BookActivityQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);

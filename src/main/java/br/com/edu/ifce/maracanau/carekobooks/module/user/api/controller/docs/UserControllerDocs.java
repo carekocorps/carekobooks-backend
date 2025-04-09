@@ -1,10 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,7 +36,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserQuery query);
 
     @Operation(
             summary = "Search all users that follow someone",
@@ -53,7 +53,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query);
 
     @Operation(
             summary = "Search all users that someone follows",
@@ -70,7 +70,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialSearchQuery query);
+    ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query);
 
     @Operation(
             summary = "Find a user by username",

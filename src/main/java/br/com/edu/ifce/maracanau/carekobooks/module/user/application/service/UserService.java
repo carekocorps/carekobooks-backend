@@ -5,8 +5,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.Ima
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSearchQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
@@ -14,7 +14,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +37,14 @@ public class UserService {
     private final UserValidator userValidator;
     private final UserMapper userMapper;
 
-    public ApplicationPage<UserResponse> search(UserSearchQuery query) {
+    public ApplicationPage<UserResponse> search(UserQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
-    public ApplicationPage<UserResponse> search(UserSocialSearchQuery query) {
+    public ApplicationPage<UserResponse> search(UserSocialQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);

@@ -5,11 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class BookProgressService {
     private final BookProgressValidator bookProgressValidator;
     private final BookProgressMapper bookProgressMapper;
 
-    public ApplicationPage<BookProgressResponse> search(BookProgressSearchQuery query) {
+    public ApplicationPage<BookProgressResponse> search(BookProgressQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
