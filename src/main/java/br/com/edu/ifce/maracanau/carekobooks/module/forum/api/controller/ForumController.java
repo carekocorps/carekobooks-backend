@@ -3,10 +3,10 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs.ForumControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.service.ForumService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class ForumController implements BaseController, ForumControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumSearchQuery query) {
+    public ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumQuery query) {
         var responses = forumService.search(query);
         return ResponseEntity.ok(responses);
     }

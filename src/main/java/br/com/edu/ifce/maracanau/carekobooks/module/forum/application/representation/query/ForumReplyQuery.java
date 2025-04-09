@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.represent
 import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumReplySpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationQuery;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @Getter
 @Setter
-public class ForumReplySearchQuery extends BaseApplicationPageSearchQuery<ForumReply> {
+public class ForumReplyQuery extends BaseApplicationQuery<ForumReply> {
 
     private String username;
     private Long bookId;

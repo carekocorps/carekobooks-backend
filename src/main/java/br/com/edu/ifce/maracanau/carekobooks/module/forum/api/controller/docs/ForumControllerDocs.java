@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.forum.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.response.ForumResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.request.ForumRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query.ForumQuery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +33,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumSearchQuery query);
+    ResponseEntity<ApplicationPage<ForumResponse>> search(@ParameterObject ForumQuery query);
 
     @Operation(
             summary = "Find a forum by ID",
