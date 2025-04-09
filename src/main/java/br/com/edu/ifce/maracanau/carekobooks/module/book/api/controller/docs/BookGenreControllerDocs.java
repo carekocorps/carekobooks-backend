@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ public interface BookGenreControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookGenreResponse>> search(@ParameterObject BookGenreSearchQuery query);
+    ResponseEntity<ApplicationPage<BookGenreResponse>> search(@ParameterObject BookGenreQuery query);
 
     @Operation(
             summary = "Find a book genre by name",

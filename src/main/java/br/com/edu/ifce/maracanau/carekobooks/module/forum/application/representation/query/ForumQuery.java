@@ -1,9 +1,9 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query;
+package br.com.edu.ifce.maracanau.carekobooks.module.forum.application.representation.query;
 
-import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookReviewSpecification.*;
+import static br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.repository.specification.ForumSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationPageSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,17 +15,17 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class BookReviewSearchQuery extends BaseApplicationPageSearchQuery<BookReview> {
+public class ForumQuery extends BaseApplicationQuery<Forum> {
 
+    private String title;
     private String username;
-    private Integer score;
     private Long bookId;
 
     @Override
-    public Specification<BookReview> getSpecification() {
+    public Specification<Forum> getSpecification() {
         var specs = super.getSpecification();
+        if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
-        if (score != null) specs = specs.and(scoreEqual(score));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
@@ -33,8 +33,7 @@ public class BookReviewSearchQuery extends BaseApplicationPageSearchQuery<BookRe
     @Override
     public Sort getSort() {
         return getSort(Map.of(
-                "username", "user.username",
-                "score", "score",
+                "title", "title",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -45,8 +44,7 @@ public class BookReviewSearchQuery extends BaseApplicationPageSearchQuery<BookRe
             defaultValue = "id",
             allowableValues = {
                     "id",
-                    "username",
-                    "score",
+                    "title",
                     "created-at",
                     "updated-at"
             }

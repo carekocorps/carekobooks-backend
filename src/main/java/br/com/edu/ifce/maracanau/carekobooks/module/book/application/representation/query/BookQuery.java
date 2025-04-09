@@ -2,8 +2,8 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representa
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookSpecification.*;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationCachedQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationPageSearchQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class BookSearchQuery extends BaseApplicationPageSearchQuery<Book> {
+public class BookQuery extends BaseApplicationCachedQuery<Book> {
 
     private String title;
     private String author;
@@ -68,6 +68,18 @@ public class BookSearchQuery extends BaseApplicationPageSearchQuery<Book> {
     )
     public String getOrderBy() {
         return super.getOrderBy();
+    }
+
+    @Override
+    public boolean isDefaultCacheSearch() {
+        return super.isDefaultCacheSearch(15)
+                && title == null
+                && author == null
+                && publisher == null
+                && genre == null
+                && publishedBefore == null
+                && publishedAfter == null
+                && totalPages == null;
     }
 
 }

@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookGenreControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreSearchQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
@@ -25,7 +25,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookGenreResponse>> search(@ParameterObject BookGenreSearchQuery query) {
+    public ResponseEntity<ApplicationPage<BookGenreResponse>> search(@ParameterObject BookGenreQuery query) {
         var responses = bookGenreService.search(query);
         return ResponseEntity.ok(responses);
     }
