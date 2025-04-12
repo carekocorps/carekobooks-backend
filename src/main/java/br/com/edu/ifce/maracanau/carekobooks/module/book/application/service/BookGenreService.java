@@ -27,11 +27,6 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
-    @Cacheable(
-            value = "book:genre:search",
-            key = "#query.getCacheKey()",
-            condition = "#query.isDefaultCacheSearch()"
-    )
     public ApplicationPage<BookGenreResponse> search(BookGenreQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -44,15 +39,7 @@ public class BookGenreService {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }
 
-    @CacheEvict(
-            value = {
-                    "book",
-                    "book:search",
-                    "book:genre",
-                    "book:genre:search"
-            },
-            allEntries = true
-    )
+    @CacheEvict(value = {"book", "book:genre"}, allEntries = true)
     @Transactional
     public BookGenreResponse create(BookGenreRequest request) {
         var bookGenre = bookGenreMapper.toModel(request);
@@ -62,11 +49,7 @@ public class BookGenreService {
 
     @Caching(
             put = @CachePut(value = "book:genre", key = "#name"),
-            evict = {
-                    @CacheEvict(value = "book", allEntries = true),
-                    @CacheEvict(value = "book:search", allEntries = true),
-                    @CacheEvict(value = "book:genre:search", allEntries = true)
-            }
+            evict = @CacheEvict(value = "book", allEntries = true)
     )
     @Transactional
     public BookGenreResponse update(String name, BookGenreRequest request) {
@@ -82,9 +65,7 @@ public class BookGenreService {
 
     @Caching(evict = {
             @CacheEvict(value = "book:genre", key = "#name"),
-            @CacheEvict(value = "book", allEntries = true),
-            @CacheEvict(value = "book:search", allEntries = true),
-            @CacheEvict(value = "book:genre:search", allEntries = true)
+            @CacheEvict(value = "book", allEntries = true)
     })
     @Transactional
     public void deleteByName(String name) {
@@ -98,9 +79,7 @@ public class BookGenreService {
     @CacheEvict(
             value = {
                     "books",
-                    "book:search",
-                    "book:genre",
-                    "book:genre:search"
+                    "book:genre"
             },
             allEntries = true
     )
