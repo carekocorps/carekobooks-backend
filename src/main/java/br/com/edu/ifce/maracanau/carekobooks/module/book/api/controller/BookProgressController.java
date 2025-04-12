@@ -44,7 +44,10 @@ public class BookProgressController implements BaseController, BookProgressContr
     public ResponseEntity<BookProgressResponse> create(@RequestBody @Valid BookProgressRequest request) {
         var response = bookProgressService.create(request);
         var uri = getHeaderLocation(response.getId());
-        return ResponseEntity.created(uri).body(response);
+        return ResponseEntity
+                .created(uri)
+                .header("X-BookActivity-Created", "true")
+                .body(response);
     }
 
     @Override
@@ -52,7 +55,10 @@ public class BookProgressController implements BaseController, BookProgressContr
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookProgressRequest request) {
         bookProgressService.update(id, request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .header("X-BookActivity-Created", "true")
+                .build();
     }
 
     @Override
