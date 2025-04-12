@@ -37,10 +37,11 @@ public class BookActivityService {
     }
 
     @Transactional
-    public void create(BookProgressRequest request) {
+    public BookActivityResponse create(BookProgressRequest request) {
         var bookActivity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(bookActivity);
         bookActivityRepository.save(bookActivity);
+        return bookActivityMapper.toResponse(bookActivity);
     }
 
     @Transactional

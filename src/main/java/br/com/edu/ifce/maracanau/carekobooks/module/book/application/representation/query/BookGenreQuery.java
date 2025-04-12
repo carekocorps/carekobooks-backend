@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.representa
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookGenreSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationCachedQuery;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class BookGenreQuery extends BaseApplicationCachedQuery<BookGenre> {
+public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
 
     private String name;
     private String friendlyName;
@@ -51,13 +51,6 @@ public class BookGenreQuery extends BaseApplicationCachedQuery<BookGenre> {
     )
     public String getOrderBy() {
         return super.getOrderBy();
-    }
-
-    @Override
-    public boolean isDefaultCacheSearch() {
-        return super.isDefaultCacheSearch()
-                && name == null
-                && friendlyName == null;
     }
 
 }
