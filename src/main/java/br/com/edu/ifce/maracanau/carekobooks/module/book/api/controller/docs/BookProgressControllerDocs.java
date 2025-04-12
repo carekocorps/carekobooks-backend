@@ -54,7 +54,7 @@ public interface BookProgressControllerDocs {
     ResponseEntity<BookProgressResponse> findById(@PathVariable Long id);
 
     @Operation(
-            summary = "Create a book progress",
+            summary = "Create a book progress and a corresponding book activity",
             tags = {"Book Progress"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
@@ -76,7 +76,7 @@ public interface BookProgressControllerDocs {
     ResponseEntity<BookProgressResponse> create(@RequestBody @Valid BookProgressRequest request);
 
     @Operation(
-            summary = "Update a book progress",
+            summary = "Update a book progress and create a corresponding book activity",
             tags = {"Book Progress"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
