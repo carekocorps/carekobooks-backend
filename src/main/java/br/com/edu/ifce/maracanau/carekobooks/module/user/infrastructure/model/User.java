@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "users")
 public class User extends BaseModel implements UserDetails {
 
     @Column(unique = true, length = 50, nullable = false)
@@ -66,7 +66,7 @@ public class User extends BaseModel implements UserDetails {
 
     @ManyToMany
     @JoinTable(
-            name = "user_follow_relationship",
+            name = "user_follow_relationships",
             joinColumns = @JoinColumn(name = "user_following_id"),
             inverseJoinColumns = @JoinColumn(name = "user_followed_id")
     )

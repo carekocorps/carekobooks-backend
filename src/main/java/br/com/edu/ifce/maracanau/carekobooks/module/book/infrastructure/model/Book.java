@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "books")
 public class Book extends BaseModel {
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Book extends BaseModel {
     @Column(name = "user_average_score")
     private Double userAverageScore;
 
-    @Column(name = "review_average_socre")
+    @Column(name = "review_average_score")
     private Double reviewAverageScore;
 
     @ManyToOne
@@ -49,7 +49,7 @@ public class Book extends BaseModel {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "book_genre_relationship",
+            name = "book_genre_relationships",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )

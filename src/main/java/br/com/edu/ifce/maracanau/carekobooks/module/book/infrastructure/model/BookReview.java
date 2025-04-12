@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "book_review")
+@Table(name = "book_reviews")
 public class BookReview extends BaseModel {
 
     @Column(nullable = false)

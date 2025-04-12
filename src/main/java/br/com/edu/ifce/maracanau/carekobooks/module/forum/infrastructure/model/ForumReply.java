@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "forum_reply")
+@Table(name = "forum_replies")
 public class ForumReply extends BaseModel {
 
     @Column(length = 1000, nullable = false)
