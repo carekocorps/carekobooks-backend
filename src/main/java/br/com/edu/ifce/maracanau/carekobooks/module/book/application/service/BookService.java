@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,11 +38,6 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
-    @Cacheable(
-            value = "book:genre:search",
-            key = "#query.getCacheKey()",
-            condition = "#query.isDefaultCacheSearch()"
-    )
     public ApplicationPage<BookResponse> search(BookQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -51,10 +45,7 @@ public class BookService {
         return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toResponse));
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", allEntries = true),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @Cacheable(value = "book", key = "#id")
     public Optional<BookResponse> findById(Long id) {
         return bookRepository.findById(id).map(bookMapper::toResponse);
     }
@@ -67,10 +58,7 @@ public class BookService {
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
-    @Caching(
-            put = @CachePut(value = "book", key = "#id"),
-            evict = @CacheEvict(value = "book:search", allEntries = true)
-    )
+    @CachePut(value = "book", key = "#id")
     @Transactional
     public BookResponse update(Long id, BookRequest request) {
         var book = bookRepository
@@ -83,10 +71,7 @@ public class BookService {
         return bookMapper.toResponse(book);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", key = "#id"),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void updateGenreById(Long id, String genreName, ToggleAction action) {
         var book = bookRepository
@@ -112,10 +97,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", key = "#id"),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void updateUserAverageScoreById(Long id, Double userAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -125,10 +107,7 @@ public class BookService {
         bookRepository.updateUserAverageScoreById(userAverageScore, id);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", key = "#id"),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void updateReviewAverageScoreById(Long id, Double reviewAverageScore) {
         if (!bookRepository.existsById(id)) {
@@ -138,10 +117,7 @@ public class BookService {
         bookRepository.updateReviewAverageScoreById(reviewAverageScore, id);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", key = "#id"),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void updateImageById(Long id, MultipartFile image) throws Exception {
         var book = bookRepository
@@ -152,10 +128,7 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "book", key = "#id"),
-            @CacheEvict(value = "book:search", allEntries = true)
-    })
+    @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void deleteImageById(Long id) throws Exception {
         var book = bookRepository
@@ -181,13 +154,7 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    @CacheEvict(
-            value = {
-                    "book",
-                    "book:search"
-            },
-            allEntries = true
-    )
+    @CacheEvict(value = "book", allEntries = true)
     public void clearCache() {
     }
 
