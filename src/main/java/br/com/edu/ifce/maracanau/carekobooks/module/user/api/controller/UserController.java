@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationshipStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
@@ -39,7 +39,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @GetMapping("/{username}/followers")
     public ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query) {
         query.setUsername(username);
-        query.setStatus(UserRelationshipStatus.FOLLOWER);
+        query.setRelationship(UserRelationship.FOLLOWER);
         var responses = userService.search(query);
         return ResponseEntity.ok(responses);
     }
@@ -48,7 +48,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @GetMapping("/{username}/following")
     public ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query) {
         query.setUsername(username);
-        query.setStatus(UserRelationshipStatus.FOLLOWING);
+        query.setRelationship(UserRelationship.FOLLOWING);
         var responses = userService.search(query);
         return ResponseEntity.ok(responses);
     }

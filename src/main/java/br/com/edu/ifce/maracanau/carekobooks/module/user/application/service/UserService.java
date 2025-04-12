@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestExceptio
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
@@ -53,6 +54,15 @@ public class UserService {
 
     public Optional<UserResponse> findByUsername(String username) {
         return userRepository.findByUsername(username).map(userMapper::toResponse);
+    }
+
+    public List<UserResponse> findAllFollowersByUsername(String username) {
+        var query = new UserSocialQuery();
+        query.setUsername(username);
+        query.setRelationship(UserRelationship.FOLLOWER);
+
+        var specification = query.getSpecification();
+        return userRepository.findAll(specification).stream().map(userMapper::toResponse).toList();
     }
 
     @Transactional

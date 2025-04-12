@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representa
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSocialSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationshipStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.BaseApplicationQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,12 +22,12 @@ public class UserSocialQuery extends BaseApplicationQuery<User> {
     private String username;
 
     @JsonIgnore
-    private UserRelationshipStatus status;
+    private UserRelationship relationship;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
-        return status == UserRelationshipStatus.FOLLOWING
+        return relationship == UserRelationship.FOLLOWING
                 ? specs.and(followingUsernameEqual(username))
                 : specs.and(followersUsernameEqual(username));
     }
