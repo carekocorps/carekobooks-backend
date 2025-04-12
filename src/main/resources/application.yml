@@ -7,7 +7,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update # Temporário, será alterado para "none" em breve
+      ddl-auto: none
     open-in-view: false
   cache:
     type: redis

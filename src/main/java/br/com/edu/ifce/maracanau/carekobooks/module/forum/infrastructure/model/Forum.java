@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "forums")
 public class Forum extends BaseModel {
 
     @Column(nullable = false)
