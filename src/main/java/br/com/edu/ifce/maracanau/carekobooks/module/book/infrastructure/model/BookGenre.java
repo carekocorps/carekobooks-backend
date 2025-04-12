@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "book_genre")
+@Table(name = "book_genres")
 public class BookGenre extends BaseModel {
 
     @Column(length = 50, unique = true, nullable = false)

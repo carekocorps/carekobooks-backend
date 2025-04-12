@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table
+@Table(name = "images")
 public class Image extends BaseModel {
 
     @Column(nullable = false)
@@ -24,10 +24,10 @@ public class Image extends BaseModel {
     @Column(length = 1024, nullable = false)
     private String url;
 
-    @Column(length = 50, name = "content_type", nullable = false)
+    @Column(name = "content_type", length = 50, nullable = false)
     private String contentType;
 
-    @Column(nullable = false)
+    @Column(name = "size_in_bytes", nullable = false)
     private Long sizeInBytes;
 
     @OneToMany(mappedBy = "image")
