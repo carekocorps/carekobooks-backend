@@ -8,10 +8,12 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>br.com.edu.ifce.maracanau</groupId>
 	<artifactId>carekobooks</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>carekobooks</name>
+
 	<properties>
 		<java.version>21</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
@@ -21,6 +23,7 @@
 		<error-handling-wimdeblauwe.version>4.5.0</error-handling-wimdeblauwe.version>
 		<minio.version>8.5.17</minio.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

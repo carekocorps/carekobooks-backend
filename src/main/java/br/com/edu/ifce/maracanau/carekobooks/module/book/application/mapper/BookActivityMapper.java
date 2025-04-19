@@ -7,9 +7,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.User
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, BookMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {UserMapper.class, BookMapper.class})
 public abstract class BookActivityMapper {
 
     @Autowired

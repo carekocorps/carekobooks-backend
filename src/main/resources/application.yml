@@ -9,6 +9,8 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
+  flyway:
+    validate-migration-naming: true
   cache:
     type: redis
   data:
@@ -24,12 +26,12 @@ security:
     key:
       private: classpath:app.key
       public: classpath:app.pub
-springdoc:
-  swagger-ui:
-    tags-sorter: alpha
-    operations-sorter: method
 minio:
   endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
   username: ${MINIO_USERNAME}
   password: ${MINIO_PASSWORD}
   bucket: ${MINIO_BUCKET}
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
