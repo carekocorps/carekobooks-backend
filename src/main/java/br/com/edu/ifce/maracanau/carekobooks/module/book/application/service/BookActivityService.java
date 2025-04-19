@@ -63,7 +63,7 @@ public class BookActivityService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookActivity.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookActivity.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book activity");
         }
 

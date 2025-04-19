@@ -49,7 +49,7 @@ public class ForumReplyService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum Reply not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(forumReply.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(forumReply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum reply");
         }
 
@@ -65,7 +65,7 @@ public class ForumReplyService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum Reply not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(forumReply.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(forumReply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum reply");
         }
 

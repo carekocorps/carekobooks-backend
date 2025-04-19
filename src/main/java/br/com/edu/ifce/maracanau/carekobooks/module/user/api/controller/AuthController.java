@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.AuthControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.RefreshTokenRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserLoginRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
@@ -28,8 +29,8 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/refresh/{username}")
-    public ResponseEntity<TokenResponse> refresh(@PathVariable String username, @RequestHeader("Authorization") String refreshToken) {
-        return ResponseEntity.ok(authService.refreshToken(username, refreshToken));
+    public ResponseEntity<TokenResponse> refresh(@PathVariable String username, @RequestBody @Valid RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(username, request.getRefreshToken()));
     }
 
     @Override

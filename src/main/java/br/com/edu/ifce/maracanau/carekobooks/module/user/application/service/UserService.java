@@ -71,7 +71,7 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
+        if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update this user");
         }
 
@@ -83,7 +83,7 @@ public class UserService {
 
     @Transactional
     public void updateFollowingByUsername(String username, String targetUsername, ToggleAction action) {
-        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
+        if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
 
@@ -122,7 +122,7 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
+        if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update the image of this user");
         }
 
@@ -136,7 +136,7 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
+        if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update the image of this user");
         }
 
@@ -155,7 +155,7 @@ public class UserService {
             throw new NotFoundException("User not found");
         }
 
-        if (!UserContextProvider.isCurrentUserAuthorized(username)) {
+        if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to delete this user");
         }
 

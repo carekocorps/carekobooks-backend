@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representa
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,8 +12,9 @@ public class TokenResponse implements BaseResponse {
 
     private String username;
     private Boolean isAuthenticated;
-    private Date createdAt;
-    private Date expiresAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime accessExpiresAt;
+    private LocalDateTime refreshExpiresAt;
     private String accessToken;
     private String refreshToken;
 
