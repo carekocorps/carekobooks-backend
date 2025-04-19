@@ -49,7 +49,7 @@ public class ForumService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum");
         }
 
@@ -65,7 +65,7 @@ public class ForumService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(forum.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(forum.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum");
         }
 

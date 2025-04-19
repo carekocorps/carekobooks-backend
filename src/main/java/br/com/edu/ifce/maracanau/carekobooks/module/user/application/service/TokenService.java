@@ -1,22 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.micrometer.common.util.StringUtils;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.Base64;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,92 +16,56 @@ import java.util.Optional;
 @Service
 public class TokenService {
 
-    @Value("${security.jwt.token.secret-key}")
-    private String secretKey;
+    private static final long EXPIRATION_TIME_IN_SECONDS = 3600L;
 
-    @Value("${security.jwt.token.expiration-time-in-ms}")
-    private Long expirationTimeInMs;
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
 
-    private final UserDetailsService userDetailsService;
-    private Algorithm algorithm = null;
-
-    @PostConstruct
-    public void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        algorithm = Algorithm.HMAC256(secretKey);
-    }
-
-    public TokenResponse createAccessToken(String username, List<String> roles) {
-        var createdAt = new Date();
-        var expiresAt = new Date(createdAt.getTime() + expirationTimeInMs);
+    public TokenResponse accessToken(String username, List<String> roles) {
+        var createdAt = Instant.now();
+        var accessExpiresAt = createdAt.plusSeconds(EXPIRATION_TIME_IN_SECONDS);
+        var refreshExpiresAt = accessExpiresAt.plusSeconds(EXPIRATION_TIME_IN_SECONDS * 3);
         var response = new TokenResponse();
         response.setUsername(username);
         response.setIsAuthenticated(true);
-        response.setCreatedAt(createdAt);
-        response.setExpiresAt(expiresAt);
-        response.setAccessToken(getAccessToken(username, roles, createdAt, expiresAt));
-        response.setRefreshToken(getRefreshToken(username, roles, createdAt));
+        response.setCreatedAt(LocalDateTime.ofInstant(createdAt, ZoneId.systemDefault()));
+        response.setAccessExpiresAt(LocalDateTime.ofInstant(accessExpiresAt, ZoneId.systemDefault()));
+        response.setRefreshExpiresAt(LocalDateTime.ofInstant(refreshExpiresAt, ZoneId.systemDefault()));
+        response.setAccessToken(getAccessToken(username, roles, createdAt, accessExpiresAt));
+        response.setRefreshToken(getRefreshToken(username, roles, createdAt, refreshExpiresAt));
         return response;
     }
 
     public TokenResponse refreshToken(String refreshToken) {
-        var token = getTokenFromBearer(refreshToken).orElse("");
-        var decodedJWT = getDecodedJWT(token);
-        return createAccessToken(decodedJWT.getSubject(), decodedJWT.getClaim("roles").asList(String.class));
+        var jwt = jwtDecoder.decode(refreshToken);
+        var roles = Optional.ofNullable(jwt.getClaimAsStringList("roles")).orElse(List.of());
+        return accessToken(jwt.getSubject(), roles);
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        var bearerToken = request.getHeader("Authorization");
-        return getTokenFromBearer(bearerToken).orElse(null);
+    private String getAccessToken(String username, List<String> roles, Instant createdAt, Instant expiresAt) {
+        var issuer = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        var claims = JwtClaimsSet
+                .builder()
+                .issuer(issuer)
+                .subject(username)
+                .issuedAt(createdAt)
+                .expiresAt(expiresAt)
+                .claim("roles", roles)
+                .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public boolean validateToken(String token) {
-        try {
-            return getDecodedJWT(token).getExpiresAt().after(new Date());
-        } catch (Exception ex) {
-            return false;
-        }
-    }
+    private String getRefreshToken(String username, List<String> roles, Instant createdAt, Instant expiresAt) {
+        var claims = JwtClaimsSet
+                .builder()
+                .subject(username)
+                .issuedAt(createdAt)
+                .expiresAt(expiresAt)
+                .claim("roles", roles)
+                .build();
 
-    public Authentication getAuthentication(String token) {
-        try {
-            var decodedJWT = getDecodedJWT(token);
-            var userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
-            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
-    private String getAccessToken(String username, List<String> roles, Date createdAt, Date expiresAt) {
-        var issuerUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        return JWT.create()
-                .withClaim("roles", roles)
-                .withIssuedAt(createdAt)
-                .withExpiresAt(expiresAt)
-                .withSubject(username)
-                .withIssuer(issuerUrl)
-                .sign(algorithm);
-    }
-
-    private String getRefreshToken(String username, List<String> roles, Date createdAt) {
-        var expiresAt = new Date(createdAt.getTime() + (expirationTimeInMs * 3));
-        return JWT.create()
-                .withClaim("roles", roles)
-                .withIssuedAt(createdAt)
-                .withExpiresAt(expiresAt)
-                .withSubject(username)
-                .sign(algorithm);
-    }
-
-    private DecodedJWT getDecodedJWT(String token) {
-        return JWT.require(algorithm).build().verify(token);
-    }
-
-    private Optional<String> getTokenFromBearer(String bearerToken) {
-        return StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith("Bearer ")
-                ? Optional.of(bearerToken.replace("Bearer", "").trim())
-                : Optional.empty();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
 }

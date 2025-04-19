@@ -46,7 +46,7 @@ public class BookProgressService {
         bookProgressValidator.validate(bookProgress);
         bookProgress = bookProgressRepository.save(bookProgress);
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
@@ -70,7 +70,7 @@ public class BookProgressService {
         bookProgressValidator.validate(bookProgress);
         bookProgressRepository.save(bookProgress);
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -88,7 +88,7 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -102,7 +102,7 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book progress");
         }
 

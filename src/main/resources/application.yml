@@ -19,15 +19,15 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
+security:
+  jwt:
+    key:
+      private: classpath:app.key
+      public: classpath:app.pub
 springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: method
-security:
-  jwt:
-    token:
-      secret-key: ${JWT_SECRET_KEY}
-      expiration-time-in-ms: ${JWT_EXPIRATION_TIME_IN_MS:3600000}
 minio:
   endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
   username: ${MINIO_USERNAME}
