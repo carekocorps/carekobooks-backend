@@ -16,7 +16,7 @@ public class UserContextProvider {
         return (UserDetails) authentication.getPrincipal();
     }
 
-    public static boolean isCurrentUserAuthorized(String authorizedUsername) {
+    public static boolean isUserUnauthorized(String authorizedUsername) {
         var userDetails = getUserDetails();
         var isUsernameMatching = userDetails.getUsername().equals(authorizedUsername);
         var isAdmin = userDetails
@@ -24,7 +24,7 @@ public class UserContextProvider {
                 .stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + UserRole.ADMIN.name()));
 
-        return isUsernameMatching || isAdmin;
+        return !isUsernameMatching && !isAdmin;
     }
 
 }

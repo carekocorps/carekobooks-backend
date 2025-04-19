@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter.TokenFilter;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.converter.JwtAuthenticationConverter;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +18,29 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
     @Autowired
-    private TokenService tokenService;
+    private JwtTokenFilter jwtTokenFilter;
+
+    @Autowired
+    private JwtAuthenticationConverter jwtAuthenticationConverter;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .anonymous(AbstractHttpConfigurer::disable)
+                .cors(cors -> {})
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -31,22 +48,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .anonymous(AbstractHttpConfigurer::disable)
-                .cors(cors -> {})
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new TokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
-                .build();
     }
 
 }

@@ -61,7 +61,7 @@ public class BookReviewService {
         bookReviewValidator.validate(bookReview);
         bookReviewRepository.save(bookReview);
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookReview.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookReview.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book review");
         }
 
@@ -77,7 +77,7 @@ public class BookReviewService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
-        if (!UserContextProvider.isCurrentUserAuthorized(bookReview.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(bookReview.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book review");
         }
 

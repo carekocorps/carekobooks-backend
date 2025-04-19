@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @OpenAPIDefinition(
         info = @Info(
                 title = "Carekobooks",
@@ -18,7 +17,8 @@ import org.springframework.context.annotation.Configuration;
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
         bearerFormat = "JWT",
-        description = "Enter the JWT token like this: Bearer {token}"
+        description = "Enter the JWT token like this: {token}"
 )
+@Configuration
 public class OpenAPIConfig {
 }

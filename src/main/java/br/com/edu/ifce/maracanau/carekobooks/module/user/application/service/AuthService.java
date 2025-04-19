@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final TokenService tokenService;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
@@ -36,10 +36,7 @@ public class AuthService {
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
-        return tokenService.createAccessToken(
-                user.getUsername(),
-                user.getRoles()
-        );
+        return tokenService.accessToken(user.getUsername(), user.getRoles());
     }
 
     public TokenResponse refreshToken(String username, String refreshToken) {
@@ -56,11 +53,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userValidator.validate(user);
         userRepository.save(user);
-
-        return tokenService.createAccessToken(
-                user.getUsername(),
-                user.getRoles()
-        );
+        return tokenService.accessToken(user.getUsername(), user.getRoles());
     }
 
 }
