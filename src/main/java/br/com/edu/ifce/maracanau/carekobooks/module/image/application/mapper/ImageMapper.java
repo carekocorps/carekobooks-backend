@@ -5,10 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.Mi
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ImageMapper {
 
     @Autowired
