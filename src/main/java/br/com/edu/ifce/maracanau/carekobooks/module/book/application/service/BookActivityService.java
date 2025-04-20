@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notication.subject.BookActivitySubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
@@ -10,11 +11,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,12 +22,10 @@ import java.util.Optional;
 @Service
 public class BookActivityService {
 
-    private final UserService userService;
-    private final SimpMessagingTemplate messagingTemplate;
-
     private final BookActivityRepository bookActivityRepository;
     private final BookActivityMapper bookActivityMapper;
     private final BookActivityValidator bookActivityValidator;
+    private final BookActivitySubject bookActivitySubject;
 
     public ApplicationPage<BookActivityResponse> search(BookActivityQuery query) {
         var specification = query.getSpecification();
@@ -46,14 +43,9 @@ public class BookActivityService {
         var bookActivity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(bookActivity);
         bookActivityRepository.save(bookActivity);
+
         var response = bookActivityMapper.toResponse(bookActivity);
-
-        var followers = userService.findAllFollowersByUsername(bookActivity.getUser().getUsername());
-        for (var follower : followers) {
-            var destination = "/topic/users/" + follower.getUsername() + "/feed";
-            messagingTemplate.convertAndSend(destination, response);
-        }
-
+        bookActivitySubject.notify(response);
         return response;
     }
 
