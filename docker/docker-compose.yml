@@ -23,7 +23,7 @@ services:
       - carekonet
 
   mysql:
-    image: mysql:8.0
+    image: mysql:latest
     container_name: mysql
     ports:
       - "3306:3306"
@@ -37,7 +37,7 @@ services:
       - carekonet
 
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     container_name: minio
     ports:
       - "9000:9000"
@@ -66,7 +66,7 @@ services:
       - carekonet
 
   redis:
-    image: redis
+    image: redis:latest
     container_name: redis
     ports:
       - "6379:6379"
