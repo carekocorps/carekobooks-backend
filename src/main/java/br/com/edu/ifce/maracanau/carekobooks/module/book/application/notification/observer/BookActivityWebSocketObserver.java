@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.book.application.notication.observer;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.observer;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;

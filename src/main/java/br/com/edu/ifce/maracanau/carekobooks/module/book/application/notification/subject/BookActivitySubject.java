@@ -1,7 +1,7 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.book.application.notication.subject;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.subject;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notification.subject.BaseSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notication.observer.BaseBookActivityObserver;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.observer.BaseBookActivityObserver;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
 
 import java.util.ArrayList;
@@ -23,11 +23,6 @@ public class BookActivitySubject implements BaseSubject<BaseBookActivityObserver
     @Override
     public void removeObserver(BaseBookActivityObserver observer) {
         observers.remove(observer);
-    }
-
-    @Override
-    public List<BaseBookActivityObserver> getObservers() {
-        return observers;
     }
 
 }
