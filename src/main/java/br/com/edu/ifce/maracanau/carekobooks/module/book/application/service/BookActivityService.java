@@ -43,8 +43,10 @@ public class BookActivityService {
         var bookActivity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(bookActivity);
         bookActivityRepository.save(bookActivity);
-        bookActivityNotificationSubject.notify(bookActivity);
-        return bookActivityMapper.toResponse(bookActivity);
+
+        var response = bookActivityMapper.toResponse(bookActivity);
+        bookActivityNotificationSubject.notify(response);
+        return response;
     }
 
     @Transactional

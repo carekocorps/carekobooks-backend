@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.request.BaseRequest;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,18 +11,19 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserPasswordResetRequest implements BaseRequest {
+public class UserEmailChangeVerificationRequest {
 
     @NotBlank
     @Email
     @Size(max = 255)
-    private String email;
+    private String currentEmail;
 
     @NotBlank
+    @Email
     @Size(max = 255)
-    private String password;
+    private String newEmail;
 
     @NotNull
-    private UUID resetToken;
+    private UUID emailResetToken;
 
 }
