@@ -2,11 +2,12 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.va
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookProgressValidator {
+public class BookProgressValidator implements BaseValidator<BookProgress> {
 
     public void validate(BookProgress bookProgress) {
         if (isUserEmpty(bookProgress)) {

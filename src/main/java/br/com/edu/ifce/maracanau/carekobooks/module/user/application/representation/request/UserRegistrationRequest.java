@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserRegisterRequest implements BaseRequest {
+public class UserRegistrationRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 50)

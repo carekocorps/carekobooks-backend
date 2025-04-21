@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.converter.JwtAuthenticationConverter;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter.JwtTokenFilter;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.converter.JwtAuthenticationConverter;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

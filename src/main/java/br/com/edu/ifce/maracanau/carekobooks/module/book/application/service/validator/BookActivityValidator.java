@@ -1,11 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookActivityValidator {
+public class BookActivityValidator implements BaseValidator<BookActivity> {
 
     public void validate(BookActivity bookActivity) {
         if (isUserEmpty(bookActivity)) {

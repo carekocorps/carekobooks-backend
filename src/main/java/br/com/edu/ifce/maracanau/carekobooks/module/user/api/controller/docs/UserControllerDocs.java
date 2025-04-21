@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -104,7 +104,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable String username, @ModelAttribute @Valid UserRegisterRequest request) throws Exception;
+    ResponseEntity<Void> update(@PathVariable String username, @ModelAttribute @Valid UserRegistrationRequest request) throws Exception;
 
     @Operation(
             summary = "Follow a user by username",
