@@ -1,22 +1,24 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserControllerDocs {
@@ -93,6 +95,14 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Update a user",
             tags = {"User"},
+            requestBody = @RequestBody(
+                    content = @Content(
+                            encoding = @Encoding(
+                                    name = "request",
+                                    contentType = "application/json"
+                            )
+                    )
+            ),
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -104,7 +114,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable String username, @ModelAttribute @Valid UserRegistrationRequest request) throws Exception;
+    ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestPart(required = false) MultipartFile image) throws Exception;
 
     @Operation(
             summary = "Follow a user by username",

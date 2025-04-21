@@ -43,18 +43,18 @@ public class BookController implements BaseController, BookControllerDocs {
 
     @Override
     @AdminRoleRequired
-    @PostMapping
-    public ResponseEntity<BookResponse> create(@RequestBody @Valid BookRequest request) {
-        var response = bookService.create(request);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) throws Exception {
+        var response = bookService.create(request, image);
         var uri = getHeaderLocation(response.getId());
         return ResponseEntity.created(uri).body(response);
     }
 
     @Override
     @AdminRoleRequired
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookRequest request) {
-        bookService.update(id, request);
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+        bookService.update(id, request, image);
         return ResponseEntity.noContent().build();
     }
 

@@ -13,12 +13,10 @@ public class UserLoginRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 255)
-    @Schema(example = "string")
     private String username;
 
     @NotBlank
     @Size(max = 255)
-    @Schema(example = "string")
     private String password;
 
 }
