@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.subject.BookActivitySubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
@@ -25,7 +25,7 @@ public class BookActivityService {
     private final BookActivityRepository bookActivityRepository;
     private final BookActivityMapper bookActivityMapper;
     private final BookActivityValidator bookActivityValidator;
-    private final BookActivitySubject bookActivitySubject;
+    private final BookActivityNotificationSubject bookActivityNotificationSubject;
 
     public ApplicationPage<BookActivityResponse> search(BookActivityQuery query) {
         var specification = query.getSpecification();
@@ -43,10 +43,8 @@ public class BookActivityService {
         var bookActivity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(bookActivity);
         bookActivityRepository.save(bookActivity);
-
-        var response = bookActivityMapper.toResponse(bookActivity);
-        bookActivitySubject.notify(response);
-        return response;
+        bookActivityNotificationSubject.notify(bookActivity);
+        return bookActivityMapper.toResponse(bookActivity);
     }
 
     @Transactional

@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.va
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class BookValidator {
+public class BookValidator implements BaseValidator<Book> {
 
     private final BookRepository bookRepository;
 

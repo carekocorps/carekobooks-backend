@@ -121,8 +121,8 @@ public interface BookControllerDocs {
     ResponseEntity<Void> unassignGenreById(@PathVariable Long id, @PathVariable String genreName);
 
     @Operation(
-            summary = "Update a user image by username",
-            tags = {"User"},
+            summary = "Update a book image by ID",
+            tags = {"Book"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -137,8 +137,8 @@ public interface BookControllerDocs {
     ResponseEntity<Void> updateImageById(@PathVariable Long id, @RequestParam MultipartFile avatar) throws Exception;
 
     @Operation(
-            summary = "Delete a user image by username",
-            tags = {"User"},
+            summary = "Delete a book image by ID",
+            tags = {"Book"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),

@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
@@ -10,12 +10,12 @@ import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", config = BaseUpdateMapper.class)
-public abstract class UserMapper implements BaseUpdateMapper<User, UserRegisterRequest> {
+public abstract class UserMapper implements BaseUpdateMapper<User, UserRegistrationRequest> {
 
     @Autowired
     protected ImageMapper imageMapper;
 
-    public abstract User toModel(UserRegisterRequest request);
+    public abstract User toModel(UserRegistrationRequest request);
 
     @Mapping(target = "image", expression = "java(imageMapper.toResponse(user.getImage()))")
     public abstract UserResponse toResponse(User user);

@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class BookGenreValidator {
+public class BookGenreValidator implements BaseValidator<BookGenre> {
 
     private final BookGenreRepository bookGenreRepository;
 

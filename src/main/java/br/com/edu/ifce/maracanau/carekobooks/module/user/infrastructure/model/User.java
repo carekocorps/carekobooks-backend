@@ -17,8 +17,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -44,6 +46,21 @@ public class User extends BaseModel implements UserDetails {
     @Column(nullable = false)
     private UserRole role = UserRole.USER;
 
+    @Column(name = "is_enabled", nullable = false)
+    private Boolean isEnabled;
+
+    @Column(name = "verification_token")
+    private UUID verificationToken;
+
+    @Column(name = "verification_token_expires_at")
+    private LocalDateTime verificationTokenExpiresAt;
+
+    @Column(name = "reset_token")
+    private UUID resetToken;
+
+    @Column(name = "reset_token_expires_at")
+    private LocalDateTime resetTokenExpiresAt;
+
     @ManyToOne
     @JoinColumn(name = "image_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -59,7 +76,7 @@ public class User extends BaseModel implements UserDetails {
     private List<BookReview> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    public List<Forum> forums;
+    private List<Forum> forums;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ForumReply> replies;
@@ -90,22 +107,22 @@ public class User extends BaseModel implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return isEnabled;
     }
 
 }
