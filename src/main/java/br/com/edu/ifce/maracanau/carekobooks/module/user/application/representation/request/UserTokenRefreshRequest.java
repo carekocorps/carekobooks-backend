@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RefreshTokenRequest implements BaseRequest {
+public class UserTokenRefreshRequest implements BaseRequest {
 
     @NotBlank
     private String refreshToken;

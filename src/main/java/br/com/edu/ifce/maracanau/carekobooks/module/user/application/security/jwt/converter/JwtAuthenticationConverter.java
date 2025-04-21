@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.converter;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

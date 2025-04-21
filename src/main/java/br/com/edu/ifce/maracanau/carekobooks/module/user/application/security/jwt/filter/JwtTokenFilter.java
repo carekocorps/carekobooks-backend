@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.filter;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
