@@ -3,6 +3,8 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.subject.UserNotificationSubject;
@@ -20,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -38,6 +41,9 @@ public class AuthService {
     private final UserPasswordRecoveryValidator userPasswordRecoveryValidator;
     private final UserMapper userMapper;
     private final UserNotificationSubject userNotificationSubject;
+
+    private final ImageService imageService;
+    private final ImageMapper imageMapper;
 
     public TokenResponse login(UserLoginRequest request) {
         var user = userRepository
@@ -59,12 +65,16 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponse register(UserRegistrationRequest request) {
+    public UserResponse register(UserRegistrationRequest request, MultipartFile image) throws Exception {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsEnabled(false);
         user.setVerificationToken(UUID.randomUUID());
         user.setVerificationTokenExpiresAt(LocalDateTime.now().plusHours(1));
+
+        if (image != null) {
+            user.setImage(imageMapper.toModel(imageService.create(image)));
+        }
 
         userValidator.validate(user);
         userRepository.save(user);

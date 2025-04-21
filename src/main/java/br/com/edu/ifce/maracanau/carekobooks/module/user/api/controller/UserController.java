@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
@@ -63,8 +63,8 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable String username, @ModelAttribute @Valid UserRegistrationRequest request) throws Exception {
-        userService.update(username, request);
+    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+        userService.update(username, request, image);
         return ResponseEntity.noContent().build();
     }
 
