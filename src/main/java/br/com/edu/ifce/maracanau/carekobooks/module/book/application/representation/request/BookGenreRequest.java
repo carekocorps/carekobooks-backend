@@ -23,7 +23,6 @@ public class BookGenreRequest implements BaseRequest {
     private String friendlyName;
 
     @Size(max = 255)
-    @Schema(example = "string")
     private String description;
 
 }

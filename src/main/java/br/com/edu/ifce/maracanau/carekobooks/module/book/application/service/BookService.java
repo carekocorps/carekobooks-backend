@@ -52,18 +52,26 @@ public class BookService {
 
     @CacheEvict(value = "book", allEntries = true)
     @Transactional
-    public BookResponse create(BookRequest request) {
+    public BookResponse create(BookRequest request, MultipartFile image) throws Exception {
         var book = bookMapper.toModel(request);
+        if (image != null) {
+            book.setImage(imageMapper.toModel(imageService.create(image)));
+        }
+
         bookValidator.validate(book);
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
     @CachePut(value = "book", key = "#id")
     @Transactional
-    public BookResponse update(Long id, BookRequest request) {
+    public BookResponse update(Long id, BookRequest request, MultipartFile image) throws Exception {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
+
+        if (image != null) {
+            book.setImage(imageMapper.toModel(imageService.create(image)));
+        }
 
         bookMapper.updateModel(book, request);
         bookValidator.validate(book);

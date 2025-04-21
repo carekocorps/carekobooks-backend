@@ -8,8 +8,10 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseCon
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequiredArgsConstructor
@@ -27,9 +29,16 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid UserRegistrationRequest request) {
-        var response = authService.register(request);
+    @PostMapping("/verify")
+    public ResponseEntity<Void> verify(@RequestBody @Valid UserVerificationRequest request) {
+        authService.verify(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> register(@RequestPart @Valid UserRegistrationRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+        var response = authService.register(request, image);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/users/{username}")
@@ -37,13 +46,6 @@ public class AuthController implements BaseController, AuthControllerDocs {
                 .toUri();
 
         return ResponseEntity.created(uri).build();
-    }
-
-    @Override
-    @PostMapping("/verify")
-    public ResponseEntity<Void> verify(@RequestBody @Valid UserVerificationRequest request) {
-        authService.verify(request);
-        return ResponseEntity.noContent().build();
     }
 
     @Override

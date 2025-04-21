@@ -5,10 +5,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.Ima
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -66,13 +66,17 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse update(String username, UserRegistrationRequest request) throws Exception {
+    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) throws Exception {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update this user");
+        }
+
+        if (image != null) {
+            user.setImage(imageMapper.toModel(imageService.create(image)));
         }
 
         userMapper.updateModel(user, request);

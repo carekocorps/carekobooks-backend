@@ -6,7 +6,9 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -14,8 +16,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface BookControllerDocs {
@@ -59,6 +61,14 @@ public interface BookControllerDocs {
             summary = "Create a book",
             tags = {"Book"},
             security = @SecurityRequirement(name = "Bearer"),
+            requestBody = @RequestBody(
+                    content = @Content(
+                            encoding = @Encoding(
+                                    name = "request",
+                                    contentType = "application/json"
+                            )
+                    )
+            ),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -76,11 +86,19 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookResponse> create(@RequestBody @Valid BookRequest request);
+    ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) throws Exception;
 
     @Operation(
             summary = "Update a book",
             tags = {"Book"},
+            requestBody = @RequestBody(
+                    content = @Content(
+                            encoding = @Encoding(
+                                    name = "request",
+                                    contentType = "application/json"
+                            )
+                    )
+            ),
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -90,7 +108,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookRequest request);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) throws Exception;
 
     @Operation(
             summary = "Assign a book genre to a book by ID",
