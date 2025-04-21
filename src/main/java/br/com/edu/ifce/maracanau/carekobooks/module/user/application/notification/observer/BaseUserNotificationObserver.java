@@ -2,10 +2,10 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificati
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notification.observer.BaseNotificationObserver;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 
 public interface BaseUserNotificationObserver extends BaseNotificationObserver {
 
-    void notify(User user, NotificationContent content);
+    void notify(UserResponse response, NotificationContent content);
 
 }

@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
@@ -11,9 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificatio
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserPasswordRecoveryValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserVerificationValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +36,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
-    private final UserVerificationValidator userVerificationValidator;
-    private final UserPasswordRecoveryValidator userPasswordRecoveryValidator;
     private final UserMapper userMapper;
     private final UserNotificationSubject userNotificationSubject;
+
+    private final UserRegisterVerificationValidator userRegisterVerificationValidator;
+    private final UserPasswordRecoveryVerificationValidator userPasswordRecoveryVerificationValidator;
+    private final UserEmailChangeVerificationValidator userEmailChangeVerificationValidator;
 
     private final ImageService imageService;
     private final ImageMapper imageMapper;
@@ -65,7 +66,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponse register(UserRegistrationRequest request, MultipartFile image) throws Exception {
+    public UserResponse initRegistration(UserRegisterInitializationRequest request, MultipartFile image) throws Exception {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsEnabled(false);
@@ -78,26 +79,30 @@ public class AuthService {
 
         userValidator.validate(user);
         userRepository.save(user);
-        userNotificationSubject.notify(user, NotificationContent.fromVerificationToken(user.getVerificationToken()));
+        userNotificationSubject.notify(
+                userMapper.toResponse(user),
+                NotificationContent.fromVerificationToken(user.getVerificationToken())
+        );
+
         return userMapper.toResponse(user);
     }
 
     @Transactional
-    public void verify(UserVerificationRequest request) {
+    public void verifyRegistration(UserRegisterVerificationRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        userVerificationValidator.validate(user);
-        if (!user.getVerificationToken().equals(request.getVerificationCode())) {
+        userRegisterVerificationValidator.validate(user);
+        if (!user.getVerificationToken().equals(request.getVerificationToken())) {
             throw new BadRequestException("Invalid verification token");
         }
 
-        userRepository.verifyUserByEmail(user.getEmail());
+        userRepository.verifyRegistration(user.getUsername());
     }
 
     @Transactional
-    public void forgotPassword(UserPasswordRecoveryRequest request) {
+    public void initPasswordRecovery(UserPasswordRecoveryInitializationRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
@@ -106,28 +111,73 @@ public class AuthService {
             throw new ForbiddenException("User not verified");
         }
 
-        user.setResetToken(UUID.randomUUID());
-        user.setResetTokenExpiresAt(LocalDateTime.now().plusHours(1));
-        userRepository.updateResetTokenByEmail(user.getEmail(), user.getResetToken(), user.getResetTokenExpiresAt());
-        userNotificationSubject.notify(user, NotificationContent.fromResetToken(user.getResetToken()));
+        var passwordVerificationToken = UUID.randomUUID();
+        var passwordVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
+        userRepository.initPasswordRecovery(user.getUsername(), passwordVerificationToken, passwordVerificationTokenExpiresAt);
+        userNotificationSubject.notify(
+                userMapper.toResponse(user),
+                NotificationContent.fromPasswordVerificationToken(passwordVerificationToken)
+        );
     }
 
     @Transactional
-    public void resetPassword(UserPasswordResetRequest request) {
+    public void verifyPasswordRecovery(UserPasswordRecoveryVerificationRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        userPasswordRecoveryValidator.validate(user);
-        if (!user.getResetToken().equals(request.getResetToken())) {
+        userPasswordRecoveryVerificationValidator.validate(user);
+        if (!user.getPasswordVerificationToken().equals(request.getPasswordResetToken())) {
             throw new BadRequestException("Invalid verification token");
         }
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.resetPasswordByEmail(user.getEmail(), user.getPassword());
+        var encodedPassword = passwordEncoder.encode(request.getPassword());
+        userRepository.verifyPasswordRecovery(user.getUsername(), encodedPassword);
     }
 
-    public TokenResponse refresh(String username, UserTokenRefreshRequest request) {
+    @Transactional
+    public void initEmailChange(UserEmailChangeInitializationRequest request) {
+        var user = userRepository
+                .findByEmail(request.getCurrentEmail())
+                .orElseThrow(() -> new NotFoundException("Email not found"));
+
+        if (!user.isEnabled()) {
+            throw new ForbiddenException("User not verified");
+        }
+
+        if (user.getEmail().equals(request.getNewEmail())) {
+            throw new BadRequestException("New email must be different from current email");
+        }
+
+        if (userRepository.existsByEmail(request.getNewEmail())) {
+            throw new ConflictException("New email is already taken");
+        }
+
+        var emailVerificationToken = UUID.randomUUID();
+        var emailVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
+        userRepository.initEmailChange(user.getUsername(), emailVerificationToken, emailVerificationTokenExpiresAt);
+
+        var userNotified = userMapper.toResponse(user);
+        userNotified.setEmail(request.getNewEmail());
+        userNotificationSubject.notify(userNotified, NotificationContent.fromEmailVerificationToken(emailVerificationToken));
+    }
+
+    @Transactional
+    public void verifyEmailChange(UserEmailChangeVerificationRequest request) {
+        var user = userRepository
+                .findByEmail(request.getCurrentEmail())
+                .orElseThrow(() -> new NotFoundException("Email not found"));
+
+        userEmailChangeVerificationValidator.validate(user);
+        if (!user.getEmailVerificationToken().equals(request.getEmailResetToken())) {
+            throw new BadRequestException("Invalid verification token");
+        }
+
+        var newEmail = request.getNewEmail();
+        userRepository.verifyEmailChange(user.getUsername(), newEmail);
+    }
+
+    public TokenResponse refreshToken(String username, UserTokenRefreshRequest request) {
         if (!userRepository.existsByUsername(username)) {
             throw new UsernameNotFoundException("Username not found");
         }

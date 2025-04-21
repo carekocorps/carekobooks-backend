@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class UserPasswordRecoveryValidator implements BaseValidator<User> {
+public class UserEmailChangeVerificationValidator implements BaseValidator<User> {
 
     public void validate(User user) {
         if (isNotEnabled(user)) {
             throw new BadRequestException("User not verified");
         }
 
-        if (isResetTokenEmpty(user)) {
-            throw new BadRequestException("Verification token is expired");
+        if (isEmailResetTokenEmpty(user)) {
+            throw new BadRequestException("Invalid token");
         }
 
-        if (isResetTokenExpired(user)) {
-            throw new BadRequestException("Invalid verification token");
+        if (isEmailResetTokenExpired(user)) {
+            throw new BadRequestException("Token expired");
         }
     }
 
@@ -28,12 +28,12 @@ public class UserPasswordRecoveryValidator implements BaseValidator<User> {
         return !user.isEnabled();
     }
 
-    private boolean isResetTokenEmpty(User user) {
-        return user.getResetToken() == null;
+    private boolean isEmailResetTokenEmpty(User user) {
+        return user.getEmailVerificationToken() == null;
     }
 
-    private boolean isResetTokenExpired(User user) {
-        return user.getResetTokenExpiresAt().isBefore(LocalDateTime.now());
+    private boolean isEmailResetTokenExpired(User user) {
+        return user.getEmailVerificationTokenExpiresAt().isBefore(LocalDateTime.now());
     }
 
 }
