@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class UserVerificationValidator implements BaseValidator<User> {
+public class UserRegisterVerificationValidator implements BaseValidator<User> {
 
     public void validate(User user) {
         if (isEnabled(user)) {

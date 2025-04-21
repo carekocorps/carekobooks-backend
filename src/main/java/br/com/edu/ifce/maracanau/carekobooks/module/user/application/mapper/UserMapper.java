@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterInitializationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegistrationRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
@@ -16,7 +16,7 @@ public abstract class UserMapper implements BaseUpdateMapper<User, UserUpdateReq
     @Autowired
     protected ImageMapper imageMapper;
 
-    public abstract User toModel(UserRegistrationRequest request);
+    public abstract User toModel(UserRegisterInitializationRequest request);
 
     @Mapping(target = "image", expression = "java(imageMapper.toResponse(user.getImage()))")
     public abstract UserResponse toResponse(User user);

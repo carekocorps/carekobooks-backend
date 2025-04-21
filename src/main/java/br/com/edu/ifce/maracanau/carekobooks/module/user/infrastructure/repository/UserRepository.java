@@ -20,28 +20,28 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
     void deleteByUsername(String username);
 
     @Modifying
     @Transactional
     @Query("""
         UPDATE User u
-        SET u.resetToken = :resetToken,
-            u.resetTokenExpiresAt = :expiresAt
-        WHERE u.email = :email
+        SET u.passwordVerificationToken = :token,
+            u.passwordVerificationTokenExpiresAt = :expiresAt
+        WHERE u.username = :username
     """)
-    void updateResetTokenByEmail(String email, UUID resetToken, LocalDateTime expiresAt);
+    void initPasswordRecovery(String username, UUID token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
     @Query("""
         UPDATE User u
-        SET u.password = :password,
-            u.resetToken = NULL,
-            u.resetTokenExpiresAt = NULL
-        WHERE u.email = :email
+        SET u.emailVerificationToken = :token,
+            u.emailVerificationTokenExpiresAt = :expiresAt
+        WHERE u.username = :username
     """)
-    void resetPasswordByEmail(String email, String password);
+    void initEmailChange(String username, UUID token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
@@ -50,8 +50,30 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
         SET u.isEnabled = true,
             u.verificationToken = null,
             u.verificationTokenExpiresAt = null
-        WHERE u.email = :email
+        WHERE u.username = :username
     """)
-    void verifyUserByEmail(String email);
+    void verifyRegistration(String username);
+
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE User u
+        SET u.password = :password,
+            u.passwordVerificationToken = NULL,
+            u.passwordVerificationTokenExpiresAt = NULL
+        WHERE u.username = :username
+    """)
+    void verifyPasswordRecovery(String username, String password);
+
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE User u
+        SET u.email = :email,
+            u.emailVerificationToken = NULL,
+            u.emailVerificationTokenExpiresAt = NULL
+        WHERE u.username = :username
+    """)
+    void verifyEmailChange(String username, String email);
 
 }

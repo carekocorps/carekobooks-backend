@@ -55,11 +55,17 @@ public class User extends BaseModel implements UserDetails {
     @Column(name = "verification_token_expires_at")
     private LocalDateTime verificationTokenExpiresAt;
 
-    @Column(name = "reset_token")
-    private UUID resetToken;
+    @Column(name = "password_verification_token")
+    private UUID passwordVerificationToken;
 
-    @Column(name = "reset_token_expires_at")
-    private LocalDateTime resetTokenExpiresAt;
+    @Column(name = "password_verification_token_expires_at")
+    private LocalDateTime passwordVerificationTokenExpiresAt;
+
+    @Column(name = "email_verification_token")
+    private UUID emailVerificationToken;
+
+    @Column(name = "email_verification_token_expires_at")
+    private LocalDateTime emailVerificationTokenExpiresAt;
 
     @ManyToOne
     @JoinColumn(name = "image_id")
