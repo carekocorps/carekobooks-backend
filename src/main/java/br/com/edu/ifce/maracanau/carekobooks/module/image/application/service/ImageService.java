@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,10 @@ public class ImageService {
 
     @Transactional
     public ImageResponse create(MultipartFile file) throws Exception {
-        var image = imageMapper.toModel(file);
+        var image = new Image();
+        image.setName(minioService.upload(file));
+        image.setUrl(minioService.findUrlByFilename(image.getName()));
+        image.setSizeInBytes(file.getSize());
         imageValidator.validate(image);
         return imageMapper.toResponse(imageRepository.save(image));
     }

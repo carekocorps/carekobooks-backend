@@ -59,6 +59,10 @@ public class BookService {
         }
 
         bookValidator.validate(book);
+        if (book.getGenres().size() != request.getGenres().size()) {
+            throw new BadRequestException("Some genres are duplicated or invalid and could not be found");
+        }
+
         return bookMapper.toResponse(bookRepository.save(book));
     }
 
@@ -75,6 +79,10 @@ public class BookService {
 
         bookMapper.updateModel(book, request);
         bookValidator.validate(book);
+        if (book.getGenres().size() != request.getGenres().size()) {
+            throw new BadRequestException("Some genres are duplicated or invalid and could not be found");
+        }
+
         bookRepository.save(book);
         return bookMapper.toResponse(book);
     }
