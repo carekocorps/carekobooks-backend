@@ -76,4 +76,21 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     """)
     void verifyEmailChange(String username, String email);
 
+    @Modifying
+    @Transactional
+    @Query(value = """
+        INSERT INTO `user_follow_relationships` (`user_following_id`, `user_followed_id`) VALUES
+            (:userFollowingId, :userFollowedId);
+    """, nativeQuery = true)
+    void follow(Long userFollowingId, Long userFollowedId);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        DELETE FROM `user_follow_relationships`
+        WHERE `user_following_id` = :userFollowingId
+        AND `user_followed_id` = :userFollowedId;
+    """, nativeQuery = true)
+    void unfollow(Long userFollowingId, Long userFollowedId);
+
 }

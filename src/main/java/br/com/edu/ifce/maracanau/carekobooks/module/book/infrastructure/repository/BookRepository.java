@@ -31,4 +31,21 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     """)
     void updateReviewAverageScoreById(Double reviewAverageScore, Long id);
 
+    @Transactional
+    @Modifying
+    @Query(value = """
+        INSERT INTO `book_genre_relationships` (`book_id`, `book_genre_id`) VALUES
+            (:bookId, :genreId);
+    """, nativeQuery = true)
+    void addGenre(Long bookId, Long genreId);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        DELETE FROM `book_genre_relationships`
+        WHERE `book_id` = :bookId
+        AND `book_genre_id` = :genreId
+    """, nativeQuery = true)
+    void removeGenre(Long bookId, Long genreId);
+
 }

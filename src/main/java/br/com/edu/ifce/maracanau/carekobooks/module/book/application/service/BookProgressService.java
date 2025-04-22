@@ -10,7 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +36,7 @@ public class BookProgressService {
         return new ApplicationPage<>(bookProgressRepository.findAll(specification, pageRequest).map(bookProgressMapper::toResponse));
     }
 
-    public Optional<BookProgressResponse> findById(Long id) {
+    public Optional<BookProgressResponse> find(Long id) {
         return bookProgressRepository.findById(id).map(bookProgressMapper::toResponse);
     }
 
@@ -44,20 +44,20 @@ public class BookProgressService {
     public BookProgressResponse create(BookProgressRequest request) {
         var bookProgress = bookProgressMapper.toModel(request);
         bookProgressValidator.validate(bookProgress);
-        bookProgress = bookProgressRepository.save(bookProgress);
+        var response = bookProgressMapper.toResponse(bookProgressRepository.save(bookProgress));
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
         if (request.getScore() != null) {
             var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
             bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
-            bookProgress.getBook().setUserAverageScore(userAverageScore);
+            response.getBook().setUserAverageScore(userAverageScore);
         }
 
         bookActivityService.create(request);
-        return bookProgressMapper.toResponse(bookProgress);
+        return response;
     }
 
     @Transactional
@@ -68,22 +68,22 @@ public class BookProgressService {
 
         bookProgressMapper.updateModel(bookProgress, request);
         bookProgressValidator.validate(bookProgress);
-        bookProgressRepository.save(bookProgress);
+        var response = bookProgressMapper.toResponse(bookProgressRepository.save(bookProgress));
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
         var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
         bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
-        bookProgress.getBook().setUserAverageScore(userAverageScore);
+        response.getBook().setUserAverageScore(userAverageScore);
 
         bookActivityService.create(request);
-        return bookProgressMapper.toResponse(bookProgress);
+        return response;
     }
 
     @Transactional
-    public void updateIsFavoriteById(Long id, ToggleAction action) {
+    public void changeAsFavorite(Long id, IntentType action) {
         var bookProgress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
@@ -92,12 +92,12 @@ public class BookProgressService {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
-        var isAssignRequested = action == ToggleAction.ASSIGN;
+        var isAssignRequested = action == IntentType.ASSIGN;
         bookProgressRepository.updateIsFavoriteById(isAssignRequested, id);
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         var bookProgress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));

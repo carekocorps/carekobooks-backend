@@ -101,7 +101,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> assignAsFavoriteById(@PathVariable Long id);
+    ResponseEntity<Void> assignAsFavorite(@PathVariable Long id);
 
     @Operation(
             summary = "Unassign a book as favorite by ID",
@@ -115,7 +115,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unassignAsFavoriteById(@PathVariable Long id);
+    ResponseEntity<Void> unassignAsFavorite(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a book progress by ID",

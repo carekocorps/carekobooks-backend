@@ -34,7 +34,7 @@ public class BookReviewService {
         return new ApplicationPage<>(bookReviewRepository.findAll(specification, pageRequest).map(bookReviewMapper::toResponse));
     }
 
-    public Optional<BookReviewResponse> findById(Long id) {
+    public Optional<BookReviewResponse> find(Long id) {
         return bookReviewRepository.findById(id).map(bookReviewMapper::toResponse);
     }
 
@@ -42,13 +42,12 @@ public class BookReviewService {
     public BookReviewResponse create(BookReviewRequest request) {
         var bookReview = bookReviewMapper.toModel(request);
         bookReviewValidator.validate(bookReview);
-        bookReview = bookReviewRepository.save(bookReview);
+        var response = bookReviewMapper.toResponse(bookReviewRepository.save(bookReview));
 
         var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
         bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
-        bookReview.getBook().setReviewAverageScore(reviewAverageScore);
-
-        return bookReviewMapper.toResponse(bookReview);
+        response.getBook().setReviewAverageScore(reviewAverageScore);
+        return response;
     }
 
     @Transactional
@@ -59,20 +58,20 @@ public class BookReviewService {
 
         bookReviewMapper.updateModel(bookReview, request);
         bookReviewValidator.validate(bookReview);
-        bookReviewRepository.save(bookReview);
+        var response = bookReviewMapper.toResponse(bookReviewRepository.save(bookReview));
 
-        if (UserContextProvider.isUserUnauthorized(bookReview.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book review");
         }
 
         var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
         bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
-        bookReview.getBook().setReviewAverageScore(reviewAverageScore);
-        return bookReviewMapper.toResponse(bookReview);
+        response.getBook().setReviewAverageScore(reviewAverageScore);
+        return response;
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         var bookReview = bookReviewRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Review not found"));

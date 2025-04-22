@@ -57,8 +57,8 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     @Override
     @AdminRoleRequired
     @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteByName(@PathVariable String name) {
-        bookGenreService.deleteByName(name);
+    public ResponseEntity<Void> delete(@PathVariable String name) {
+        bookGenreService.delete(name);
         return ResponseEntity.noContent().build();
     }
 

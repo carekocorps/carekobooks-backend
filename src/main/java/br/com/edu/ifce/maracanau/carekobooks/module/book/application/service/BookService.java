@@ -12,7 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -46,7 +46,7 @@ public class BookService {
     }
 
     @Cacheable(value = "book", key = "#id")
-    public Optional<BookResponse> findById(Long id) {
+    public Optional<BookResponse> find(Long id) {
         return bookRepository.findById(id).map(bookMapper::toResponse);
     }
 
@@ -89,7 +89,7 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void updateGenreById(Long id, String genreName, ToggleAction action) {
+    public void changeGenre(Long id, String genreName, IntentType action) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
@@ -99,7 +99,7 @@ public class BookService {
                 .map(bookGenreMapper::toModel)
                 .orElseThrow(() -> new NotFoundException("Genre not found"));
 
-        var isAssignRequested = action == ToggleAction.ASSIGN;
+        var isAssignRequested = action == IntentType.ASSIGN;
         var isBookContainingGenre = book.getGenres().contains(bookGenre);
         if (isBookContainingGenre == isAssignRequested) {
             throw new BadRequestException(isAssignRequested
@@ -108,9 +108,8 @@ public class BookService {
             );
         }
 
-        if (isAssignRequested) book.getGenres().add(bookGenre);
-        else book.getGenres().remove(bookGenre);
-        bookRepository.save(book);
+        if (isAssignRequested) bookRepository.addGenre(book.getId(), bookGenre.getId());
+        else bookRepository.removeGenre(book.getId(), bookGenre.getId());
     }
 
     @CacheEvict(value = "book", key = "#id")
@@ -135,34 +134,24 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void updateImageById(Long id, MultipartFile image) throws Exception {
+    public void changeImage(Long id, MultipartFile image) throws Exception {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        book.setImage(imageMapper.toModel(imageService.create(image)));
-        bookRepository.save(book);
-    }
-
-    @CacheEvict(value = "book", key = "#id")
-    @Transactional
-    public void deleteImageById(Long id) throws Exception {
-        var book = bookRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found"));
-
-        if (book.getImage() == null) {
-            throw new NotFoundException("Image not found or already deleted");
+        if (image == null && book.getImage() != null) {
+            imageService.delete(book.getImage().getId());
+            book.setImage(null);
+        } else {
+            book.setImage(imageMapper.toModel(imageService.create(image)));
         }
 
-        imageService.deleteById(book.getImage().getId());
-        book.setImage(null);
         bookRepository.save(book);
     }
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new NotFoundException("Book not found");
         }

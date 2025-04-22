@@ -23,7 +23,7 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final ImageValidator imageValidator;
 
-    public Optional<ImageResponse> findById(Long id) {
+    public Optional<ImageResponse> find(Long id) {
         return imageRepository.findById(id).map(imageMapper::toResponse);
     }
 
@@ -38,7 +38,7 @@ public class ImageService {
     }
 
     @Transactional
-    public void deleteById(Long id) throws Exception {
+    public void delete(Long id) throws Exception {
         var image = imageRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("File not found"));

@@ -28,7 +28,7 @@ public interface ImageControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ImageResponse> findById(@PathVariable Long id);
+    ResponseEntity<ImageResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Delete a image by ID",
@@ -42,6 +42,6 @@ public interface ImageControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id) throws Exception;
+    ResponseEntity<Void> delete(@PathVariable Long id) throws Exception;
 
 }

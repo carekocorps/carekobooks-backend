@@ -55,7 +55,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookResponse> findById(@PathVariable Long id);
+    ResponseEntity<BookResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Create a book",
@@ -122,7 +122,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> assignGenreById(@PathVariable Long id, @PathVariable String genreName);
+    ResponseEntity<Void> assignGenre(@PathVariable Long id, @PathVariable String genreName);
 
     @Operation(
             summary = "Unassign a book genre to a book by ID",
@@ -136,7 +136,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unassignGenreById(@PathVariable Long id, @PathVariable String genreName);
+    ResponseEntity<Void> unassignGenre(@PathVariable Long id, @PathVariable String genreName);
 
     @Operation(
             summary = "Update a book image by ID",
@@ -152,7 +152,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> updateImageById(@PathVariable Long id, @RequestParam MultipartFile avatar) throws Exception;
+    ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile avatar) throws Exception;
 
     @Operation(
             summary = "Delete a book image by ID",
@@ -166,7 +166,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteImageById(@PathVariable Long id) throws Exception;
+    ResponseEntity<Void> unassignImage(@PathVariable Long id) throws Exception;
 
     @Operation(
             summary = "Delete a book by ID",
@@ -180,7 +180,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id);
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
     @Operation(
             summary = "Clear book cache",

@@ -34,7 +34,7 @@ public class BookActivityService {
         return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
     }
 
-    public Optional<BookActivityResponse> findById(Long id) {
+    public Optional<BookActivityResponse> find(Long id) {
         return bookActivityRepository.findById(id).map(bookActivityMapper::toResponse);
     }
 
@@ -50,7 +50,7 @@ public class BookActivityService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         var bookActivity = bookActivityRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));

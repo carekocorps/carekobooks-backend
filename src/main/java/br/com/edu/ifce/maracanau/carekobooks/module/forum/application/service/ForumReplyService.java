@@ -32,7 +32,7 @@ public class ForumReplyService {
         return new ApplicationPage<>(forumReplyRepository.findAll(specification, pageRequest).map(forumReplyMapper::toResponse));
     }
 
-    public Optional<ForumReplyResponse> findById(Long id) {
+    public Optional<ForumReplyResponse> find(Long id) {
         return forumReplyRepository.findById(id).map(forumReplyMapper::toResponse);
     }
 
@@ -60,7 +60,7 @@ public class ForumReplyService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         var forumReply = forumReplyRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum Reply not found"));

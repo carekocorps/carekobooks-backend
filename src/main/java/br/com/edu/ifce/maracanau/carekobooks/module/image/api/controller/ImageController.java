@@ -20,16 +20,16 @@ public class ImageController implements BaseController, ImageControllerDocs {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ImageResponse> findById(@PathVariable Long id) {
-        var response = imageService.findById(id);
+    public ResponseEntity<ImageResponse> find(@PathVariable Long id) {
+        var response = imageService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @AdminRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) throws Exception {
-        imageService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+        imageService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

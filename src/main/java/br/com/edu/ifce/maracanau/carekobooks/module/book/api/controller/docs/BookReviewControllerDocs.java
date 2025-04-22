@@ -51,7 +51,7 @@ public interface BookReviewControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookReviewResponse> findById(@PathVariable Long id);
+    ResponseEntity<BookReviewResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Create a book review",
@@ -101,6 +101,6 @@ public interface BookReviewControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id);
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
 }

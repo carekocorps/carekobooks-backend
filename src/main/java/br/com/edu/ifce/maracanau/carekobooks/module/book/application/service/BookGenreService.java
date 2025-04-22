@@ -68,7 +68,7 @@ public class BookGenreService {
             @CacheEvict(value = "book", allEntries = true)
     })
     @Transactional
-    public void deleteByName(String name) {
+    public void delete(String name) {
         if (!bookGenreRepository.existsByName(name)) {
             throw new NotFoundException("Book not found");
         }
