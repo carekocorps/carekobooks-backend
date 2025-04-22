@@ -7,18 +7,15 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.BaseUpdateMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", config = BaseUpdateMapper.class)
-public abstract class UserMapper implements BaseUpdateMapper<User, UserUpdateRequest> {
+@Mapper(
+        componentModel = "spring",
+        config = BaseUpdateMapper.class,
+        uses = ImageMapper.class
+)
+public interface UserMapper extends BaseUpdateMapper<User, UserUpdateRequest> {
 
-    @Autowired
-    protected ImageMapper imageMapper;
-
-    public abstract User toModel(UserRegisterInitializationRequest request);
-
-    @Mapping(target = "image", expression = "java(imageMapper.toResponse(user.getImage()))")
-    public abstract UserResponse toResponse(User user);
+    User toModel(UserRegisterInitializationRequest request);
+    UserResponse toResponse(User user);
 
 }
