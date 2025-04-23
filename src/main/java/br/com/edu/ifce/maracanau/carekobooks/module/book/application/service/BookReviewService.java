@@ -40,43 +40,41 @@ public class BookReviewService {
 
     @Transactional
     public BookReviewResponse create(BookReviewRequest request) {
-        var bookReview = bookReviewMapper.toModel(request);
-        bookReviewValidator.validate(bookReview);
-        var response = bookReviewMapper.toResponse(bookReviewRepository.save(bookReview));
+        var review = bookReviewMapper.toModel(request);
+        bookReviewValidator.validate(review);
+        bookReviewRepository.save(review);
 
-        var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
-        bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
-        response.getBook().setReviewAverageScore(reviewAverageScore);
-        return response;
+        var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
+        bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
+        return bookReviewMapper.toResponse(review);
     }
 
     @Transactional
     public BookReviewResponse update(Long id, BookReviewRequest request) {
-        var bookReview = bookReviewRepository
+        var review = bookReviewRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
-        bookReviewMapper.updateModel(bookReview, request);
-        bookReviewValidator.validate(bookReview);
-        var response = bookReviewMapper.toResponse(bookReviewRepository.save(bookReview));
+        bookReviewMapper.updateModel(review, request);
+        bookReviewValidator.validate(review);
+        bookReviewRepository.save(review);
 
-        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(review.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book review");
         }
 
-        var reviewAverageScore = bookReviewRepository.findReviewAverageScoreByBookId(request.getBookId());
-        bookService.updateReviewAverageScoreById(request.getBookId(), reviewAverageScore);
-        response.getBook().setReviewAverageScore(reviewAverageScore);
-        return response;
+        var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
+        bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
+        return bookReviewMapper.toResponse(review);
     }
 
     @Transactional
     public void delete(Long id) {
-        var bookReview = bookReviewRepository
+        var review = bookReviewRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
-        if (UserContextProvider.isUserUnauthorized(bookReview.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(review.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book review");
         }
 

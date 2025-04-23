@@ -10,7 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @UserRoleRequired
     @PostMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> follow(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.changeFollowing(username, targetUsername, IntentType.ASSIGN);
+        userService.changeFollowing(username, targetUsername, ActionType.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
@@ -80,7 +80,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @UserRoleRequired
     @DeleteMapping("/{username}/following/{targetUsername}")
     public ResponseEntity<Void> unfollow(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.changeFollowing(username, targetUsername, IntentType.UNASSIGN);
+        userService.changeFollowing(username, targetUsername, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 

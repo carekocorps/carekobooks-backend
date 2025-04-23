@@ -51,7 +51,7 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookProgressResponse> findById(@PathVariable Long id);
+    ResponseEntity<BookProgressResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Create a book progress and a corresponding book activity",
@@ -129,6 +129,6 @@ public interface BookProgressControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id);
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
 }

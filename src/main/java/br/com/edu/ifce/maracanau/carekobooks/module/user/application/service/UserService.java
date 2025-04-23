@@ -16,7 +16,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.pr
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -81,12 +81,11 @@ public class UserService {
 
         userMapper.updateModel(user, request);
         userValidator.validate(user);
-        userRepository.save(user);
-        return userMapper.toResponse(user);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Transactional
-    public void changeFollowing(String username, String targetUsername, IntentType action) {
+    public void changeFollowing(String username, String targetUsername, ActionType action) {
         if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
@@ -106,9 +105,9 @@ public class UserService {
             throw new NotFoundException("One or both users not found");
         }
 
-        var isFollowingRequested = action == IntentType.ASSIGN;
+        var isFollowingRequested = action == ActionType.ASSIGN;
         var isUserFollowing = user.getFollowing().contains(target);
-        if (isFollowingRequested == isUserFollowing) {
+        if (isUserFollowing == isFollowingRequested) {
             throw new BadRequestException(isFollowingRequested
                     ? "User is already following the target"
                     : "User does not follow the target"

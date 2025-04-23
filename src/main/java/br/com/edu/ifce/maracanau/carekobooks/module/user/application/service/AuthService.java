@@ -98,7 +98,7 @@ public class AuthService {
             throw new BadRequestException("Invalid verification token");
         }
 
-        userRepository.verifyRegistration(user.getUsername());
+        userRepository.verifyRegistrationByUsername(user.getUsername());
     }
 
     @Transactional
@@ -113,7 +113,7 @@ public class AuthService {
 
         var passwordVerificationToken = UUID.randomUUID();
         var passwordVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
-        userRepository.initPasswordRecovery(user.getUsername(), passwordVerificationToken, passwordVerificationTokenExpiresAt);
+        userRepository.initPasswordRecoveryByUsername(user.getUsername(), passwordVerificationToken, passwordVerificationTokenExpiresAt);
         userNotificationSubject.notify(
                 userMapper.toResponse(user),
                 NotificationContent.fromPasswordVerificationToken(passwordVerificationToken)
@@ -132,7 +132,7 @@ public class AuthService {
         }
 
         var encodedPassword = passwordEncoder.encode(request.getPassword());
-        userRepository.verifyPasswordRecovery(user.getUsername(), encodedPassword);
+        userRepository.verifyPasswordRecoveryByUsername(user.getUsername(), encodedPassword);
     }
 
     @Transactional
@@ -155,7 +155,7 @@ public class AuthService {
 
         var emailVerificationToken = UUID.randomUUID();
         var emailVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
-        userRepository.initEmailChange(user.getUsername(), emailVerificationToken, emailVerificationTokenExpiresAt);
+        userRepository.initEmailChangeByUsername(user.getUsername(), emailVerificationToken, emailVerificationTokenExpiresAt);
 
         var userNotified = userMapper.toResponse(user);
         userNotified.setEmail(request.getNewEmail());
@@ -174,7 +174,7 @@ public class AuthService {
         }
 
         var newEmail = request.getNewEmail();
-        userRepository.verifyEmailChange(user.getUsername(), newEmail);
+        userRepository.verifyEmailChangeByUsername(user.getUsername(), newEmail);
     }
 
     public TokenResponse refreshToken(String username, UserTokenRefreshRequest request) {

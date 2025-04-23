@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.passwordVerificationTokenExpiresAt = :expiresAt
         WHERE u.username = :username
     """)
-    void initPasswordRecovery(String username, UUID token, LocalDateTime expiresAt);
+    void initPasswordRecoveryByUsername(String username, UUID token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
@@ -41,7 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.emailVerificationTokenExpiresAt = :expiresAt
         WHERE u.username = :username
     """)
-    void initEmailChange(String username, UUID token, LocalDateTime expiresAt);
+    void initEmailChangeByUsername(String username, UUID token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.verificationTokenExpiresAt = null
         WHERE u.username = :username
     """)
-    void verifyRegistration(String username);
+    void verifyRegistrationByUsername(String username);
 
     @Modifying
     @Transactional
@@ -63,7 +63,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.passwordVerificationTokenExpiresAt = NULL
         WHERE u.username = :username
     """)
-    void verifyPasswordRecovery(String username, String password);
+    void verifyPasswordRecoveryByUsername(String username, String password);
 
     @Modifying
     @Transactional
@@ -74,23 +74,23 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.emailVerificationTokenExpiresAt = NULL
         WHERE u.username = :username
     """)
-    void verifyEmailChange(String username, String email);
+    void verifyEmailChangeByUsername(String username, String email);
 
     @Modifying
     @Transactional
     @Query(value = """
         INSERT INTO `user_follow_relationships` (`user_following_id`, `user_followed_id`) VALUES
-            (:userFollowingId, :userFollowedId);
+            (:followingId, :followedId);
     """, nativeQuery = true)
-    void follow(Long userFollowingId, Long userFollowedId);
+    void follow(Long followingId, Long followedId);
 
     @Modifying
     @Transactional
     @Query(value = """
         DELETE FROM `user_follow_relationships`
-        WHERE `user_following_id` = :userFollowingId
-        AND `user_followed_id` = :userFollowedId;
+        WHERE `user_following_id` = :followingId
+        AND `user_followed_id` = :followedId;
     """, nativeQuery = true)
-    void unfollow(Long userFollowingId, Long userFollowedId);
+    void unfollow(Long followingId, Long followedId);
 
 }

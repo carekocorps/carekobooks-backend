@@ -32,8 +32,8 @@ public class BookGenreController implements BaseController, BookGenreControllerD
 
     @Override
     @GetMapping("/{name}")
-    public ResponseEntity<BookGenreResponse> findByName(@PathVariable String name) {
-        var response = bookGenreService.findByName(name);
+    public ResponseEntity<BookGenreResponse> find(@PathVariable String name) {
+        var response = bookGenreService.find(name);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

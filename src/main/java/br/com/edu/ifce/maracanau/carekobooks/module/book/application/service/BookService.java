@@ -12,7 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -89,47 +89,48 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void changeGenre(Long id, String genreName, IntentType action) {
+    public void changeGenre(Long id, String genreName, ActionType action) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        var bookGenre = bookGenreService
-                .findByName(genreName)
+        var genre = bookGenreService
+                .find(genreName)
                 .map(bookGenreMapper::toModel)
                 .orElseThrow(() -> new NotFoundException("Genre not found"));
 
-        var isAssignRequested = action == IntentType.ASSIGN;
-        var isBookContainingGenre = book.getGenres().contains(bookGenre);
-        if (isBookContainingGenre == isAssignRequested) {
-            throw new BadRequestException(isAssignRequested
+        var isAdditionRequested = action == ActionType.ASSIGN;
+        var isBookContainingGenre = book.getGenres().contains(genre);
+        if (isBookContainingGenre == isAdditionRequested) {
+            throw new BadRequestException(isAdditionRequested
                     ? "Book already contains this genre"
                     : "Book does not contain this genre"
             );
         }
 
-        if (isAssignRequested) bookRepository.addGenre(book.getId(), bookGenre.getId());
-        else bookRepository.removeGenre(book.getId(), bookGenre.getId());
+        if (isAdditionRequested) bookRepository.addGenre(book.getId(), genre.getId());
+        else bookRepository.removeGenre(book.getId(), genre.getId());
+        bookValidator.validate(book);
     }
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void updateUserAverageScoreById(Long id, Double userAverageScore) {
+    public void changeUserAverageScore(Long id, Double userAverageScore) {
         if (!bookRepository.existsById(id)) {
             throw new NotFoundException("Book not found");
         }
 
-        bookRepository.updateUserAverageScoreById(userAverageScore, id);
+        bookRepository.changeUserAverageScoreById(id, userAverageScore);
     }
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void updateReviewAverageScoreById(Long id, Double reviewAverageScore) {
+    public void changeReviewAverageScore(Long id, Double reviewAverageScore) {
         if (!bookRepository.existsById(id)) {
             throw new NotFoundException("Book not found");
         }
 
-        bookRepository.updateReviewAverageScoreById(reviewAverageScore, id);
+        bookRepository.changeReviewAverageScoreById(id, reviewAverageScore);
     }
 
     @CacheEvict(value = "book", key = "#id")

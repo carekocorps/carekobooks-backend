@@ -51,7 +51,7 @@ public interface BookGenreControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookGenreResponse> findByName(@PathVariable String name);
+    ResponseEntity<BookGenreResponse> find(@PathVariable String name);
 
     @Operation(
             summary = "Create a book genre",

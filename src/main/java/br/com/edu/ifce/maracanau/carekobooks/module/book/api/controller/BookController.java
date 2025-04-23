@@ -9,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @AdminRoleRequired
     @PostMapping("/{id}/genres/{genreName}")
     public ResponseEntity<Void> assignGenre(@PathVariable Long id, @PathVariable String genreName) {
-        bookService.changeGenre(id, genreName, IntentType.ASSIGN);
+        bookService.changeGenre(id, genreName, ActionType.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
@@ -70,7 +70,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @AdminRoleRequired
     @DeleteMapping("/{id}/genres/{genreName}")
     public ResponseEntity<Void> unassignGenre(@PathVariable Long id, @PathVariable String genreName) {
-        bookService.changeGenre(id, genreName, IntentType.UNASSIGN);
+        bookService.changeGenre(id, genreName, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 

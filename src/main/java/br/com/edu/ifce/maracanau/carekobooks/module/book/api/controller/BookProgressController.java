@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.Boo
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.IntentType;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class BookProgressController implements BaseController, BookProgressContr
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookProgressResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<BookProgressResponse> find(@PathVariable Long id) {
         var response = bookProgressService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -65,7 +65,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     @UserRoleRequired
     @PostMapping("/{id}/favorites")
     public ResponseEntity<Void> assignAsFavorite(@PathVariable Long id) {
-        bookProgressService.changeAsFavorite(id, IntentType.ASSIGN);
+        bookProgressService.changeAsFavorite(id, ActionType.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
@@ -73,14 +73,14 @@ public class BookProgressController implements BaseController, BookProgressContr
     @UserRoleRequired
     @DeleteMapping("/{id}/favorites")
     public ResponseEntity<Void> unassignAsFavorite(@PathVariable Long id) {
-        bookProgressService.changeAsFavorite(id, IntentType.UNASSIGN);
+        bookProgressService.changeAsFavorite(id, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookProgressService.delete(id);
         return ResponseEntity.noContent().build();
     }

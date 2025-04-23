@@ -17,7 +17,7 @@ public interface BookProgressRepository extends JpaRepository<BookProgress, Long
         WHERE bp.book.id = :bookId
         AND bp.score IS NOT NULL
     """)
-    Double findUserAverageScoreByBookId(Long bookId);
+    Double calculateUserAverageScoreByBookId(Long bookId);
 
     @Transactional
     @Modifying
@@ -26,6 +26,6 @@ public interface BookProgressRepository extends JpaRepository<BookProgress, Long
         SET bp.isFavorite = :isFavorite
         WHERE bp.id = :id
     """)
-    void updateIsFavoriteById(Boolean isFavorite, Long id);
+    void changeAsFavoriteById(Long id, Boolean isFavorite);
 
 }
