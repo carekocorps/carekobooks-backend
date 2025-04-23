@@ -34,28 +34,28 @@ public class BookActivityService {
         return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
     }
 
-    public Optional<BookActivityResponse> findById(Long id) {
+    public Optional<BookActivityResponse> find(Long id) {
         return bookActivityRepository.findById(id).map(bookActivityMapper::toResponse);
     }
 
     @Transactional
     public BookActivityResponse create(BookProgressRequest request) {
-        var bookActivity = bookActivityMapper.toModel(request);
-        bookActivityValidator.validate(bookActivity);
-        bookActivityRepository.save(bookActivity);
+        var activity = bookActivityMapper.toModel(request);
+        bookActivityValidator.validate(activity);
+        bookActivityRepository.save(activity);
 
-        var response = bookActivityMapper.toResponse(bookActivity);
+        var response = bookActivityMapper.toResponse(activity);
         bookActivityNotificationSubject.notify(response);
         return response;
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        var bookActivity = bookActivityRepository
+    public void delete(Long id) {
+        var activity = bookActivityRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        if (UserContextProvider.isUserUnauthorized(bookActivity.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(activity.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book activity");
         }
 

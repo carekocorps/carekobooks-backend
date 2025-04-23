@@ -16,7 +16,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.pr
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -52,11 +52,11 @@ public class UserService {
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
-    public Optional<UserResponse> findByUsername(String username) {
+    public Optional<UserResponse> find(String username) {
         return userRepository.findByUsername(username).map(userMapper::toResponse);
     }
 
-    public List<UserResponse> findAllFollowersByUsername(String username) {
+    public List<UserResponse> findAllFollowers(String username) {
         var query = new UserSocialQuery();
         query.setUsername(username);
         query.setRelationship(UserRelationship.FOLLOWER);
@@ -66,7 +66,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) throws Exception {
+    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -81,12 +81,11 @@ public class UserService {
 
         userMapper.updateModel(user, request);
         userValidator.validate(user);
-        userRepository.save(user);
-        return userMapper.toResponse(user);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Transactional
-    public void updateFollowingByUsername(String username, String targetUsername, ToggleAction action) {
+    public void changeFollowing(String username, String targetUsername, ActionType action) {
         if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
@@ -106,22 +105,21 @@ public class UserService {
             throw new NotFoundException("One or both users not found");
         }
 
-        var isFollowingRequested = action == ToggleAction.ASSIGN;
+        var isFollowingRequested = action == ActionType.ASSIGN;
         var isUserFollowing = user.getFollowing().contains(target);
-        if (isFollowingRequested == isUserFollowing) {
+        if (isUserFollowing == isFollowingRequested) {
             throw new BadRequestException(isFollowingRequested
                     ? "User is already following the target"
                     : "User does not follow the target"
             );
         }
 
-        if (isFollowingRequested) user.getFollowing().add(target);
-        else user.getFollowing().remove(target);
-        userRepository.save(user);
+        if (isFollowingRequested) userRepository.follow(user.getId(), target.getId());
+        else userRepository.unfollow(user.getId(), target.getId());
     }
 
     @Transactional
-    public void updateImageByUsername(String username, MultipartFile image) throws Exception {
+    public void changeImage(String username, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -130,31 +128,24 @@ public class UserService {
             throw new ForbiddenException("You are not allowed to update the image of this user");
         }
 
-        user.setImage(imageMapper.toModel(imageService.create(image)));
+        user.setImage(Optional
+                .ofNullable(image)
+                .map(file -> imageMapper.toModel(imageService.create(file)))
+                .orElseGet(() -> {
+                    if (user.getImage() == null) {
+                        throw new NotFoundException("No image found or already deleted");
+                    }
+
+                    imageService.delete(user.getImage().getId());
+                    return null;
+                })
+        );
+
         userRepository.save(user);
     }
 
     @Transactional
-    public void deleteImageByUsername(String username) throws Exception {
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (UserContextProvider.isUserUnauthorized(username)) {
-            throw new ForbiddenException("You are not allowed to update the image of this user");
-        }
-
-        if (user.getImage() == null) {
-            throw new NotFoundException("Image not found or already deleted");
-        }
-
-        imageService.deleteById(user.getImage().getId());
-        user.setImage(null);
-        userRepository.save(user);
-    }
-
-    @Transactional
-    public void deleteByUsername(String username) {
+    public void delete(String username) {
         if (!userRepository.existsByUsername(username)) {
             throw new NotFoundException("User not found");
         }

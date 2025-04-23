@@ -7,6 +7,9 @@ import java.time.LocalDate;
 
 public class BaseSpecification {
 
+    private BaseSpecification() {
+    }
+
     public static <T> Specification<T> createdBefore(LocalDate createdBefore) {
         return (root, query, cb) -> {
             Expression<LocalDate> createdAtDate = cb.function("DATE", LocalDate.class, root.get("createdAt"));

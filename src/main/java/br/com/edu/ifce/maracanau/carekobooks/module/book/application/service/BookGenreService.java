@@ -35,16 +35,16 @@ public class BookGenreService {
     }
 
     @Cacheable(value = "book:genre", key = "#name")
-    public Optional<BookGenreResponse> findByName(String name) {
+    public Optional<BookGenreResponse> find(String name) {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }
 
     @CacheEvict(value = {"book", "book:genre"}, allEntries = true)
     @Transactional
     public BookGenreResponse create(BookGenreRequest request) {
-        var bookGenre = bookGenreMapper.toModel(request);
-        bookGenreValidator.validate(bookGenre);
-        return bookGenreMapper.toResponse(bookGenreRepository.save(bookGenre));
+        var genre = bookGenreMapper.toModel(request);
+        bookGenreValidator.validate(genre);
+        return bookGenreMapper.toResponse(bookGenreRepository.save(genre));
     }
 
     @Caching(
@@ -53,14 +53,13 @@ public class BookGenreService {
     )
     @Transactional
     public BookGenreResponse update(String name, BookGenreRequest request) {
-        var bookGenre = bookGenreRepository
+        var genre = bookGenreRepository
                 .findByName(name)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        bookGenreMapper.updateModel(bookGenre, request);
-        bookGenreValidator.validate(bookGenre);
-        bookGenreRepository.save(bookGenre);
-        return bookGenreMapper.toResponse(bookGenre);
+        bookGenreMapper.updateModel(genre, request);
+        bookGenreValidator.validate(genre);
+        return bookGenreMapper.toResponse(bookGenreRepository.save(genre));
     }
 
     @Caching(evict = {
@@ -68,7 +67,7 @@ public class BookGenreService {
             @CacheEvict(value = "book", allEntries = true)
     })
     @Transactional
-    public void deleteByName(String name) {
+    public void delete(String name) {
         if (!bookGenreRepository.existsByName(name)) {
             throw new NotFoundException("Book not found");
         }
@@ -83,7 +82,7 @@ public class BookGenreService {
             },
             allEntries = true
     )
-    public void clearCache() {
+    public void clearCache() { // @CacheEvict handles the cache clearing
     }
 
 }

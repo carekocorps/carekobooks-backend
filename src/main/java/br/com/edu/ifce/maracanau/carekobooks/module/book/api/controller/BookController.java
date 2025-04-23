@@ -9,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,15 +36,15 @@ public class BookController implements BaseController, BookControllerDocs {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> findById(@PathVariable Long id) {
-        var response = bookService.findById(id);
+    public ResponseEntity<BookResponse> find(@PathVariable Long id) {
+        var response = bookService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @AdminRoleRequired
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) {
         var response = bookService.create(request, image);
         var uri = getHeaderLocation(response.getId());
         return ResponseEntity.created(uri).body(response);
@@ -53,7 +53,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @AdminRoleRequired
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) {
         bookService.update(id, request, image);
         return ResponseEntity.noContent().build();
     }
@@ -61,40 +61,40 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @AdminRoleRequired
     @PostMapping("/{id}/genres/{genreName}")
-    public ResponseEntity<Void> assignGenreById(@PathVariable Long id, @PathVariable String genreName) {
-        bookService.updateGenreById(id, genreName, ToggleAction.ASSIGN);
+    public ResponseEntity<Void> assignGenre(@PathVariable Long id, @PathVariable String genreName) {
+        bookService.changeGenre(id, genreName, ActionType.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @AdminRoleRequired
     @DeleteMapping("/{id}/genres/{genreName}")
-    public ResponseEntity<Void> unassignGenreById(@PathVariable Long id, @PathVariable String genreName) {
-        bookService.updateGenreById(id, genreName, ToggleAction.UNASSIGN);
+    public ResponseEntity<Void> unassignGenre(@PathVariable Long id, @PathVariable String genreName) {
+        bookService.changeGenre(id, genreName, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateImageById(@PathVariable Long id, @RequestParam MultipartFile image) throws Exception {
-        bookService.updateImageById(id, image);
+    public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile image) {
+        bookService.changeImage(id, image);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping(value = "/{id}/images")
-    public ResponseEntity<Void> deleteImageById(@PathVariable Long id) throws Exception {
-        bookService.deleteImageById(id);
+    public ResponseEntity<Void> unassignImage(@PathVariable Long id) {
+        bookService.changeImage(id, null);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @AdminRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        bookService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        bookService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

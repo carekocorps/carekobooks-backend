@@ -10,7 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,73 +36,71 @@ public class BookProgressService {
         return new ApplicationPage<>(bookProgressRepository.findAll(specification, pageRequest).map(bookProgressMapper::toResponse));
     }
 
-    public Optional<BookProgressResponse> findById(Long id) {
+    public Optional<BookProgressResponse> find(Long id) {
         return bookProgressRepository.findById(id).map(bookProgressMapper::toResponse);
     }
 
     @Transactional
     public BookProgressResponse create(BookProgressRequest request) {
-        var bookProgress = bookProgressMapper.toModel(request);
-        bookProgressValidator.validate(bookProgress);
-        bookProgress = bookProgressRepository.save(bookProgress);
+        var progress = bookProgressMapper.toModel(request);
+        bookProgressValidator.validate(progress);
+        progress = bookProgressRepository.save(progress);
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
         if (request.getScore() != null) {
-            var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
-            bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
-            bookProgress.getBook().setUserAverageScore(userAverageScore);
+            var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
+            bookService.changeUserAverageScore(request.getBookId(), userAverageScore);
         }
 
         bookActivityService.create(request);
-        return bookProgressMapper.toResponse(bookProgress);
+        return bookProgressMapper.toResponse(progress);
     }
 
     @Transactional
     public BookProgressResponse update(Long id, BookProgressRequest request) {
-        var bookProgress = bookProgressRepository
+        var progress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        bookProgressMapper.updateModel(bookProgress, request);
-        bookProgressValidator.validate(bookProgress);
-        bookProgressRepository.save(bookProgress);
+        bookProgressMapper.updateModel(progress, request);
+        bookProgressValidator.validate(progress);
+        bookProgressRepository.save(progress);
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
-        var userAverageScore = bookProgressRepository.findUserAverageScoreByBookId(request.getBookId());
-        bookService.updateUserAverageScoreById(request.getBookId(), userAverageScore);
-        bookProgress.getBook().setUserAverageScore(userAverageScore);
+        var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
+        bookService.changeUserAverageScore(request.getBookId(), userAverageScore);
 
         bookActivityService.create(request);
-        return bookProgressMapper.toResponse(bookProgress);
+        return bookProgressMapper.toResponse(progress);
     }
 
     @Transactional
-    public void updateIsFavoriteById(Long id, ToggleAction action) {
-        var bookProgress = bookProgressRepository
+    public void changeAsFavorite(Long id, ActionType action) {
+        var progress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
-        var isAssignRequested = action == ToggleAction.ASSIGN;
-        bookProgressRepository.updateIsFavoriteById(isAssignRequested, id);
+        var isFavorite = action == ActionType.ASSIGN;
+        bookProgressRepository.changeAsFavoriteById(id, isFavorite);
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        var bookProgress = bookProgressRepository
+    public void delete(Long id) {
+        var progress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (UserContextProvider.isUserUnauthorized(bookProgress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book progress");
         }
 

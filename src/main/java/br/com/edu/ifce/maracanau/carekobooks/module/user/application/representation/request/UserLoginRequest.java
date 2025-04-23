@@ -1,7 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.request.BaseRequest;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

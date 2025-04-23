@@ -7,6 +7,9 @@ import java.time.LocalDate;
 
 public class BookSpecification {
 
+    private BookSpecification() {
+    }
+
     public static Specification<Book> titleContains(String title) {
         return (root, query, cb) ->
                 cb.like(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");

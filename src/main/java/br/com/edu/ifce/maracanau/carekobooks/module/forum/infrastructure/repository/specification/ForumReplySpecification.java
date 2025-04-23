@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ForumReplySpecification {
 
+    private ForumReplySpecification() {
+    }
+
     public static Specification<ForumReply> usernameEqual(String username) {
         return (root, query, cb) ->
                 cb.equal(root.get("user").get("username"), username);

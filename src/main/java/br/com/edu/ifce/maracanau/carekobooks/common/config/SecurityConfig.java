@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.config;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.converter.JwtAuthenticationConverter;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter.JwtTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,16 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
-
-    @Autowired
-    private JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

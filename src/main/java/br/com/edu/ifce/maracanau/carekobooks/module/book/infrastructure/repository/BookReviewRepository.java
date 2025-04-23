@@ -14,6 +14,6 @@ public interface BookReviewRepository extends JpaRepository<BookReview, Long>, J
         FROM BookReview br
         WHERE br.book.id = :bookId
     """)
-    Double findReviewAverageScoreByBookId(Long bookId);
+    Double calculateReviewAverageScore(Long bookId);
 
 }

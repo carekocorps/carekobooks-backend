@@ -6,6 +6,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class BookActivitySpecification {
 
+    private BookActivitySpecification() {
+    }
+
     public static Specification<BookActivity> statusEqual(BookProgressStatus status) {
         return (root, query, cb) ->
                 cb.equal(root.get("status"), status);

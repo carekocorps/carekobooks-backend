@@ -10,7 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ToggleAction;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,15 +55,15 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @GetMapping("/{username}")
-    public ResponseEntity<UserResponse> findByUsername(@PathVariable String username) {
-        var response = userService.findByUsername(username);
+    public ResponseEntity<UserResponse> find(@PathVariable String username) {
+        var response = userService.find(username);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @UserRoleRequired
     @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
         userService.update(username, request, image);
         return ResponseEntity.noContent().build();
     }
@@ -71,40 +71,40 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> assignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsername(username, targetUsername, ToggleAction.ASSIGN);
+    public ResponseEntity<Void> follow(@PathVariable String username, @PathVariable String targetUsername) {
+        userService.changeFollowing(username, targetUsername, ActionType.ASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> unassignFollowingByUsername(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.updateFollowingByUsername(username, targetUsername, ToggleAction.UNASSIGN);
+    public ResponseEntity<Void> unfollow(@PathVariable String username, @PathVariable String targetUsername) {
+        userService.changeFollowing(username, targetUsername, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> updateImageByUsername(@PathVariable String username, @RequestParam MultipartFile image) throws Exception {
-        userService.updateImageByUsername(username, image);
+    public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile image) {
+        userService.changeImage(username, image);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping(value = "/{username}/images")
-    public ResponseEntity<Void> deleteImageByUsername(@PathVariable String username) throws Exception {
-        userService.deleteImageByUsername(username);
+    public ResponseEntity<Void> unassignImage(@PathVariable String username) {
+        userService.changeImage(username, null);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping("/{username}")
-    public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
-        userService.deleteByUsername(username);
+    public ResponseEntity<Void> delete(@PathVariable String username) {
+        userService.delete(username);
         return ResponseEntity.noContent().build();
     }
 

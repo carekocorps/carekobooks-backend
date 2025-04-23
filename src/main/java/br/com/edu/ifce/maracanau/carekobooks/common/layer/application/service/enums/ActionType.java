@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums;
 
-public enum ToggleAction {
+public enum ActionType {
 
     ASSIGN,
     UNASSIGN
