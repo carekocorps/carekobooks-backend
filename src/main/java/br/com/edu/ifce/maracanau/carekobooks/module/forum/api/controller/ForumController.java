@@ -32,8 +32,8 @@ public class ForumController implements BaseController, ForumControllerDocs {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ForumResponse> findById(@PathVariable Long id) {
-        var response = forumService.findById(id);
+    public ResponseEntity<ForumResponse> find(@PathVariable Long id) {
+        var response = forumService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -57,8 +57,8 @@ public class ForumController implements BaseController, ForumControllerDocs {
     @Override
     @UserRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        forumService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        forumService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

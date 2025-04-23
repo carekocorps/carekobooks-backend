@@ -32,8 +32,8 @@ public class BookReviewController implements BaseController, BookReviewControlle
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookReviewResponse> findById(@PathVariable Long id) {
-        var response = bookReviewService.findById(id);
+    public ResponseEntity<BookReviewResponse> find(@PathVariable Long id) {
+        var response = bookReviewService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -57,8 +57,8 @@ public class BookReviewController implements BaseController, BookReviewControlle
     @Override
     @UserRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        bookReviewService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        bookReviewService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

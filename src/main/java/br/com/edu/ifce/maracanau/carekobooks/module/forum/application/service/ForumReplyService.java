@@ -32,40 +32,40 @@ public class ForumReplyService {
         return new ApplicationPage<>(forumReplyRepository.findAll(specification, pageRequest).map(forumReplyMapper::toResponse));
     }
 
-    public Optional<ForumReplyResponse> findById(Long id) {
+    public Optional<ForumReplyResponse> find(Long id) {
         return forumReplyRepository.findById(id).map(forumReplyMapper::toResponse);
     }
 
     @Transactional
     public ForumReplyResponse create(ForumReplyRequest request) {
-        var forumReply = forumReplyMapper.toModel(request);
-        forumReplyValidator.validate(forumReply);
-        return forumReplyMapper.toResponse(forumReplyRepository.save(forumReply));
+        var reply = forumReplyMapper.toModel(request);
+        forumReplyValidator.validate(reply);
+        return forumReplyMapper.toResponse(forumReplyRepository.save(reply));
     }
 
     @Transactional
     public ForumReplyResponse update(Long id, ForumReplyRequest request) {
-        var forumReply = forumReplyRepository
+        var reply = forumReplyRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum Reply not found"));
 
-        if (UserContextProvider.isUserUnauthorized(forumReply.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(reply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this forum reply");
         }
 
-        forumReplyMapper.updateModel(forumReply, request);
-        forumReplyValidator.validate(forumReply);
-        forumReplyRepository.save(forumReply);
-        return forumReplyMapper.toResponse(forumReply);
+        forumReplyMapper.updateModel(reply, request);
+        forumReplyValidator.validate(reply);
+        forumReplyRepository.save(reply);
+        return forumReplyMapper.toResponse(reply);
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        var forumReply = forumReplyRepository
+    public void delete(Long id) {
+        var reply = forumReplyRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Forum Reply not found"));
 
-        if (UserContextProvider.isUserUnauthorized(forumReply.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(reply.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this forum reply");
         }
 

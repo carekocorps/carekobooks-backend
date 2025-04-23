@@ -30,16 +30,16 @@ public class BookActivityController implements BaseController, BookActivityContr
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookActivityResponse> findById(@PathVariable Long id) {
-        var response = bookActivityService.findById(id);
+    public ResponseEntity<BookActivityResponse> find(@PathVariable Long id) {
+        var response = bookActivityService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
     @UserRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        bookActivityService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        bookActivityService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

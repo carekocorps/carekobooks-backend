@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class BookReviewSpecification {
 
+    private BookReviewSpecification() {
+    }
+
     public static Specification<BookReview> usernameEqual(String username) {
         return (root, query, cb) ->
                 cb.equal(root.get("user").get("username"), username);

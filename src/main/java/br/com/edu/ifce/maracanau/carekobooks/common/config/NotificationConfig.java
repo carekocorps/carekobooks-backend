@@ -7,19 +7,21 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificatio
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Configuration
 public class NotificationConfig {
 
     @Bean
     public BookActivityNotificationSubject bookActivitySubject(BookActivityWebSocketNotificationObserver bookActivityWebSocketObserver) {
-        return new BookActivityNotificationSubject(List.of(bookActivityWebSocketObserver));
+        var subject = new BookActivityNotificationSubject();
+        subject.addObserver(bookActivityWebSocketObserver);
+        return subject;
     }
 
     @Bean
     public UserNotificationSubject userSubject(UserEmailNotificationObserver userEmailObserver) {
-        return new UserNotificationSubject(List.of(userEmailObserver));
+        var subject = new UserNotificationSubject();
+        subject.addObserver(userEmailObserver);
+        return subject;
     }
 
 }

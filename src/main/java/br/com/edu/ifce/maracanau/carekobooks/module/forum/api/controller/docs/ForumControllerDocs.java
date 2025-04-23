@@ -51,7 +51,7 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ForumResponse> findById(@PathVariable Long id);
+    ResponseEntity<ForumResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Create a forum",
@@ -100,6 +100,6 @@ public interface ForumControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id);
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
 }

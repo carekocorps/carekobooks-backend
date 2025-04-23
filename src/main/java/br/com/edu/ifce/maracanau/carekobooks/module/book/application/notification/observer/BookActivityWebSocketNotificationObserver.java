@@ -15,7 +15,7 @@ public class BookActivityWebSocketNotificationObserver implements BaseBookActivi
 
     public void notify(BookActivityResponse response) {
         userService
-                .findAllFollowersByUsername(response.getUser().getUsername())
+                .findAllFollowers(response.getUser().getUsername())
                 .forEach(follower -> {
                     var destination = "/topic/users/" + follower.getUsername() + "/feed";
                     messagingTemplate.convertAndSend(destination, response);

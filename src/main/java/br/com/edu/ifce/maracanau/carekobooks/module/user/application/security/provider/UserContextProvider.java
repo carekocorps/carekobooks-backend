@@ -7,6 +7,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class UserContextProvider {
 
+    private UserContextProvider() {
+    }
+
     public static User getUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

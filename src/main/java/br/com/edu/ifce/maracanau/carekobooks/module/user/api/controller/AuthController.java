@@ -30,7 +30,7 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> initRegistration(@RequestPart @Valid UserRegisterInitializationRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<Void> initRegistration(@RequestPart @Valid UserRegisterInitializationRequest request, @RequestParam(required = false) MultipartFile image) {
         var response = authService.initRegistration(request, image);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

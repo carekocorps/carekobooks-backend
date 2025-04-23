@@ -23,12 +23,12 @@ public class ImageService {
     private final ImageMapper imageMapper;
     private final ImageValidator imageValidator;
 
-    public Optional<ImageResponse> findById(Long id) {
+    public Optional<ImageResponse> find(Long id) {
         return imageRepository.findById(id).map(imageMapper::toResponse);
     }
 
     @Transactional
-    public ImageResponse create(MultipartFile file) throws Exception {
+    public ImageResponse create(MultipartFile file) {
         var image = new Image();
         image.setName(minioService.upload(file));
         image.setUrl(minioService.findUrlByFilename(image.getName()));
@@ -38,7 +38,7 @@ public class ImageService {
     }
 
     @Transactional
-    public void deleteById(Long id) throws Exception {
+    public void delete(Long id) {
         var image = imageRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("File not found"));

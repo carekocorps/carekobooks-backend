@@ -33,7 +33,7 @@ public class ForumReplyController implements BaseController, ForumReplyControlle
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ForumReplyResponse> findById(@PathVariable Long id) {
-        var response = forumReplyService.findById(id);
+        var response = forumReplyService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -58,7 +58,7 @@ public class ForumReplyController implements BaseController, ForumReplyControlle
     @UserRoleRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        forumReplyService.deleteById(id);
+        forumReplyService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
