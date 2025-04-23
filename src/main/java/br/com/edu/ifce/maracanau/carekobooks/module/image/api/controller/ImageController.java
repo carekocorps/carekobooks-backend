@@ -28,7 +28,7 @@ public class ImageController implements BaseController, ImageControllerDocs {
     @Override
     @AdminRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         imageService.delete(id);
         return ResponseEntity.noContent().build();
     }

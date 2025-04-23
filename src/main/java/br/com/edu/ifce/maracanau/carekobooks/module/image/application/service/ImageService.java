@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
@@ -28,23 +29,31 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageResponse create(MultipartFile file) throws Exception {
-        var image = new Image();
-        image.setName(minioService.upload(file));
-        image.setUrl(minioService.findUrlByFilename(image.getName()));
-        image.setSizeInBytes(file.getSize());
-        imageValidator.validate(image);
-        return imageMapper.toResponse(imageRepository.save(image));
+    public ImageResponse create(MultipartFile file) {
+        try {
+            var image = new Image();
+            image.setName(minioService.upload(file));
+            image.setUrl(minioService.findUrlByFilename(image.getName()));
+            image.setSizeInBytes(file.getSize());
+            imageValidator.validate(image);
+            return imageMapper.toResponse(imageRepository.save(image));
+        } catch (Exception e) {
+            throw new BadRequestException("Could not upload image");
+        }
     }
 
     @Transactional
-    public void delete(Long id) throws Exception {
-        var image = imageRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("File not found"));
+    public void delete(Long id) {
+        try {
+            var image = imageRepository
+                    .findById(id)
+                    .orElseThrow(() -> new NotFoundException("File not found"));
 
-        minioService.deleteByFilename(image.getName());
-        imageRepository.deleteById(id);
+            minioService.deleteByFilename(image.getName());
+            imageRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new BadRequestException("Could not delete image");
+        }
     }
 
 }

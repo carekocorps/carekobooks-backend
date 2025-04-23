@@ -42,6 +42,6 @@ public interface ImageControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> delete(@PathVariable Long id) throws Exception;
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
 }

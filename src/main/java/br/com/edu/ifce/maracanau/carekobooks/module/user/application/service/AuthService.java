@@ -66,7 +66,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponse initRegistration(UserRegisterInitializationRequest request, MultipartFile image) throws Exception {
+    public UserResponse initRegistration(UserRegisterInitializationRequest request, MultipartFile image) {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsEnabled(false);

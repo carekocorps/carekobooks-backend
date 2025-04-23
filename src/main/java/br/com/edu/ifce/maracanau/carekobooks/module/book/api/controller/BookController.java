@@ -44,7 +44,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @AdminRoleRequired
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) {
         var response = bookService.create(request, image);
         var uri = getHeaderLocation(response.getId());
         return ResponseEntity.created(uri).body(response);
@@ -53,7 +53,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @AdminRoleRequired
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) {
         bookService.update(id, request, image);
         return ResponseEntity.noContent().build();
     }
@@ -77,7 +77,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile image) throws Exception {
+    public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile image) {
         bookService.changeImage(id, image);
         return ResponseEntity.noContent().build();
     }
@@ -85,7 +85,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @UserRoleRequired
     @DeleteMapping(value = "/{id}/images")
-    public ResponseEntity<Void> unassignImage(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> unassignImage(@PathVariable Long id) {
         bookService.changeImage(id, null);
         return ResponseEntity.noContent().build();
     }

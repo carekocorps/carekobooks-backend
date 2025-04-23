@@ -52,7 +52,7 @@ public class BookService {
 
     @CacheEvict(value = "book", allEntries = true)
     @Transactional
-    public BookResponse create(BookRequest request, MultipartFile image) throws Exception {
+    public BookResponse create(BookRequest request, MultipartFile image) {
         var book = bookMapper.toModel(request);
         if (image != null) {
             book.setImage(imageMapper.toModel(imageService.create(image)));
@@ -68,7 +68,7 @@ public class BookService {
 
     @CachePut(value = "book", key = "#id")
     @Transactional
-    public BookResponse update(Long id, BookRequest request, MultipartFile image) throws Exception {
+    public BookResponse update(Long id, BookRequest request, MultipartFile image) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
@@ -101,7 +101,7 @@ public class BookService {
 
         var isAdditionRequested = action == ActionType.ASSIGN;
         var isBookContainingGenre = book.getGenres().contains(genre);
-        if (isBookContainingGenre == isAdditionRequested) {
+        if (isBookContainingGenre != isAdditionRequested) {
             throw new BadRequestException(isAdditionRequested
                     ? "Book already contains this genre"
                     : "Book does not contain this genre"
@@ -135,17 +135,23 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void changeImage(Long id, MultipartFile image) throws Exception {
+    public void changeImage(Long id, MultipartFile image) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        if (image == null && book.getImage() != null) {
-            imageService.delete(book.getImage().getId());
-            book.setImage(null);
-        } else {
-            book.setImage(imageMapper.toModel(imageService.create(image)));
-        }
+        book.setImage(Optional
+                .ofNullable(image)
+                .map(file -> imageMapper.toModel(imageService.create(file)))
+                .orElseGet(() -> {
+                    if (book.getImage() == null) {
+                        throw new NotFoundException("No image found or already deleted");
+                    }
+
+                    imageService.delete(book.getImage().getId());
+                    return null;
+                })
+        );
 
         bookRepository.save(book);
     }

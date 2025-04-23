@@ -63,7 +63,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) throws Exception {
+    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
         userService.update(username, request, image);
         return ResponseEntity.noContent().build();
     }
@@ -87,7 +87,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile image) throws Exception {
+    public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile image) {
         userService.changeImage(username, image);
         return ResponseEntity.noContent().build();
     }
@@ -95,7 +95,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @DeleteMapping(value = "/{username}/images")
-    public ResponseEntity<Void> unassignImage(@PathVariable String username) throws Exception {
+    public ResponseEntity<Void> unassignImage(@PathVariable String username) {
         userService.changeImage(username, null);
         return ResponseEntity.noContent().build();
     }

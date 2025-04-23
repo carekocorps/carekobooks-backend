@@ -66,7 +66,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) throws Exception {
+    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -119,7 +119,7 @@ public class UserService {
     }
 
     @Transactional
-    public void changeImage(String username, MultipartFile image) throws Exception {
+    public void changeImage(String username, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -128,12 +128,18 @@ public class UserService {
             throw new ForbiddenException("You are not allowed to update the image of this user");
         }
 
-        if (image == null && user.getImage() != null) {
-            imageService.delete(user.getImage().getId());
-            user.setImage(null);
-        } else {
-            user.setImage(imageMapper.toModel(imageService.create(image)));
-        }
+        user.setImage(Optional
+                .ofNullable(image)
+                .map(file -> imageMapper.toModel(imageService.create(file)))
+                .orElseGet(() -> {
+                    if (user.getImage() == null) {
+                        throw new NotFoundException("No image found or already deleted");
+                    }
+
+                    imageService.delete(user.getImage().getId());
+                    return null;
+                })
+        );
 
         userRepository.save(user);
     }

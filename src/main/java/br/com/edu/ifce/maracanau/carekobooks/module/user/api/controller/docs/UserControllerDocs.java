@@ -114,7 +114,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestPart(required = false) MultipartFile image) throws Exception;
+    ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestPart(required = false) MultipartFile image);
 
     @Operation(
             summary = "Follow a user by username",
@@ -158,7 +158,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile avatar) throws Exception;
+    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile avatar);
 
     @Operation(
             summary = "Delete a user image by username",
@@ -172,7 +172,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> unassignImage(@PathVariable String username) throws Exception;
+    ResponseEntity<Void> unassignImage(@PathVariable String username);
 
     @Operation(
             summary = "Delete a user by username",
