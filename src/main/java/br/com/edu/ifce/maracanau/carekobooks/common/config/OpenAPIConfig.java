@@ -1,0 +1,24 @@
+package br.com.edu.ifce.maracanau.carekobooks.common.config;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.context.annotation.Configuration;
+
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Carekobooks",
+                version = "v1"
+        )
+)
+@SecurityScheme(
+        name = "Bearer",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        description = "Enter the JWT token like this: {token}"
+)
+@Configuration
+public class OpenAPIConfig {
+}
