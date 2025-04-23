@@ -34,7 +34,7 @@ public abstract class BaseApplicationQuery<T extends BaseModel> extends BaseAppl
     }
 
     protected Sort getSort(Map<String, String> fieldMapping) {
-        var direction = isAscendingOrder
+        var direction = Boolean.TRUE.equals(isAscendingOrder)
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 

@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class UserSocialSpecification {
 
+    private UserSocialSpecification() {
+    }
+
     public static Specification<User> followingUsernameEqual(String username) {
         return (root, query, cb) -> {
             var users = root.get("followers");

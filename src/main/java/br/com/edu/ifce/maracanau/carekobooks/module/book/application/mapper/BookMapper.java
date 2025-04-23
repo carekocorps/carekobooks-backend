@@ -6,6 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
+import lombok.Setter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -20,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class BookMapper {
 
-    @Autowired
+    @Setter(onMethod = @__(@Autowired))
     protected BookRepository bookRepository;
 
     @IgnoreBaseModelFields

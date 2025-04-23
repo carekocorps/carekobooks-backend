@@ -8,6 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.reposit
 import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class ForumMapper {
 
-    @Autowired
+    @Setter(onMethod = @__(@Autowired))
     protected ForumRepository forumRepository;
 
     @IgnoreBaseModelFields

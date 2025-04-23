@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ForumSpecification {
 
+    private ForumSpecification() {
+    }
+
     public static Specification<Forum> titleContains(String title) {
         return (root, query, cb) ->
                 cb.equal(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");

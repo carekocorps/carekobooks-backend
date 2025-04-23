@@ -82,7 +82,7 @@ public class BookGenreService {
             },
             allEntries = true
     )
-    public void clearCache() {
+    public void clearCache() { // @CacheEvict handles the cache clearing
     }
 
 }

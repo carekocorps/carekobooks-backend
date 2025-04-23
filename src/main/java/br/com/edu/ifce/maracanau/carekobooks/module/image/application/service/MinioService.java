@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -21,32 +22,44 @@ public class MinioService {
 
     private final MinioClient minioClient;
 
-    public String findUrlByFilename(String filename) throws Exception {
-        return minioClient
-                .getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
-                        .bucket(minioBucket)
-                        .object(filename)
-                        .method(Method.GET)
-                        .expiry(7, TimeUnit.DAYS)
-                        .build()
-                );
+    public String findUrlByFilename(String filename) {
+        try {
+            return minioClient
+                    .getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                            .bucket(minioBucket)
+                            .object(filename)
+                            .method(Method.GET)
+                            .expiry(7, TimeUnit.DAYS)
+                            .build()
+                    );
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
-    public String upload(MultipartFile file) throws Exception {
-        var fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        minioClient.putObject(PutObjectArgs.builder()
-                .bucket(minioBucket)
-                .object(fileName)
-                .stream(file.getInputStream(), file.getSize(), -1)
-                .contentType(file.getContentType())
-                .build()
-        );
+    public String upload(MultipartFile file) {
+        try {
+            var fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(minioBucket)
+                    .object(fileName)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .contentType(file.getContentType())
+                    .build()
+            );
 
-        return fileName;
+            return fileName;
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
-    public void deleteByFilename(String filename) throws Exception {
-        minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioBucket).object(filename).build());
+    public void deleteByFilename(String filename) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioBucket).object(filename).build());
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
 }

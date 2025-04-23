@@ -167,7 +167,7 @@ public class BookService {
     }
 
     @CacheEvict(value = "book", allEntries = true)
-    public void clearCache() {
+    public void clearCache() { // @CacheEvict handles the cache clearing
     }
 
 }

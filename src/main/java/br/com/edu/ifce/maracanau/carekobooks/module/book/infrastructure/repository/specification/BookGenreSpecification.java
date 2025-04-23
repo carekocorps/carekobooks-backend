@@ -5,6 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class BookGenreSpecification {
 
+    private BookGenreSpecification() {
+    }
+
     public static Specification<BookGenre> nameContains(String name) {
         return (root, query, cb) ->
                 cb.like(cb.upper(root.get("title")), "%" + name.toUpperCase() + "%");
