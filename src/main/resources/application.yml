@@ -1,3 +1,5 @@
+server:
+  forward-headers-strategy: framework
 spring:
   application:
     name: carekobooks
@@ -43,16 +45,9 @@ security:
       private: classpath:app.key
       public: classpath:app.pub
 springdoc:
-  api-docs:
-    path: /api-docs
-    version: openapi_3_1
   swagger-ui:
-    enabled: true
-    path: swagger-ui.html
     operations-sorter: method
     tags-sorter: alpha
-server:
-  forward-headers-strategy: framework
 minio:
   endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
   username: ${MINIO_USERNAME}

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.swagger;
+package br.com.edu.ifce.maracanau.carekobooks.common.customizer;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
@@ -16,11 +16,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
-public class SwaggerUiCustomizer extends SwaggerIndexPageTransformer {
+public class SwaggerCustomizer extends SwaggerIndexPageTransformer {
 
     private static final String CUSTOM_CSS_PATH = "/static/swagger-ui.css";
 
-    public SwaggerUiCustomizer(
+    public SwaggerCustomizer(
             final SwaggerUiConfigProperties swaggerUiConfig,
             final SwaggerUiOAuthProperties swaggerUiOAuthProperties,
             final SwaggerWelcomeCommon swaggerWelcomeCommon,

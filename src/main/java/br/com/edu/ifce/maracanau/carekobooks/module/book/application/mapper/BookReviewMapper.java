@@ -27,6 +27,7 @@ public interface BookReviewMapper {
     BookReviewResponse toResponse(BookReview review);
 
     @IgnoreBaseModelFields
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     void updateModel(@MappingTarget BookReview review, BookReviewRequest request);
 
