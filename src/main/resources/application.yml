@@ -32,15 +32,27 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
+  mvc:
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/static/
 security:
   jwt:
     key:
       private: classpath:app.key
       public: classpath:app.pub
 springdoc:
+  api-docs:
+    path: /api-docs
+    version: openapi_3_1
   swagger-ui:
-    tags-sorter: alpha
+    enabled: true
+    path: swagger-ui.html
     operations-sorter: method
+    tags-sorter: alpha
+server:
+  forward-headers-strategy: framework
 minio:
   endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
   username: ${MINIO_USERNAME}
