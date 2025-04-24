@@ -31,7 +31,7 @@ public abstract class BookMapper {
     @Mapping(target = "progresses", ignore = true)
     @Mapping(target = "activities", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    @Mapping(target = "forums", ignore = true)
+    @Mapping(target = "threads", ignore = true)
     public abstract Book toModel(BookRequest request);
     public abstract BookResponse toResponse(Book book);
 
@@ -42,7 +42,7 @@ public abstract class BookMapper {
     @Mapping(target = "progresses", ignore = true)
     @Mapping(target = "activities", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    @Mapping(target = "forums", ignore = true)
+    @Mapping(target = "threads", ignore = true)
     public abstract void updateModel(@MappingTarget Book book, BookRequest request);
 
     public Book toModel(Long id) {

@@ -21,18 +21,18 @@ public class BookRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 255)
-    private String author;
+    private String authorName;
 
     @NotBlank
     @Size(max = 255)
-    private String publisher;
+    private String publisherName;
 
     @PastOrPresent
     private LocalDate publishedAt;
 
     @NotNull
     @Min(1)
-    private Integer totalPages;
+    private Integer pageCount;
 
     @Size(max = 5)
     private List<@NotBlank @Size(max = 50) String> genres;

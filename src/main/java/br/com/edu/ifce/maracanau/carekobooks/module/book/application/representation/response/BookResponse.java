@@ -16,10 +16,10 @@ public class BookResponse implements BaseResponse {
     private Long id;
     private String title;
     private String synopsis;
-    private String author;
-    private String publisher;
+    private String authorName;
+    private String publisherName;
     private LocalDate publishedAt;
-    private Integer totalPages;
+    private Integer pageCount;
     private Double userAverageScore;
     private Double reviewAverageScore;
     private LocalDateTime createdAt;

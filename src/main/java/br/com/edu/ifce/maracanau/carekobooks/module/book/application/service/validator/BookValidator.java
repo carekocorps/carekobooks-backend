@@ -28,11 +28,11 @@ public class BookValidator implements BaseValidator<Book> {
     private boolean isBookDuplicated(Book book) {
         var query = new BookQuery();
         query.setTitle(book.getTitle());
-        query.setAuthor(book.getAuthor());
-        query.setPublisher(book.getPublisher());
+        query.setAuthorName(book.getAuthorName());
+        query.setPublisherName(book.getPublisherName());
         query.setPublishedBefore(book.getPublishedAt());
         query.setPublishedAfter(book.getPublishedAt());
-        query.setTotalPages(book.getTotalPages());
+        query.setPageCount(book.getPageCount());
 
         var books = bookRepository.findAll(query.getSpecification());
         return books.stream().anyMatch(b -> !b.getId().equals(book.getId()));

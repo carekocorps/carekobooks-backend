@@ -42,11 +42,13 @@ public class BookReviewService {
     public BookReviewResponse create(BookReviewRequest request) {
         var review = bookReviewMapper.toModel(request);
         bookReviewValidator.validate(review);
-        bookReviewRepository.save(review);
+        var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
 
         var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
         bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
-        return bookReviewMapper.toResponse(review);
+        response.getBook().setReviewAverageScore(reviewAverageScore);
+
+        return response;
     }
 
     @Transactional
@@ -57,15 +59,15 @@ public class BookReviewService {
 
         bookReviewMapper.updateModel(review, request);
         bookReviewValidator.validate(review);
-        bookReviewRepository.save(review);
+        var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
 
-        if (UserContextProvider.isUserUnauthorized(review.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book review");
         }
 
         var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
         bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
-        return bookReviewMapper.toResponse(review);
+        return response;
     }
 
     @Transactional

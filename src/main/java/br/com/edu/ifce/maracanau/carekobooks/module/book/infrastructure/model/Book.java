@@ -2,7 +2,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.model.BaseModel;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,17 +23,17 @@ public class Book extends BaseModel {
     @Column(length = 1000)
     private String synopsis;
 
-    @Column(nullable = false)
-    private String author;
+    @Column(name = "author_name", nullable = false)
+    private String authorName;
 
-    @Column(nullable = false)
-    private String publisher;
+    @Column(name = "publisher_name", nullable = false)
+    private String publisherName;
 
     @Column(name = "published_at")
     private LocalDate publishedAt;
 
-    @Column(name = "total_pages", nullable = false)
-    private Integer totalPages;
+    @Column(name = "page_count", nullable = false)
+    private Integer pageCount;
 
     @Column(name = "user_average_score")
     private Double userAverageScore;
@@ -65,6 +64,6 @@ public class Book extends BaseModel {
     private List<BookReview> reviews;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
-    private List<Forum> forums;
+    private List<BookThread> threads;
 
 }

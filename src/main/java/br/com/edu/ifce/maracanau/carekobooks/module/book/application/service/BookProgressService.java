@@ -44,19 +44,20 @@ public class BookProgressService {
     public BookProgressResponse create(BookProgressRequest request) {
         var progress = bookProgressMapper.toModel(request);
         bookProgressValidator.validate(progress);
-        progress = bookProgressRepository.save(progress);
+        var response = bookProgressMapper.toResponse(bookProgressRepository.save(progress));
 
-        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
+        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
         if (request.getScore() != null) {
             var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
             bookService.changeUserAverageScore(request.getBookId(), userAverageScore);
+            response.getBook().setUserAverageScore(userAverageScore);
         }
 
         bookActivityService.create(request);
-        return bookProgressMapper.toResponse(progress);
+        return response;
     }
 
     @Transactional

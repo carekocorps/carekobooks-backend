@@ -29,6 +29,6 @@ public interface BookProgressMapper {
     @IgnoreBaseModelFields
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    void updateModel(@MappingTarget BookProgress model, BookProgressRequest request);
+    void updateModel(@MappingTarget BookProgress progress, BookProgressRequest request);
 
 }

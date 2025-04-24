@@ -19,7 +19,7 @@ public class UserUpdateRequest implements BaseRequest {
     private String username;
 
     @Size(max = 50)
-    private String name;
+    private String displayName;
 
     @NotBlank
     @Size(min = 5, max = 255)

@@ -32,7 +32,7 @@ public class BookProgressValidator implements BaseValidator<BookProgress> {
     }
 
     private boolean isPagesReadInvalid(BookProgress bookProgress) {
-        return bookProgress.getPagesRead() != null && bookProgress.getPagesRead() > bookProgress.getBook().getTotalPages();
+        return bookProgress.getPageCount() != null && bookProgress.getPageCount() > bookProgress.getBook().getPageCount();
     }
 
 }

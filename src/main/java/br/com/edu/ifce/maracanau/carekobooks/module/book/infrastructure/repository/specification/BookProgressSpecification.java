@@ -24,7 +24,7 @@ public class BookProgressSpecification {
                 cb.equal(root.get("score"), score);
     }
 
-    public static Specification<BookProgress> pagesReadEqual(Integer pagesRead) {
+    public static Specification<BookProgress> pageCountEqual(Integer pagesRead) {
         return (root, query, cb) ->
                 cb.equal(root.get("pagesRead"), pagesRead);
     }

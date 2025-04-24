@@ -18,13 +18,13 @@ import java.util.Map;
 public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
 
     private String name;
-    private String friendlyName;
+    private String displayName;
 
     @Override
     public Specification<BookGenre> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(name)) specs = specs.and(nameContains(name));
-        if (StringUtils.isNotBlank(friendlyName)) specs = specs.and(friendlyNameContains(friendlyName));
+        if (StringUtils.isNotBlank(displayName)) specs = specs.and(displayNameContains(displayName));
         return specs;
     }
 
@@ -32,7 +32,7 @@ public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
     public Sort getSort() {
         return getSort(Map.of(
                 "name", "name",
-                "friendly-name", "friendlyName",
+                "display-name", "displayName",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -44,7 +44,7 @@ public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
             allowableValues = {
                     "id",
                     "name",
-                    "friendly-name",
+                    "display-name",
                     "created-at",
                     "updated-at"
             }

@@ -6,8 +6,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.en
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.Forum;
-import br.com.edu.ifce.maracanau.carekobooks.module.forum.infrastructure.model.ForumReply;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThread;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,14 +25,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+                @Index(name = "idx_username", columnList = "username"),
+                @Index(name = "idx_email", columnList = "email")
+        }
+)
 public class User extends BaseModel implements UserDetails {
 
-    @Column(unique = true, length = 50, nullable = false)
+    @Column(length = 50, unique = true, nullable = false)
     private String username;
 
-    @Column(length = 50)
-    private String name;
+    @Column(name = "display_name", length = 50)
+    private String displayName;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -44,25 +50,26 @@ public class User extends BaseModel implements UserDetails {
     private String description;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
 
-    @Column(name = "verification_token")
-    private UUID verificationToken;
+    @Column(name = "verification_token", length = 8)
+    private String verificationToken;
 
     @Column(name = "verification_token_expires_at")
     private LocalDateTime verificationTokenExpiresAt;
 
-    @Column(name = "password_verification_token")
-    private UUID passwordVerificationToken;
+    @Column(name = "password_verification_token", length = 8)
+    private String passwordVerificationToken;
 
     @Column(name = "password_verification_token_expires_at")
     private LocalDateTime passwordVerificationTokenExpiresAt;
 
-    @Column(name = "email_verification_token")
-    private UUID emailVerificationToken;
+    @Column(name = "email_verification_token", length = 8)
+    private String emailVerificationToken;
 
     @Column(name = "email_verification_token_expires_at")
     private LocalDateTime emailVerificationTokenExpiresAt;
@@ -82,10 +89,10 @@ public class User extends BaseModel implements UserDetails {
     private List<BookReview> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Forum> forums;
+    private List<BookThread> threads;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<ForumReply> replies;
+    private List<BookThreadReply> replies;
 
     @ManyToMany
     @JoinTable(

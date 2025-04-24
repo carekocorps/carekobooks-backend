@@ -14,6 +14,7 @@ import lombok.Setter;
 public class BookProgress extends BaseModel {
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BookProgressStatus status = BookProgressStatus.READING;
 
     @Column(name = "is_favorite", nullable = false)
@@ -22,8 +23,8 @@ public class BookProgress extends BaseModel {
     @Column
     private Integer score;
 
-    @Column(name = "pages_read")
-    private Integer pagesRead;
+    @Column(name = "page_count")
+    private Integer pageCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

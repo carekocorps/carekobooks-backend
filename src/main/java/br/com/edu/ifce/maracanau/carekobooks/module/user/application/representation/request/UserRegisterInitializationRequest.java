@@ -17,7 +17,7 @@ public class UserRegisterInitializationRequest implements BaseRequest {
     private String username;
 
     @Size(max = 50)
-    private String name;
+    private String displayName;
 
     @NotBlank
     @Email

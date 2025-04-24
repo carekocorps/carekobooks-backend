@@ -19,23 +19,23 @@ import java.util.Map;
 public class BookQuery extends BaseApplicationQuery<Book> {
 
     private String title;
-    private String author;
-    private String publisher;
+    private String authorName;
+    private String publisherName;
     private String genre;
     private LocalDate publishedBefore;
     private LocalDate publishedAfter;
-    private Integer totalPages;
+    private Integer pageCount;
 
     @Override
     public Specification<Book> getSpecification() {
         var specs = super.getSpecification();
-        if (StringUtils.isNotBlank(author)) specs = specs.and(authorContains(author));
-        if (StringUtils.isNotBlank(publisher)) specs = specs.and(publisherContains(publisher));
+        if (StringUtils.isNotBlank(authorName)) specs = specs.and(authorNameContains(authorName));
+        if (StringUtils.isNotBlank(publisherName)) specs = specs.and(publisherNameContains(publisherName));
         if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
         if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));
         if (publishedBefore != null) specs = specs.and(publishedBefore(publishedBefore));
         if (publishedAfter != null) specs = specs.and(publishedAfter(publishedAfter));
-        if (totalPages != null) specs = specs.and(totalPagesEqual(totalPages));
+        if (pageCount != null) specs = specs.and(pageCountEquals(pageCount));
         return specs;
     }
 
@@ -43,10 +43,10 @@ public class BookQuery extends BaseApplicationQuery<Book> {
     public Sort getSort() {
         return getSort(Map.of(
                 "title", "title",
-                "author", "author",
-                "publisher", "publisher",
+                "author-name", "authorName",
+                "publisher-name", "publisherName",
                 "published-at", "publishedAt",
-                "total-pages", "totalPages",
+                "page-count", "pageCount",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -58,10 +58,10 @@ public class BookQuery extends BaseApplicationQuery<Book> {
             allowableValues = {
                     "id",
                     "title",
-                    "author",
-                    "publisher",
+                    "author-name",
+                    "publisher-name",
                     "published-at",
-                    "total-pages",
+                    "page-count",
                     "created-at",
                     "updated-at"
             }

@@ -1,0 +1,65 @@
+package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
+
+import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookThreadReplyControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadReplyResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookThreadReplyQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookThreadReplyService;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1/books/threads/replies")
+@Tag(name = "Thread Reply", description = "Endpoints for managing thread replies")
+public class BookThreadReplyController implements BaseController, BookThreadReplyControllerDocs {
+
+    private final BookThreadReplyService bookThreadReplyService;
+
+    @Override
+    @GetMapping
+    public ResponseEntity<ApplicationPage<BookThreadReplyResponse>> search(@ParameterObject BookThreadReplyQuery query) {
+        var responses = bookThreadReplyService.search(query);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<BookThreadReplyResponse> findById(@PathVariable Long id) {
+        var response = bookThreadReplyService.find(id);
+        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Override
+    @UserRoleRequired
+    @PostMapping
+    public ResponseEntity<BookThreadReplyResponse> create(@RequestBody @Valid BookThreadReplyRequest request) {
+        var response = bookThreadReplyService.create(request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    @UserRoleRequired
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request) {
+        bookThreadReplyService.update(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @UserRoleRequired
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        bookThreadReplyService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}

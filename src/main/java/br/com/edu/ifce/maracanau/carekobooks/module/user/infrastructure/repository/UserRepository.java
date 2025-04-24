@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
@@ -31,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.passwordVerificationTokenExpiresAt = :expiresAt
         WHERE u.username = :username
     """)
-    void initPasswordRecoveryByUsername(String username, UUID token, LocalDateTime expiresAt);
+    void initPasswordRecoveryByUsername(String username, String token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
@@ -41,7 +40,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             u.emailVerificationTokenExpiresAt = :expiresAt
         WHERE u.username = :username
     """)
-    void initEmailChangeByUsername(String username, UUID token, LocalDateTime expiresAt);
+    void initEmailChangeByUsername(String username, String token, LocalDateTime expiresAt);
 
     @Modifying
     @Transactional
@@ -79,7 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Modifying
     @Transactional
     @Query(value = """
-        INSERT INTO `user_follow_relationships` (`user_following_id`, `user_followed_id`) VALUES
+        INSERT INTO user_follow_relationships (user_following_id, user_followed_id) VALUES
             (:followingId, :followedId);
     """, nativeQuery = true)
     void follow(Long followingId, Long followedId);
@@ -87,9 +86,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Modifying
     @Transactional
     @Query(value = """
-        DELETE FROM `user_follow_relationships`
-        WHERE `user_following_id` = :followingId
-        AND `user_followed_id` = :followedId;
+        DELETE FROM user_follow_relationships
+        WHERE user_following_id = :followingId
+        AND user_followed_id = :followedId;
     """, nativeQuery = true)
     void unfollow(Long followingId, Long followedId);
 

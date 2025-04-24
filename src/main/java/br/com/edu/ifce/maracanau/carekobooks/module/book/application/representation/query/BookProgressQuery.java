@@ -22,7 +22,7 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
     private BookProgressStatus status;
     private Boolean isFavorite;
     private Integer score;
-    private Integer pagesRead;
+    private Integer pageCount;
     private Long bookId;
 
     @Override
@@ -32,7 +32,7 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
         if (status != null) specs = specs.and(statusEqual(status));
         if (isFavorite != null) specs = specs.and(isFavoriteEqual(isFavorite));
         if (score != null) specs = specs.and(scoreEqual(score));
-        if (pagesRead != null) specs = specs.and(pagesReadEqual(pagesRead));
+        if (pageCount != null) specs = specs.and(pageCountEqual(pageCount));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
@@ -44,7 +44,7 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
                 "status", "status",
                 "is-favorite", "isFavorite",
                 "score", "score",
-                "pages-read", "pagesRead",
+                "page-count", "pageCount",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -59,7 +59,7 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
                     "status",
                     "is-favorite",
                     "score",
-                    "pages-read",
+                    "page-count",
                     "created-at",
                     "updated-at"
             }

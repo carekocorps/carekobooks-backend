@@ -1,0 +1,32 @@
+package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
+
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadReplyResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import org.mapstruct.*;
+
+@Mapper(
+        componentModel = "spring",
+        imports = UserContextProvider.class,
+        uses = {
+                UserMapper.class,
+                BookThreadMapper.class
+        }
+)
+public interface BookThreadReplyMapper {
+
+    @IgnoreBaseModelFields
+    @Mapping(target = "user", expression = "java(UserContextProvider.getUser())")
+    @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
+    BookThreadReply toModel(BookThreadReplyRequest request);
+    BookThreadReplyResponse toResponse(BookThreadReply bookThreadReply);
+
+    @IgnoreBaseModelFields
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
+    void updateModel(@MappingTarget BookThreadReply reply, BookThreadReplyRequest request);
+
+}

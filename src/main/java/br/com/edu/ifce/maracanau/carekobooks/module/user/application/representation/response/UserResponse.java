@@ -13,7 +13,7 @@ public class UserResponse implements BaseResponse {
 
     private Long id;
     private String username;
-    private String name;
+    private String displayName;
     private String email;
     private String description;
     private LocalDateTime createdAt;

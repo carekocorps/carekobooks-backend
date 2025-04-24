@@ -23,7 +23,7 @@ public class BookProgressRequest implements BaseRequest {
     private Integer score;
 
     @Min(0)
-    private Integer pagesRead;
+    private Integer pageCount;
 
     @NotNull
     private Long bookId;

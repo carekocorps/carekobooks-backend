@@ -15,12 +15,12 @@ public class BookSpecification {
                 cb.like(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");
     }
 
-    public static Specification<Book> authorContains(String author) {
+    public static Specification<Book> authorNameContains(String author) {
         return (root, query, cb) ->
                 cb.like(cb.upper(root.get("author")), "%" + author.toUpperCase() + "%");
     }
 
-    public static Specification<Book> publisherContains(String publisher) {
+    public static Specification<Book> publisherNameContains(String publisher) {
         return (root, query, cb) ->
                 cb.like(cb.upper(root.get("publisher")), "%" + publisher.toUpperCase() + "%");
     }
@@ -35,7 +35,7 @@ public class BookSpecification {
                 cb.greaterThanOrEqualTo(root.get("publishedAt"), publishedAfter);
     }
 
-    public static Specification<Book> totalPagesEqual(Integer totalPages) {
+    public static Specification<Book> pageCountEquals(Integer totalPages) {
         return (root, query, cb) ->
                 cb.equal(root.get("totalPages"), totalPages);
     }

@@ -14,7 +14,7 @@ public class BookActivityResponse implements BaseResponse {
 
     private Long id;
     private BookProgressStatus status;
-    private Integer pagesRead;
+    private Integer pageCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserResponse user;

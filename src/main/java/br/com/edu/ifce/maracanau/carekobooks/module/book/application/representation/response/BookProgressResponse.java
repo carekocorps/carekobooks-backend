@@ -16,7 +16,7 @@ public class BookProgressResponse implements BaseResponse {
     private BookProgressStatus status;
     private Boolean isFavorite;
     private Integer score;
-    private Integer pagesRead;
+    private Integer pageCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserResponse user;

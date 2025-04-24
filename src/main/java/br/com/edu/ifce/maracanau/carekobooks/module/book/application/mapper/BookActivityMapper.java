@@ -23,6 +23,6 @@ public interface BookActivityMapper {
     @Mapping(target = "user", expression = "java(UserContextProvider.getUser())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookActivity toModel(BookProgressRequest request);
-    BookActivityResponse toResponse(BookActivity bookActivity);
+    BookActivityResponse toResponse(BookActivity activity);
 
 }

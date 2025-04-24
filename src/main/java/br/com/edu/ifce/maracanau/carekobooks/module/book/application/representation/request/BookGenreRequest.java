@@ -20,7 +20,7 @@ public class BookGenreRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 100)
-    private String friendlyName;
+    private String displayName;
 
     @Size(max = 255)
     private String description;

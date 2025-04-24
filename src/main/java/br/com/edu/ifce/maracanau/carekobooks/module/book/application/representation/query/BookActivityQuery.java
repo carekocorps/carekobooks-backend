@@ -20,7 +20,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
 
     private String username;
     private BookProgressStatus status;
-    private Integer pagesRead;
+    private Integer pageCount;
     private Long bookId;
 
     @Override
@@ -28,7 +28,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
         if (status != null) specs = specs.and(statusEqual(status));
-        if (pagesRead != null) specs = specs.and(pagesReadEqual(pagesRead));
+        if (pageCount != null) specs = specs.and(pageCountEqual(pageCount));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;
     }
@@ -38,7 +38,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
         return getSort(Map.of(
                 "username", "user.username",
                 "status", "status",
-                "pages-read", "pagesRead",
+                "page-count", "pageCount",
                 "created-at", "createdAt",
                 "updated-at", "updatedAt"
         ));
@@ -51,7 +51,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
                     "id",
                     "username",
                     "status",
-                    "pages-read",
+                    "page-count",
                     "created-at",
                     "updated-at"
             }

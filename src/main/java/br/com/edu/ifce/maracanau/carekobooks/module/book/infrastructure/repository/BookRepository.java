@@ -15,7 +15,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     boolean existsById(@NotNull Long id);
 
     @Transactional
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Modifying
     @Query("""
         UPDATE Book b
         SET b.userAverageScore = :userAverageScore
@@ -24,7 +24,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     void changeUserAverageScoreById(Long id, Double userAverageScore);
 
     @Transactional
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Modifying
     @Query("""
         UPDATE Book b
         SET b.reviewAverageScore = :reviewAverageScore
@@ -35,7 +35,7 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Transactional
     @Modifying
     @Query(value = """
-        INSERT INTO `book_genre_relationships` (`book_id`, `genre_id`) VALUES
+        INSERT INTO book_genre_relationships (book_id, genre_id) VALUES
             (:bookId, :genreId);
     """, nativeQuery = true)
     void addGenre(Long bookId, Long genreId);
@@ -43,9 +43,9 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Transactional
     @Modifying
     @Query(value = """
-        DELETE FROM `book_genre_relationships`
-        WHERE `book_id` = :bookId
-        AND `genre_id` = :genreId
+        DELETE FROM book_genre_relationships
+        WHERE book_id = :bookId
+        AND genre_id = :genreId
     """, nativeQuery = true)
     void removeGenre(Long bookId, Long genreId);
 

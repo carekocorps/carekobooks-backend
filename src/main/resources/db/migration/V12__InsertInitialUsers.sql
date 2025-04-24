@@ -1,7 +1,4 @@
-INSERT INTO `users` (`created_at`, `updated_at`, `description`, `email`, `name`, `password`, `role`, `username`, `image_id`)
-SELECT '2025-04-19 13:29:19.979583', '2025-04-19 13:29:19.979583', 'admin', 'admin@gmail.com', 'admin', '$2a$10$TuGgPj88K2O7bZGrk0yuMuFZcwq6BZGK5eszL9t2MNQsxpGe9/oJu', 0, 'admin', NULL
-WHERE NOT EXISTS (SELECT 1 FROM carekobooks.users WHERE email = 'admin@gmail.com' LIMIT 1);
-
-INSERT INTO `users` (`created_at`, `updated_at`, `description`, `email`, `name`, `password`, `role`, `username`, `image_id`)
-SELECT '2025-04-19 13:29:39.779430', '2025-04-19 13:29:39.779430', 'string', 'string@gmail.com', 'string', '$2a$10$YJbbR3B0ekhiaHz7SzdYxelyCk3btsPbtKIWkyisxZ981AdyGCFSa', 0, 'string', NULL
-WHERE NOT EXISTS (SELECT 1 FROM carekobooks.users WHERE email = 'string@gmail.com' LIMIT 1);
+insert into users (id, created_at, updated_at, description, display_name, email, email_verification_token, email_verification_token_expires_at, is_enabled, password, password_verification_token, password_verification_token_expires_at, role, username, verification_token, verification_token_expires_at, image_id)
+values  (1, '2025-04-24 14:29:27.820479', '2025-04-24 14:29:27.820479', 'string', 'string', 'string@gmail.com', null, null, true, '$2a$10$ZBJMNFd4cXLMHWZwqIPkH.gSUnwxgNDKkTcqVxfnZ0M32aecdJGFG', null, null, 'USER', 'string', null, null, null),
+        (2, '2025-04-24 14:31:13.048216', '2025-04-24 14:31:13.048216', 'admin', 'admin', 'admin@gmail.com', null, null, true, '$2a$10$TDFC0SC0AL.kUYtJuftLruWzv8NT8MpH6gNKWI6mPEBCh/x4mVCPW', null, null, 'ADMIN', 'admin', null, null, null)
+on conflict (username) do nothing;

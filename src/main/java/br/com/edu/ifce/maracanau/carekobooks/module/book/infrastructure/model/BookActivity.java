@@ -14,10 +14,11 @@ import lombok.Setter;
 public class BookActivity extends BaseModel {
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BookProgressStatus status = BookProgressStatus.READING;
 
-    @Column(name = "pages_read")
-    private Integer pagesRead;
+    @Column(name = "page_count")
+    private Integer pageCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

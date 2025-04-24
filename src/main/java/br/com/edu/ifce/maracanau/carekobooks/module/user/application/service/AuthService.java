@@ -7,8 +7,8 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.subject.UserNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.NotificationContent;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.subject.UserNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
@@ -70,7 +70,7 @@ public class AuthService {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setIsEnabled(false);
-        user.setVerificationToken(UUID.randomUUID());
+        user.setVerificationToken(UUID.randomUUID().toString().substring(0, 8));
         user.setVerificationTokenExpiresAt(LocalDateTime.now().plusHours(1));
 
         if (image != null) {
@@ -111,7 +111,7 @@ public class AuthService {
             throw new ForbiddenException("User not verified");
         }
 
-        var passwordVerificationToken = UUID.randomUUID();
+        var passwordVerificationToken = UUID.randomUUID().toString().substring(0, 8);
         var passwordVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
         userRepository.initPasswordRecoveryByUsername(user.getUsername(), passwordVerificationToken, passwordVerificationTokenExpiresAt);
         userNotificationSubject.notify(
@@ -153,7 +153,7 @@ public class AuthService {
             throw new ConflictException("New email is already taken");
         }
 
-        var emailVerificationToken = UUID.randomUUID();
+        var emailVerificationToken = UUID.randomUUID().toString().substring(0, 8);
         var emailVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
         userRepository.initEmailChangeByUsername(user.getUsername(), emailVerificationToken, emailVerificationTokenExpiresAt);
 
