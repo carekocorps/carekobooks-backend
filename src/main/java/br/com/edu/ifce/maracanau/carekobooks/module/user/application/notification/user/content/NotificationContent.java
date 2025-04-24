@@ -18,67 +18,71 @@ public class NotificationContent {
     public static NotificationContent fromVerificationToken(String verificationToken) {
         var title = "Verificação de Conta";
         var message = "Use o token a seguir para verificar sua conta do Carekobooks: " + verificationToken;
-        var messageHtml = """
-            <html>
-                <body style="font-family: Arial, sans-serif;">
-                    <div style="background-color: #f5f5f5; padding: 20px;">
-                        <h2 style="color: #333;">Bem-vindo ao Carekobooks!</h2>
-                        <p style="font-size: 16px;">Por favor, insira o token de verificação abaixo para continuar:</p>
-                        <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h3 style="color: #333;">Token de Verificação:</h3>
-                            <p style="font-size: 18px; font-weight: bold; color: #007bff;">%s</p>
-                        </div>
-                        <p style="font-size: 16px;">Venha ser um Carekobooker com a gente e explore o mundo dos livros!</p>
-                    </div>
-                </body>
-            </html>
-            """.formatted(verificationToken);
-
+        var messageHtml = getTemplate(title, "Por favor, insira o token abaixo para completar seu cadastro:", verificationToken, "Venha ser um Carekobooker com a gente e explore o mundo dos livros!");
         return new NotificationContent(title, message, messageHtml);
     }
 
     public static NotificationContent fromPasswordVerificationToken(String passwordVerificationToken) {
         var title = "Redefinição de Senha";
         var message = "Use o token a seguir para redefinir sua senha do Carekobooks: " + passwordVerificationToken;
-        var messageHtml = """
-            <html>
-                <body style="font-family: Arial, sans-serif;">
-                    <div style="background-color: #f5f5f5; padding: 20px;">
-                        <h2 style="color: #333;">Solicitação de Redefinição de Senha</h2>
-                        <p style="font-size: 16px;">Recebemos uma solicitação para redefinir sua senha. Use o token abaixo:</p>
-                        <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h3 style="color: #333;">Token de Redefinição:</h3>
-                            <p style="font-size: 18px; font-weight: bold; color: #dc3545;">%s</p>
-                        </div>
-                        <p style="font-size: 16px;">Se você não solicitou essa alteração, ignore este e-mail.</p>
-                    </div>
-                </body>
-            </html>
-            """.formatted(passwordVerificationToken);
-
+        var messageHtml = getTemplate(title, "Recebemos uma solicitação para redefinir sua senha. Use o token abaixo:", passwordVerificationToken, "Se você não solicitou essa alteração, ignore este e-mail.");
         return new NotificationContent(title, message, messageHtml);
     }
 
     public static NotificationContent fromEmailVerificationToken(String emailVerificationToken) {
         var title = "Confirmação de Alteração de E-mail";
         var message = "Use o token a seguir para confirmar a alteração de e-mail da sua conta do Carekobooks: " + emailVerificationToken;
-        var messageHtml = """
-            <html>
-                <body style="font-family: Arial, sans-serif;">
-                    <div style="background-color: #f5f5f5; padding: 20px;">
-                        <h2 style="color: #333;">Solicitação de Alteração de E-mail</h2>
-                        <p style="font-size: 16px;">Recebemos uma solicitação para alterar o e-mail da sua conta. Use o token abaixo para confirmar:</p>
-                        <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                            <h3 style="color: #333;">Token de Confirmação:</h3>
-                            <p style="font-size: 18px; font-weight: bold; color: #17a2b8;">%s</p>
-                        </div>
-                        <p style="font-size: 16px;">Se você não solicitou essa alteração, ignore este e-mail.</p>
-                    </div>
-                </body>
-            </html>
-            """.formatted(emailVerificationToken);
-
+        var messageHtml = getTemplate(title, "Recebemos uma solicitação para alterar o e-mail da sua conta. Use o token abaixo para confirmar:", emailVerificationToken, "Se você não solicitou essa alteração, ignore este e-mail.");
         return new NotificationContent(title, message, messageHtml);
+    }
+
+    private static String getTemplate(String titulo, String instrucoes, String token, String mensagemFinal) {
+        return """
+        <html>
+          <body style="margin: 0; padding: 0; font-family: 'Open Sans', 'Roboto', Arial, sans-serif; background-color: #f5f7fa;">
+            <main role="main" style="max-width: 600px; margin: 20px auto; padding: 20px;">
+              <article style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); overflow: hidden;">
+                <header style="background: linear-gradient(to right, #0a2543, #00438a); padding: 30px 20px; text-align: center;">
+                  <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.5px;">Carekobooks</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 16px; margin: 8px 0 0; font-weight: 400;">Bem-vindo à nossa comunidade literária</p>
+                </header>
+                <section style="padding: 32px 30px;">
+                  <h2 style="color: #0a2543; font-size: 20px; font-weight: 600; text-align: center; margin: 0 0 16px 0;">%s</h2>
+                  <p style="color: #4a5568; font-size: 15px; line-height: 1.6; margin-bottom: 28px; text-align: center;">%s</p>
+                  <div role="region" aria-label="Token"
+                       style="background-color: #f8fafc;
+                              padding: 24px;
+                              border-radius: 8px;
+                              border: 1px solid #e2e8f0;
+                              margin: 0 auto 32px;
+                              max-width: 100%%;
+                              text-align: center;
+                              box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+                    <p style="color: #4a5568; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Seu código de verificação:</p>
+                    <p style="font-size: 28px;
+                             font-weight: 700;
+                             color: #00438a;
+                             letter-spacing: 2px;
+                             margin: 0;
+                             padding: 12px 0;
+                             background-color: #f0f4f8;
+                             border-radius: 6px;
+                             font-family: 'Roboto', monospace;">%s</p>
+                  </div>
+                  <p style="color: #4a5568; font-size: 15px; line-height: 1.6; text-align: center; margin-bottom: 0;">%s</p>
+                </section>
+                <footer style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
+                  <h3 style="color: #00438a; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Leia, Registre & Compartilhe</h3>
+                  <p style="color: #718096; font-size: 13px; margin: 0; line-height: 1.5;">
+                    © 2023 Carekobooks · Todos os direitos reservados<br>
+                    <span style="color: #a0aec0;">Uma comunidade para amantes de livros</span>
+                  </p>
+                </footer>
+              </article>
+            </main>
+          </body>
+        </html>
+        """.formatted(titulo, instrucoes, token, mensagemFinal);
     }
 
 }
