@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.request.BaseRequest;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserEmailChangeVerificationRequest {
+public class UserChangeEmailRequest implements BaseRequest {
 
     @NotBlank
     @Email
@@ -22,6 +23,6 @@ public class UserEmailChangeVerificationRequest {
 
     @NotBlank
     @Size(max = 8)
-    private String emailResetToken;
+    private String otp;
 
 }

@@ -29,9 +29,16 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
+    @PostMapping("/otp")
+    public ResponseEntity<Void> generateOtp(@RequestBody UserGenerateOtpRequest request) {
+        authService.generateOtp(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> initRegistration(@RequestPart @Valid UserRegisterInitializationRequest request, @RequestParam(required = false) MultipartFile image) {
-        var response = authService.initRegistration(request, image);
+    public ResponseEntity<Void> register(@RequestPart @Valid UserRegisterRequest request, @RequestParam(required = false) MultipartFile image) {
+        var response = authService.register(request, image);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/users/{username}")
@@ -42,43 +49,29 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
-    @PostMapping("/register/verify")
-    public ResponseEntity<Void> verifyRegistration(@RequestBody @Valid UserRegisterVerificationRequest request) {
-        authService.verifyRegistration(request);
+    @PostMapping("/register/otp")
+    public ResponseEntity<Void> verify(@RequestBody @Valid UserRegisterVerificationRequest request) {
+        authService.verify(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/forgot-password")
-    public ResponseEntity<Void> initPasswordRecovery(@RequestBody @Valid UserPasswordRecoveryInitializationRequest request) {
-        authService.initPasswordRecovery(request);
+    @PostMapping("/password/otp")
+    public ResponseEntity<Void> recoverPassword(@RequestBody @Valid UserRecoverPasswordRequest request) {
+        authService.recoverPassword(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/forgot-password/verify")
-    public ResponseEntity<Void> verifyPasswordRecovery(@RequestBody @Valid UserPasswordRecoveryVerificationRequest request) {
-        authService.verifyPasswordRecovery(request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @PostMapping("/change-email")
-    public ResponseEntity<Void> initEmailChange(@RequestBody @Valid UserEmailChangeInitializationRequest request) {
-        authService.initEmailChange(request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @PostMapping("/change-email/verify")
-    public ResponseEntity<Void> verifyEmailChange(@RequestBody @Valid UserEmailChangeVerificationRequest request) {
-        authService.verifyEmailChange(request);
+    @PostMapping("/email/otp")
+    public ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request) {
+        authService.changeEmail(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @PostMapping("/refresh/{username}")
-    public ResponseEntity<TokenResponse> refreshToken(@PathVariable String username, @RequestBody @Valid UserTokenRefreshRequest request) {
+    public ResponseEntity<TokenResponse> refreshToken(@PathVariable String username, @RequestBody @Valid UserRefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(username, request));
     }
 

@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.model.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
@@ -20,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -56,23 +56,15 @@ public class User extends BaseModel implements UserDetails {
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled;
 
-    @Column(name = "verification_token", length = 8)
-    private String verificationToken;
+    @Column(length = 8)
+    private String otp;
 
-    @Column(name = "verification_token_expires_at")
-    private LocalDateTime verificationTokenExpiresAt;
+    @Column(name = "otp_validation_type")
+    @Enumerated(EnumType.STRING)
+    private OtpValidationType otpValidationType;
 
-    @Column(name = "password_verification_token", length = 8)
-    private String passwordVerificationToken;
-
-    @Column(name = "password_verification_token_expires_at")
-    private LocalDateTime passwordVerificationTokenExpiresAt;
-
-    @Column(name = "email_verification_token", length = 8)
-    private String emailVerificationToken;
-
-    @Column(name = "email_verification_token_expires_at")
-    private LocalDateTime emailVerificationTokenExpiresAt;
+    @Column(name = "otp_expires_at")
+    private LocalDateTime otpExpiresAt;
 
     @ManyToOne
     @JoinColumn(name = "image_id")

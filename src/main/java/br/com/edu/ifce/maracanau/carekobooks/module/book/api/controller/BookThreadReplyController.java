@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/books/threads/replies")
-@Tag(name = "Thread Reply", description = "Endpoints for managing thread replies")
+@Tag(name = "Book Thread Reply", description = "Endpoints for managing thread replies")
 public class BookThreadReplyController implements BaseController, BookThreadReplyControllerDocs {
 
     private final BookThreadReplyService bookThreadReplyService;

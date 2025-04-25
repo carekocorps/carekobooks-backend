@@ -9,11 +9,15 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class UserRegisterVerificationValidator implements BaseValidator<User> {
+public class UserChangeEmailValidator implements BaseValidator<User> {
 
     public void validate(User user) {
-        if (isEnabled(user)) {
-            throw new BadRequestException("User is already verified");
+        if (isNotEnabled(user)) {
+            throw new BadRequestException("User not verified");
+        }
+
+        if (isOtpEmpty(user)) {
+            throw new BadRequestException("Invalid otp");
         }
 
         if (isOtpValidationTypeInvalid(user)) {
@@ -21,16 +25,20 @@ public class UserRegisterVerificationValidator implements BaseValidator<User> {
         }
 
         if (isOtpExpired(user)) {
-            throw new BadRequestException("Otp is expired");
+            throw new BadRequestException("Otp expired");
         }
     }
 
-    private boolean isEnabled(User user) {
-        return user.isEnabled();
+    private boolean isNotEnabled(User user) {
+        return !user.isEnabled();
+    }
+
+    private boolean isOtpEmpty(User user) {
+        return user.getOtp() == null;
     }
 
     private boolean isOtpValidationTypeInvalid(User user) {
-        return user.getOtpValidationType() != OtpValidationType.REGISTRATION;
+        return user.getOtpValidationType() == OtpValidationType.EMAIL;
     }
 
     private boolean isOtpExpired(User user) {

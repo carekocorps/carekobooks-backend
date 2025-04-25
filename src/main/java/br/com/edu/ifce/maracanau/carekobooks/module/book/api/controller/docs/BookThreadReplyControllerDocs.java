@@ -20,7 +20,7 @@ public interface BookThreadReplyControllerDocs {
 
     @Operation(
             summary = "Search all thread replies",
-            tags = {"Thread Reply"},
+            tags = {"Book Thread Reply"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
@@ -37,7 +37,7 @@ public interface BookThreadReplyControllerDocs {
 
     @Operation(
             summary = "Find a thread reply by ID",
-            tags = {"Thread Reply"},
+            tags = {"Book Thread Reply"},
             responses = {
                     @ApiResponse(
                             description = "Ok",
@@ -55,7 +55,7 @@ public interface BookThreadReplyControllerDocs {
 
     @Operation(
             summary = "Create a thread reply",
-            tags = {"Thread Reply"},
+            tags = {"Book Thread Reply"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(
@@ -76,7 +76,7 @@ public interface BookThreadReplyControllerDocs {
 
     @Operation(
             summary = "Update a thread reply",
-            tags = {"Thread Reply"},
+            tags = {"Book Thread Reply"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -90,7 +90,7 @@ public interface BookThreadReplyControllerDocs {
 
     @Operation(
             summary = "Delete a thread reply by ID",
-            tags = {"Thread Reply"},
+            tags = {"Book Thread Reply"},
             security = @SecurityRequirement(name = "Bearer"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),

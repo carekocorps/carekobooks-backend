@@ -1,18 +1,19 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.NotificationContent;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.enums.NotificationContentStrategy;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.factory.NotificationContentFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.subject.UserNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,8 @@ public class AuthService {
     private final UserNotificationSubject userNotificationSubject;
 
     private final UserRegisterVerificationValidator userRegisterVerificationValidator;
-    private final UserPasswordRecoveryVerificationValidator userPasswordRecoveryVerificationValidator;
-    private final UserEmailChangeVerificationValidator userEmailChangeVerificationValidator;
+    private final UserRecoverPasswordValidator userRecoverPasswordValidator;
+    private final UserChangeEmailValidator userChangeEmailValidator;
 
     private final ImageService imageService;
     private final ImageMapper imageMapper;
@@ -57,8 +58,8 @@ public class AuthService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
-                    request.getPassword()
+                        request.getUsername(),
+                        request.getPassword()
                 )
         );
 
@@ -66,12 +67,35 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponse initRegistration(UserRegisterInitializationRequest request, MultipartFile image) {
+    public void generateOtp(UserGenerateOtpRequest request) {
+        var user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new NotFoundException("Email not found"));
+
+        if (!Boolean.TRUE.equals(user.getIsEnabled()) && user.getOtpValidationType() != OtpValidationType.REGISTRATION) {
+            throw new BadRequestException("User not verified");
+        }
+
+        var otp = UUID.randomUUID().toString().substring(0, 8);
+        userNotificationSubject.notify(
+                userMapper.toResponse(user),
+                NotificationContentStrategy
+                        .valueOf(request.getValidationType().toString())
+                        .build(otp)
+        );
+
+        var otpExpiresAt = LocalDateTime.now().plusHours(1);
+        userRepository.changeOtpValuesByUsername(user.getUsername(), otp, request.getValidationType(), otpExpiresAt);
+    }
+
+    @Transactional
+    public UserResponse register(UserRegisterRequest request, MultipartFile image) {
         var user = userMapper.toModel(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setIsEnabled(false);
-        user.setVerificationToken(UUID.randomUUID().toString().substring(0, 8));
-        user.setVerificationTokenExpiresAt(LocalDateTime.now().plusHours(1));
+        user.setOtp(UUID.randomUUID().toString().substring(0, 8));
+        user.setOtpValidationType(OtpValidationType.REGISTRATION);
+        user.setOtpExpiresAt(LocalDateTime.now().plusHours(1));
 
         if (image != null) {
             user.setImage(imageMapper.toModel(imageService.create(image)));
@@ -81,103 +105,55 @@ public class AuthService {
         userRepository.save(user);
         userNotificationSubject.notify(
                 userMapper.toResponse(user),
-                NotificationContent.fromVerificationToken(user.getVerificationToken())
+                NotificationContentFactory.fromRegistrationOtp(user.getOtp())
         );
 
         return userMapper.toResponse(user);
     }
 
     @Transactional
-    public void verifyRegistration(UserRegisterVerificationRequest request) {
+    public void verify(UserRegisterVerificationRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
         userRegisterVerificationValidator.validate(user);
-        if (!user.getVerificationToken().equals(request.getVerificationToken())) {
-            throw new BadRequestException("Invalid verification token");
+        if (!user.getOtp().equals(request.getOtp())) {
+            throw new BadRequestException("Invalid otp");
         }
 
-        userRepository.verifyRegistrationByUsername(user.getUsername());
+        userRepository.verifyByUsername(user.getUsername());
     }
 
     @Transactional
-    public void initPasswordRecovery(UserPasswordRecoveryInitializationRequest request) {
+    public void recoverPassword(UserRecoverPasswordRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        if (!user.isEnabled()) {
-            throw new ForbiddenException("User not verified");
+        userRecoverPasswordValidator.validate(user);
+        if (!request.getOtp().equals(user.getOtp())) {
+            throw new BadRequestException("Invalid otp");
         }
 
-        var passwordVerificationToken = UUID.randomUUID().toString().substring(0, 8);
-        var passwordVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
-        userRepository.initPasswordRecoveryByUsername(user.getUsername(), passwordVerificationToken, passwordVerificationTokenExpiresAt);
-        userNotificationSubject.notify(
-                userMapper.toResponse(user),
-                NotificationContent.fromPasswordVerificationToken(passwordVerificationToken)
-        );
+        userRepository.changePasswordByUsername(user.getUsername(), passwordEncoder.encode(request.getPassword()));
     }
 
     @Transactional
-    public void verifyPasswordRecovery(UserPasswordRecoveryVerificationRequest request) {
-        var user = userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
-
-        userPasswordRecoveryVerificationValidator.validate(user);
-        if (!user.getPasswordVerificationToken().equals(request.getPasswordResetToken())) {
-            throw new BadRequestException("Invalid verification token");
-        }
-
-        var encodedPassword = passwordEncoder.encode(request.getPassword());
-        userRepository.verifyPasswordRecoveryByUsername(user.getUsername(), encodedPassword);
-    }
-
-    @Transactional
-    public void initEmailChange(UserEmailChangeInitializationRequest request) {
+    public void changeEmail(UserChangeEmailRequest request) {
         var user = userRepository
                 .findByEmail(request.getCurrentEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        if (!user.isEnabled()) {
-            throw new ForbiddenException("User not verified");
-        }
-
-        if (user.getEmail().equals(request.getNewEmail())) {
-            throw new BadRequestException("New email must be different from current email");
-        }
-
-        if (userRepository.existsByEmail(request.getNewEmail())) {
-            throw new ConflictException("New email is already taken");
-        }
-
-        var emailVerificationToken = UUID.randomUUID().toString().substring(0, 8);
-        var emailVerificationTokenExpiresAt = LocalDateTime.now().plusHours(1);
-        userRepository.initEmailChangeByUsername(user.getUsername(), emailVerificationToken, emailVerificationTokenExpiresAt);
-
-        var userNotified = userMapper.toResponse(user);
-        userNotified.setEmail(request.getNewEmail());
-        userNotificationSubject.notify(userNotified, NotificationContent.fromEmailVerificationToken(emailVerificationToken));
-    }
-
-    @Transactional
-    public void verifyEmailChange(UserEmailChangeVerificationRequest request) {
-        var user = userRepository
-                .findByEmail(request.getCurrentEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
-
-        userEmailChangeVerificationValidator.validate(user);
-        if (!user.getEmailVerificationToken().equals(request.getEmailResetToken())) {
+        userChangeEmailValidator.validate(user);
+        if (!request.getOtp().equals(user.getOtp())) {
             throw new BadRequestException("Invalid verification token");
         }
 
-        var newEmail = request.getNewEmail();
-        userRepository.verifyEmailChangeByUsername(user.getUsername(), newEmail);
+        userRepository.changeEmailByUsername(user.getUsername(), request.getNewEmail());
     }
 
-    public TokenResponse refreshToken(String username, UserTokenRefreshRequest request) {
+    public TokenResponse refreshToken(String username, UserRefreshTokenRequest request) {
         if (!userRepository.existsByUsername(username)) {
             throw new UsernameNotFoundException("Username not found");
         }

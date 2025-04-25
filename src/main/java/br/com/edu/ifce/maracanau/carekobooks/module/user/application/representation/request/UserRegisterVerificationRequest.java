@@ -18,6 +18,6 @@ public class UserRegisterVerificationRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 8)
-    private String verificationToken;
+    private String otp;
 
 }
