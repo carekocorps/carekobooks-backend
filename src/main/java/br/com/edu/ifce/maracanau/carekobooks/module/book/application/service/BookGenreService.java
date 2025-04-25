@@ -55,7 +55,7 @@ public class BookGenreService {
     public BookGenreResponse update(String name, BookGenreRequest request) {
         var genre = bookGenreRepository
                 .findByName(name)
-                .orElseThrow(() -> new NotFoundException("Book not found"));
+                .orElseThrow(() -> new NotFoundException("Book Genre not found"));
 
         bookGenreMapper.updateModel(genre, request);
         bookGenreValidator.validate(genre);
@@ -69,7 +69,7 @@ public class BookGenreService {
     @Transactional
     public void delete(String name) {
         if (!bookGenreRepository.existsByName(name)) {
-            throw new NotFoundException("Book not found");
+            throw new NotFoundException("Book Genre not found");
         }
 
         bookGenreRepository.deleteByName(name);

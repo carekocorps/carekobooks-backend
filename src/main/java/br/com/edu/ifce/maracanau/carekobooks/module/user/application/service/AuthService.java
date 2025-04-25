@@ -72,8 +72,14 @@ public class AuthService {
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        if (!Boolean.TRUE.equals(user.getIsEnabled()) && user.getOtpValidationType() != OtpValidationType.REGISTRATION) {
+        var isEnabled = Boolean.TRUE.equals(user.getIsEnabled());
+        var isRegistrationOtp = user.getOtpValidationType() == OtpValidationType.REGISTRATION;
+        if (!isEnabled && isRegistrationOtp) {
             throw new BadRequestException("User not verified");
+        }
+
+        if (isEnabled && isRegistrationOtp) {
+            throw new ForbiddenException("User is already verified");
         }
 
         var otp = UUID.randomUUID().toString().substring(0, 8);
@@ -154,8 +160,12 @@ public class AuthService {
     }
 
     public TokenResponse refreshToken(String username, UserRefreshTokenRequest request) {
-        if (!userRepository.existsByUsername(username)) {
-            throw new UsernameNotFoundException("Username not found");
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (!user.isEnabled()) {
+            throw new BadRequestException("User not verified");
         }
 
         return tokenService.refreshToken(request.getRefreshToken());

@@ -4,13 +4,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,24 +33,6 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @GetMapping("/{username}/followers")
-    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query) {
-        query.setUsername(username);
-        query.setRelationship(UserRelationship.FOLLOWER);
-        var responses = userService.search(query);
-        return ResponseEntity.ok(responses);
-    }
-
-    @Override
-    @GetMapping("/{username}/following")
-    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query) {
-        query.setUsername(username);
-        query.setRelationship(UserRelationship.FOLLOWING);
-        var responses = userService.search(query);
-        return ResponseEntity.ok(responses);
-    }
-
-    @Override
     @GetMapping("/{username}")
     public ResponseEntity<UserResponse> find(@PathVariable String username) {
         var response = userService.find(username);
@@ -65,22 +44,6 @@ public class UserController implements BaseController, UserControllerDocs {
     @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
         userService.update(username, request, image);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @UserRoleRequired
-    @PostMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> follow(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.changeFollowing(username, targetUsername, ActionType.ASSIGN);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @UserRoleRequired
-    @DeleteMapping("/{username}/following/{targetUsername}")
-    public ResponseEntity<Void> unfollow(@PathVariable String username, @PathVariable String targetUsername) {
-        userService.changeFollowing(username, targetUsername, ActionType.UNASSIGN);
         return ResponseEntity.noContent().build();
     }
 
