@@ -14,9 +14,9 @@ public class BookActivitySpecification {
                 cb.equal(root.get("status"), status);
     }
 
-    public static Specification<BookActivity> pageCountEqual(Integer pagesRead) {
+    public static Specification<BookActivity> pageCountEqual(Integer pageCount) {
         return (root, query, cb) ->
-                cb.equal(root.get("pagesRead"), pagesRead);
+                cb.equal(root.get("pageCount"), pageCount);
     }
 
     public static Specification<BookActivity> usernameEqual(String username) {

@@ -32,6 +32,7 @@ public class ImageService {
         var image = new Image();
         image.setName(minioService.upload(file));
         image.setUrl(minioService.findUrlByFilename(image.getName()));
+        image.setContentType(file.getContentType());
         image.setSizeInBytes(file.getSize());
         imageValidator.validate(image);
         return imageMapper.toResponse(imageRepository.save(image));

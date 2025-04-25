@@ -13,9 +13,9 @@ public class BookGenreSpecification {
                 cb.like(cb.upper(root.get("title")), "%" + name.toUpperCase() + "%");
     }
 
-    public static Specification<BookGenre> displayNameContains(String friendlyName) {
+    public static Specification<BookGenre> displayNameContains(String displayName) {
         return (root, query, cb) ->
-                cb.like(cb.upper(root.get("title")), "%" + friendlyName.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("displayName")), "%" + displayName.toUpperCase() + "%");
     }
 
 }

@@ -5,7 +5,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
-import lombok.Setter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -16,7 +15,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class BookGenreMapper {
 
-    @Setter(onMethod = @__(@Autowired))
+    @Autowired
     protected BookGenreRepository bookGenreRepository;
 
     @IgnoreBaseModelFields
