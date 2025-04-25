@@ -7,11 +7,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - postgres
       - redis
       - minio
     environment:
-      DB_HOST: mysql
+      DB_HOST: postgres
       DB_NAME: ${DB_NAME}
       DB_PASSWORD: ${DB_PASSWORD}
       REDIS_HOST: redis
@@ -24,16 +24,17 @@ services:
     networks:
       - carekonet
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - mysql-data:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - carekonet
@@ -79,7 +80,7 @@ services:
       - carekonet
 
 volumes:
-  mysql-data:
+  postgres-data:
   minio-data:
   redis-data:
 

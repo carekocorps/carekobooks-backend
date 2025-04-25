@@ -66,7 +66,7 @@ public class NotificationContentFactory {
                     <footer style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
                       <h3 style="color: #00438a; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Leia, Registre & Compartilhe</h3>
                       <p style="color: #718096; font-size: 13px; margin: 0; line-height: 1.5;">
-                        © 2023 Carekobooks · Todos os direitos reservados<br>
+                        © 2025 Carekobooks · Todos os direitos reservados<br>
                         <span style="color: #a0aec0;">Uma comunidade para amantes de livros</span>
                       </p>
                     </footer>
