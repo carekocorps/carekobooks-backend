@@ -30,4 +30,9 @@ public class BookGenre extends BaseModel {
     @ManyToMany(mappedBy = "genres")
     private List<Book> books;
 
+    @PreRemove
+    private void preRemove() {
+        books.forEach(book -> book.getGenres().remove(this));
+    }
+
 }

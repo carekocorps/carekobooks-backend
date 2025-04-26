@@ -12,7 +12,6 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -89,7 +88,7 @@ public class BookService {
 
     @CacheEvict(value = "book", key = "#id")
     @Transactional
-    public void changeGenre(Long id, String genreName, ActionType action) {
+    public void changeGenre(Long id, String genreName, boolean isAdditionRequested) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
@@ -99,9 +98,12 @@ public class BookService {
                 .map(bookGenreMapper::toModel)
                 .orElseThrow(() -> new NotFoundException("Genre not found"));
 
-        var isAdditionRequested = action == ActionType.ASSIGN;
-        var isBookContainingGenre = book.getGenres().contains(genre);
-        if (isBookContainingGenre != isAdditionRequested) {
+        var isBookContainingGenre = book
+                .getGenres()
+                .stream()
+                .anyMatch(bookGenre -> bookGenre.getId().equals(genre.getId()));
+
+        if (isBookContainingGenre == isAdditionRequested) {
             throw new BadRequestException(isAdditionRequested
                     ? "Book already contains this genre"
                     : "Book does not contain this genre"
@@ -110,7 +112,6 @@ public class BookService {
 
         if (isAdditionRequested) bookRepository.addGenre(book.getId(), genre.getId());
         else bookRepository.removeGenre(book.getId(), genre.getId());
-        bookValidator.validate(book);
     }
 
     @CacheEvict(value = "book", key = "#id")

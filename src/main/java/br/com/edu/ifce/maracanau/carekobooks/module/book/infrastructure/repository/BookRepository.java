@@ -40,6 +40,16 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     """, nativeQuery = true)
     void addGenre(Long bookId, Long genreId);
 
+    @Query(value = """
+        SELECT EXISTS(
+            SELECT 1
+            FROM book_genre_relationships
+            WHERE book_id = :bookId
+            AND genre_id = :genreId
+        )
+    """, nativeQuery = true)
+    boolean existsBookGenreRelationship(@NotNull Long bookId, @NotNull Long genreId);
+
     @Transactional
     @Modifying
     @Query(value = """

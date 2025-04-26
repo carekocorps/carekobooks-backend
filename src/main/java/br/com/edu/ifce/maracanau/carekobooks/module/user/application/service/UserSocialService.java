@@ -4,7 +4,6 @@ import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestExceptio
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
@@ -44,7 +43,7 @@ public class UserSocialService {
     }
 
     @Transactional
-    public void changeFollowing(String username, String targetUsername, ActionType action) {
+    public void changeFollowing(String username, String targetUsername, boolean isFollowingRequested) {
         if (UserContextProvider.isUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
@@ -68,7 +67,6 @@ public class UserSocialService {
             throw new BadRequestException("One or both users are not verified");
         }
 
-        var isFollowingRequested = action == ActionType.ASSIGN;
         var isUserFollowing = user.getFollowing().contains(target);
         if (isUserFollowing == isFollowingRequested) {
             throw new BadRequestException(isFollowingRequested

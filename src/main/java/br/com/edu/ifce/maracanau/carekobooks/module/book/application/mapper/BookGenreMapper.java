@@ -22,7 +22,6 @@ public abstract class BookGenreMapper {
     @Mapping(target = "books", ignore = true)
     public abstract BookGenre toModel(BookGenreRequest request);
 
-    @IgnoreBaseModelFields
     @Mapping(target = "books", ignore = true)
     public abstract BookGenre toModel(BookGenreResponse response);
     public abstract BookGenreResponse toResponse(BookGenre genre);

@@ -2,7 +2,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.enums.ActionType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserSocialControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
@@ -45,7 +44,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
     @UserRoleRequired
     @PostMapping("/following/{targetUsername}")
     public ResponseEntity<Void> follow(@PathVariable String username, @PathVariable String targetUsername) {
-        userSocialService.changeFollowing(username, targetUsername, ActionType.ASSIGN);
+        userSocialService.changeFollowing(username, targetUsername, true);
         return ResponseEntity.noContent().build();
     }
 
@@ -53,7 +52,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
     @UserRoleRequired
     @DeleteMapping("/following/{targetUsername}")
     public ResponseEntity<Void> unfollow(@PathVariable String username, @PathVariable String targetUsername) {
-        userSocialService.changeFollowing(username, targetUsername, ActionType.UNASSIGN);
+        userSocialService.changeFollowing(username, targetUsername, false);
         return ResponseEntity.noContent().build();
     }
 
