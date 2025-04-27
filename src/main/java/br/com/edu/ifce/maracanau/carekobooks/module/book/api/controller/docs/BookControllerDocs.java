@@ -60,7 +60,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Create a book",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             requestBody = @RequestBody(
                     content = @Content(
                             encoding = @Encoding(
@@ -99,11 +99,11 @@ public interface BookControllerDocs {
                             )
                     )
             ),
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -113,7 +113,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Assign a book genre to a book by ID",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -127,7 +127,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Unassign a book genre to a book by ID",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -141,7 +141,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Update a book image by ID",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -157,7 +157,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Delete a book image by ID",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -171,7 +171,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Delete a book by ID",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
@@ -185,7 +185,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Clear book cache",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

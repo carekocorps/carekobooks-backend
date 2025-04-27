@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
@@ -45,7 +45,7 @@ public class BookProgressService {
         bookProgressValidator.validate(progress);
         var response = bookProgressMapper.toResponse(bookProgressRepository.save(progress));
 
-        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book progress");
         }
 
@@ -69,7 +69,7 @@ public class BookProgressService {
         bookProgressValidator.validate(progress);
         bookProgressRepository.save(progress);
 
-        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -86,7 +86,7 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this book progress");
         }
 
@@ -99,7 +99,7 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Progress not found"));
 
-        if (UserContextProvider.isUserUnauthorized(progress.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book progress");
         }
 

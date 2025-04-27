@@ -5,14 +5,14 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
-        imports = UserContextProvider.class,
+        imports = AuthenticatedUserProvider.class,
         uses = {
                 UserMapper.class,
                 BookMapper.class
@@ -21,7 +21,7 @@ import org.mapstruct.MappingTarget;
 public interface BookProgressMapper {
 
     @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(UserContextProvider.getUser())")
+    @Mapping(target = "user", expression = "java(AuthenticatedUserProvider.getAuthenticatedUser())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookProgress toModel(BookProgressRequest request);
     BookProgressResponse toResponse(BookProgress progress);

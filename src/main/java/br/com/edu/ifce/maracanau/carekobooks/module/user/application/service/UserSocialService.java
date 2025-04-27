@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.User
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -44,7 +44,7 @@ public class UserSocialService {
 
     @Transactional
     public void changeFollowing(String username, String targetUsername, boolean isFollowingRequested) {
-        if (UserContextProvider.isUserUnauthorized(username)) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to perform this action");
         }
 

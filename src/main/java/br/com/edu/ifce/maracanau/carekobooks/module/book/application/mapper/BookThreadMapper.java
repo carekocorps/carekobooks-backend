@@ -6,13 +6,13 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThread;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
         componentModel = "spring",
-        imports = UserContextProvider.class,
+        imports = AuthenticatedUserProvider.class,
         uses = {
                 UserMapper.class,
                 BookMapper.class
@@ -25,7 +25,7 @@ public abstract class BookThreadMapper {
 
     @IgnoreBaseModelFields
     @Mapping(target = "replies", ignore = true)
-    @Mapping(target = "user", expression = "java(UserContextProvider.getUser())")
+    @Mapping(target = "user", expression = "java(AuthenticatedUserProvider.getAuthenticatedUser())")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     public abstract BookThread toModel(BookThreadRequest request);
     public abstract BookThreadResponse toResponse(BookThread thread);

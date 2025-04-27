@@ -9,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
@@ -53,7 +53,7 @@ public class UserService {
             throw new BadRequestException("User not verified");
         }
 
-        if (UserContextProvider.isUserUnauthorized(username)) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update this user");
         }
 
@@ -76,7 +76,7 @@ public class UserService {
             throw new BadRequestException("User not verified");
         }
 
-        if (UserContextProvider.isUserUnauthorized(username)) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to update the image of this user");
         }
 
@@ -106,7 +106,7 @@ public class UserService {
             throw new BadRequestException("User not verified");
         }
 
-        if (UserContextProvider.isUserUnauthorized(username)) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
             throw new ForbiddenException("You are not allowed to delete this user");
         }
 

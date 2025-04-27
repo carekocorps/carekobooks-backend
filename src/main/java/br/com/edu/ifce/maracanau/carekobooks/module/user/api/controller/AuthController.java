@@ -2,10 +2,11 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.AuthControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -24,8 +25,16 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody @Valid UserLoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<Void> login(@RequestBody @Valid UserLoginRequest request, HttpServletResponse response) {
+        authService.login(request, response);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @PostMapping("/refresh/{username}")
+    public ResponseEntity<Void> refreshToken(@PathVariable String username, HttpServletRequest request, HttpServletResponse response) {
+        authService.refreshToken(username, request, response);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -67,12 +76,6 @@ public class AuthController implements BaseController, AuthControllerDocs {
     public ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request) {
         authService.changeEmail(request);
         return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @PostMapping("/refresh/{username}")
-    public ResponseEntity<TokenResponse> refreshToken(@PathVariable String username, @RequestBody @Valid UserRefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refreshToken(username, request));
     }
 
 }

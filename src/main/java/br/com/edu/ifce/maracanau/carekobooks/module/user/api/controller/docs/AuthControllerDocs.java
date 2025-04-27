@@ -1,12 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,31 +19,30 @@ public interface AuthControllerDocs {
             summary = "Authenticate a user",
             tags = {"Auth"},
             responses = {
-                    @ApiResponse(
-                            description = "Ok",
-                            responseCode = "200",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TokenResponse.class)
-                            )
-                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<TokenResponse> login(@RequestBody @Valid UserLoginRequest request);
+    ResponseEntity<Void> login(@RequestBody @Valid UserLoginRequest request, HttpServletResponse response);
+
+    @Operation(
+            summary = "Refresh a user authentication token",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> refreshToken(@PathVariable String username, HttpServletRequest request, HttpServletResponse response);
 
     @Operation(
             summary = "Generate OTP (One-Time Password) code",
             description = "Sends a one-time password (OTP) to the user for validation.",
             tags = {"Auth"},
             responses = {
-                    @ApiResponse(
-                            description = "No Content",
-                            responseCode = "204",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
-                    ),
-                    @ApiResponse(responseCode = "204", description = "OTP sent"),
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -78,11 +77,7 @@ public interface AuthControllerDocs {
             summary = "Verify a user's account",
             tags = {"Auth"},
             responses = {
-                    @ApiResponse(
-                            description = "No Content",
-                            responseCode = "204",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
-                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
@@ -94,11 +89,7 @@ public interface AuthControllerDocs {
             summary = "Request a password reset for a user",
             tags = {"Auth"},
             responses = {
-                    @ApiResponse(
-                            description = "No Content",
-                            responseCode = "204",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
-                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -109,33 +100,11 @@ public interface AuthControllerDocs {
             summary = "Request an email change for a user",
             tags = {"Auth"},
             responses = {
-                    @ApiResponse(
-                            description = "No Content",
-                            responseCode = "204",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
-                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
     ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request);
-
-    @Operation(
-            summary = "Refresh a user authentication token",
-            tags = {"Auth"},
-            responses = {
-                    @ApiResponse(
-                            description = "Ok",
-                            responseCode = "200",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = TokenResponse.class)
-                            )
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<TokenResponse> refreshToken(@PathVariable String username, @RequestBody @Valid UserRefreshTokenRequest request);
 
 }

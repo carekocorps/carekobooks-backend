@@ -1,14 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.extractor.CookieExtractor;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.factory.CookieFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,30 +17,25 @@ import java.util.Optional;
 @Service
 public class TokenService {
 
-    private static final long EXPIRATION_TIME_IN_SECONDS = 3600L;
+    public static final Integer ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS = 3600;
+    public static final Integer REFRESH_TOKEN_EXPIRATION_TIME_IN_SECONDS = ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS * 3;
 
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
 
-    public TokenResponse accessToken(String username, List<String> roles) {
+    public void accessToken(String username, List<String> roles, HttpServletResponse response) {
         var createdAt = Instant.now();
-        var accessExpiresAt = createdAt.plusSeconds(EXPIRATION_TIME_IN_SECONDS);
-        var refreshExpiresAt = accessExpiresAt.plusSeconds(EXPIRATION_TIME_IN_SECONDS * 3);
-        var response = new TokenResponse();
-        response.setUsername(username);
-        response.setIsAuthenticated(true);
-        response.setCreatedAt(LocalDateTime.ofInstant(createdAt, ZoneId.systemDefault()));
-        response.setAccessExpiresAt(LocalDateTime.ofInstant(accessExpiresAt, ZoneId.systemDefault()));
-        response.setRefreshExpiresAt(LocalDateTime.ofInstant(refreshExpiresAt, ZoneId.systemDefault()));
-        response.setAccessToken(getAccessToken(username, roles, createdAt, accessExpiresAt));
-        response.setRefreshToken(getRefreshToken(username, roles, createdAt, refreshExpiresAt));
-        return response;
+        var accessExpiresAt = createdAt.plusSeconds(ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS);
+        var refreshExpiresAt = accessExpiresAt.plusSeconds(REFRESH_TOKEN_EXPIRATION_TIME_IN_SECONDS);
+
+        response.addCookie(CookieFactory.buildFromAccessToken(getAccessToken(username, roles, createdAt, accessExpiresAt)));
+        response.addCookie(CookieFactory.buildFromRefreshToken(getRefreshToken(username, roles, createdAt, refreshExpiresAt)));
     }
 
-    public TokenResponse refreshToken(String refreshToken) {
-        var jwt = jwtDecoder.decode(refreshToken);
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        var jwt = jwtDecoder.decode(CookieExtractor.extractRefreshToken(request));
         var roles = Optional.ofNullable(jwt.getClaimAsStringList("roles")).orElse(List.of());
-        return accessToken(jwt.getSubject(), roles);
+        accessToken(jwt.getSubject(), roles, response);
     }
 
     private String getAccessToken(String username, List<String> roles, Instant createdAt, Instant expiresAt) {

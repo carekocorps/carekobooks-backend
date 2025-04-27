@@ -1,16 +1,16 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.UnauthorizedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class UserContextProvider {
+public class AuthenticatedUserProvider {
 
-    private UserContextProvider() {
+    private AuthenticatedUserProvider() {
     }
 
-    public static User getUser() {
+    public static User getAuthenticatedUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new UnauthorizedException("User is not authenticated");
@@ -19,8 +19,8 @@ public class UserContextProvider {
         return (User) authentication.getPrincipal();
     }
 
-    public static boolean isUserUnauthorized(String authorizedUsername) {
-        var userDetails = getUser();
+    public static boolean isAuthenticatedUserUnauthorized(String authorizedUsername) {
+        var userDetails = getAuthenticatedUser();
         var isUsernameMatching = userDetails.getUsername().equals(authorizedUsername);
         var isAdmin = userDetails
                 .getAuthorities()

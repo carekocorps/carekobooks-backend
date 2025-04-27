@@ -3,8 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.o
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,24 +20,20 @@ import java.util.UUID;
 @Component
 public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         var oauth2User = (OAuth2User) authentication.getPrincipal();
         var email = (String) oauth2User.getAttribute("email");
         var user = userRepository
                 .findByEmail(email)
                 .orElseGet(() -> userRepository.save(createOAuth2UserFromEmail(email)));
 
-        var jwt = tokenService.accessToken(user.getUsername(), user.getRoles());
-        var mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(mapper.writeValueAsString(jwt));
+        tokenService.accessToken(user.getUsername(), user.getRoles(), response);
+        super.onAuthenticationSuccess(request, response, authentication);
     }
 
     private User createOAuth2UserFromEmail(String email) {

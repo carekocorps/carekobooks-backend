@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.extractor.CookieExtractor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
@@ -30,21 +32,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
-            var jwt = jwtDecoder.decode(extractToken(request));
+            var jwt = jwtDecoder.decode(CookieExtractor.extractAccessToken(request));
             var userDetails = userDetailsService.loadUserByUsername(jwt.getSubject());
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (JwtException ignored) {
+        } catch (JwtException | UsernameNotFoundException ignored) {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String extractToken(HttpServletRequest request) {
-        var authorizationHeader = request.getHeader("Authorization");
-        return authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-                ? authorizationHeader.replaceFirst("Bearer ", "")
-                : null;
     }
 
 }

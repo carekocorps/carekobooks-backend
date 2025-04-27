@@ -68,7 +68,7 @@ public interface UserControllerDocs {
                             )
                     )
             ),
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -84,7 +84,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Update a user image by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -100,7 +100,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Delete a user image by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -114,7 +114,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Delete a user by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

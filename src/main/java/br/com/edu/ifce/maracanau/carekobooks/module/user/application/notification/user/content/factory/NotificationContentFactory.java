@@ -7,21 +7,21 @@ public class NotificationContentFactory {
     private NotificationContentFactory() {
     }
 
-    public static NotificationContent fromRegistrationOtp(String otp) {
+    public static NotificationContent buildFromRegistrationOtp(String otp) {
         var title = "Verificação de Conta";
         var message = "Use o token a seguir para verificar sua conta do Carekobooks: " + otp;
         var messageHtml = generateMessageHtml(title, "Por favor, insira o token abaixo para completar seu cadastro:", otp, "Venha ser um Carekobooker com a gente e explore o mundo dos livros!");
         return new NotificationContent(title, message, messageHtml);
     }
 
-    public static NotificationContent fromPasswordOtp(String otp) {
+    public static NotificationContent buildFromPasswordOtp(String otp) {
         var title = "Redefinição de Senha";
         var message = "Use o token a seguir para redefinir sua senha do Carekobooks: " + otp;
         var messageHtml = generateMessageHtml(title, "Recebemos uma solicitação para redefinir sua senha. Use o token abaixo:", otp, "Se você não solicitou essa alteração, ignore este e-mail.");
         return new NotificationContent(title, message, messageHtml);
     }
 
-    public static NotificationContent fromEmailOtp(String otp) {
+    public static NotificationContent buildFromEmailOtp(String otp) {
         var title = "Confirmação de Alteração de E-mail";
         var message = "Use o token a seguir para confirmar a alteração de e-mail da sua conta do Carekobooks: " + otp;
         var messageHtml = generateMessageHtml(title, "Recebemos uma solicitação para alterar o e-mail da sua conta. Use o token abaixo para confirmar:", otp, "Se você não solicitou essa alteração, ignore este e-mail.");

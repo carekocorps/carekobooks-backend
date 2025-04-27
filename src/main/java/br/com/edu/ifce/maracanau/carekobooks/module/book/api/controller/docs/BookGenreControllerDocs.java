@@ -56,7 +56,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Create a book genre",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -77,11 +77,11 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Update a book genre",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -91,11 +91,11 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Delete a book genre by name",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
@@ -105,7 +105,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Clear book genre cache",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

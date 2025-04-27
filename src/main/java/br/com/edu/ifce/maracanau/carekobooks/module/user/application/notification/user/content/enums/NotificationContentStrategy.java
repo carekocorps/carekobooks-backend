@@ -7,9 +7,9 @@ import java.util.function.Function;
 
 public enum NotificationContentStrategy {
 
-    REGISTRATION(NotificationContentFactory::fromRegistrationOtp),
-    PASSWORD(NotificationContentFactory::fromPasswordOtp),
-    EMAIL(NotificationContentFactory::fromEmailOtp);
+    REGISTRATION(NotificationContentFactory::buildFromRegistrationOtp),
+    PASSWORD(NotificationContentFactory::buildFromPasswordOtp),
+    EMAIL(NotificationContentFactory::buildFromEmailOtp);
 
     private final Function<String, NotificationContent> strategy;
 

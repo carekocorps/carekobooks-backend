@@ -56,7 +56,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Create a book progress and a corresponding book activity",
             tags = {"Book Progress"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -78,7 +78,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Update a book progress and create a corresponding book activity",
             tags = {"Book Progress"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -92,7 +92,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Assign a book as favorite by ID",
             tags = {"Book Progress"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -106,7 +106,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Unassign a book as favorite by ID",
             tags = {"Book Progress"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -120,7 +120,7 @@ public interface BookProgressControllerDocs {
     @Operation(
             summary = "Delete a book progress by ID",
             tags = {"Book Progress"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

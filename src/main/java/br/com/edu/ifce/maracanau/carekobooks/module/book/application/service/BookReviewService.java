@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +61,7 @@ public class BookReviewService {
         bookReviewValidator.validate(review);
         var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
 
-        if (UserContextProvider.isUserUnauthorized(response.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(response.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to create this book review");
         }
 
@@ -76,7 +76,7 @@ public class BookReviewService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book Review not found"));
 
-        if (UserContextProvider.isUserUnauthorized(review.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(review.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book review");
         }
 

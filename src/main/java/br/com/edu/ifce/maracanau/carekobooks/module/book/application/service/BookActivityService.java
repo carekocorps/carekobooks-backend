@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookActivityResponse;
@@ -55,7 +55,7 @@ public class BookActivityService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        if (UserContextProvider.isUserUnauthorized(activity.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(activity.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this book activity");
         }
 

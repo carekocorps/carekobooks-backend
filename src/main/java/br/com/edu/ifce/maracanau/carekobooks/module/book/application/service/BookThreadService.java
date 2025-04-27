@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadResponse;
@@ -54,7 +54,7 @@ public class BookThreadService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Thread not found"));
 
-        if (UserContextProvider.isUserUnauthorized(thread.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to update this thread");
         }
 
@@ -70,7 +70,7 @@ public class BookThreadService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Thread not found"));
 
-        if (UserContextProvider.isUserUnauthorized(thread.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
             throw new ForbiddenException("You are not allowed to delete this thread");
         }
 

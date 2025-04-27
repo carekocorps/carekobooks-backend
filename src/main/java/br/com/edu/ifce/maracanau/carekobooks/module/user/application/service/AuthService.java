@@ -10,11 +10,12 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificatio
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.factory.NotificationContentFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.subject.UserNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.TokenResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +48,7 @@ public class AuthService {
     private final ImageService imageService;
     private final ImageMapper imageMapper;
 
-    public TokenResponse login(UserLoginRequest request) {
+    public void login(UserLoginRequest request, HttpServletResponse response) {
         var user = userRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
@@ -63,7 +64,19 @@ public class AuthService {
                 )
         );
 
-        return tokenService.accessToken(user.getUsername(), user.getRoles());
+        tokenService.accessToken(user.getUsername(), user.getRoles(), response);
+    }
+
+    public void refreshToken(String username, HttpServletRequest request, HttpServletResponse response) {
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (!user.isEnabled()) {
+            throw new BadRequestException("User not verified");
+        }
+
+        tokenService.refreshToken(request, response);
     }
 
     @Transactional
@@ -111,7 +124,7 @@ public class AuthService {
         userRepository.save(user);
         userNotificationSubject.notify(
                 userMapper.toResponse(user),
-                NotificationContentFactory.fromRegistrationOtp(user.getOtp())
+                NotificationContentFactory.buildFromRegistrationOtp(user.getOtp())
         );
 
         return userMapper.toResponse(user);
@@ -157,18 +170,6 @@ public class AuthService {
         }
 
         userRepository.changeEmailByUsername(user.getUsername(), request.getNewEmail());
-    }
-
-    public TokenResponse refreshToken(String username, UserRefreshTokenRequest request) {
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (!user.isEnabled()) {
-            throw new BadRequestException("User not verified");
-        }
-
-        return tokenService.refreshToken(request.getRefreshToken());
     }
 
 }
