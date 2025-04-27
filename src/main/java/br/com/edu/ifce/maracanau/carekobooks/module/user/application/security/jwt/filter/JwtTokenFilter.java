@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             var jwt = jwtDecoder.decode(extractToken(request));
             var userDetails = userDetailsService.loadUserByUsername(jwt.getSubject());
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException ignored) {
         }
@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private String extractToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
-        return authorizationHeader != null
+        return authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
                 ? authorizationHeader.replaceFirst("Bearer ", "")
                 : null;
     }
