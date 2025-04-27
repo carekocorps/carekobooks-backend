@@ -19,12 +19,16 @@ import org.mapstruct.*;
 public interface BookThreadReplyMapper {
 
     @IgnoreBaseModelFields
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "children", ignore = true)
     @Mapping(target = "user", expression = "java(UserContextProvider.getUser())")
     @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
     BookThreadReply toModel(BookThreadReplyRequest request);
     BookThreadReplyResponse toResponse(BookThreadReply bookThreadReply);
 
     @IgnoreBaseModelFields
+    @Mapping(target = "parent", ignore = true)
+    @Mapping(target = "children", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
     void updateModel(@MappingTarget BookThreadReply reply, BookThreadReplyRequest request);

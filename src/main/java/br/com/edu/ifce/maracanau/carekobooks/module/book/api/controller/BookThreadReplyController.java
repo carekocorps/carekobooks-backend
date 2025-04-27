@@ -32,7 +32,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<BookThreadReplyResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<BookThreadReplyResponse> find(@PathVariable Long id) {
         var response = bookThreadReplyService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -48,6 +48,15 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
 
     @Override
     @UserRoleRequired
+    @PostMapping("/{id}/children")
+    public ResponseEntity<BookThreadReplyResponse> addChild(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request) {
+        var response = bookThreadReplyService.createChild(id, request);
+        var uri = getHeaderLocation(response.getId());
+        return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    @UserRoleRequired
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request) {
         bookThreadReplyService.update(id, request);
@@ -57,7 +66,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
     @Override
     @UserRoleRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookThreadReplyService.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -13,12 +13,14 @@ import org.springframework.data.jpa.domain.Specification;
 @Setter
 public class BookThreadReplyQuery extends BaseApplicationQuery<BookThreadReply> {
 
+    private Long parentId;
     private String username;
     private Long bookId;
 
     @Override
     public Specification<BookThreadReply> getSpecification() {
         var specs = super.getSpecification();
+        if (parentId != null) specs = specs.and(parentIdEqual(parentId));
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
         return specs;

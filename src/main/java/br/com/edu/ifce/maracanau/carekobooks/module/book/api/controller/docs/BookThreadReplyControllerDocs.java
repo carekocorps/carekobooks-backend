@@ -51,7 +51,7 @@ public interface BookThreadReplyControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<BookThreadReplyResponse> findById(@PathVariable Long id);
+    ResponseEntity<BookThreadReplyResponse> find(@PathVariable Long id);
 
     @Operation(
             summary = "Create a thread reply",
@@ -73,6 +73,27 @@ public interface BookThreadReplyControllerDocs {
             }
     )
     ResponseEntity<BookThreadReplyResponse> create(@RequestBody @Valid BookThreadReplyRequest request);
+
+    @Operation(
+            summary = "Add a child reply to a thread",
+            tags = {"Book Thread Reply"},
+            security = @SecurityRequirement(name = "Bearer"),
+            responses = {
+                    @ApiResponse(
+                            description = "Created",
+                            responseCode = "201",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = BookThreadReplyResponse.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<BookThreadReplyResponse> addChild(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request);
 
     @Operation(
             summary = "Update a thread reply",
@@ -100,6 +121,6 @@ public interface BookThreadReplyControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> deleteById(@PathVariable Long id);
+    ResponseEntity<Void> delete(@PathVariable Long id);
 
 }

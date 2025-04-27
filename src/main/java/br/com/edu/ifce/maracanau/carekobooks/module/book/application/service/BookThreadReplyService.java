@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
@@ -24,7 +25,9 @@ public class BookThreadReplyService {
     private final BookThreadReplyRepository bookThreadReplyRepository;
     private final BookThreadReplyValidator bookThreadReplyValidator;
     private final BookThreadReplyMapper bookThreadReplyMapper;
+    private final BookThreadReplyNotificationSubject bookThreadReplyNotificationSubject;
 
+    @Transactional
     public ApplicationPage<BookThreadReplyResponse> search(BookThreadReplyQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -32,6 +35,7 @@ public class BookThreadReplyService {
         return new ApplicationPage<>(bookThreadReplyRepository.findAll(specification, pageRequest).map(bookThreadReplyMapper::toResponse));
     }
 
+    @Transactional
     public Optional<BookThreadReplyResponse> find(Long id) {
         return bookThreadReplyRepository.findById(id).map(bookThreadReplyMapper::toResponse);
     }
@@ -40,7 +44,10 @@ public class BookThreadReplyService {
     public BookThreadReplyResponse create(BookThreadReplyRequest request) {
         var reply = bookThreadReplyMapper.toModel(request);
         bookThreadReplyValidator.validate(reply);
-        return bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
+
+        var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
+        bookThreadReplyNotificationSubject.notify(response);
+        return response;
     }
 
     @Transactional
@@ -55,8 +62,22 @@ public class BookThreadReplyService {
 
         bookThreadReplyMapper.updateModel(reply, request);
         bookThreadReplyValidator.validate(reply);
-        bookThreadReplyRepository.save(reply);
-        return bookThreadReplyMapper.toResponse(reply);
+        return bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
+    }
+
+    @Transactional
+    public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
+        var parent = bookThreadReplyRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Thread Reply not found"));
+
+        var child = bookThreadReplyMapper.toModel(request);
+        child.setParent(parent);
+        bookThreadReplyValidator.validate(child);
+
+        var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(child));
+        bookThreadReplyNotificationSubject.notify(response);
+        return response;
     }
 
     @Transactional

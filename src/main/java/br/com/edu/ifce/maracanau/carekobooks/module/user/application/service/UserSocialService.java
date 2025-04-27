@@ -33,7 +33,7 @@ public class UserSocialService {
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
-    public List<UserResponse> findAllFollowers(String username) {
+    public List<UserResponse> findFollowers(String username) {
         var query = new UserSocialQuery();
         query.setUsername(username);
         query.setRelationship(UserRelationship.FOLLOWER);

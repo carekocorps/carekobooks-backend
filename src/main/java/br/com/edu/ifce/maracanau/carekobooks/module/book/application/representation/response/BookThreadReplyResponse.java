@@ -13,6 +13,7 @@ public class BookThreadReplyResponse implements BaseResponse {
 
     private Long id;
     private String content;
+    private Boolean isContainingChildren;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private UserResponse user;

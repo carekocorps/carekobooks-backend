@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
@@ -24,6 +25,7 @@ public class BookThreadService {
     private final BookThreadRepository bookThreadRepository;
     private final BookThreadValidator bookThreadValidator;
     private final BookThreadMapper bookThreadMapper;
+    private final BookThreadNotificationSubject bookThreadNotificationSubject;
 
     public ApplicationPage<BookThreadResponse> search(BookThreadQuery query) {
         var specification = query.getSpecification();
@@ -40,7 +42,10 @@ public class BookThreadService {
     public BookThreadResponse create(BookThreadRequest request) {
         var thread = bookThreadMapper.toModel(request);
         bookThreadValidator.validate(thread);
-        return bookThreadMapper.toResponse(bookThreadRepository.save(thread));
+
+        var response = bookThreadMapper.toResponse(bookThreadRepository.save(thread));
+        bookThreadNotificationSubject.notify(response);
+        return response;
     }
 
     @Transactional
