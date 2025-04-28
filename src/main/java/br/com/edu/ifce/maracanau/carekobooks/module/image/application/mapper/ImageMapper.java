@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

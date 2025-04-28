@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookGenreNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.genre.BookGenreNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookGenreResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookGenreRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookGenreQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookGenreValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import jakarta.transaction.Transactional;

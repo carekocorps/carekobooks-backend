@@ -1,16 +1,16 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.reply.BookThreadReplyModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.reply.BookThreadReplyNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadReplyResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadReplyMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookThreadReplyQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookThreadReplyQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookThreadReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadReplyRepository;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

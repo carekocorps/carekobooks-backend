@@ -1,10 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.extractor.CookieExtractor;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.factory.CookieFactory;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthMissingRefreshTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.cookie.extractor.CookieExtractor;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.cookie.factory.CookieFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,23 +19,33 @@ import java.util.Optional;
 @Service
 public class TokenService {
 
-    public static final Integer ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS = 3600;
-    public static final Integer REFRESH_TOKEN_EXPIRATION_TIME_IN_SECONDS = ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS * 3;
+    @Value("${security.jwt.token.access.expiry-in-seconds}")
+    private Integer accessTokenExpiryInSeconds;
+
+    @Value("${security.jwt.token.refresh.expiry-in-seconds}")
+    private Integer refreshTokenExpiryInSeconds;
+
+    private final CookieExtractor cookieExtractor;
+    private final CookieFactory cookieFactory;
 
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
 
     public void accessToken(String username, List<String> roles, HttpServletResponse response) {
         var createdAt = Instant.now();
-        var accessExpiresAt = createdAt.plusSeconds(ACCESS_TOKEN_EXPIRATION_TIME_IN_SECONDS);
-        var refreshExpiresAt = accessExpiresAt.plusSeconds(REFRESH_TOKEN_EXPIRATION_TIME_IN_SECONDS);
-
-        response.addCookie(CookieFactory.buildFromAccessToken(getAccessToken(username, roles, createdAt, accessExpiresAt)));
-        response.addCookie(CookieFactory.buildFromRefreshToken(getRefreshToken(username, roles, createdAt, refreshExpiresAt)));
+        var accessExpiresAt = createdAt.plusSeconds(accessTokenExpiryInSeconds);
+        var refreshExpiresAt = accessExpiresAt.plusSeconds(refreshTokenExpiryInSeconds);
+        response.addCookie(cookieFactory.buildFromAccessToken(getAccessToken(username, roles, createdAt, accessExpiresAt)));
+        response.addCookie(cookieFactory.buildFromRefreshToken(getRefreshToken(username, roles, createdAt, refreshExpiresAt)));
     }
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        var jwt = jwtDecoder.decode(CookieExtractor.extractRefreshToken(request));
+        var cookie = cookieExtractor.extractRefreshToken(request);
+        if (cookie == null) {
+            throw new AuthMissingRefreshTokenException();
+        }
+
+        var jwt = jwtDecoder.decode(cookie);
         var roles = Optional.ofNullable(jwt.getClaimAsStringList("roles")).orElse(List.of());
         accessToken(jwt.getSubject(), roles, response);
     }

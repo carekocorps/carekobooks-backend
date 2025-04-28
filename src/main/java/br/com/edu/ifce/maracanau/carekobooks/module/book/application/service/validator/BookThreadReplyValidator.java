@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.thread.BookThreadNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.thread.BookThreadNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
 import org.springframework.stereotype.Component;

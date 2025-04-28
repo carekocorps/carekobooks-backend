@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.image.ImageNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;

@@ -4,7 +4,7 @@ spring:
   application:
     name: carekobooks
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}?useTimezone=true&serverTimezone=UTC
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
   jpa:
@@ -12,6 +12,7 @@ spring:
       ddl-auto: none
     open-in-view: false
   flyway:
+    enabled: true
     validate-migration-naming: true
   cache:
     type: redis
@@ -51,6 +52,13 @@ security:
     key:
       private: classpath:app.key
       public: classpath:app.pub
+    token:
+      access:
+        cookie-name: access_token
+        expiry-in-seconds: 3600
+      refresh:
+        cookie-name: refresh_token
+        expiry-in-seconds: 10800
 springdoc:
   swagger-ui:
     operations-sorter: method

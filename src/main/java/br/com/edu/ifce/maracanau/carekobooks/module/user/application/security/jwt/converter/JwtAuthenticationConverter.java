@@ -23,9 +23,8 @@ public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthen
         var username = source.getSubject();
         var roles = Optional.ofNullable(source.getClaimAsStringList("roles")).orElse(List.of());
         var grantedAuthorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
-
         var userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", grantedAuthorities);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, grantedAuthorities);
     }
 
 }

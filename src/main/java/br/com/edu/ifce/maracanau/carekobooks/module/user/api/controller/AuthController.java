@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.AuthControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;

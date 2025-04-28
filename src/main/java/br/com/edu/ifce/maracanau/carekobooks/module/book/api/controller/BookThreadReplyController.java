@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookThreadReplyControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadReplyResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookThreadReplyQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadReplyResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookThreadReplyQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookThreadReplyService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

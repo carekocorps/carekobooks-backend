@@ -2,9 +2,9 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserRegisterRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.UserUpdateRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

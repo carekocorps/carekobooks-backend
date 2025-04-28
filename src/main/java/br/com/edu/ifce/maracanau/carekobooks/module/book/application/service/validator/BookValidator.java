@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.book.BookConflictException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookExceedingGenreLimitException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.book.BookConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.genre.BookExceedingGenreLimitException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookProgressResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookProgressQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -12,7 +12,7 @@ public class RootController implements BaseController {
 
     @GetMapping
     public String root() {
-        return "Carekobooks";
+        return "CarekoBooks";
     }
 
 }

@@ -1,18 +1,21 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthInvalidVerificationTokenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserAlreadyVerifiedException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthVerificationTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserAlreadyVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.enums.NotificationContentStrategy;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.factory.NotificationContentFactory;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.subject.UserNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.notification.content.enums.NotificationContentStrategy;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.notification.content.factory.NotificationContentFactory;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.notification.subject.UserNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserChangeEmailValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserRecoverPasswordValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserRegisterVerificationValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -130,7 +133,7 @@ public class AuthService {
 
         userRegisterVerificationValidator.validate(user);
         if (!user.getOtp().equals(request.getOtp())) {
-            throw new AuthInvalidVerificationTokenException();
+            throw new AuthVerificationTokenException();
         }
 
         userRepository.verifyByUsername(user.getUsername());
@@ -144,7 +147,7 @@ public class AuthService {
 
         userRecoverPasswordValidator.validate(user);
         if (!request.getOtp().equals(user.getOtp())) {
-            throw new AuthInvalidVerificationTokenException();
+            throw new AuthVerificationTokenException();
         }
 
         userRepository.changePasswordByUsername(user.getUsername(), passwordEncoder.encode(request.getPassword()));
@@ -158,7 +161,7 @@ public class AuthService {
 
         userChangeEmailValidator.validate(user);
         if (!request.getOtp().equals(user.getOtp())) {
-            throw new AuthInvalidVerificationTokenException();
+            throw new AuthVerificationTokenException();
         }
 
         userRepository.changeEmailByUsername(user.getUsername(), request.getNewEmail());

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.cookie.extractor.CookieExtractor;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.cookie.extractor.CookieExtractor;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,8 +22,9 @@ import java.io.IOException;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final JwtDecoder jwtDecoder;
+    private final CookieExtractor cookieExtractor;
     private final UserDetailsService userDetailsService;
+    private final JwtDecoder jwtDecoder;
 
     @Override
     protected void doFilterInternal(
@@ -32,7 +33,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
-            var jwt = jwtDecoder.decode(CookieExtractor.extractAccessToken(request));
+            var jwt = jwtDecoder.decode(cookieExtractor.extractAccessToken(request));
             var userDetails = userDetailsService.loadUserByUsername(jwt.getSubject());
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

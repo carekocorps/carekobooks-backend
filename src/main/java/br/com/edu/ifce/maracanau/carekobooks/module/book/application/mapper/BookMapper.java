@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;

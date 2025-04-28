@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Carekobooks",
+                title = "CarekoBooks",
                 version = "v1"
         )
 )

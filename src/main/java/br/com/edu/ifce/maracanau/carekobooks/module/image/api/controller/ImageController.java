@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller.docs.ImageControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;

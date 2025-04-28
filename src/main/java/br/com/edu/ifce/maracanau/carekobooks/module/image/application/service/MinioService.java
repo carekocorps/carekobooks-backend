@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.http.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageDeletionException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageRetrievalException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageUploadException;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -33,7 +35,7 @@ public class MinioService {
                             .build()
                     );
         } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+            throw new ImageRetrievalException(e.getMessage());
         }
     }
 
@@ -50,7 +52,7 @@ public class MinioService {
 
             return fileName;
         } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+            throw new ImageUploadException(e.getMessage());
         }
     }
 
@@ -58,7 +60,7 @@ public class MinioService {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioBucket).object(filename).build());
         } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
+            throw new ImageDeletionException(e.getMessage());
         }
     }
 

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.request.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;

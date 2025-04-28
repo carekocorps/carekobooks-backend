@@ -1,15 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.review.BookReviewModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.review.BookReviewNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookReviewRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookReviewResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookReviewQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
