@@ -1,6 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.image.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
@@ -10,8 +13,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representat
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -47,14 +48,14 @@ public class UserService {
     public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!user.isEnabled()) {
-            throw new BadRequestException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new ForbiddenException("You are not allowed to update this user");
+            throw new UserModificationForbiddenException();
         }
 
         if (image != null) {
@@ -70,14 +71,14 @@ public class UserService {
     public void changeImage(String username, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!user.isEnabled()) {
-            throw new BadRequestException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new ForbiddenException("You are not allowed to update the image of this user");
+            throw new UserModificationForbiddenException();
         }
 
         user.setImage(Optional
@@ -85,7 +86,7 @@ public class UserService {
                 .map(file -> imageMapper.toModel(imageService.create(file)))
                 .orElseGet(() -> {
                     if (user.getImage() == null) {
-                        throw new NotFoundException("No image found or already deleted");
+                        throw new ImageNotFoundException();
                     }
 
                     imageService.delete(user.getImage().getId());
@@ -100,14 +101,14 @@ public class UserService {
     public void delete(String username) {
         var user = userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!user.isEnabled()) {
-            throw new BadRequestException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new ForbiddenException("You are not allowed to delete this user");
+            throw new UserModificationForbiddenException();
         }
 
         userRepository.deleteByUsername(username);

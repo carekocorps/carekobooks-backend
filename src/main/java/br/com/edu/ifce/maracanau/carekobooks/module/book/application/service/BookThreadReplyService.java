@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.reply.BookThreadReplyModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.reply.BookThreadReplyNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadReplyMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookThreadReplyQuery;
@@ -54,10 +54,10 @@ public class BookThreadReplyService {
     public BookThreadReplyResponse update(Long id, BookThreadReplyRequest request) {
         var reply = bookThreadReplyRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Thread Reply not found"));
+                .orElseThrow(BookThreadReplyNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(reply.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to update this thread reply");
+            throw new BookThreadReplyModificationForbiddenException();
         }
 
         bookThreadReplyMapper.updateModel(reply, request);
@@ -69,7 +69,7 @@ public class BookThreadReplyService {
     public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
         var parent = bookThreadReplyRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Thread Reply not found"));
+                .orElseThrow(BookThreadReplyNotFoundException::new);
 
         var child = bookThreadReplyMapper.toModel(request);
         child.setParent(parent);
@@ -84,10 +84,10 @@ public class BookThreadReplyService {
     public void delete(Long id) {
         var reply = bookThreadReplyRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Thread Reply not found"));
+                .orElseThrow(BookThreadReplyNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(reply.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to delete this thread reply");
+            throw new BookThreadReplyModificationForbiddenException();
         }
 
         bookThreadReplyRepository.deleteById(id);

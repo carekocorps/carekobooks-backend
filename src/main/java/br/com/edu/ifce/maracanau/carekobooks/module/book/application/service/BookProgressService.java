@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.progress.BookProgressNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookProgressQuery;
@@ -46,7 +46,7 @@ public class BookProgressService {
         var response = bookProgressMapper.toResponse(bookProgressRepository.save(progress));
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(response.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to create this book progress");
+            throw new BookProgressModificationForbiddenException();
         }
 
         if (request.getScore() != null) {
@@ -63,14 +63,14 @@ public class BookProgressService {
     public BookProgressResponse update(Long id, BookProgressRequest request) {
         var progress = bookProgressRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
+                .orElseThrow(BookProgressNotFoundException::new);
 
         bookProgressMapper.updateModel(progress, request);
         bookProgressValidator.validate(progress);
         bookProgressRepository.save(progress);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to update this book progress");
+            throw new BookProgressModificationForbiddenException();
         }
 
         var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
@@ -84,10 +84,10 @@ public class BookProgressService {
     public void changeAsFavorite(Long id, boolean isFavorite) {
         var progress = bookProgressRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
+                .orElseThrow(BookProgressNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to update this book progress");
+            throw new BookProgressModificationForbiddenException();
         }
 
         bookProgressRepository.changeAsFavoriteById(id, isFavorite);
@@ -97,10 +97,10 @@ public class BookProgressService {
     public void delete(Long id) {
         var progress = bookProgressRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book Progress not found"));
+                .orElseThrow(BookProgressNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to delete this book progress");
+            throw new BookProgressModificationForbiddenException();
         }
 
         bookProgressRepository.deleteById(id);

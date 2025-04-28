@@ -1,8 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.query.UserSocialQuery;
@@ -45,11 +43,11 @@ public class UserSocialService {
     @Transactional
     public void changeFollowing(String username, String targetUsername, boolean isFollowingRequested) {
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new ForbiddenException("You are not allowed to perform this action");
+            throw new UserModificationForbiddenException();
         }
 
         if (username.equals(targetUsername)) {
-            throw new BadRequestException("You cannot follow/unfollow yourself");
+            throw new UserSelfFollowingException();
         }
 
         var users = userRepository
@@ -60,19 +58,18 @@ public class UserSocialService {
         var user = users.get(username);
         var target = users.get(targetUsername);
         if (user == null || target == null) {
-            throw new NotFoundException("One or both users were not found");
+            throw new UserNotFoundException("One or both users were not found");
         }
 
         if (!user.isEnabled() || !target.isEnabled()) {
-            throw new BadRequestException("One or both users are not verified");
+            throw new UserNotVerifiedException("One or both users are not verified");
         }
 
         var isUserFollowing = user.getFollowing().contains(target);
         if (isUserFollowing == isFollowingRequested) {
-            throw new BadRequestException(isFollowingRequested
-                    ? "User is already following the target"
-                    : "User does not follow the target"
-            );
+            throw isFollowingRequested
+                    ? new UserAlreadyVerifiedException()
+                    : new UserNotFollowingException();
         }
 
         if (isFollowingRequested) userRepository.follow(user.getId(), target.getId());

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookGenreNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookGenreQuery;
@@ -55,7 +55,7 @@ public class BookGenreService {
     public BookGenreResponse update(String name, BookGenreRequest request) {
         var genre = bookGenreRepository
                 .findByName(name)
-                .orElseThrow(() -> new NotFoundException("Book Genre not found"));
+                .orElseThrow(BookGenreNotFoundException::new);
 
         bookGenreMapper.updateModel(genre, request);
         bookGenreValidator.validate(genre);
@@ -69,7 +69,7 @@ public class BookGenreService {
     @Transactional
     public void delete(String name) {
         if (!bookGenreRepository.existsByName(name)) {
-            throw new NotFoundException("Book Genre not found");
+            throw new BookGenreNotFoundException();
         }
 
         bookGenreRepository.deleteByName(name);

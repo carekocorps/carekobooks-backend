@@ -35,7 +35,7 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> refreshToken(@PathVariable String username, HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response);
 
     @Operation(
             summary = "Generate OTP (One-Time Password) code",

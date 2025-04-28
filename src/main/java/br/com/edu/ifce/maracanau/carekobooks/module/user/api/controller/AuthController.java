@@ -31,9 +31,9 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
-    @PostMapping("/refresh/{username}")
-    public ResponseEntity<Void> refreshToken(@PathVariable String username, HttpServletRequest request, HttpServletResponse response) {
-        authService.refreshToken(username, request, response);
+    @PostMapping("/refresh")
+    public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        authService.refreshToken(request, response);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.observer;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.http.BadRequestException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.user.content.NotificationContent;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.representation.response.UserResponse;
 import jakarta.mail.MessagingException;

@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.UnauthorizedException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.http.UnauthorizedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole;
 import org.springframework.security.core.context.SecurityContextHolder;

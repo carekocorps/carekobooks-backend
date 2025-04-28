@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.http.BadRequestException;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;

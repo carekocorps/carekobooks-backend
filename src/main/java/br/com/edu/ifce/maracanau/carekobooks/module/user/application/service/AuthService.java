@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthInvalidVerificationTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserAlreadyVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
@@ -20,7 +21,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,10 +51,10 @@ public class AuthService {
     public void login(UserLoginRequest request, HttpServletResponse response) {
         var user = userRepository
                 .findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!user.isEnabled()) {
-            throw new ForbiddenException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         authenticationManager.authenticate(
@@ -67,15 +67,7 @@ public class AuthService {
         tokenService.accessToken(user.getUsername(), user.getRoles(), response);
     }
 
-    public void refreshToken(String username, HttpServletRequest request, HttpServletResponse response) {
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (!user.isEnabled()) {
-            throw new BadRequestException("User not verified");
-        }
-
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
         tokenService.refreshToken(request, response);
     }
 
@@ -83,16 +75,16 @@ public class AuthService {
     public void generateOtp(UserGenerateOtpRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         var isEnabled = Boolean.TRUE.equals(user.getIsEnabled());
         var isRegistrationOtp = user.getOtpValidationType() == OtpValidationType.REGISTRATION;
         if (!isEnabled && isRegistrationOtp) {
-            throw new BadRequestException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (isEnabled && isRegistrationOtp) {
-            throw new ForbiddenException("User is already verified");
+            throw new UserAlreadyVerifiedException();
         }
 
         var otp = UUID.randomUUID().toString().substring(0, 8);
@@ -134,11 +126,11 @@ public class AuthService {
     public void verify(UserRegisterVerificationRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         userRegisterVerificationValidator.validate(user);
         if (!user.getOtp().equals(request.getOtp())) {
-            throw new BadRequestException("Invalid otp");
+            throw new AuthInvalidVerificationTokenException();
         }
 
         userRepository.verifyByUsername(user.getUsername());
@@ -148,11 +140,11 @@ public class AuthService {
     public void recoverPassword(UserRecoverPasswordRequest request) {
         var user = userRepository
                 .findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         userRecoverPasswordValidator.validate(user);
         if (!request.getOtp().equals(user.getOtp())) {
-            throw new BadRequestException("Invalid otp");
+            throw new AuthInvalidVerificationTokenException();
         }
 
         userRepository.changePasswordByUsername(user.getUsername(), passwordEncoder.encode(request.getPassword()));
@@ -162,11 +154,11 @@ public class AuthService {
     public void changeEmail(UserChangeEmailRequest request) {
         var user = userRepository
                 .findByEmail(request.getCurrentEmail())
-                .orElseThrow(() -> new NotFoundException("Email not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         userChangeEmailValidator.validate(user);
         if (!request.getOtp().equals(user.getOtp())) {
-            throw new BadRequestException("Invalid verification token");
+            throw new AuthInvalidVerificationTokenException();
         }
 
         userRepository.changeEmailByUsername(user.getUsername(), request.getNewEmail());

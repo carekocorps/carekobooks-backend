@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.review.BookReviewModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewQuery;
@@ -55,14 +55,14 @@ public class BookReviewService {
     public BookReviewResponse update(Long id, BookReviewRequest request) {
         var review = bookReviewRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book Review not found"));
+                .orElseThrow(BookReviewNotFoundException::new);
 
         bookReviewMapper.updateModel(review, request);
         bookReviewValidator.validate(review);
         var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(response.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to create this book review");
+            throw new BookReviewModificationForbiddenException();
         }
 
         var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
@@ -74,10 +74,10 @@ public class BookReviewService {
     public void delete(Long id) {
         var review = bookReviewRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book Review not found"));
+                .orElseThrow(BookReviewNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(review.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to delete this book review");
+            throw new BookReviewModificationForbiddenException();
         }
 
         bookReviewRepository.deleteById(id);

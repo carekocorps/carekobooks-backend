@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.book.BookNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.review.BookReviewUserConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookReviewQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
@@ -17,15 +18,15 @@ public class BookReviewValidator implements BaseValidator<BookReview> {
 
     public void validate(BookReview bookReview) {
         if (isUserEmpty(bookReview)) {
-            throw new NotFoundException("User not found");
+            throw new UserNotFoundException();
         }
 
         if (isBookEmpty(bookReview)) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException();
         }
 
         if (isUserReviewDuplicated(bookReview)) {
-            throw new BadRequestException("User has already reviewed this book");
+            throw new BookReviewUserConflictException();
         }
     }
 

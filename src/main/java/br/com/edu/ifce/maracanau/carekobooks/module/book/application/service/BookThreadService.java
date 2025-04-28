@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.thread.BookThreadModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.thread.thread.BookThreadNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookThreadResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookThreadRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookThreadQuery;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookThreadValidator;
@@ -52,10 +52,10 @@ public class BookThreadService {
     public BookThreadResponse update(Long id, BookThreadRequest request) {
         var thread = bookThreadRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Thread not found"));
+                .orElseThrow(BookThreadNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to update this thread");
+            throw new BookThreadModificationForbiddenException();
         }
 
         bookThreadMapper.updateModel(thread, request);
@@ -68,10 +68,10 @@ public class BookThreadService {
     public void delete(Long id) {
         var thread = bookThreadRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Thread not found"));
+                .orElseThrow(BookThreadNotFoundException::new);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
-            throw new ForbiddenException("You are not allowed to delete this thread");
+            throw new BookThreadModificationForbiddenException();
         }
 
         bookThreadRepository.deleteById(id);

@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.exception;
+package br.com.edu.ifce.maracanau.carekobooks.common.exception.http;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserEmailConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserUsernameConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -15,11 +16,11 @@ public class UserValidator implements BaseValidator<User> {
 
     public void validate(User user) {
         if (isUsernameDuplicated(user)) {
-            throw new ConflictException("A user with the same username already exists");
+            throw new UserUsernameConflictException();
         }
 
         if (isEmailDuplicated(user)) {
-            throw new ConflictException("A user with the same email already exists");
+            throw new UserEmailConflictException();
         }
     }
 

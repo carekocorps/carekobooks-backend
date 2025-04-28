@@ -1,6 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.book.BookAlreadyContainingGenreException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.book.BookNotContainingGenreException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.book.BookNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookGenreNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookGenreInvalidException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.image.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
@@ -8,7 +13,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.Im
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.representation.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.representation.query.BookQuery;
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
@@ -59,7 +63,7 @@ public class BookService {
 
         bookValidator.validate(book);
         if (book.getGenres().size() != request.getGenres().size()) {
-            throw new BadRequestException("Some genres are duplicated or invalid and could not be found");
+            throw new BookGenreInvalidException();
         }
 
         return bookMapper.toResponse(bookRepository.save(book));
@@ -70,7 +74,7 @@ public class BookService {
     public BookResponse update(Long id, BookRequest request, MultipartFile image) {
         var book = bookRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found"));
+                .orElseThrow(BookNotFoundException::new);
 
         if (image != null) {
             book.setImage(imageMapper.toModel(imageService.create(image)));
@@ -79,7 +83,7 @@ public class BookService {
         bookMapper.updateModel(book, request);
         bookValidator.validate(book);
         if (book.getGenres().size() != request.getGenres().size()) {
-            throw new BadRequestException("Some genres are duplicated or invalid and could not be found");
+            throw new BookGenreInvalidException();
         }
 
         bookRepository.save(book);
@@ -91,12 +95,12 @@ public class BookService {
     public void changeGenre(Long id, String genreName, boolean isAdditionRequested) {
         var book = bookRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found"));
+                .orElseThrow(BookNotFoundException::new);
 
         var genre = bookGenreService
                 .find(genreName)
                 .map(bookGenreMapper::toModel)
-                .orElseThrow(() -> new NotFoundException("Genre not found"));
+                .orElseThrow(BookGenreNotFoundException::new);
 
         var isBookContainingGenre = book
                 .getGenres()
@@ -104,10 +108,9 @@ public class BookService {
                 .anyMatch(bookGenre -> bookGenre.getId().equals(genre.getId()));
 
         if (isBookContainingGenre == isAdditionRequested) {
-            throw new BadRequestException(isAdditionRequested
-                    ? "Book already contains this genre"
-                    : "Book does not contain this genre"
-            );
+            throw isAdditionRequested
+                    ? new BookAlreadyContainingGenreException()
+                    : new BookNotContainingGenreException();
         }
 
         if (isAdditionRequested) bookRepository.addGenre(book.getId(), genre.getId());
@@ -118,7 +121,7 @@ public class BookService {
     @Transactional
     public void changeUserAverageScore(Long id, Double userAverageScore) {
         if (!bookRepository.existsById(id)) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException();
         }
 
         bookRepository.changeUserAverageScoreById(id, userAverageScore);
@@ -128,7 +131,7 @@ public class BookService {
     @Transactional
     public void changeReviewAverageScore(Long id, Double reviewAverageScore) {
         if (!bookRepository.existsById(id)) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException();
         }
 
         bookRepository.changeReviewAverageScoreById(id, reviewAverageScore);
@@ -139,14 +142,14 @@ public class BookService {
     public void changeImage(Long id, MultipartFile image) {
         var book = bookRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Book not found"));
+                .orElseThrow(BookNotFoundException::new);
 
         book.setImage(Optional
                 .ofNullable(image)
                 .map(file -> imageMapper.toModel(imageService.create(file)))
                 .orElseGet(() -> {
                     if (book.getImage() == null) {
-                        throw new NotFoundException("No image found or already deleted");
+                        throw new ImageNotFoundException();
                     }
 
                     imageService.delete(book.getImage().getId());
@@ -161,7 +164,7 @@ public class BookService {
     @Transactional
     public void delete(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException();
         }
 
         bookRepository.deleteById(id);

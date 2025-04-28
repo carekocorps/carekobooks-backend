@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.NotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.image.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.representation.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
@@ -42,7 +42,7 @@ public class ImageService {
     public void delete(Long id) {
         var image = imageRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("File not found"));
+                .orElseThrow(ImageNotFoundException::new);
 
         minioService.deleteByFilename(image.getName());
         imageRepository.deleteById(id);

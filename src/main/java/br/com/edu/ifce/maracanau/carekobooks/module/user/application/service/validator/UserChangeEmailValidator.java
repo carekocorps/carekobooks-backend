@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthInvalidVerificationTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthVerificationTokenExpiredException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
@@ -13,19 +15,19 @@ public class UserChangeEmailValidator implements BaseValidator<User> {
 
     public void validate(User user) {
         if (isNotEnabled(user)) {
-            throw new BadRequestException("User not verified");
+            throw new UserNotVerifiedException();
         }
 
         if (isOtpEmpty(user)) {
-            throw new BadRequestException("Invalid otp");
+            throw new AuthInvalidVerificationTokenException();
         }
 
         if (isOtpValidationTypeInvalid(user)) {
-            throw new BadRequestException("Invalid otp type");
+            throw new AuthInvalidVerificationTokenException();
         }
 
         if (isOtpExpired(user)) {
-            throw new BadRequestException("Otp expired");
+            throw new AuthVerificationTokenExpiredException();
         }
     }
 

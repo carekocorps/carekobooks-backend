@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.BadRequestException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthInvalidVerificationTokenTypeException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.auth.AuthVerificationTokenExpiredException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.user.user.UserAlreadyVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
@@ -13,15 +15,15 @@ public class UserRegisterVerificationValidator implements BaseValidator<User> {
 
     public void validate(User user) {
         if (isEnabled(user)) {
-            throw new BadRequestException("User is already verified");
+            throw new UserAlreadyVerifiedException();
         }
 
         if (isOtpValidationTypeInvalid(user)) {
-            throw new BadRequestException("Invalid otp type");
+            throw new AuthInvalidVerificationTokenTypeException();
         }
 
         if (isOtpExpired(user)) {
-            throw new BadRequestException("Otp is expired");
+            throw new AuthVerificationTokenExpiredException();
         }
     }
 

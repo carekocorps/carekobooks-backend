@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.exception.ConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.common.exception.module.book.genre.BookGenreNameConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -15,7 +15,7 @@ public class BookGenreValidator implements BaseValidator<BookGenre> {
 
     public void validate(BookGenre bookGenre) {
         if (isNameDuplicated(bookGenre)) {
-            throw new ConflictException("Book Genre with the same name already exists");
+            throw new BookGenreNameConflictException();
         }
     }
 
