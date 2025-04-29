@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation.Username;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -10,6 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -60,6 +61,7 @@ public class BookProgressService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookProgressNotFoundException.class)
     public BookProgressResponse update(Long id, BookProgressRequest request) {
         var progress = bookProgressRepository
                 .findById(id)
@@ -68,10 +70,6 @@ public class BookProgressService {
         bookProgressMapper.updateModel(progress, request);
         bookProgressValidator.validate(progress);
         bookProgressRepository.save(progress);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
 
         var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
         bookService.changeUserAverageScore(request.getBookId(), userAverageScore);

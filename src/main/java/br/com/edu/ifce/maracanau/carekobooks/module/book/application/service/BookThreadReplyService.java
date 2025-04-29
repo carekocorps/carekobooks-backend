@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
@@ -12,6 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookThreadReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadReplyRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -42,13 +42,10 @@ public class BookThreadReplyService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadReplyModificationForbiddenException.class)
     public BookThreadReplyResponse create(BookThreadReplyRequest request) {
         var reply = bookThreadReplyMapper.toModel(request);
         bookThreadReplyValidator.validate(reply);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
 
         var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
         bookThreadReplyNotificationSubject.notify(response);
@@ -56,14 +53,11 @@ public class BookThreadReplyService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadReplyModificationForbiddenException.class)
     public BookThreadReplyResponse update(Long id, BookThreadReplyRequest request) {
         var reply = bookThreadReplyRepository
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(reply.getUser().getUsername())) {
-            throw new BookThreadReplyModificationForbiddenException();
-        }
 
         bookThreadReplyMapper.updateModel(reply, request);
         bookThreadReplyValidator.validate(reply);
@@ -71,14 +65,11 @@ public class BookThreadReplyService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadReplyModificationForbiddenException.class)
     public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
         var parent = bookThreadReplyRepository
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
 
         var child = bookThreadReplyMapper.toModel(request);
         child.setParent(parent);

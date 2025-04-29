@@ -10,18 +10,20 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.User
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -45,6 +47,7 @@ public class UserService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
     public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
@@ -52,10 +55,6 @@ public class UserService {
 
         if (!user.isEnabled()) {
             throw new UserNotVerifiedException();
-        }
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new UserModificationForbiddenException();
         }
 
         if (image != null) {
@@ -68,6 +67,7 @@ public class UserService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
     public void changeImage(String username, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
@@ -75,10 +75,6 @@ public class UserService {
 
         if (!user.isEnabled()) {
             throw new UserNotVerifiedException();
-        }
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new UserModificationForbiddenException();
         }
 
         user.setImage(Optional
@@ -98,6 +94,7 @@ public class UserService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
     public void delete(String username) {
         var user = userRepository
                 .findByUsername(username)
@@ -105,10 +102,6 @@ public class UserService {
 
         if (!user.isEnabled()) {
             throw new UserNotVerifiedException();
-        }
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new UserModificationForbiddenException();
         }
 
         userRepository.deleteByUsername(username);

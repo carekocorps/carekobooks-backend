@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.thread.BookThreadModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.thread.BookThreadNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.thread.subject.BookThreadNotificationSubject;
@@ -12,6 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookThreadValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,13 +40,10 @@ public class BookThreadService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadModificationForbiddenException.class)
     public BookThreadResponse create(BookThreadRequest request) {
         var thread = bookThreadMapper.toModel(request);
         bookThreadValidator.validate(thread);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
 
         var response = bookThreadMapper.toResponse(bookThreadRepository.save(thread));
         bookThreadNotificationSubject.notify(response);
@@ -54,19 +51,15 @@ public class BookThreadService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadModificationForbiddenException.class)
     public BookThreadResponse update(Long id, BookThreadRequest request) {
         var thread = bookThreadRepository
                 .findById(id)
                 .orElseThrow(BookThreadNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookThreadModificationForbiddenException();
-        }
-
         bookThreadMapper.updateModel(thread, request);
         bookThreadValidator.validate(thread);
-        bookThreadRepository.save(thread);
-        return bookThreadMapper.toResponse(thread);
+        return bookThreadMapper.toResponse(bookThreadRepository.save(thread));
     }
 
     @Transactional

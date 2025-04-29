@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation;
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -86,8 +86,7 @@ public class BookService {
             throw new BookGenreCountMismatchException();
         }
 
-        bookRepository.save(book);
-        return bookMapper.toResponse(book);
+        return bookMapper.toResponse(bookRepository.save(book));
     }
 
     @CacheEvict(value = "book", key = "#id")

@@ -2,7 +2,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
@@ -12,6 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,14 +40,11 @@ public class BookActivityService {
     }
 
     @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = BookActivityModificationForbiddenException.class)
     public BookActivityResponse create(BookProgressRequest request) {
         var activity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(activity);
         bookActivityRepository.save(activity);
-
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
 
         var response = bookActivityMapper.toResponse(activity);
         bookActivityNotificationSubject.notify(response);
