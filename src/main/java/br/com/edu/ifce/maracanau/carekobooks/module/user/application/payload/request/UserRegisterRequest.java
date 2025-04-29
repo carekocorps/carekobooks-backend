@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation.Password;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation.Username;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,10 +15,7 @@ import lombok.Setter;
 @Setter
 public class UserRegisterRequest implements BaseRequest {
 
-    @NotBlank
-    @Size(max = 50)
-    @Pattern(regexp = "^[a-z_0-9]+$", message = "Username should only contain letters and numbers")
-    @Schema(example = "string")
+    @Username
     private String username;
 
     @Size(max = 50)
@@ -28,10 +27,7 @@ public class UserRegisterRequest implements BaseRequest {
     @Schema(example = "string@gmail.com")
     private String email;
 
-    @NotBlank
-    @Size(min = 5, max = 255)
-    @Pattern(regexp = "^\\S+$", message = "Password should not contain spaces")
-    @Schema(example = "string")
+    @Password
     private String password;
 
     @Size(max = 1000)

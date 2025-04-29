@@ -1,10 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation.Username;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +23,9 @@ public class BookProgressRequest implements BaseRequest {
 
     @Min(0)
     private Integer pageCount;
+
+    @Username
+    private String username;
 
     @NotNull
     private Long bookId;

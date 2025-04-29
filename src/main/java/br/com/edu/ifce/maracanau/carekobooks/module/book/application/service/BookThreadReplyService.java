@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.reply.BookThreadReplyNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
@@ -45,6 +46,10 @@ public class BookThreadReplyService {
         var reply = bookThreadReplyMapper.toModel(request);
         bookThreadReplyValidator.validate(reply);
 
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
+            throw new BookProgressModificationForbiddenException();
+        }
+
         var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
         bookThreadReplyNotificationSubject.notify(response);
         return response;
@@ -70,6 +75,10 @@ public class BookThreadReplyService {
         var parent = bookThreadReplyRepository
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
+
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
+            throw new BookProgressModificationForbiddenException();
+        }
 
         var child = bookThreadReplyMapper.toModel(request);
         child.setParent(parent);

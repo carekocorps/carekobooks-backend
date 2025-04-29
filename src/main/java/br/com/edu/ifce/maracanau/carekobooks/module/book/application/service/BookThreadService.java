@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.thread.BookThreadModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.thread.thread.BookThreadNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.thread.subject.BookThreadNotificationSubject;
@@ -43,6 +44,10 @@ public class BookThreadService {
         var thread = bookThreadMapper.toModel(request);
         bookThreadValidator.validate(thread);
 
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
+            throw new BookProgressModificationForbiddenException();
+        }
+
         var response = bookThreadMapper.toResponse(bookThreadRepository.save(thread));
         bookThreadNotificationSubject.notify(response);
         return response;
@@ -54,7 +59,7 @@ public class BookThreadService {
                 .findById(id)
                 .orElseThrow(BookThreadNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
             throw new BookThreadModificationForbiddenException();
         }
 

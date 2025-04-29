@@ -5,14 +5,12 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
-        imports = AuthenticatedUserProvider.class,
         uses = {
                 UserMapper.class,
                 BookMapper.class
@@ -21,13 +19,13 @@ import org.mapstruct.MappingTarget;
 public interface BookProgressMapper {
 
     @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(AuthenticatedUserProvider.getAuthenticatedUser())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookProgress toModel(BookProgressRequest request);
     BookProgressResponse toResponse(BookProgress progress);
 
     @IgnoreBaseModelFields
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     void updateModel(@MappingTarget BookProgress progress, BookProgressRequest request);
 

@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookActivityValidator;
@@ -43,6 +44,10 @@ public class BookActivityService {
         var activity = bookActivityMapper.toModel(request);
         bookActivityValidator.validate(activity);
         bookActivityRepository.save(activity);
+
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
+            throw new BookProgressModificationForbiddenException();
+        }
 
         var response = bookActivityMapper.toResponse(activity);
         bookActivityNotificationSubject.notify(response);

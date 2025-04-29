@@ -5,12 +5,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.mapstruct.*;
 
 @Mapper(
         componentModel = "spring",
-        imports = AuthenticatedUserProvider.class,
         uses = {
                 UserMapper.class,
                 BookThreadMapper.class
@@ -21,15 +19,15 @@ public interface BookThreadReplyMapper {
     @IgnoreBaseModelFields
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "children", ignore = true)
-    @Mapping(target = "user", expression = "java(AuthenticatedUserProvider.getAuthenticatedUser())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
     @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
     BookThreadReply toModel(BookThreadReplyRequest request);
-    BookThreadReplyResponse toResponse(BookThreadReply bookThreadReply);
+    BookThreadReplyResponse toResponse(BookThreadReply reply);
 
     @IgnoreBaseModelFields
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "children", ignore = true)
-    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
     @Mapping(target = "thread", expression = "java(bookThreadMapper.toModel(request.getThreadId()))")
     void updateModel(@MappingTarget BookThreadReply reply, BookThreadReplyRequest request);
 

@@ -5,13 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(
         componentModel = "spring",
-        imports = AuthenticatedUserProvider.class,
         uses = {
                 UserMapper.class,
                 BookMapper.class
@@ -20,7 +18,7 @@ import org.mapstruct.Mapping;
 public interface BookActivityMapper {
 
     @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(AuthenticatedUserProvider.getAuthenticatedUser())")
+    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
     @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
     BookActivity toModel(BookProgressRequest request);
     BookActivityResponse toResponse(BookActivity activity);

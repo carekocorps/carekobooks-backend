@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.annotation.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,10 +19,7 @@ public class UserRecoverPasswordRequest implements BaseRequest {
     @Size(max = 255)
     private String email;
 
-    @NotBlank
-    @Size(min = 5, max = 255)
-    @Pattern(regexp = "^\\S+$", message = "Password should not contain spaces")
-    @Schema(example = "string")
+    @Password
     private String password;
 
     @NotBlank

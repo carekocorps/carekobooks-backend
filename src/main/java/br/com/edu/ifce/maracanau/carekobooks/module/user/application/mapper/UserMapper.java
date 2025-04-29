@@ -6,15 +6,20 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
         componentModel = "spring",
         uses = ImageMapper.class
 )
-public interface UserMapper {
+public abstract class UserMapper {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @IgnoreBaseModelFields
     @Mapping(target = "role", ignore = true)
@@ -32,8 +37,8 @@ public interface UserMapper {
     @Mapping(target = "followers", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authorities", ignore = true)
-    User toModel(UserRegisterRequest request);
-    UserResponse toResponse(User user);
+    public abstract User toModel(UserRegisterRequest request);
+    public abstract UserResponse toResponse(User user);
 
     @IgnoreBaseModelFields
     @Mapping(target = "email", ignore = true)
@@ -52,6 +57,10 @@ public interface UserMapper {
     @Mapping(target = "followers", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authorities", ignore = true)
-    void updateModel(@MappingTarget User user, UserUpdateRequest request);
+    public abstract void updateModel(@MappingTarget User user, UserUpdateRequest request);
+
+    public User toModel(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
 
 }

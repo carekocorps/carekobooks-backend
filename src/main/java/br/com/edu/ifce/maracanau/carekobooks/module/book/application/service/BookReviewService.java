@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.progress.BookProgressModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
@@ -43,6 +44,10 @@ public class BookReviewService {
         var review = bookReviewMapper.toModel(request);
         bookReviewValidator.validate(review);
         var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
+
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
+            throw new BookProgressModificationForbiddenException();
+        }
 
         var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
         bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);

@@ -45,7 +45,7 @@ public class BookProgressService {
         bookProgressValidator.validate(progress);
         var response = bookProgressMapper.toResponse(bookProgressRepository.save(progress));
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(response.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
             throw new BookProgressModificationForbiddenException();
         }
 
@@ -69,7 +69,7 @@ public class BookProgressService {
         bookProgressValidator.validate(progress);
         bookProgressRepository.save(progress);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
+        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
             throw new BookProgressModificationForbiddenException();
         }
 
