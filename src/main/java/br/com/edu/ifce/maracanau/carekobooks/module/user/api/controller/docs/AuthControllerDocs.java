@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -38,8 +39,7 @@ public interface AuthControllerDocs {
     ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response);
 
     @Operation(
-            summary = "Generate OTP (One-Time Password) code",
-            description = "Sends a one-time password (OTP) to the user for validation.",
+            summary = "Generate One-Time Password (OTP)",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
@@ -86,7 +86,7 @@ public interface AuthControllerDocs {
     ResponseEntity<Void> verify(@RequestBody @Valid UserRegisterVerificationRequest request);
 
     @Operation(
-            summary = "Request a password reset for a user",
+            summary = "Change a user's password",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
@@ -97,7 +97,7 @@ public interface AuthControllerDocs {
     ResponseEntity<Void> recoverPassword(UserRecoverPasswordRequest request);
 
     @Operation(
-            summary = "Request an email change for a user",
+            summary = "Change a user's email",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
@@ -106,5 +106,17 @@ public interface AuthControllerDocs {
             }
     )
     ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request);
+
+    @Operation(
+            summary = "Change a user's username",
+            tags = {"Auth"},
+            security = @SecurityRequirement(name = "access_token"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> changeUsername(@RequestBody @Valid UserChangeUsernameRequest request, HttpServletResponse response);
 
 }

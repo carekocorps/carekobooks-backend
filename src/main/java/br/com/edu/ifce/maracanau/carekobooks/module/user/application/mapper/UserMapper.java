@@ -41,6 +41,7 @@ public abstract class UserMapper {
     public abstract UserResponse toResponse(User user);
 
     @IgnoreBaseModelFields
+    @Mapping(target = "username", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)

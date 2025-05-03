@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.AuthControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.AuthService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,23 +59,31 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
-    @PostMapping("/register/otp")
+    @PostMapping("/register/verify")
     public ResponseEntity<Void> verify(@RequestBody @Valid UserRegisterVerificationRequest request) {
         authService.verify(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/password/otp")
+    @PostMapping("/password/change")
     public ResponseEntity<Void> recoverPassword(@RequestBody @Valid UserRecoverPasswordRequest request) {
         authService.recoverPassword(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/email/otp")
+    @PostMapping("/email/change")
     public ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request) {
         authService.changeEmail(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @UserRoleRequired
+    @PostMapping("/username/change")
+    public ResponseEntity<Void> changeUsername(@RequestBody @Valid UserChangeUsernameRequest request, HttpServletResponse response) {
+        authService.changeUsername(request, response);
         return ResponseEntity.noContent().build();
     }
 

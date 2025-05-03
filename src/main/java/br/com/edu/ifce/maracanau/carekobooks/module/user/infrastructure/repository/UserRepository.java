@@ -70,6 +70,15 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Modifying
     @Transactional
+    @Query("""
+        UPDATE User u
+        SET u.username = :newUsername
+        WHERE u.username = :username
+    """)
+    void changeUsernameByUsername(String username, String newUsername);
+
+    @Modifying
+    @Transactional
     @Query(value = """
         INSERT INTO user_follow_relationships (user_following_id, user_followed_id) VALUES
             (:followingId, :followedId)

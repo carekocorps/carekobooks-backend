@@ -1,9 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthVerificationTokenException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserAlreadyVerifiedException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
@@ -12,10 +10,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificatio
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.subject.UserNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserChangeEmailValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserRecoverPasswordValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserRegisterVerificationValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +43,7 @@ public class AuthService {
     private final UserRegisterVerificationValidator userRegisterVerificationValidator;
     private final UserRecoverPasswordValidator userRecoverPasswordValidator;
     private final UserChangeEmailValidator userChangeEmailValidator;
+    private final UserChangeUsernameValidator userChangeUsernameValidator;
 
     private final ImageService imageService;
     private final ImageMapper imageMapper;
@@ -156,7 +153,7 @@ public class AuthService {
     @Transactional
     public void changeEmail(UserChangeEmailRequest request) {
         var user = userRepository
-                .findByEmail(request.getCurrentEmail())
+                .findByEmail(request.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         userChangeEmailValidator.validate(user);
@@ -164,7 +161,29 @@ public class AuthService {
             throw new AuthVerificationTokenException();
         }
 
+        var existingUser = userRepository.findByEmail(request.getNewEmail());
+        if (existingUser.isPresent() && !existingUser.get().getId().equals(user.getId())) {
+            throw new UserEmailConflictException();
+        }
+
         userRepository.changeEmailByUsername(user.getUsername(), request.getNewEmail());
+    }
+
+    @Transactional
+    @AuthenticatedUserMatchRequired(target = "request", exception = UserModificationForbiddenException.class)
+    public void changeUsername(UserChangeUsernameRequest request, HttpServletResponse response) {
+        var user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(UserNotFoundException::new);
+
+        userChangeUsernameValidator.validate(user);
+        var existingUser = userRepository.findByUsername(request.getNewUsername());
+        if (existingUser.isPresent() && !existingUser.get().getId().equals(user.getId())) {
+            throw new UserUsernameConflictException();
+        }
+
+        userRepository.changeUsernameByUsername(user.getUsername(), request.getNewUsername());
+        tokenService.accessToken(request.getNewUsername(), user.getRoles(), response);
     }
 
 }
