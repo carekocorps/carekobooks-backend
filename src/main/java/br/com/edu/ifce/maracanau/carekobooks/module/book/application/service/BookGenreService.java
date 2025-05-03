@@ -6,8 +6,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookGenreQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookGenreValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookGenreValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,6 +24,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookGenreService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final BookGenreRepository bookGenreRepository;
     private final BookGenreValidator bookGenreValidator;
@@ -57,9 +62,10 @@ public class BookGenreService {
                 .findByName(name)
                 .orElseThrow(BookGenreNotFoundException::new);
 
+        entityManager.detach(genre);
         bookGenreMapper.updateModel(genre, request);
         bookGenreValidator.validate(genre);
-        return bookGenreMapper.toResponse(bookGenreRepository.save(genre));
+        return bookGenreMapper.toResponse(bookGenreRepository.save(entityManager.merge(genre)));
     }
 
     @Caching(evict = {

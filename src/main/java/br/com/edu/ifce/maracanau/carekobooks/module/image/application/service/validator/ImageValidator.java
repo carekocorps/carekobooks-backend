@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageContentTypeException;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.service.validator.BaseValidator;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.validator.BaseValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
 import org.springframework.stereotype.Component;
 

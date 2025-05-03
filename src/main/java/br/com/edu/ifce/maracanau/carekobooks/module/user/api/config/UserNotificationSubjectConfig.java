@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.notification.observer.UserEmailNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.notification.subject.UserNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.observer.UserEmailNotificationObserver;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.subject.UserNotificationSubject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

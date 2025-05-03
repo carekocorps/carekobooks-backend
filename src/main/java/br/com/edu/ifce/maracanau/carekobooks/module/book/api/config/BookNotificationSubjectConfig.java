@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.activity.observer.BookActivityWebSocketNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.activity.subject.BookActivityNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.reply.observer.BookThreadReplyWebSocketNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.thread.observer.BookThreadWebSocketNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.notification.thread.thread.subject.BookThreadNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.observer.BookActivityWebSocketNotificationObserver;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.observer.BookThreadReplyWebSocketNotificationObserver;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.observer.BookThreadWebSocketNotificationObserver;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

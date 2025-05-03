@@ -15,7 +15,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

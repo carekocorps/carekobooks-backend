@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookReviewQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookReviewValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;

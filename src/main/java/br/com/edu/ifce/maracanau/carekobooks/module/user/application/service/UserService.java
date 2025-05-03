@@ -11,9 +11,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.validator.UserValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final ImageService imageService;
     private final ImageMapper imageMapper;
@@ -61,9 +66,10 @@ public class UserService {
             user.setImage(imageMapper.toModel(imageService.create(image)));
         }
 
+        entityManager.detach(user);
         userMapper.updateModel(user, request);
         userValidator.validate(user);
-        return userMapper.toResponse(userRepository.save(user));
+        return userMapper.toResponse(userRepository.save(entityManager.merge(user)));
     }
 
     @Transactional

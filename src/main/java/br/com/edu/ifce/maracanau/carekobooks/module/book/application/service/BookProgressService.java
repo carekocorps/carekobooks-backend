@@ -7,7 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookProgressQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.validator.BookProgressValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
