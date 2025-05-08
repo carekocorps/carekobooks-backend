@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

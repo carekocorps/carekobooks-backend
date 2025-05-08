@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
 import jakarta.validation.constraints.*;
 import lombok.Getter;

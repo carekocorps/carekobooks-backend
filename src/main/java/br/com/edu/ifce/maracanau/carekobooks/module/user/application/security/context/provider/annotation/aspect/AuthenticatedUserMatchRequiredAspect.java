@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.aspect;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.validator.BaseValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotVerifiedException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component

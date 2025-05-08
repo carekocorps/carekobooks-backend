@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.qu
 import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSocialSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.enums.UserRelationship;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.BaseApplicationQuery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.review.BookReviewNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookReviewQuery;

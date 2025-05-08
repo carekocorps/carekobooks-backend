@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.genre.BookGenreNameConflictException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.genre.BookGenreNameConflictException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.validator.BaseValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

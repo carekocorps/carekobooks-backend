@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('ROLE_' + T(br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.UserRole).USER.name())")
+@PreAuthorize("hasRole('ROLE_' + T(br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRole).USER.name())")
 public @interface UserRoleRequired {
 }

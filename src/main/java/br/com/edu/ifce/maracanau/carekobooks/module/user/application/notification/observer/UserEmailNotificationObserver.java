@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.observer;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthEmailNotificationException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthEmailNotificationException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import jakarta.mail.MessagingException;

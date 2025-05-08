@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.qu
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookThreadReplySpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThreadReply;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.BaseApplicationQuery;
 import lombok.Getter;
 import lombok.Setter;

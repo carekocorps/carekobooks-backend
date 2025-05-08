@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

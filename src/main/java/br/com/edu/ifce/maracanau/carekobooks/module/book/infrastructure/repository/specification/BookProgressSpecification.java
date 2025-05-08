@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookProgressSpecification {

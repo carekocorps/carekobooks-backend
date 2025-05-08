@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookReview;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookReview;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookReviewSpecification {

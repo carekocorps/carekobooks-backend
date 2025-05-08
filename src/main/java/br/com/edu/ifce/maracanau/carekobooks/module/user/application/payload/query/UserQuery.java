@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.qu
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.specification.UserSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.BaseApplicationQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

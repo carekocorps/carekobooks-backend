@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.q
 import static br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.repository.specification.BaseSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.BaseApplicationSearch;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.model.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;

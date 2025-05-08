@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.book.BookAlreadyContainingGenreException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.book.BookNotContainingGenreException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.book.BookNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.genre.BookGenreNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.genre.BookGenreCountMismatchException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookAlreadyContainingGenreException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotContainingGenreException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.genre.BookGenreNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.genre.BookGenreCountMismatchException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;

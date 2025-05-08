@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.exception.activity.BookActivityNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.activity.BookActivityModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.activity.BookActivityNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookActivityValidator;

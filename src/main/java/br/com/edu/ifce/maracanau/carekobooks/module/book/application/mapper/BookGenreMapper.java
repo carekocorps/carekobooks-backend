@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookGenre;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

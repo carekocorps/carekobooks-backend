@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserNotVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;

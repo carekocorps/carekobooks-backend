@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.oauth2.handler;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

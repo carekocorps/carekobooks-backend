@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageDeletionException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageRetrievalException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageUploadException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageDeletionException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageRetrievalException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageUploadException;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;

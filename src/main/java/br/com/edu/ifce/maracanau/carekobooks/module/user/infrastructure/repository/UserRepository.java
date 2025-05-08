@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

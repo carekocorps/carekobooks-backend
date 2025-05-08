@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthMissingRefreshTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthMissingRefreshTokenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.cookie.extractor.CookieExtractor;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.cookie.factory.CookieFactory;
 import jakarta.servlet.http.HttpServletRequest;

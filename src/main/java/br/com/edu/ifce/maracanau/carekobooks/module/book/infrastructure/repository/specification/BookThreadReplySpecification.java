@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookThreadReply;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThreadReply;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookThreadReplySpecification {

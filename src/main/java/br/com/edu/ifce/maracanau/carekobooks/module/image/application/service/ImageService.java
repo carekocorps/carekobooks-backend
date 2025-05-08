@@ -1,10 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.validator.ImageValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.validator.ImageValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

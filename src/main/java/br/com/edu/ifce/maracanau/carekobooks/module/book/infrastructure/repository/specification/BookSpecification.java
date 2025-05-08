@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.Book;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;

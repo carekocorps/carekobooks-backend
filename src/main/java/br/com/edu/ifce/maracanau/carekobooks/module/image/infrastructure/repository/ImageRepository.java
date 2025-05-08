@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.model.Image;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

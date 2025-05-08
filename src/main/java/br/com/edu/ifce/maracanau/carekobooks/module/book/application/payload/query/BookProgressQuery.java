@@ -2,8 +2,8 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.qu
 
 import static br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.specification.BookProgressSpecification.*;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.BookProgress;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.model.enums.BookProgressStatus;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.BaseApplicationQuery;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

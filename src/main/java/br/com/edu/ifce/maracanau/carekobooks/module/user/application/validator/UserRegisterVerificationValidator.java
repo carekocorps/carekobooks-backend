@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthVerificationTokenTypeException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.auth.AuthVerificationTokenExpiredException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.exception.user.UserAlreadyVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthVerificationTokenTypeException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthVerificationTokenExpiredException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserAlreadyVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.validator.BaseValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.User;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.model.enums.OtpValidationType;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
