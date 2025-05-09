@@ -18,7 +18,6 @@ import java.util.Optional;
 public class ImageService {
 
     private final MinioService minioService;
-
     private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
     private final ImageValidator imageValidator;
@@ -30,8 +29,7 @@ public class ImageService {
     @Transactional
     public ImageResponse create(MultipartFile file) {
         var image = new Image();
-        image.setName(minioService.upload(file));
-        image.setUrl(minioService.findUrlByFilename(image.getName()));
+        image.setName(minioService.create(file));
         image.setContentType(file.getContentType());
         image.setSizeInBytes(file.getSize());
         imageValidator.validate(image);
@@ -44,7 +42,7 @@ public class ImageService {
                 .findById(id)
                 .orElseThrow(ImageNotFoundException::new);
 
-        minioService.deleteByFilename(image.getName());
+        minioService.delete(image.getName());
         imageRepository.deleteById(id);
     }
 

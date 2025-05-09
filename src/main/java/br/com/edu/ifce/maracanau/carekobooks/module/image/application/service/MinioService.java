@@ -22,38 +22,24 @@ public class MinioService {
 
     private final MinioClient minioClient;
 
-    public String findUrlByFilename(String filename) {
+    public String create(MultipartFile file) {
         try {
-            return minioClient
-                    .getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
-                            .bucket(minioBucket)
-                            .object(filename)
-                            .method(Method.GET)
-                            .build()
-                    );
-        } catch (Exception e) {
-            throw new ImageRetrievalException(e.getMessage());
-        }
-    }
-
-    public String upload(MultipartFile file) {
-        try {
-            var fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            var filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(minioBucket)
-                    .object(fileName)
+                    .object(filename)
                     .stream(file.getInputStream(), file.getSize(), -1)
                     .contentType(file.getContentType())
                     .build()
             );
 
-            return fileName;
+            return filename;
         } catch (Exception e) {
             throw new ImageUploadException(e.getMessage());
         }
     }
 
-    public void deleteByFilename(String filename) {
+    public void delete(String filename) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioBucket).object(filename).build());
         } catch (Exception e) {

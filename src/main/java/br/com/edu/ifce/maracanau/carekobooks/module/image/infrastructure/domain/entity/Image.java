@@ -21,9 +21,6 @@ public class Image extends BaseModel {
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 1024, nullable = false)
-    private String url;
-
     @Column(name = "content_type", length = 50, nullable = false)
     private String contentType;
 
