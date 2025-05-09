@@ -58,7 +58,7 @@ public interface BookControllerDocs {
     ResponseEntity<BookResponse> find(@PathVariable Long id);
 
     @Operation(
-            summary = "Create a book",
+            summary = "Create a book [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             requestBody = @RequestBody(
@@ -89,7 +89,7 @@ public interface BookControllerDocs {
     ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image);
 
     @Operation(
-            summary = "Update a book",
+            summary = "Update a book [ADMIN]",
             tags = {"Book"},
             requestBody = @RequestBody(
                     content = @Content(
@@ -111,7 +111,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image);
 
     @Operation(
-            summary = "Assign a book genre to a book by ID",
+            summary = "Assign a book genre to a book by ID [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -125,7 +125,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> assignGenre(@PathVariable Long id, @PathVariable String genreName);
 
     @Operation(
-            summary = "Unassign a book genre to a book by ID",
+            summary = "Unassign a book genre to a book by ID [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -139,7 +139,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> unassignGenre(@PathVariable Long id, @PathVariable String genreName);
 
     @Operation(
-            summary = "Update a book image by ID",
+            summary = "Update a book image by ID [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -155,7 +155,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile avatar);
 
     @Operation(
-            summary = "Delete a book image by ID",
+            summary = "Delete a book image by ID [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -169,7 +169,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> unassignImage(@PathVariable Long id);
 
     @Operation(
-            summary = "Delete a book by ID",
+            summary = "Delete a book by ID [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -183,7 +183,7 @@ public interface BookControllerDocs {
     ResponseEntity<Void> delete(@PathVariable Long id);
 
     @Operation(
-            summary = "Clear book cache",
+            summary = "Clear book cache [ADMIN]",
             tags = {"Book"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {

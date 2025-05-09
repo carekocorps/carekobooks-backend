@@ -30,6 +30,7 @@ public interface AuthControllerDocs {
     @Operation(
             summary = "Refresh a user authentication token",
             tags = {"Auth"},
+            security = @SecurityRequirement(name = "refresh_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),

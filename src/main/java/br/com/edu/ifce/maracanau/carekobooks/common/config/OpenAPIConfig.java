@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
         type = SecuritySchemeType.OAUTH2,
         flows = @OAuthFlows(
                 implicit = @OAuthFlow(
-                        authorizationUrl = "http://localhost:8080/oauth2/authorization/google"
+                        authorizationUrl = "/oauth2/authorization/google"
                 )
         )
 )

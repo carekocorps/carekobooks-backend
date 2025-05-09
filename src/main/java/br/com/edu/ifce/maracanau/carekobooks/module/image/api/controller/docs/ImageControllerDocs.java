@@ -31,7 +31,7 @@ public interface ImageControllerDocs {
     ResponseEntity<ImageResponse> find(@PathVariable Long id);
 
     @Operation(
-            summary = "Delete a image by ID",
+            summary = "Delete a image by ID [ADMIN]",
             tags = {"Image"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {

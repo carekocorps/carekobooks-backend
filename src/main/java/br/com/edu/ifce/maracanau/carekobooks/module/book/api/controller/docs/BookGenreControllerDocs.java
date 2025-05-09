@@ -54,7 +54,7 @@ public interface BookGenreControllerDocs {
     ResponseEntity<BookGenreResponse> find(@PathVariable String name);
 
     @Operation(
-            summary = "Create a book genre",
+            summary = "Create a book genre [ADMIN]",
             tags = {"Book Genre"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -75,7 +75,7 @@ public interface BookGenreControllerDocs {
     ResponseEntity<BookGenreResponse> create(@RequestBody @Valid BookGenreRequest request);
 
     @Operation(
-            summary = "Update a book genre",
+            summary = "Update a book genre [ADMIN]",
             tags = {"Book Genre"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -89,7 +89,7 @@ public interface BookGenreControllerDocs {
     ResponseEntity<Void> update(@PathVariable String name, @RequestBody @Valid BookGenreRequest request);
 
     @Operation(
-            summary = "Delete a book genre by name",
+            summary = "Delete a book genre by name [ADMIN]",
             tags = {"Book Genre"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
@@ -103,7 +103,7 @@ public interface BookGenreControllerDocs {
     ResponseEntity<Void> delete(@PathVariable String name);
 
     @Operation(
-            summary = "Clear book genre cache",
+            summary = "Clear book genre cache [ADMIN]",
             tags = {"Book Genre"},
             security = @SecurityRequirement(name = "access_token"),
             responses = {
