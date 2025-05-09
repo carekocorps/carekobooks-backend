@@ -28,6 +28,11 @@ import org.springframework.context.annotation.Configuration;
         in = SecuritySchemeIn.COOKIE
 )
 @SecurityScheme(
+        name = "refresh_token",
+        type = SecuritySchemeType.APIKEY,
+        in = SecuritySchemeIn.COOKIE
+)
+@SecurityScheme(
         name = "google_oauth2",
         type = SecuritySchemeType.OAUTH2,
         flows = @OAuthFlows(

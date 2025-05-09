@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.concurrent.TimeUnit;
-
 @RequiredArgsConstructor
 @Service
 public class MinioService {
@@ -31,7 +29,6 @@ public class MinioService {
                             .bucket(minioBucket)
                             .object(filename)
                             .method(Method.GET)
-                            .expiry(7, TimeUnit.DAYS)
                             .build()
                     );
         } catch (Exception e) {
