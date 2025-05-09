@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ImageService {
 
     private final MinioService minioService;
+
     private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
     private final ImageValidator imageValidator;

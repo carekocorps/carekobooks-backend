@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller.docs.ImageControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +22,6 @@ public class ImageController implements BaseController, ImageControllerDocs {
     public ResponseEntity<ImageResponse> find(@PathVariable Long id) {
         var response = imageService.find(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @Override
-    @AdminRoleRequired
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        imageService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
 }
