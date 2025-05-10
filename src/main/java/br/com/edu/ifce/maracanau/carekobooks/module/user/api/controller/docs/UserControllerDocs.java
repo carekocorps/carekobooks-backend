@@ -95,7 +95,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile avatar);
+    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile avatar);
 
     @Operation(
             summary = "Delete a user image by username",

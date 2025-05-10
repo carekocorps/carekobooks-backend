@@ -76,7 +76,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile image) {
+    public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam(required = false) MultipartFile image) {
         bookService.changeImage(id, image);
         return ResponseEntity.noContent().build();
     }

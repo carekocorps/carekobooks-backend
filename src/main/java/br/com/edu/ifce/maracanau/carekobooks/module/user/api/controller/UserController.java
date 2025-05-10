@@ -50,7 +50,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @UserRoleRequired
     @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam MultipartFile image) {
+    public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile image) {
         userService.changeImage(username, image);
         return ResponseEntity.noContent().build();
     }

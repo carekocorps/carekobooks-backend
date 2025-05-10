@@ -26,12 +26,11 @@ public abstract class ImageMapper {
     @Mapping(
             target = "url",
             expression = """
-                    java(
-                            UriComponentsBuilder
-                                    .fromUriString(outerEndpoint)
-                                    .pathSegment(bucket)
-                                    .pathSegment(image.getName())
-                                    .toUriString()
+                    java(UriComponentsBuilder
+                            .fromUriString(outerEndpoint)
+                            .pathSegment(bucket)
+                            .pathSegment(image.getName())
+                            .toUriString()
                     )
                     """
     )

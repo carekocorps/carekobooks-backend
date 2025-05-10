@@ -62,6 +62,10 @@ public class UserService {
             throw new UserNotVerifiedException();
         }
 
+        if (user.getImage() != null) {
+            imageService.delete(user.getImage().getId());
+        }
+
         if (image != null) {
             user.setImage(imageMapper.toModel(imageService.create(image)));
         }
@@ -83,17 +87,18 @@ public class UserService {
             throw new UserNotVerifiedException();
         }
 
+        if (image == null && user.getImage() == null) {
+            throw new ImageNotFoundException();
+        }
+
+        if (user.getImage() != null) {
+            imageService.delete(user.getImage().getId());
+        }
+
         user.setImage(Optional
                 .ofNullable(image)
                 .map(file -> imageMapper.toModel(imageService.create(file)))
-                .orElseGet(() -> {
-                    if (user.getImage() == null) {
-                        throw new ImageNotFoundException();
-                    }
-
-                    imageService.delete(user.getImage().getId());
-                    return null;
-                })
+                .orElse(null)
         );
 
         userRepository.save(user);

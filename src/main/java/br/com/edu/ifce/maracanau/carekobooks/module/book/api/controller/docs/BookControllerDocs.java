@@ -152,7 +152,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam MultipartFile avatar);
+    ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam(required = false) MultipartFile avatar);
 
     @Operation(
             summary = "Delete a book image by ID [ADMIN]",

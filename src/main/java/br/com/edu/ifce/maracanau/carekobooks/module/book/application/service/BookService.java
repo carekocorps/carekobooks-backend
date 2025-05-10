@@ -76,6 +76,10 @@ public class BookService {
                 .findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
+        if (book.getImage() != null) {
+            imageService.delete(book.getImage().getId());
+        }
+
         if (image != null) {
             book.setImage(imageMapper.toModel(imageService.create(image)));
         }
@@ -143,17 +147,18 @@ public class BookService {
                 .findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
+        if (image == null && book.getImage() == null) {
+            throw new ImageNotFoundException();
+        }
+
+        if (book.getImage() != null) {
+            imageService.delete(book.getImage().getId());
+        }
+
         book.setImage(Optional
                 .ofNullable(image)
                 .map(file -> imageMapper.toModel(imageService.create(file)))
-                .orElseGet(() -> {
-                    if (book.getImage() == null) {
-                        throw new ImageNotFoundException();
-                    }
-
-                    imageService.delete(book.getImage().getId());
-                    return null;
-                })
+                .orElse(null)
         );
 
         bookRepository.save(book);
