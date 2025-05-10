@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.config;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.oauth2.handler.SocialLoginSuccessHandler;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.converter.JwtAuthenticationConverter;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.filter.JwtTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,19 +14,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
 public class SecurityFilterConfig {
 
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
-
-    @Autowired
-    private JwtAuthenticationConverter jwtAuthenticationConverter;
-
-    @Autowired
-    private SocialLoginSuccessHandler socialLoginSuccessHandler;
+    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final SocialLoginSuccessHandler socialLoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

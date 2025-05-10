@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Slf4j
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -37,7 +39,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             var userDetails = userDetailsService.loadUserByUsername(jwt.getSubject());
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (JwtException | UsernameNotFoundException ignored) {
+        } catch (JwtException e) {
+            log.warn("Failed to decode JWT: token might be expired, malformed, or invalid signature");
+        } catch (UsernameNotFoundException e) {
+            log.warn("User not found in database for JWT authentication");
         }
 
         filterChain.doFilter(request, response);

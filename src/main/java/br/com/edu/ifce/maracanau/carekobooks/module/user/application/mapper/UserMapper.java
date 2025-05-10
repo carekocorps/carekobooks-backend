@@ -7,6 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import lombok.Setter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class UserMapper {
 
-    @Autowired
+    @Setter(onMethod_ = @Autowired)
     private UserRepository userRepository;
 
     @IgnoreBaseModelFields

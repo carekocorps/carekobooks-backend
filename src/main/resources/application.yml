@@ -59,6 +59,7 @@ security:
       refresh:
         cookie-name: refresh_token
         expiry-in-seconds: 10800
+    roles-claim-name: roles
 springdoc:
   swagger-ui:
     operations-sorter: method

@@ -25,6 +25,9 @@ public class TokenService {
     @Value("${security.jwt.token.refresh.expiry-in-seconds}")
     private Integer refreshTokenExpiryInSeconds;
 
+    @Value("${security.jwt.roles-claim-name}")
+    private String rolesClaimName;
+
     private final CookieExtractor cookieExtractor;
     private final CookieFactory cookieFactory;
 
@@ -46,7 +49,7 @@ public class TokenService {
         }
 
         var jwt = jwtDecoder.decode(cookie);
-        var roles = Optional.ofNullable(jwt.getClaimAsStringList("roles")).orElse(List.of());
+        var roles = Optional.ofNullable(jwt.getClaimAsStringList(rolesClaimName)).orElse(List.of());
         accessToken(jwt.getSubject(), roles, response);
     }
 
@@ -58,7 +61,7 @@ public class TokenService {
                 .subject(username)
                 .issuedAt(createdAt)
                 .expiresAt(expiresAt)
-                .claim("roles", roles)
+                .claim(rolesClaimName, roles)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -70,7 +73,7 @@ public class TokenService {
                 .subject(username)
                 .issuedAt(createdAt)
                 .expiresAt(expiresAt)
-                .claim("roles", roles)
+                .claim(rolesClaimName, roles)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

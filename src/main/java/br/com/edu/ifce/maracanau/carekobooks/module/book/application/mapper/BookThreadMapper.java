@@ -6,6 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThread;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 )
 public abstract class BookThreadMapper {
 
-    @Autowired
+    @Setter(onMethod_ = @Autowired)
     protected BookThreadRepository bookThreadRepository;
 
     @IgnoreBaseModelFields
