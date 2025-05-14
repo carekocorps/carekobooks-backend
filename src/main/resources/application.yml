@@ -50,8 +50,8 @@ spring:
 security:
   jwt:
     key:
-      private: classpath:app.key
-      public: classpath:app.pub
+      private: ${JWT_PRIVATE_KEY_PATH:file:.secrets/keys/app.key}
+      public: ${JWT_PUBLIC_KEY_PATH:file:.secrets/keys/app.pub}
     token:
       access:
         cookie-name: access_token

@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ..
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: backend
     ports:
       - "8080:8080"
@@ -19,6 +19,8 @@ services:
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_PRIVATE_KEY_PATH: file:/app/.secrets/keys/app.key
+      JWT_PUBLIC_KEY_PATH: file:/app/.secrets/keys/app.pub
       MINIO_OUTER_ENDPOINT: ${MINIO_OUTER_ENDPOINT}
       MINIO_INNER_ENDPOINT: http://minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
