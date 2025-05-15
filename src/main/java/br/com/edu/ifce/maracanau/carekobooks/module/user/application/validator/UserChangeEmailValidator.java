@@ -1,0 +1,50 @@
+package br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator;
+
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthVerificationTokenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthVerificationTokenExpiredException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotVerifiedException;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.validator.BaseValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+
+@Component
+public class UserChangeEmailValidator implements BaseValidator<User> {
+
+    public void validate(User user) {
+        if (isNotEnabled(user)) {
+            throw new UserNotVerifiedException();
+        }
+
+        if (isOtpEmpty(user)) {
+            throw new AuthVerificationTokenException();
+        }
+
+        if (isOtpValidationTypeInvalid(user)) {
+            throw new AuthVerificationTokenException();
+        }
+
+        if (isOtpExpired(user)) {
+            throw new AuthVerificationTokenExpiredException();
+        }
+    }
+
+    private boolean isNotEnabled(User user) {
+        return !user.isEnabled();
+    }
+
+    private boolean isOtpEmpty(User user) {
+        return user.getOtp() == null;
+    }
+
+    private boolean isOtpValidationTypeInvalid(User user) {
+        return user.getOtpValidationType() == OtpValidationType.EMAIL;
+    }
+
+    private boolean isOtpExpired(User user) {
+        return user.getOtpExpiresAt().isBefore(LocalDateTime.now());
+    }
+
+}

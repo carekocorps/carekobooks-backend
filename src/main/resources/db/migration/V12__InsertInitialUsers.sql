@@ -1,0 +1,4 @@
+insert into users (id, created_at, updated_at, description, display_name, email, email_verification_token, email_verification_token_expires_at, is_enabled, password, password_verification_token, password_verification_token_expires_at, role, username, verification_token, verification_token_expires_at, image_id)
+values  (1, '2025-04-24 14:29:27.820479', '2025-04-24 14:29:27.820479', 'string', 'string', 'string@gmail.com', null, null, true, '$2a$10$ZBJMNFd4cXLMHWZwqIPkH.gSUnwxgNDKkTcqVxfnZ0M32aecdJGFG', null, null, 'USER', 'string', null, null, null),
+        (2, '2025-04-24 14:31:13.048216', '2025-04-24 14:31:13.048216', 'admin', 'admin', 'admin@gmail.com', null, null, true, '$2a$10$TDFC0SC0AL.kUYtJuftLruWzv8NT8MpH6gNKWI6mPEBCh/x4mVCPW', null, null, 'ADMIN', 'admin', null, null, null)
+on conflict (username) do nothing;
