@@ -3,6 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.o
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.TokenService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,11 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+
+    @PostConstruct
+    public void init() {
+        setDefaultTargetUrl("/login/success");
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {

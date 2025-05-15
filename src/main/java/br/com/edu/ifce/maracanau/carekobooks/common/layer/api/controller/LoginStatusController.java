@@ -9,11 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Hidden
 @RestController
 @RequestMapping("/")
-public class RootController implements BaseController {
+public class LoginStatusController implements BaseController {
 
-    @GetMapping
-    public ResponseEntity<String> root() {
-        return ResponseEntity.ok("CarekoBooks");
+    @GetMapping("/login/success")
+    public ResponseEntity<Void> success() {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/login/failure")
+    public ResponseEntity<Void> failure() {
+        return ResponseEntity.ok().build();
     }
 
 }
