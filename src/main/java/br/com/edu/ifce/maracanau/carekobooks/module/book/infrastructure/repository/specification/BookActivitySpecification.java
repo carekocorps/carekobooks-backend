@@ -24,6 +24,13 @@ public class BookActivitySpecification {
                 cb.equal(root.get("user").get("username"), username);
     }
 
+    public static Specification<BookActivity> followerUsernameEqual(String username) {
+        return (root, query, cb) -> {
+            var users = root.get("user").get("followers");
+            return cb.equal(users.get("username"), username);
+        };
+    }
+
     public static Specification<BookActivity> bookIdEqual(Long bookId) {
         return (root, query, cb) ->
                 cb.equal(root.get("book").get("id"), bookId);

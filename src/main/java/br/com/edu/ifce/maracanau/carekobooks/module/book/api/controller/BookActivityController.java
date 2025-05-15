@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookActivityControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityFollowingQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
@@ -24,6 +25,13 @@ public class BookActivityController implements BaseController, BookActivityContr
     @Override
     @GetMapping
     public ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivityQuery query) {
+        var responses = bookActivityService.search(query);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Override
+    @GetMapping("/following")
+    public ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivityFollowingQuery query) {
         var responses = bookActivityService.search(query);
         return ResponseEntity.ok(responses);
     }

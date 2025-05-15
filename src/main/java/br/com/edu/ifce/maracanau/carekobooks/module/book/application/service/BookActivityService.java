@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityFollowingQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.activity.BookActivityModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.activity.BookActivityNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
@@ -29,6 +30,13 @@ public class BookActivityService {
     private final BookActivityNotificationSubject bookActivityNotificationSubject;
 
     public ApplicationPage<BookActivityResponse> search(BookActivityQuery query) {
+        var specification = query.getSpecification();
+        var sort = query.getSort();
+        var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
+        return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
+    }
+
+    public ApplicationPage<BookActivityResponse> search(BookActivityFollowingQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
