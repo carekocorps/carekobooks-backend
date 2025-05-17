@@ -1,0 +1,22 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: deploy
+        run: |
+          cd ~/carekobooks-backend
+          docker compose stop backend
+          docker compose rm -f backend
+          docker compose build backend --no-cache
+          docker compose --env-file .secrets/.env up -d --no-deps backend
