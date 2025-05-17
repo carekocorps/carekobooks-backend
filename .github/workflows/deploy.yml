@@ -9,13 +9,40 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    environment: carekenvironment
+    env:
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      MINIO_OUTER_ENDPOINT: ${{ secrets.MINIO_OUTER_ENDPOINT }}
+      MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+      MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+      MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
-
+      - name: keygen
+        run: bash keygen.sh
+      - name: .env
+        run: |
+          mkdir -p .secrets
+          cat <<EOF > .secrets/.env
+          DB_NAME=${DB_NAME}
+          DB_PASSWORD=${DB_PASSWORD}
+          EMAIL_USERNAME=${EMAIL_USERNAME}
+          EMAIL_PASSWORD=${EMAIL_PASSWORD}
+          GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+          GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+          MINIO_OUTER_ENDPOINT=${MINIO_OUTER_ENDPOINT}
+          MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+          MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+          MINIO_BUCKET=${MINIO_BUCKET}
+          EOF
       - name: deploy
         run: |
-          cd ~/carekobooks-backend
           docker compose stop backend
           docker compose rm -f backend
           docker compose build backend --no-cache

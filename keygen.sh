@@ -5,9 +5,11 @@ if ! command -v openssl &> /dev/null; then
     exit 1
 fi
 
-readonly PRIVATE_KEY="app.key"
-readonly PUBLIC_KEY="app.pub"
+readonly OUTPUT_DIR=".secrets/keys"
+readonly PRIVATE_KEY="$OUTPUT_DIR/app.key"
+readonly PUBLIC_KEY="$OUTPUT_DIR/app.pub"
 
+mkdir -p "$OUTPUT_DIR"
 openssl genpkey -algorithm RSA -out "$PRIVATE_KEY" -pkeyopt rsa_keygen_bits:2048 &> /dev/null
 if [ ! -f "$PRIVATE_KEY" ]; then
     echo "Error generating the private key" >&2
