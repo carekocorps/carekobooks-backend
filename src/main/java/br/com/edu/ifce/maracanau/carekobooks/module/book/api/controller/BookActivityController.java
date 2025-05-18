@@ -30,7 +30,7 @@ public class BookActivityController implements BaseController, BookActivityContr
     }
 
     @Override
-    @GetMapping("/following")
+    @GetMapping("/social/following")
     public ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivityFollowingQuery query) {
         var responses = bookActivityService.search(query);
         return ResponseEntity.ok(responses);

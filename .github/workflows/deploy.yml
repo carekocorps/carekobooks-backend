@@ -22,7 +22,7 @@ env:
   SONAR_JDBC_PASSWORD: ${{ secrets.SONAR_JDBC_PASSWORD }}
 
 jobs:
-  build:
+  analyze:
     runs-on: self-hosted
     steps:
       - name: checkout
@@ -30,33 +30,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: build
-        run: |
-          docker compose stop backend
-          docker compose rm -f backend
-          docker compose build backend --no-cache
+      - name: java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
 
-  analyze:
-    runs-on: self-hosted
-    needs: build
-    steps:
+      - name: maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       - name: sonarqube
-        run: |
-          docker run --rm \
-            -v "$(pwd)":/app \
-            -v "$HOME/.m2":/root/.m2 \
-            -w /app \
-            maven:3.9-eclipse-temurin-21 \
-            mvn verify sonar:sonar \
-              -Dsonar.projectKey=carekobooks-backend \
-              -Dsonar.host.url=${SONAR_HOST_URL} \
-              -Dsonar.login=${SONAR_TOKEN} \
-              -DskipTests=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: | 
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \ 
+            -Dsonar.projectKey=carekobooks-backend \
+            -DskipTests=true
 
   deploy:
     runs-on: self-hosted
     needs: analyze
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
       - name: keygen
         run: bash keygen.sh
 
@@ -74,7 +78,12 @@ jobs:
           MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
           MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
           MINIO_BUCKET=${MINIO_BUCKET}
+          SONAR_JDBC_PASSWORD=${SONAR_JDBC_PASSWORD}
           EOF
 
       - name: deploy
-        run: docker compose up --env-file .env -d --no-deps backend
+        run: |
+          docker compose stop backend
+          docker compose rm -f backend
+          docker compose build backend
+          docker compose up --env-file .secrets/.env -d --no-deps backend
