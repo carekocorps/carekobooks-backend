@@ -8,7 +8,7 @@ on:
 
 jobs:
   code_quality:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: carekenvironment
     steps:
       - name: checkout
@@ -82,4 +82,4 @@ jobs:
           docker compose stop backend
           docker compose rm -f backend
           docker compose build backend
-          docker compose up --env-file .secrets/.env -d --no-deps backend
+          docker compose --env-file .secrets/.env up -d --no-deps backend
