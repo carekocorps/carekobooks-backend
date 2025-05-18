@@ -9,6 +9,7 @@ on:
 jobs:
   code_quality:
     runs-on: self-hosted
+    environment: carekenvironment
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -22,7 +23,7 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: maven
+      - name: maven cache
         uses: actions/cache@v3
         with:
           path: ~/.m2
@@ -39,6 +40,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs: code_quality
+    environment: carekenvironment
     env:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
