@@ -10,40 +10,50 @@ jobs:
   build:
     runs-on: self-hosted
     environment: carekenvironment
-    env:
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      MINIO_OUTER_ENDPOINT: ${{ secrets.MINIO_OUTER_ENDPOINT }}
-      MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-      MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-      MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: sonarqube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=carekobooks-backend -DskipTests=true
+
       - name: keygen
         run: bash keygen.sh
-      - name: .env
-        run: |
-          mkdir -p .secrets
-          cat <<EOF > .secrets/.env
-          DB_NAME=${DB_NAME}
-          DB_PASSWORD=${DB_PASSWORD}
-          EMAIL_USERNAME=${EMAIL_USERNAME}
-          EMAIL_PASSWORD=${EMAIL_PASSWORD}
-          GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-          GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-          MINIO_OUTER_ENDPOINT=${MINIO_OUTER_ENDPOINT}
-          MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-          MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
-          MINIO_BUCKET=${MINIO_BUCKET}
-          EOF
+
       - name: deploy
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          MINIO_OUTER_ENDPOINT: ${{ secrets.MINIO_OUTER_ENDPOINT }}
+          MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+          MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+          MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
         run: |
           docker compose stop backend
           docker compose rm -f backend
           docker compose build backend --no-cache
-          docker compose --env-file .secrets/.env up -d --no-deps backend
+          docker compose up -d --no-deps backend
