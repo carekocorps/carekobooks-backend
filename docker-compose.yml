@@ -26,6 +26,8 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
+    volumes:
+      - ./.secrets/keys:/app/.secrets/keys:ro
     restart: unless-stopped
     networks:
       - carekonet
