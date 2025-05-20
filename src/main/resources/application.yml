@@ -62,6 +62,7 @@ security:
     roles-claim-name: roles
 springdoc:
   swagger-ui:
+    custom-css-path: /static/swagger-ui.css
     operations-sorter: method
     tags-sorter: alpha
 minio:

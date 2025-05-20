@@ -6,8 +6,10 @@ import org.springdoc.core.properties.SwaggerUiOAuthProperties;
 import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springdoc.webmvc.ui.SwaggerIndexPageTransformer;
 import org.springdoc.webmvc.ui.SwaggerWelcomeCommon;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.resource.ResourceTransformerChain;
 import org.springframework.web.servlet.resource.TransformedResource;
 
@@ -16,15 +18,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
+@Component
 public class SwaggerCustomizer extends SwaggerIndexPageTransformer {
 
-    private static final String CUSTOM_CSS_PATH = "/static/swagger-ui.css";
+    @Value("${springdoc.swagger-ui.custom-css-path}")
+    private String cssPath;
 
     public SwaggerCustomizer(
             final SwaggerUiConfigProperties swaggerUiConfig,
             final SwaggerUiOAuthProperties swaggerUiOAuthProperties,
             final SwaggerWelcomeCommon swaggerWelcomeCommon,
-            final ObjectMapperProvider objectMapperProvider) {
+            final ObjectMapperProvider objectMapperProvider
+    ) {
         super(swaggerUiConfig, swaggerUiOAuthProperties, swaggerWelcomeCommon, objectMapperProvider);
     }
 
@@ -48,7 +53,7 @@ public class SwaggerCustomizer extends SwaggerIndexPageTransformer {
     private String getTransformedHtml(String html) {
         var linkTag = """
             <link rel="stylesheet" type="text/css" href="%s"/>
-            """.formatted(CUSTOM_CSS_PATH);
+            """.formatted(cssPath);
 
         return html.replace("</head>", linkTag + "</head>");
     }

@@ -44,6 +44,7 @@ public abstract class UserMapper {
     @IgnoreBaseModelFields
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "email", ignore = true)
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "otp", ignore = true)
