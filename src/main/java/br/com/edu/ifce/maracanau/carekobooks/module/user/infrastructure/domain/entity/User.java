@@ -43,8 +43,14 @@ public class User extends BaseModel implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(name = "temp_email")
+    private String tempEmail;
+
     @Column(nullable = false)
     private String password;
+
+    @Column(name = "temp_password")
+    private String tempPassword;
 
     @Column(length = 1000)
     private String description;

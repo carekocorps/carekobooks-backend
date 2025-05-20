@@ -25,10 +25,10 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> login(@RequestBody @Valid UserLoginRequest request, HttpServletResponse response);
+    ResponseEntity<Void> signin(@RequestBody @Valid UserSignInRequest request, HttpServletResponse response);
 
     @Operation(
-            summary = "Refresh a user authentication token",
+            summary = "Generate a new access token using the refresh token",
             tags = {"Auth"},
             security = @SecurityRequirement(name = "refresh_token"),
             responses = {
@@ -40,18 +40,7 @@ public interface AuthControllerDocs {
     ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response);
 
     @Operation(
-            summary = "Generate One-Time Password (OTP)",
-            tags = {"Auth"},
-            responses = {
-                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<Void> generateOtp(@RequestBody UserGenerateOtpRequest request);
-
-    @Operation(
-            summary = "Register a user",
+            summary = "Register a new user account",
             tags = {"Auth"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -72,41 +61,43 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> register(@RequestPart @Valid UserRegisterRequest request, @RequestParam(required = false) MultipartFile image);
+    ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image, HttpServletResponse response);
 
     @Operation(
-            summary = "Verify a user's account",
+            summary = "Validate the OTP (One-Time Password) sent to the user",
             tags = {"Auth"},
-            responses = {
-                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<Void> verify(@RequestBody @Valid UserRegisterVerificationRequest request);
-
-    @Operation(
-            summary = "Change a user's password",
-            tags = {"Auth"},
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> recoverPassword(UserRecoverPasswordRequest request);
+    ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request, HttpServletResponse response);
 
     @Operation(
-            summary = "Change a user's email",
+            summary = "Initiate a user's password recovery",
             tags = {"Auth"},
+            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request);
+    ResponseEntity<Void> recoverPassword(@RequestBody @Valid UserPasswordRecoveryRequest request);
+
+    @Operation(
+            summary = "Initiate a user's email change",
+            tags = {"Auth"},
+            security = @SecurityRequirement(name = "access_token"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> changeEmail(@RequestBody @Valid UserEmailChangeRequest request);
 
     @Operation(
             summary = "Change a user's username",
@@ -118,6 +109,6 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> changeUsername(@RequestBody @Valid UserChangeUsernameRequest request, HttpServletResponse response);
+    ResponseEntity<Void> changeUsername(@RequestBody @Valid UserUsernameChangeRequest request, HttpServletResponse response);
 
 }

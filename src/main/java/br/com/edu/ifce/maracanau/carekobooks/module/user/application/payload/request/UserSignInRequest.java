@@ -1,18 +1,21 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserChangeUsernameRequest implements BaseRequest {
+public class UserSignInRequest implements BaseRequest {
 
-    @Username
+    @NotBlank
+    @Size(max = 255)
     private String username;
 
-    @Username
-    private String newUsername;
+    @NotBlank
+    @Size(max = 255)
+    private String password;
 
 }

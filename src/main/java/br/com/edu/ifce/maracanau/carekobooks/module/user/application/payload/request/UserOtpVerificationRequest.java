@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,12 +11,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserGenerateOtpRequest implements BaseRequest {
+public class UserOtpVerificationRequest implements BaseRequest {
+
+    @Username
+    private String username;
 
     @NotBlank
-    @Email
-    @Size(max = 255)
-    private String email;
+    @Size(min = 8, max = 8)
+    private String otp;
 
     @NotNull
     private OtpValidationType validationType;
