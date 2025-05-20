@@ -19,15 +19,27 @@ services:
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      JWT_PRIVATE_KEY_PATH: file:/app/.secrets/keys/app.key
-      JWT_PUBLIC_KEY_PATH: file:/app/.secrets/keys/app.pub
+      JWT_PRIVATE_KEY_PATH: /app/.secrets/keys/app.key
+      JWT_PUBLIC_KEY_PATH: /app/.secrets/keys/app.pub
       MINIO_OUTER_ENDPOINT: ${MINIO_OUTER_ENDPOINT}
       MINIO_INNER_ENDPOINT: http://minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
     volumes:
-      - ./.secrets/keys:/app/.secrets/keys:ro
+      - backend-data:/app/.secrets/keys
+    entrypoint: >
+      /bin/sh -c '
+        if [ ! -f "$${JWT_PRIVATE_KEY_PATH}" ] || [ ! -f "$${JWT_PUBLIC_KEY_PATH}" ]; then
+          openssl genpkey -algorithm RSA -out "$${JWT_PRIVATE_KEY_PATH}" -pkeyopt rsa_keygen_bits:2048 &> /dev/null
+          openssl rsa -pubout -in "$${JWT_PRIVATE_KEY_PATH}" -out "$${JWT_PUBLIC_KEY_PATH}" &> /dev/null
+          echo "RSA Keys generated successfully"
+        else
+          echo "Pre-existing RSA keys loaded successfully."
+        fi
+        exec $0 "$@"
+      '
+    command: java -jar app.jar
     restart: unless-stopped
     networks:
       - carekonet
@@ -105,7 +117,7 @@ services:
       - sonarnet
 
   sonarqube-db:
-    image: postgres:13
+    image: postgres:latest
     container_name: sonarqube-db
     ports:
       - "5433:5432"
@@ -119,6 +131,7 @@ services:
       - sonarnet
 
 volumes:
+  backend-data:
   postgres-data:
   minio-data:
   redis-data:
