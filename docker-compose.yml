@@ -35,7 +35,7 @@ services:
           openssl rsa -pubout -in "$${JWT_PRIVATE_KEY_PATH}" -out "$${JWT_PUBLIC_KEY_PATH}" &> /dev/null
           echo "RSA Keys generated successfully"
         else
-          echo "Pre-existing RSA keys loaded successfully."
+          echo "Pre-existing RSA keys loaded successfully"
         fi
         exec $0 "$@"
       '
