@@ -12,4 +12,8 @@ public class UserEmailConflictException extends RuntimeException {
         super(DEFAULT_ERROR_MESSAGE);
     }
 
+    public UserEmailConflictException(String message) {
+        super(message);
+    }
+
 }

@@ -1,7 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -25,48 +24,63 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Transactional
     @Query("""
         UPDATE User u
-        SET u.otp = NULL,
-            u.otpValidationType = NULL,
-            u.otpExpiresAt = NULL,
-            u.isEnabled = TRUE
-        WHERE u.username = :username
+        SET u.otp = :otp,
+            u.otpValidationType = 'EMAIL',
+            u.otpExpiresAt = :otpExpiresAt,
+            u.tempEmail = :newEmail
+        WHERE u.email = :email
     """)
-    void verifyByUsername(String username);
+    void changeTempEmailValuesByEmail(String email, String newEmail, String otp, LocalDateTime otpExpiresAt);
 
     @Modifying
     @Transactional
     @Query("""
         UPDATE User u
         SET u.otp = :otp,
-            u.otpValidationType = :otpValidationType,
-            u.otpExpiresAt = :otpExpiresAt
+            u.otpValidationType = 'PASSWORD',
+            u.otpExpiresAt = :otpExpiresAt,
+            u.tempPassword = :password
         WHERE u.username = :username
     """)
-    void changeOtpValuesByUsername(String username, String otp, OtpValidationType otpValidationType, LocalDateTime otpExpiresAt);
+    void changeTempPasswordValuesByUsername(String username, String password, String otp, LocalDateTime otpExpiresAt);
 
     @Modifying
     @Transactional
     @Query("""
         UPDATE User u
-        SET u.password = :password,
-            u.otp = NULL,
+        SET u.otp = NULL,
             u.otpValidationType = NULL,
-            u.otpExpiresAt = NULL
+            u.otpExpiresAt = NULL,
+            u.isEnabled = TRUE
         WHERE u.username = :username
     """)
-    void changePasswordByUsername(String username, String password);
+    void verifyUserByUsername(String username);
 
     @Modifying
     @Transactional
     @Query("""
         UPDATE User u
-        SET u.email = :email,
+        SET u.email = :newEmail,
+            u.tempEmail = NULL,
             u.otp = NULL,
             u.otpValidationType = NULL,
             u.otpExpiresAt = NULL
         WHERE u.username = :username
     """)
-    void changeEmailByUsername(String username, String email);
+    void verifyEmailOtpByUsername(String username, String newEmail);
+
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE User u
+        SET u.password = :newPassword,
+            u.tempPassword = NULL,
+            u.otp = NULL,
+            u.otpValidationType = NULL,
+            u.otpExpiresAt = NULL
+        WHERE u.username = :username
+    """)
+    void verifyPasswordOtpByUsername(String username, String newPassword);
 
     @Modifying
     @Transactional

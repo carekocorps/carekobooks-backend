@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserRegisterRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
@@ -23,6 +23,8 @@ public abstract class UserMapper {
     private UserRepository userRepository;
 
     @IgnoreBaseModelFields
+    @Mapping(target = "tempEmail", ignore = true)
+    @Mapping(target = "tempPassword", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "otp", ignore = true)
@@ -38,13 +40,15 @@ public abstract class UserMapper {
     @Mapping(target = "followers", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authorities", ignore = true)
-    public abstract User toModel(UserRegisterRequest request);
+    public abstract User toModel(UserSignUpRequest request);
     public abstract UserResponse toResponse(User user);
 
     @IgnoreBaseModelFields
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "email", ignore = true)
+    @Mapping(target = "tempEmail", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "tempPassword", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "otp", ignore = true)

@@ -25,30 +25,23 @@ public class AuthController implements BaseController, AuthControllerDocs {
     private final AuthService authService;
 
     @Override
-    @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid UserLoginRequest request, HttpServletResponse response) {
-        authService.login(request, response);
+    @PostMapping("/signin")
+    public ResponseEntity<Void> signin(@RequestBody @Valid UserSignInRequest request, HttpServletResponse response) {
+        authService.signin(request, response);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/refresh")
+    @PostMapping("/refresh-token")
     public ResponseEntity<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authService.refreshToken(request, response);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/otp")
-    public ResponseEntity<Void> generateOtp(@RequestBody UserGenerateOtpRequest request) {
-        authService.generateOtp(request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> register(@RequestPart @Valid UserRegisterRequest request, @RequestParam(required = false) MultipartFile image) {
-        var response = authService.register(request, image);
+    @PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image) {
+        var response = authService.signup(request, image);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/users/{username}")
@@ -59,30 +52,32 @@ public class AuthController implements BaseController, AuthControllerDocs {
     }
 
     @Override
-    @PostMapping("/register/verify")
-    public ResponseEntity<Void> verify(@RequestBody @Valid UserRegisterVerificationRequest request) {
-        authService.verify(request);
+    @PostMapping("/otp")
+    public ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request) {
+        authService.verifyOtp(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/password/change")
-    public ResponseEntity<Void> recoverPassword(@RequestBody @Valid UserRecoverPasswordRequest request) {
+    @UserRoleRequired
+    @PostMapping("/password-recovery")
+    public ResponseEntity<Void> recoverPassword(@RequestBody @Valid UserPasswordRecoveryRequest request) {
         authService.recoverPassword(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    @PostMapping("/email/change")
-    public ResponseEntity<Void> changeEmail(@RequestBody @Valid UserChangeEmailRequest request) {
+    @UserRoleRequired
+    @PostMapping("/change-email")
+    public ResponseEntity<Void> changeEmail(@RequestBody @Valid UserEmailChangeRequest request) {
         authService.changeEmail(request);
         return ResponseEntity.noContent().build();
     }
 
     @Override
     @UserRoleRequired
-    @PostMapping("/username/change")
-    public ResponseEntity<Void> changeUsername(@RequestBody @Valid UserChangeUsernameRequest request, HttpServletResponse response) {
+    @PostMapping("/change-username")
+    public ResponseEntity<Void> changeUsername(@RequestBody @Valid UserUsernameChangeRequest request, HttpServletResponse response) {
         authService.changeUsername(request, response);
         return ResponseEntity.noContent().build();
     }
