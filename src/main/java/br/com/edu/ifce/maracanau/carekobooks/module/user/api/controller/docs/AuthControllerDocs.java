@@ -61,19 +61,18 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image, HttpServletResponse response);
+    ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image);
 
     @Operation(
             summary = "Validate the OTP (One-Time Password) sent to the user",
             tags = {"Auth"},
-            security = @SecurityRequirement(name = "access_token"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request, HttpServletResponse response);
+    ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request);
 
     @Operation(
             summary = "Initiate a user's password recovery",

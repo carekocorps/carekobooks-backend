@@ -27,10 +27,10 @@ public class OtpService {
     }
 
     public LocalDateTime generateOtpExpiresAt() {
-        return LocalDateTime.now().plusHours(1);
+        return LocalDateTime.now().plusMinutes(30);
     }
 
-    public void notify(User user, String otp, OtpValidationType otpValidationType) {
+    public void notify(User user, String targetEmail, String otp, OtpValidationType otpValidationType) {
         if (user.isEnabled() && otpValidationType == OtpValidationType.REGISTRATION) {
             throw new UserAlreadyVerifiedException();
         }
@@ -39,8 +39,11 @@ public class OtpService {
             throw new UserNotVerifiedException();
         }
 
+        var response = userMapper.toResponse(user);
+        response.setEmail(targetEmail);
+
         userNotificationSubject.notify(
-                userMapper.toResponse(user),
+                response,
                 NotificationContentStrategy
                         .valueOf(otpValidationType.toString())
                         .build(otp)

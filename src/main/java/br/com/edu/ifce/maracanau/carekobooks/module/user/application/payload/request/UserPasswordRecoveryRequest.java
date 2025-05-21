@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Password;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +12,8 @@ public class UserPasswordRecoveryRequest implements BaseRequest {
 
     @Username
     private String username;
+
+    @Password
+    private String newPassword;
 
 }

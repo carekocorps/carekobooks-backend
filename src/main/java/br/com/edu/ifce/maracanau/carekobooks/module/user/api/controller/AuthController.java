@@ -40,22 +40,21 @@ public class AuthController implements BaseController, AuthControllerDocs {
 
     @Override
     @PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image, HttpServletResponse response) {
-        var userResponse = authService.signup(request, image, response);
+    public ResponseEntity<Void> signup(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image) {
+        var response = authService.signup(request, image);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/users/{username}")
-                .buildAndExpand(userResponse.getUsername())
+                .buildAndExpand(response.getUsername())
                 .toUri();
 
         return ResponseEntity.created(uri).build();
     }
 
     @Override
-    @UserRoleRequired
     @PostMapping("/otp")
-    public ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request, HttpServletResponse response) {
-        authService.verifyOtp(request, response);
+    public ResponseEntity<Void> verifyOtp(@RequestBody @Valid UserOtpVerificationRequest request) {
+        authService.verifyOtp(request);
         return ResponseEntity.noContent().build();
     }
 

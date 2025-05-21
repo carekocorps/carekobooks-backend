@@ -16,7 +16,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     List<User> findByUsernameIn(List<String> usernames);
-    List<User> findByEmailIn(List<String> emails);
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     void deleteByUsername(String username);

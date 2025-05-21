@@ -23,6 +23,8 @@ public abstract class UserMapper {
     private UserRepository userRepository;
 
     @IgnoreBaseModelFields
+    @Mapping(target = "tempEmail", ignore = true)
+    @Mapping(target = "tempPassword", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "otp", ignore = true)
@@ -44,7 +46,9 @@ public abstract class UserMapper {
     @IgnoreBaseModelFields
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "email", ignore = true)
+    @Mapping(target = "tempEmail", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "tempPassword", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "otp", ignore = true)

@@ -18,11 +18,6 @@ public class UserEmailChangeRequest implements BaseRequest {
     @NotBlank
     @Email
     @Size(max = 255)
-    private String email;
-
-    @NotBlank
-    @Email
-    @Size(max = 255)
     private String newEmail;
 
 }

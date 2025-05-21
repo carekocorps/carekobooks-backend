@@ -7,7 +7,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.OtpValidationType;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -20,9 +19,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -64,7 +60,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponse signup(UserSignUpRequest request, MultipartFile image, HttpServletResponse response) {
+    public UserResponse signup(UserSignUpRequest request, MultipartFile image) {
         var user = userMapper.toModel(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setIsEnabled(false);
@@ -78,13 +74,12 @@ public class AuthService {
 
         userValidator.validate(user);
         userRepository.save(user);
-        otpService.notify(user, user.getOtp(), OtpValidationType.REGISTRATION);
+        otpService.notify(user, user.getEmail(), user.getOtp(), OtpValidationType.REGISTRATION);
         return userMapper.toResponse(user);
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
-    public void verifyOtp(UserOtpVerificationRequest request, HttpServletResponse response) {
+    public void verifyOtp(UserOtpVerificationRequest request) {
         var user = userRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(UserNotFoundException::new);
@@ -94,10 +89,6 @@ public class AuthService {
             case REGISTRATION -> userRepository.verifyUserByUsername(user.getUsername());
             case PASSWORD -> userRepository.verifyPasswordOtpByUsername(user.getUsername(), user.getTempPassword());
             case EMAIL -> userRepository.verifyEmailOtpByUsername(user.getUsername(), user.getTempEmail());
-        }
-
-        if (request.getValidationType() == OtpValidationType.REGISTRATION) {
-            tokenService.accessToken(user.getUsername(), user.getRoles(), response);
         }
     }
 
@@ -113,39 +104,33 @@ public class AuthService {
         }
 
         var otp = otpService.generateOtp();
-        otpService.notify(user, otp, OtpValidationType.PASSWORD);
-        userRepository.changeTempPasswordValuesByUsername(user.getUsername(), user.getPassword(), otp, otpService.generateOtpExpiresAt());
+        otpService.notify(user, user.getEmail(), otp, OtpValidationType.PASSWORD);
+        userRepository.changeTempPasswordValuesByUsername(user.getUsername(), passwordEncoder.encode(request.getNewPassword()), otp, otpService.generateOtpExpiresAt());
     }
 
     @Transactional
     @AuthenticatedUserMatchRequired(target = "request", exception = UserModificationForbiddenException.class)
     public void changeEmail(UserEmailChangeRequest request) {
-        if (request.getEmail().equals(request.getNewEmail())) {
-            throw new UserEmailConflictException("The current email should be different from the new email");
-        }
-
-        var users = userRepository
-                .findByEmailIn(List.of(request.getEmail(), request.getNewEmail()))
-                .stream()
-                .collect(Collectors.toMap(User::getEmail, user -> user));
-
-        var user = users.get(request.getEmail());
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        var user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(UserNotFoundException::new);
 
         if (!user.isEnabled()) {
             throw new UserNotVerifiedException();
         }
 
-        var existingUser = users.get(request.getNewEmail());
-        if (existingUser != null && !existingUser.getId().equals(user.getId())) {
+        if (user.getEmail().equals(request.getNewEmail())) {
+            throw new UserEmailConflictException("The current email should be different from the new email");
+        }
+
+        var existingUser = userRepository.findByEmail(request.getNewEmail());
+        if (existingUser.isPresent() && !existingUser.get().getId().equals(user.getId())) {
             throw new UserEmailConflictException();
         }
 
         var otp = otpService.generateOtp();
-        otpService.notify(user, otp, OtpValidationType.EMAIL);
-        userRepository.changeTempEmailValuesByEmail(request.getEmail(), request.getNewEmail(), otp, otpService.generateOtpExpiresAt());
+        otpService.notify(user, request.getNewEmail(), otp, OtpValidationType.EMAIL);
+        userRepository.changeTempEmailValuesByEmail(user.getEmail(), request.getNewEmail(), otp, otpService.generateOtpExpiresAt());
     }
 
     @Transactional
