@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @NotBlank
 @Size(max = 50)
-@Pattern(regexp = "^[a-z_0-9]+$", message = "Username should only contain letters and numbers")
+@Pattern(regexp = "^[a-z0-9]+$", message = "Username should only contain letters and numbers")
 @Schema(example = "string")
 public @interface Username {
 }

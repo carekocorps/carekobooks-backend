@@ -1,0 +1,39 @@
+package br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity;
+
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+public class BookGenreFactory {
+
+    private BookGenreFactory() {
+    }
+
+    public static BookGenre validGenre() {
+        var genre = new BookGenre();
+        genre.setId(new Random().nextLong());
+        genre.setName(UUID.randomUUID().toString().replace("-", ""));
+        genre.setDisplayName(UUID.randomUUID().toString());
+        genre.setDescription(UUID.randomUUID().toString());
+        genre.setBooks(List.of());
+        genre.setCreatedAt(LocalDateTime.now());
+        genre.setUpdatedAt(genre.getCreatedAt());
+        return genre;
+    }
+
+    public static BookGenre validGenre(String name) {
+        var genre = validGenre();
+        genre.setName(name);
+        return genre;
+    }
+
+    public static BookGenre validGenre(Long id, String name) {
+        var genre = validGenre(name);
+        genre.setId(id);
+        return genre;
+    }
+
+}
