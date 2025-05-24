@@ -21,4 +21,10 @@ public class BookFactory {
         return book;
     }
 
+    public static Book validBook(Long id) {
+        var book = validBook();
+        book.setId(id);
+        return book;
+    }
+
 }

@@ -1,14 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.payload.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookReviewRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookThreadRequestFactory;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BookReviewRequestTest {
+class BookThreadRequestTest {
 
     private Validator validator;
 
@@ -21,7 +21,7 @@ class BookReviewRequestTest {
     @Test
     void validate_withValidRequest_shouldPass() {
         // Arrange
-        var request = BookReviewRequestFactory.validRequest();
+        var request = BookThreadRequestFactory.validRequest();
 
         // Act
         var result = validator.validate(request);
@@ -32,8 +32,7 @@ class BookReviewRequestTest {
 
     @Test
     void validate_withInvalidRequestByBlankTitle_shouldFail() {
-        // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByBlankTitle();
+        var request = BookThreadRequestFactory.invalidRequestByBlankTitle();
 
         // Act
         var result = validator.validate(request);
@@ -45,7 +44,7 @@ class BookReviewRequestTest {
     @Test
     void validate_withInvalidRequestByTitleExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByTitleExceedingMaxLength();
+        var request = BookThreadRequestFactory.invalidRequestByTitleExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -55,69 +54,33 @@ class BookReviewRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByBlankContent_shouldFail() {
+    void validate_withInvalidRequestByBlankDescription_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByBlankContent();
+        var request = BookThreadRequestFactory.invalidRequestByBlankDescription();
 
         // Act
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("content")));
+        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("description")));
     }
 
     @Test
-    void validate_withInvalidRequestByContentExceedingMaxLength_shouldFail() {
+    void validate_withInvalidRequestByDescriptionExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByContentExceedingMaxLength();
+        var request = BookThreadRequestFactory.invalidRequestByDescriptionExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("content")));
-    }
-
-    @Test
-    void validate_withInvalidRequestByNullScore_shouldFail() {
-        // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByNullScore();
-
-        // Act
-        var result = validator.validate(request);
-
-        // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("score")));
-    }
-
-    @Test
-    void validate_withInvalidRequestByNegativeScore_shouldFail() {
-        // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByNegativeScore();
-
-        // Act
-        var result = validator.validate(request);
-
-        // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("score")));
-    }
-
-    @Test
-    void validate_withInvalidRequestByScoreExceedingMaxValue_shouldFail() {
-        // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByScoreExceedingMaxValue();
-
-        // Act
-        var result = validator.validate(request);
-
-        // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("score")));
+        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("description")));
     }
 
     @Test
     void validate_withInvalidRequestByBlankUsername_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByBlankUsername();
+        var request = BookThreadRequestFactory.invalidRequestByBlankUsername();
 
         // Act
         var result = validator.validate(request);
@@ -129,7 +92,7 @@ class BookReviewRequestTest {
     @Test
     void validate_withInvalidRequestByUsernameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByUsernameExceedingMaxLength();
+        var request = BookThreadRequestFactory.invalidRequestByUsernameExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -141,7 +104,7 @@ class BookReviewRequestTest {
     @Test
     void validate_withInvalidRequestByUsernameRegexMismatch_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByUsernameRegexMismatch();
+        var request = BookThreadRequestFactory.invalidRequestByUsernameRegexMismatch();
 
         // Act
         var result = validator.validate(request);
@@ -153,7 +116,7 @@ class BookReviewRequestTest {
     @Test
     void validate_withInvalidRequestByBlankBookId_shouldFail() {
         // Arrange
-        var request = BookReviewRequestFactory.invalidRequestByBlankBookId();
+        var request = BookThreadRequestFactory.invalidRequestByBlankBookId();
 
         // Act
         var result = validator.validate(request);

@@ -24,4 +24,10 @@ public class UserFactory {
         return user;
     }
 
+    public static User validUser(String username) {
+        var user = validUser();
+        user.setUsername(username);
+        return user;
+    }
+
 }
