@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.image.payload.response;
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class ImageResponseFactory {
@@ -9,8 +10,7 @@ public class ImageResponseFactory {
     private ImageResponseFactory() {
     }
 
-    public static ImageResponse validResponse(String outerEndpoint, String bucket) {
-        var image = ImageFactory.validImage();
+    public static ImageResponse validResponse(Image image, String outerEndpoint, String bucket) {
         var response = new ImageResponse();
         response.setId(image.getId());
         response.setName(image.getName());
@@ -20,6 +20,11 @@ public class ImageResponseFactory {
         response.setCreatedAt(image.getCreatedAt());
         response.setUpdatedAt(image.getUpdatedAt());
         return response;
+    }
+
+    public static ImageResponse validResponse(String outerEndpoint, String bucket) {
+        var image = ImageFactory.validImage();
+        return validResponse(image, outerEndpoint, bucket);
     }
 
     public static String validResponseUrl(String name, String outerEndpoint, String bucket) {
