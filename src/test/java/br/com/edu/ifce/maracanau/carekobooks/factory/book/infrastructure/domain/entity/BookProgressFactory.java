@@ -8,6 +8,10 @@ import java.util.Random;
 
 public class BookProgressFactory {
 
+    private static final int DEFAULT_BOOK_PAGE_COUNT = 500;
+    private static final int EXCEEDING_PAGE_COUNT = 150;
+    private static final int MAX_PAGE_COUNT_FOR_EXCEEDING_TEST = 100;
+
     private BookProgressFactory() {
     }
 
@@ -17,20 +21,24 @@ public class BookProgressFactory {
         progress.setId(random.nextLong());
         progress.setStatus(BookProgressStatus.READING);
         progress.setIsFavorite(random.nextBoolean());
-        progress.setScore(random.nextInt(6));
-        progress.setPageCount(random.nextInt(500));
+        progress.setScore(random.nextInt(6)); // Score de 0 a 5
+        progress.setPageCount(random.nextInt(DEFAULT_BOOK_PAGE_COUNT));
         progress.setUser(UserFactory.validUser());
-        progress.setBook(BookFactory.validBook());
+
+        var book = BookFactory.validBook();
+        book.setPageCount(DEFAULT_BOOK_PAGE_COUNT);
+        progress.setBook(book);
+
         return progress;
     }
 
-    public static BookProgress invalidReviewByEmptyUser() {
+    public static BookProgress invalidProgressByEmptyUser() {
         var progress = validProgress();
         progress.setUser(null);
         return progress;
     }
 
-    public static BookProgress invalidReviewByEmptyBook() {
+    public static BookProgress invalidProgressByEmptyBook() {
         var progress = validProgress();
         progress.setBook(null);
         return progress;
@@ -38,9 +46,15 @@ public class BookProgressFactory {
 
     public static BookProgress invalidProgressByExceedingPageCount() {
         var progress = validProgress();
-        var book = progress.getBook();
-        book.setPageCount(100);
-        progress.setPageCount(150);
+        progress.getBook().setPageCount(MAX_PAGE_COUNT_FOR_EXCEEDING_TEST);
+        progress.setPageCount(EXCEEDING_PAGE_COUNT);
+        return progress;
+    }
+
+    public static BookProgress validProgressWithNullPageCount() {
+        var progress = validProgress();
+        progress.setPageCount(null);
+        progress.getBook().setPageCount(null);
         return progress;
     }
 
