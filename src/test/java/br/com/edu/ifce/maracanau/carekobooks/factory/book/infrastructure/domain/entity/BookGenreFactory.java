@@ -13,6 +13,18 @@ public class BookGenreFactory {
     private BookGenreFactory() {
     }
 
+    public static BookGenre updatedGenre(BookGenre genre, BookGenreRequest request) {
+        var updatedGenre = new BookGenre();
+        updatedGenre.setId(genre.getId());
+        updatedGenre.setName(request.getName());
+        updatedGenre.setDisplayName(request.getDisplayName());
+        updatedGenre.setDescription(request.getDescription());
+        updatedGenre.setBooks(genre.getBooks());
+        updatedGenre.setCreatedAt(genre.getCreatedAt());
+        updatedGenre.setUpdatedAt(LocalDateTime.now());
+        return updatedGenre;
+    }
+
     public static BookGenre validGenre(BookGenreRequest request) {
         var genre = new BookGenre();
         genre.setId(new Random().nextLong());

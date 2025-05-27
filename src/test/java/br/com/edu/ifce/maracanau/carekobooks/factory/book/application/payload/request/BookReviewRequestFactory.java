@@ -20,6 +20,12 @@ public class BookReviewRequestFactory {
         return request;
     }
 
+    public static BookReviewRequest validRequest(Integer score) {
+        var request = validRequest();
+        request.setScore(score);
+        return request;
+    }
+
     public static BookReviewRequest invalidRequestByBlankTitle() {
         var request = validRequest();
         request.setTitle(null);

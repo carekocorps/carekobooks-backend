@@ -1,15 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.user.payload.response;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 
 public class UserResponseFactory {
 
     private UserResponseFactory() {
     }
 
-    public static UserResponse validResponse() {
-        var user = UserFactory.validUser();
+    public static UserResponse validResponse(User user) {
         var response = new UserResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());

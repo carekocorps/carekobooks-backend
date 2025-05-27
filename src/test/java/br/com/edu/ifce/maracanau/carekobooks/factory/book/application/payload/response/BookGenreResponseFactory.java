@@ -1,6 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 
@@ -18,11 +17,6 @@ public class BookGenreResponseFactory {
         response.setCreatedAt(genre.getCreatedAt());
         response.setUpdatedAt(genre.getUpdatedAt());
         return response;
-    }
-
-    public static BookGenreResponse validResponse() {
-        var genre = BookGenreFactory.validGenre();
-        return validResponse(genre);
     }
 
 }
