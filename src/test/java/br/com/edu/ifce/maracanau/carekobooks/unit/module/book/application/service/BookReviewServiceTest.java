@@ -4,8 +4,10 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.re
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookReviewResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookReviewValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookReview;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
@@ -50,6 +52,7 @@ class BookReviewServiceTest {
         // Assert
         assertTrue(result.isEmpty());
         verify(bookReviewRepository, times(1)).findById(id);
+        verify(bookReviewMapper, never()).toResponse(any(BookReview.class));
     }
 
     @Test
@@ -114,6 +117,10 @@ class BookReviewServiceTest {
         // Act && Assert
         assertThrows(BookReviewNotFoundException.class, () -> bookReviewService.update(id, request));
         verify(bookReviewRepository, times(1)).findById(id);
+        verify(bookReviewMapper, never()).updateModel(any(BookReview.class), any(BookReviewRequest.class));
+        verify(bookReviewValidator, never()).validate(any(BookReview.class));
+        verify(bookReviewRepository, never()).save(any(BookReview.class));
+        verify(bookReviewMapper, never()).toResponse(any(BookReview.class));
     }
 
     @Test
