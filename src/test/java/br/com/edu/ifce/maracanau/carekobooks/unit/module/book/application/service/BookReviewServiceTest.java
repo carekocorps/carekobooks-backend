@@ -5,7 +5,6 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.re
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewNotFoundException;
@@ -24,9 +23,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookReviewServiceTest {
-
-    @Mock
-    private BookService bookService;
 
     @Mock
     private BookReviewRepository bookReviewRepository;
@@ -98,29 +94,15 @@ class BookReviewServiceTest {
         when(bookReviewMapper.toResponse(review))
                 .thenReturn(response);
 
-        var bookReviewAverageScore = 100;
-        var bookReviewScoreCount = 10;
-        var newBookReviewAverageScore = Double.valueOf((double) (bookReviewAverageScore + review.getScore()) / (bookReviewScoreCount + 1));
-
-        when(bookReviewRepository.calculateReviewAverageScore(request.getBookId()))
-                .thenReturn(newBookReviewAverageScore);
-
-        doNothing()
-                .when(bookService)
-                .changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
-
         // Act
         var result = bookReviewService.create(request);
 
         // Assert
         assertEquals(response, result);
-        assertEquals(response.getBook().getReviewAverageScore(), newBookReviewAverageScore);
         verify(bookReviewMapper, times(1)).toModel(request);
         verify(bookReviewValidator, times(1)).validate(review);
         verify(bookReviewRepository, times(1)).save(review);
         verify(bookReviewMapper, times(1)).toResponse(review);
-        verify(bookReviewRepository, times(1)).calculateReviewAverageScore(request.getBookId());
-        verify(bookService, times(1)).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
     }
 
     @Test
@@ -159,30 +141,16 @@ class BookReviewServiceTest {
         when(bookReviewMapper.toResponse(updatedReview))
                 .thenReturn(updatedReviewResponse);
 
-        var bookReviewAverageScore = 100;
-        var bookReviewScoreCount = 10;
-        var newBookReviewAverageScore = Double.valueOf((double) (bookReviewAverageScore + review.getScore()) / (bookReviewScoreCount + 1));
-
-        when(bookReviewRepository.calculateReviewAverageScore(request.getBookId()))
-                .thenReturn(newBookReviewAverageScore);
-
-        doNothing()
-                .when(bookService)
-                .changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
-
         // Act
         var result = bookReviewService.update(review.getId(), request);
 
         // Assert
         assertEquals(updatedReviewResponse, result);
-        assertEquals(updatedReviewResponse.getBook().getReviewAverageScore(), newBookReviewAverageScore);
         verify(bookReviewRepository, times(1)).findById(review.getId());
         verify(bookReviewMapper, times(1)).updateModel(review, request);
         verify(bookReviewValidator, times(1)).validate(review);
         verify(bookReviewRepository, times(1)).save(review);
         verify(bookReviewMapper, times(1)).toResponse(updatedReview);
-        verify(bookReviewRepository, times(1)).calculateReviewAverageScore(request.getBookId());
-        verify(bookService, times(1)).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
     }
 
     @Test

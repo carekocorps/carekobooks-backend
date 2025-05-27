@@ -10,7 +10,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.B
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -18,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,6 +32,7 @@ public class BookGenreService {
     private final BookGenreValidator bookGenreValidator;
     private final BookGenreMapper bookGenreMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookGenreResponse> search(BookGenreQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -40,6 +41,7 @@ public class BookGenreService {
     }
 
     @Cacheable(value = "book:genre", key = "#name")
+    @Transactional(readOnly = true)
     public Optional<BookGenreResponse> find(String name) {
         return bookGenreRepository.findByName(name).map(bookGenreMapper::toResponse);
     }

@@ -8,10 +8,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookActivityService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.progress.BookProgressModificationForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.progress.BookProgressNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import org.junit.jupiter.api.Test;
@@ -27,9 +27,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookProgressServiceTest {
-
-    @Mock
-    private BookService bookService;
 
     @Mock
     private BookActivityService bookActivityService;
@@ -90,7 +87,6 @@ class BookProgressServiceTest {
         // Arrange
         var progress = BookProgressFactory.validProgress();
         var request = BookProgressRequestFactory.validRequest(progress);
-        var response = BookProgressResponseFactory.validResponse(progress);
 
         when(bookProgressMapper.toModel(request))
                 .thenReturn(progress);
@@ -101,9 +97,6 @@ class BookProgressServiceTest {
 
         when(bookProgressRepository.save(progress))
                 .thenReturn(progress);
-
-        when(bookProgressMapper.toResponse(progress))
-                .thenReturn(response);
 
         // Act && Assert
         try (var mockedStatic = mockStatic(AuthenticatedUserProvider.class)) {
@@ -117,16 +110,14 @@ class BookProgressServiceTest {
         verify(bookProgressMapper, times(1)).toModel(request);
         verify(bookProgressValidator, times(1)).validate(progress);
         verify(bookProgressRepository, times(1)).save(progress);
-        verify(bookProgressMapper, times(1)).toResponse(progress);
+        verify(bookProgressMapper, never()).toResponse(any(BookProgress.class));
         verify(bookActivityService, never()).create(any(BookProgressRequest.class));
-        verify(bookProgressRepository, never()).calculateUserAverageScoreByBookId(any(Long.class));
-        verify(bookService, never()).changeUserAverageScore(any(Long.class), any(Double.class));
     }
 
     @Test
-    void create_withValidProgressAndUserAuthorizedAndNullScore_shouldReturnValidResponse() {
+    void create_withValidProgressAndUserAuthorized_shouldReturnValidResponse() {
         // Arrange
-        var progress = BookProgressFactory.validProgress(null);
+        var progress = BookProgressFactory.validProgress();
         var request = BookProgressRequestFactory.validRequest(progress);
         var response = BookProgressResponseFactory.validResponse(progress);
 
@@ -143,9 +134,6 @@ class BookProgressServiceTest {
         when(bookProgressMapper.toResponse(progress))
                 .thenReturn(response);
 
-        when(bookActivityService.create(request))
-                .thenReturn(new BookActivityResponse());
-
         // Act && Assert
         try (var mockedStatic = mockStatic(AuthenticatedUserProvider.class)) {
             mockedStatic
@@ -160,8 +148,105 @@ class BookProgressServiceTest {
         verify(bookProgressRepository, times(1)).save(progress);
         verify(bookProgressMapper, times(1)).toResponse(progress);
         verify(bookActivityService, times(1)).create(request);
-        verify(bookProgressRepository, never()).calculateUserAverageScoreByBookId(any(Long.class));
-        verify(bookService, never()).changeUserAverageScore(any(Long.class), any(Double.class));
+    }
+
+    @Test
+    void update_withNonExisting_Progress_shouldFail() {
+        // Arrange
+        var id = 1L;
+        var request = BookProgressRequestFactory.validRequest();
+
+        // Act && Assert
+        assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.update(id, request));
+        verify(bookProgressRepository, times(1)).findById(id);
+        verify(bookProgressMapper, never()).updateModel(any(BookProgress.class), any(BookProgressRequest.class));
+        verify(bookProgressValidator, never()).validate(any(BookProgress.class));
+        verify(bookProgressRepository, never()).save(any(BookProgress.class));
+        verify(bookProgressMapper, never()).toResponse(any(BookProgress.class));
+        verify(bookActivityService, never()).create(request);
+    }
+
+    @Test
+    void update_withExistingProgress_shouldPass() {
+        // Arrange
+        var review = BookProgressFactory.validProgress();
+        var request = BookProgressRequestFactory.validRequest();
+        var updatedProgress = BookProgressFactory.updatedProgress(review, request);
+        var updatedProgressResponse = BookProgressResponseFactory.validResponse(updatedProgress);
+
+        when(bookProgressRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+
+        doNothing()
+                .when(bookProgressMapper)
+                .updateModel(review, request);
+
+        doNothing()
+                .when(bookProgressValidator)
+                .validate(review);
+
+        when(bookProgressRepository.save(review))
+                .thenReturn(updatedProgress);
+
+        when(bookProgressMapper.toResponse(updatedProgress))
+                .thenReturn(updatedProgressResponse);
+
+        when(bookActivityService.create(request))
+                .thenReturn(new BookActivityResponse());
+
+        // Act
+        var result = bookProgressService.update(review.getId(), request);
+
+        // Assert
+        assertEquals(updatedProgressResponse, result);
+        verify(bookProgressRepository, times(1)).findById(review.getId());
+        verify(bookProgressMapper, times(1)).updateModel(review, request);
+        verify(bookProgressValidator, times(1)).validate(review);
+        verify(bookProgressRepository, times(1)).save(review);
+        verify(bookProgressMapper, times(1)).toResponse(updatedProgress);
+        verify(bookActivityService, times(1)).create(request);
+    }
+
+    @Test
+    void delete_withExistingReviewAndUserIsUnauthorized_shouldFail() {
+        // Arrange
+        var progress = BookProgressFactory.validProgress();
+        var progressId = progress.getId();
+
+        when(bookProgressRepository.findById(progressId))
+                .thenReturn(Optional.of(progress));
+
+        // Act && Assert
+        try (var mockedStatic = mockStatic(AuthenticatedUserProvider.class)) {
+            mockedStatic
+                    .when(() -> AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername()))
+                    .thenReturn(true);
+
+            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.delete(progressId));
+        }
+
+        verify(bookProgressRepository, times(1)).findById(progressId);
+    }
+
+    @Test
+    void delete_withExistingReviewAndUserIsAuthorized_shouldPass() {
+        // Arrange
+        var progress = BookProgressFactory.validProgress();
+        var progressId = progress.getId();
+
+        when(bookProgressRepository.findById(progressId))
+                .thenReturn(Optional.of(progress));
+
+        // Act && Assert
+        try (var mockedStatic = mockStatic(AuthenticatedUserProvider.class)) {
+            mockedStatic
+                    .when(() -> AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername()))
+                    .thenReturn(false);
+
+            assertDoesNotThrow(() -> bookProgressService.delete(progressId));
+        }
+
+        verify(bookProgressRepository, times(1)).findById(progressId);
     }
 
 }

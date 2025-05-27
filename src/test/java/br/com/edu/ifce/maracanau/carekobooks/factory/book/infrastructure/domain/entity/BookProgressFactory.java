@@ -1,9 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity;
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class BookProgressFactory {
@@ -13,6 +15,20 @@ public class BookProgressFactory {
     private static final int MAX_PAGE_COUNT_FOR_EXCEEDING_TEST = 100;
 
     private BookProgressFactory() {
+    }
+
+    public static BookProgress updatedProgress(BookProgress progress, BookProgressRequest request) {
+        var updatedProgress = new BookProgress();
+        updatedProgress.setId(progress.getId());
+        updatedProgress.setStatus(request.getStatus());
+        updatedProgress.setIsFavorite(request.getIsFavorite());
+        updatedProgress.setScore(request.getScore());
+        updatedProgress.setPageCount(request.getPageCount());
+        updatedProgress.setUser(UserFactory.validUser(request.getUsername()));
+        updatedProgress.setBook(BookFactory.validBook(request.getBookId()));
+        updatedProgress.setCreatedAt(progress.getCreatedAt());
+        updatedProgress.setUpdatedAt(LocalDateTime.now());
+        return updatedProgress;
     }
 
     public static BookProgress validProgress() {
@@ -29,12 +45,6 @@ public class BookProgressFactory {
         book.setPageCount(DEFAULT_BOOK_PAGE_COUNT);
         progress.setBook(book);
 
-        return progress;
-    }
-
-    public static BookProgress validProgress(Integer score) {
-        var progress = validProgress();
-        progress.setScore(score);
         return progress;
     }
 

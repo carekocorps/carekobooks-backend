@@ -13,10 +13,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -29,6 +29,7 @@ public class BookActivityService {
     private final BookActivityValidator bookActivityValidator;
     private final BookActivityNotificationSubject bookActivityNotificationSubject;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookActivityResponse> search(BookActivityQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -36,6 +37,7 @@ public class BookActivityService {
         return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookActivityResponse> search(BookActivityFollowingQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -43,6 +45,7 @@ public class BookActivityService {
         return new ApplicationPage<>(bookActivityRepository.findAll(specification, pageRequest).map(bookActivityMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public Optional<BookActivityResponse> find(Long id) {
         return bookActivityRepository.findById(id).map(bookActivityMapper::toResponse);
     }

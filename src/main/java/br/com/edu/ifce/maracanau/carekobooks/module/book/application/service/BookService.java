@@ -16,13 +16,13 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookValidator;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -41,6 +41,7 @@ public class BookService {
     private final BookValidator bookValidator;
     private final BookMapper bookMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookResponse> search(BookQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -49,6 +50,7 @@ public class BookService {
     }
 
     @Cacheable(value = "book", key = "#id")
+    @Transactional(readOnly = true)
     public Optional<BookResponse> find(Long id) {
         return bookRepository.findById(id).map(bookMapper::toResponse);
     }
@@ -118,26 +120,6 @@ public class BookService {
 
         if (isAdditionRequested) bookRepository.addGenre(book.getId(), genre.getId());
         else bookRepository.removeGenre(book.getId(), genre.getId());
-    }
-
-    @CacheEvict(value = "book", key = "#id")
-    @Transactional
-    public void changeUserAverageScore(Long id, Double userAverageScore) {
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException();
-        }
-
-        bookRepository.changeUserAverageScoreById(id, userAverageScore);
-    }
-
-    @CacheEvict(value = "book", key = "#id")
-    @Transactional
-    public void changeReviewAverageScore(Long id, Double reviewAverageScore) {
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException();
-        }
-
-        bookRepository.changeReviewAverageScoreById(id, reviewAverageScore);
     }
 
     @CacheEvict(value = "book", key = "#id")

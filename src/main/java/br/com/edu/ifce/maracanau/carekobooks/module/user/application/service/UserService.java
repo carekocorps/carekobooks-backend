@@ -16,11 +16,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -40,6 +40,7 @@ public class UserService {
     private final UserValidator userValidator;
     private final UserMapper userMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<UserResponse> search(UserQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -47,6 +48,7 @@ public class UserService {
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public Optional<UserResponse> find(String username) {
         return userRepository.findByUsername(username).map(userMapper::toResponse);
     }

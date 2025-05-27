@@ -3,9 +3,9 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseModel;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class BookThreadReply extends BaseModel {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private List<BookThreadReply> children;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Boolean getIsContainingChildren() {
         return children != null && !children.isEmpty();
     }

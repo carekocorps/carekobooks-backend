@@ -9,10 +9,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.co
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ public class UserSocialService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<UserResponse> search(UserSocialQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -31,6 +32,7 @@ public class UserSocialService {
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> findFollowers(String username) {
         var query = new UserSocialQuery();
         query.setUsername(username);

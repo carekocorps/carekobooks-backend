@@ -1,36 +1,18 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
-import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
 
     boolean existsById(@NotNull Long id);
-
-    @Transactional
-    @Modifying
-    @Query("""
-        UPDATE Book b
-        SET b.userAverageScore = :userAverageScore
-        WHERE b.id = :id
-    """)
-    void changeUserAverageScoreById(Long id, Double userAverageScore);
-
-    @Transactional
-    @Modifying
-    @Query("""
-        UPDATE Book b
-        SET b.reviewAverageScore = :reviewAverageScore
-        WHERE b.id = :id
-    """)
-    void changeReviewAverageScoreById(Long id, Double reviewAverageScore);
 
     @Transactional
     @Modifying

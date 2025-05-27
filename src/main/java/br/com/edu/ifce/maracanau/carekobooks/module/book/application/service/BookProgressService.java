@@ -11,10 +11,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.B
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,13 +22,13 @@ import java.util.Optional;
 @Service
 public class BookProgressService {
 
-    private final BookService bookService;
     private final BookActivityService bookActivityService;
 
     private final BookProgressRepository bookProgressRepository;
     private final BookProgressValidator bookProgressValidator;
     private final BookProgressMapper bookProgressMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookProgressResponse> search(BookProgressQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -36,6 +36,7 @@ public class BookProgressService {
         return new ApplicationPage<>(bookProgressRepository.findAll(specification, pageRequest).map(bookProgressMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public Optional<BookProgressResponse> find(Long id) {
         return bookProgressRepository.findById(id).map(bookProgressMapper::toResponse);
     }
@@ -44,20 +45,14 @@ public class BookProgressService {
     public BookProgressResponse create(BookProgressRequest request) {
         var progress = bookProgressMapper.toModel(request);
         bookProgressValidator.validate(progress);
-        var response = bookProgressMapper.toResponse(bookProgressRepository.save(progress));
+        progress = bookProgressRepository.save(progress);
 
         if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
             throw new BookProgressModificationForbiddenException();
         }
 
-        if (request.getScore() != null) {
-            var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
-            bookService.changeUserAverageScore(request.getBookId(), userAverageScore);
-            response.getBook().setUserAverageScore(userAverageScore);
-        }
-
         bookActivityService.create(request);
-        return response;
+        return bookProgressMapper.toResponse(progress);
     }
 
     @Transactional
@@ -69,10 +64,7 @@ public class BookProgressService {
 
         bookProgressMapper.updateModel(progress, request);
         bookProgressValidator.validate(progress);
-        bookProgressRepository.save(progress);
-
-        var userAverageScore = bookProgressRepository.calculateUserAverageScoreByBookId(request.getBookId());
-        bookService.changeUserAverageScore(request.getBookId(), userAverageScore);
+        progress = bookProgressRepository.save(progress);
 
         bookActivityService.create(request);
         return bookProgressMapper.toResponse(progress);
