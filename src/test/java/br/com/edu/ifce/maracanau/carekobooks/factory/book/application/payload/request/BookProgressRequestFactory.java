@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 
 import java.util.Random;
@@ -9,6 +10,17 @@ import java.util.UUID;
 public class BookProgressRequestFactory {
 
     private BookProgressRequestFactory() {
+    }
+
+    public static BookProgressRequest validRequest(BookProgress progress) {
+        var request = new BookProgressRequest();
+        request.setStatus(progress.getStatus());
+        request.setIsFavorite(progress.getIsFavorite());
+        request.setScore(progress.getScore());
+        request.setPageCount(progress.getPageCount());
+        request.setUsername(progress.getUser().getUsername());
+        request.setBookId(progress.getBook().getId());
+        return request;
     }
 
     public static BookProgressRequest validRequest() {

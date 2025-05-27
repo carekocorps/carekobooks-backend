@@ -21,7 +21,7 @@ public class BookProgressFactory {
         progress.setId(random.nextLong());
         progress.setStatus(BookProgressStatus.READING);
         progress.setIsFavorite(random.nextBoolean());
-        progress.setScore(random.nextInt(6)); // Score de 0 a 5
+        progress.setScore(random.nextInt(6));
         progress.setPageCount(random.nextInt(DEFAULT_BOOK_PAGE_COUNT));
         progress.setUser(UserFactory.validUser());
 
@@ -29,6 +29,12 @@ public class BookProgressFactory {
         book.setPageCount(DEFAULT_BOOK_PAGE_COUNT);
         progress.setBook(book);
 
+        return progress;
+    }
+
+    public static BookProgress validProgress(Integer score) {
+        var progress = validProgress();
+        progress.setScore(score);
         return progress;
     }
 

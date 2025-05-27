@@ -16,7 +16,7 @@ public class ImageFactory {
     public static Image validImage(MultipartFile file) {
         var image = new Image();
         image.setId(new Random().nextLong());
-        image.setName(file.getOriginalFilename());
+        image.setName(file.getName());
         image.setContentType(file.getContentType());
         image.setSizeInBytes(file.getSize());
         image.setUsers(List.of());

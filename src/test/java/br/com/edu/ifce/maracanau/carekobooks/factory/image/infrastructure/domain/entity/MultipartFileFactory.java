@@ -8,8 +8,12 @@ public class MultipartFileFactory {
     private MultipartFileFactory() {
     }
 
+    public static MultipartFile validFile(String name) {
+        return new MockMultipartFile(name, "test.png", "image/png", "dummy content".getBytes());
+    }
+
     public static MultipartFile validFile() {
-        return new MockMultipartFile("file", "test.png", "image/png", "dummy content".getBytes());
+        return validFile("test.png");
     }
 
 }

@@ -53,7 +53,7 @@ class BookReviewServiceTest {
 
         // Assert
         assertTrue(result.isEmpty());
-        verify(bookReviewRepository).findById(id);
+        verify(bookReviewRepository, times(1)).findById(id);
     }
 
     @Test
@@ -74,8 +74,8 @@ class BookReviewServiceTest {
         // Assert
         assertTrue(result.isPresent());
         assertEquals(result.get(), response);
-        verify(bookReviewRepository).findById(review.getId());
-        verify(bookReviewMapper).toResponse(review);
+        verify(bookReviewRepository, times(1)).findById(review.getId());
+        verify(bookReviewMapper, times(1)).toResponse(review);
     }
 
     @Test
@@ -115,12 +115,12 @@ class BookReviewServiceTest {
         // Assert
         assertEquals(response, result);
         assertEquals(response.getBook().getReviewAverageScore(), newBookReviewAverageScore);
-        verify(bookReviewMapper).toModel(request);
-        verify(bookReviewValidator).validate(review);
-        verify(bookReviewRepository).save(review);
-        verify(bookReviewMapper).toResponse(review);
-        verify(bookReviewRepository).calculateReviewAverageScore(request.getBookId());
-        verify(bookService).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
+        verify(bookReviewMapper, times(1)).toModel(request);
+        verify(bookReviewValidator, times(1)).validate(review);
+        verify(bookReviewRepository, times(1)).save(review);
+        verify(bookReviewMapper, times(1)).toResponse(review);
+        verify(bookReviewRepository, times(1)).calculateReviewAverageScore(request.getBookId());
+        verify(bookService, times(1)).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
     }
 
     @Test
@@ -131,7 +131,7 @@ class BookReviewServiceTest {
 
         // Act && Assert
         assertThrows(BookReviewNotFoundException.class, () -> bookReviewService.update(id, request));
-        verify(bookReviewRepository).findById(id);
+        verify(bookReviewRepository, times(1)).findById(id);
     }
 
     @Test
@@ -176,13 +176,13 @@ class BookReviewServiceTest {
         // Assert
         assertEquals(updatedReviewResponse, result);
         assertEquals(updatedReviewResponse.getBook().getReviewAverageScore(), newBookReviewAverageScore);
-        verify(bookReviewRepository).findById(review.getId());
-        verify(bookReviewMapper).updateModel(review, request);
-        verify(bookReviewValidator).validate(review);
-        verify(bookReviewRepository).save(review);
-        verify(bookReviewMapper).toResponse(updatedReview);
-        verify(bookReviewRepository).calculateReviewAverageScore(request.getBookId());
-        verify(bookService).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
+        verify(bookReviewRepository, times(1)).findById(review.getId());
+        verify(bookReviewMapper, times(1)).updateModel(review, request);
+        verify(bookReviewValidator, times(1)).validate(review);
+        verify(bookReviewRepository, times(1)).save(review);
+        verify(bookReviewMapper, times(1)).toResponse(updatedReview);
+        verify(bookReviewRepository, times(1)).calculateReviewAverageScore(request.getBookId());
+        verify(bookService, times(1)).changeReviewAverageScore(request.getBookId(), newBookReviewAverageScore);
     }
 
     @Test
@@ -216,7 +216,7 @@ class BookReviewServiceTest {
             assertThrows(BookReviewModificationForbiddenException.class, () -> bookReviewService.delete(reviewId));
         }
 
-        verify(bookReviewRepository).findById(reviewId);
+        verify(bookReviewRepository, times(1)).findById(reviewId);
     }
 
     @Test
@@ -237,7 +237,7 @@ class BookReviewServiceTest {
             assertDoesNotThrow(() -> bookReviewService.delete(reviewId));
         }
 
-        verify(bookReviewRepository).findById(reviewId);
+        verify(bookReviewRepository, times(1)).findById(reviewId);
     }
 
 }

@@ -4,8 +4,10 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.re
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookGenreResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookGenreValidator;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.genre.BookGenreNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import jakarta.persistence.EntityManager;
@@ -58,7 +60,8 @@ class BookGenreServiceTest {
 
         // Assert
         assertTrue(result.isEmpty());
-        verify(bookGenreRepository).findByName(name);
+        verify(bookGenreRepository, times(1)).findByName(name);
+        verify(bookGenreMapper, never()).toResponse(any(BookGenre.class));
     }
 
     @Test
@@ -79,8 +82,8 @@ class BookGenreServiceTest {
         // Assert
         assertTrue(result.isPresent());
         assertEquals(result.get(), response);
-        verify(bookGenreRepository).findByName(genre.getName());
-        verify(bookGenreMapper).toResponse(genre);
+        verify(bookGenreRepository, times(1)).findByName(genre.getName());
+        verify(bookGenreMapper, times(1)).toResponse(genre);
     }
 
     @Test
@@ -93,6 +96,10 @@ class BookGenreServiceTest {
         when(bookGenreMapper.toModel(request))
                 .thenReturn(genre);
 
+        doNothing()
+                .when(bookGenreValidator)
+                .validate(genre);
+
         when(bookGenreRepository.save(genre))
                 .thenReturn(genre);
 
@@ -104,10 +111,10 @@ class BookGenreServiceTest {
 
         // Assert
         assertEquals(response, result);
-        verify(bookGenreMapper).toModel(request);
-        verify(bookGenreValidator).validate(genre);
-        verify(bookGenreRepository).save(genre);
-        verify(bookGenreMapper).toResponse(genre);
+        verify(bookGenreMapper, times(1)).toModel(request);
+        verify(bookGenreValidator, times(1)).validate(genre);
+        verify(bookGenreRepository, times(1)).save(genre);
+        verify(bookGenreMapper, times(1)).toResponse(genre);
     }
 
     @Test
@@ -118,7 +125,13 @@ class BookGenreServiceTest {
 
         // Act && Assert
         assertThrows(BookGenreNotFoundException.class, () -> bookGenreService.update(name, request));
-        verify(bookGenreRepository).findByName(name);
+        verify(bookGenreRepository, times(1)).findByName(name);
+        verify(entityManager, never()).detach(any(BookGenre.class));
+        verify(bookGenreMapper, never()).updateModel(any(BookGenre.class), any(BookGenreRequest.class));
+        verify(bookGenreValidator, never()).validate(any(BookGenre.class));
+        verify(entityManager, never()).merge(any(BookGenre.class));
+        verify(bookGenreRepository, never()).save(any(BookGenre.class));
+        verify(bookGenreMapper, never()).toResponse(any(BookGenre.class));
     }
 
     @Test
@@ -140,6 +153,10 @@ class BookGenreServiceTest {
                 .when(bookGenreMapper)
                 .updateModel(genre, request);
 
+        doNothing()
+                .when(bookGenreValidator)
+                .validate(genre);
+
         when(entityManager.merge(genre))
                 .thenReturn(updatedGenre);
 
@@ -151,12 +168,13 @@ class BookGenreServiceTest {
 
         // Act && Assert
         assertDoesNotThrow(() -> bookGenreService.update(genre.getName(), request));
-        verify(bookGenreRepository).findByName(genre.getName());
-        verify(entityManager).detach(genre);
-        verify(bookGenreMapper).updateModel(genre, request);
-        verify(entityManager).merge(genre);
-        verify(bookGenreRepository).save(updatedGenre);
-        verify(bookGenreMapper).toResponse(updatedGenre);
+        verify(bookGenreRepository, times(1)).findByName(genre.getName());
+        verify(entityManager, times(1)).detach(genre);
+        verify(bookGenreMapper, times(1)).updateModel(genre, request);
+        verify(bookGenreValidator, times(1)).validate(genre);
+        verify(entityManager, times(1)).merge(genre);
+        verify(bookGenreRepository, times(1)).save(updatedGenre);
+        verify(bookGenreMapper, times(1)).toResponse(updatedGenre);
     }
 
     @Test
@@ -169,7 +187,8 @@ class BookGenreServiceTest {
 
         // Act && Assert
         assertThrows(BookGenreNotFoundException.class, () -> bookGenreService.delete(name));
-        verify(bookGenreRepository).existsByName(name);
+        verify(bookGenreRepository, times(1)).existsByName(name);
+        verify(bookGenreRepository, never()).deleteByName(any(String.class));
     }
 
     @Test
@@ -182,7 +201,8 @@ class BookGenreServiceTest {
 
         // Act && Assert
         assertDoesNotThrow(() -> bookGenreService.delete(genre.getName()));
-        verify(bookGenreRepository).existsByName(genre.getName());
+        verify(bookGenreRepository, times(1)).existsByName(genre.getName());
+        verify(bookGenreRepository, times(1)).deleteByName(genre.getName());
     }
 
 }
