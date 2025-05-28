@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThreadReply;
 
 import java.util.Random;
 import java.util.UUID;
@@ -8,6 +9,14 @@ import java.util.UUID;
 public class BookThreadReplyRequestFactory {
 
     private BookThreadReplyRequestFactory() {
+    }
+
+    public static BookThreadReplyRequest validRequest(BookThreadReply reply) {
+        var request = new BookThreadReplyRequest();
+        request.setContent(reply.getContent());
+        request.setUsername(reply.getUser().getUsername());
+        request.setThreadId(reply.getThread().getId());
+        return request;
     }
 
     public static BookThreadReplyRequest validRequest() {
