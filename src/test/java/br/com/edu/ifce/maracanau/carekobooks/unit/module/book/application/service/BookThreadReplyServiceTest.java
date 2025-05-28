@@ -67,7 +67,7 @@ class BookThreadReplyServiceTest {
         var thread = BookThreadReplyFactory.validReply();
         var response = BookThreadReplyResponseFactory.validResponse(thread);
 
-        when(bookThreadReplyRepository.findById(thread.getId()))
+        when(       bookThreadReplyRepository.findById(thread.getId()))
                 .thenReturn(Optional.of(thread));
 
         when(bookThreadReplyMapper.toResponse(thread))

@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response;
 
+import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 
