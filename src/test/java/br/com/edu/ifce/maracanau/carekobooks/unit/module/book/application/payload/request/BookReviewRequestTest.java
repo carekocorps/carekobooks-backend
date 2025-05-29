@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.payload.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookReviewRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookReviewRequestFactory;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;

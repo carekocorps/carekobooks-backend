@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.payload.response.ImageResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.payload.response.ImageResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

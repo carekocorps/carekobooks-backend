@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookReviewRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookReviewResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookReviewFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookReviewRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookReviewResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;

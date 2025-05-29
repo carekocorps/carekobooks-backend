@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookThreadFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookThreadFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookThreadValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
