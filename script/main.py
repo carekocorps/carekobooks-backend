@@ -11,6 +11,7 @@ from generator.module.book.book_review_generator import BookReviewGenerator
 from generator.module.book.book_thread_generator import BookThreadGenerator
 from generator.module.book.book_thread_reply_generator import BookThreadReplyGenerator
 from generator.module.user.user_generator import UserGenerator
+from generator.module.user.user_social_generator import UserSocialGenerator
 from config import Config
 from faker import Faker
 import dotenv
@@ -40,15 +41,16 @@ def load_config() -> Config:
 def main() -> None:
     faker = Faker()
     image_factory = ImageFactory(faker)
+    user_factory = UserFactory(faker)
     book_factory = BookFactory(image_factory)
     book_review_factory = BookReviewFactory(faker)
     book_thread_factory = BookThreadFactory(faker)
     book_thread_reply_factory = BookThreadReplyFactory(faker)
-    user_factory = UserFactory(faker)
 
     config = load_config()
     mail_manager = MailSlurpManager(config)
     user_generator = UserGenerator(mail_manager, image_factory, user_factory, config)
+    user_social_generaetor = UserSocialGenerator(config)
     book_generator = BookGenerator(book_factory, config)
     book_progress_generator = BookProgressGenerator(config)
     book_review_generator = BookReviewGenerator(book_review_factory, config)
@@ -56,6 +58,7 @@ def main() -> None:
     book_thread_reply_generator = BookThreadReplyGenerator(book_thread_reply_factory, config)
 
     user_generator.generate()
+    user_social_generaetor.generate()
     book_generator.generate()
     book_progress_generator.generate()
     book_review_generator.generate()
