@@ -10,44 +10,46 @@ class IMailManager(ABC):
 
     @property
     @abstractmethod
-    def email_address(self):
+    def email_address(self) -> str:
         pass
 
     @abstractmethod
-    def refresh(self):
+    def latest_email(self, timeout_ms: int = 60000) -> str:
         pass
 
     @abstractmethod
-    def latest_email(self, timeout_ms: int):
+    def refresh(self) -> None:
         pass
 
     @abstractmethod
-    def close(self):
+    def close(self) -> None:
         pass
 
 class MailSlurpManager(IMailManager):
     def __init__(self, config: Config):
-        mailslurp_config = mailslurp_client.Configuration()
-        mailslurp_config.api_key['x-api-key'] = config.mailslurp_api_key
-        self.__api_client = mailslurp_client.ApiClient(mailslurp_config)
+        self.__mailslurp_config = mailslurp_client.Configuration()
+        self.__mailslurp_config.api_key['x-api-key'] = config.mailslurp_api_key
+        self.__api_client = mailslurp_client.ApiClient(self.__mailslurp_config)
         self.__inbox_controller = mailslurp_client.InboxControllerApi(self.__api_client)
+        self.__wait_controller = mailslurp_client.WaitForControllerApi(self.__api_client)
         self.__inbox = None
-    
+
     @property
     def inbox(self):
         if self.__inbox is None:
-            self.renew_inbox()
+            self.refresh()
         return self.__inbox
 
     @property
-    def email_address(self):
+    def email_address(self) -> str:
         return self.inbox.email_address
 
-    def latest_email(self, timeout_ms: int = 60000):
-        return self.__inbox_controller.get_latest_email_in_inbox(inbox_id = self.inbox.id, timeout_millis = timeout_ms)
+    def latest_email(self, timeout_ms: int = 60000) -> None:
+        email = self.__wait_controller.wait_for_latest_email(inbox_id = self.inbox.id, timeout = timeout_ms)
+        return email.body
     
-    def refresh(self):
+    def refresh(self) -> None:
         self.__inbox = self.__inbox_controller.create_inbox()
 
-    def close(self):
+    def close(self) -> None:
         self.__api_client.close()

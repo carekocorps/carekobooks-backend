@@ -107,12 +107,8 @@ public class UserService {
     @Transactional
     @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
     public void delete(String username) {
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
-
-        if (!user.isEnabled()) {
-            throw new UserNotVerifiedException();
+        if (!userRepository.existsByUsername(username)) {
+            throw new UserNotFoundException();
         }
 
         userRepository.deleteByUsername(username);

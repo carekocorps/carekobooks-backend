@@ -2,8 +2,10 @@ from common.factory.user_factory import IUserFactory
 from common.factory.image_factory import IImageFactory
 from common.manager.mail_manager import IMailManager
 from config import Config
+from typing import Optional
 import requests
-import time
+import logging
+import json
 import re
 
 class UserGenerator:
@@ -23,14 +25,14 @@ class UserGenerator:
         payload = self.__user_factory.generate(username, self.__mail_manager.email_address)
         image = self.__image_factory.generate()
         files = {
-            'request': (None, payload, 'application/json'),
+            'request': (None, json.dumps(payload), 'application/json'),
             'image': ('avatar.jpg', image, 'image/jpeg')
         }
 
         response = requests.post(url, files = files)
         response.raise_for_status()
 
-    def __extract_otp(self) -> str | None:
+    def __extract_otp(self) -> Optional[str]:
         content = self.__mail_manager.latest_email()
         match = self.__otp_pattern.search(content)
         if not match:
@@ -47,17 +49,15 @@ class UserGenerator:
 
         response = requests.post(url, json = payload)
         response.raise_for_status()
-        print(f'User {username} was created successfully')
+        logging.info(f'User {username} was created successfully')
 
-    def generate(self, num_users: int = 25, delay: int = 15) -> None:
+    def generate(self, num_users: int = 25) -> None:
         for _ in range(num_users):
             try:
                 username = self.__user_factory.generate_username()
                 self.__signup(username)
-
-                time.sleep(delay)
                 self.__verify_otp(username)
                 self.__mail_manager.refresh()
-            except Exception:
-                continue
+            except Exception as ex:
+                logging.error(ex)
         self.__mail_manager.close()

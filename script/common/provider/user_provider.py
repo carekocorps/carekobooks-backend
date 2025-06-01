@@ -13,4 +13,5 @@ class UserProvider:
 
         response = requests.get(config.user_provider_url, params = params)
         response.raise_for_status()
-        return response.json().get('content')
+        users = response.json().get('content')
+        return [user for user in users if user.get('username') not in ('string', 'admin')]
