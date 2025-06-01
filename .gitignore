@@ -4,11 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Secrets ###
-.secrets/.env
-.secrets/keys/app.key
-.secrets/keys/app.pub
-
 ### STS ###
 .apt_generated
 .classpath
