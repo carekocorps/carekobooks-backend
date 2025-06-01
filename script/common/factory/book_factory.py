@@ -1,16 +1,17 @@
 from common.factory.image_factory import IImageFactory
 from abc import ABC, abstractmethod
 import requests
-
-class IBookFactory(ABC):
-    @abstractmethod
-    def generate(self, genre_names: list[str]) -> dict:
-        pass
+import logging
 
 class BookRequestParams:
     def __init__(self, payload: dict, image: bytes):
         self.payload = payload
         self.image = image
+
+class IBookFactory(ABC):
+    @abstractmethod
+    def generate(self, genre_names: list[str]) -> list[BookRequestParams]:
+        pass
 
 class BookFactory(IBookFactory):
     def __init__(self, image_factory: IImageFactory):
@@ -35,7 +36,7 @@ class BookFactory(IBookFactory):
                         'publisherName': info.get('publisher', 'Unknown Publisher'),
                         'publishedAt': info.get('publishedDate', '1900-01-01')[:4] + '-01-01',
                         'pageCount': info.get('pageCount'),
-                        'genres': (genre_name)
+                        'genres': [genre_name]
                     }
 
                     if not payload.get('pageCount'):
@@ -46,7 +47,10 @@ class BookFactory(IBookFactory):
                         continue
 
                     image = self.__image_factory.generate_by_url(image_url)
-                    books.append(BookRequestParams(payload, image))
-                except Exception:
-                    continue
+                    book = BookRequestParams(payload, image)
+                    
+                    logging.info(book)
+                    books.append(book)
+                except Exception as ex:
+                    logging.error(ex)
         return books

@@ -12,11 +12,13 @@ from generator.module.book.book_thread_generator import BookThreadGenerator
 from generator.module.book.book_thread_reply_generator import BookThreadReplyGenerator
 from generator.module.user.user_generator import UserGenerator
 from config import Config
-from dotenv import load_dotenv
 from faker import Faker
+import dotenv
+import logging
 import os
 
-load_dotenv()
+dotenv.load_dotenv()
+logging.basicConfig(level = logging.INFO, format = '%(asctime)s - %(levelname)s - %(message)s')
 
 def load_config() -> Config:
     return Config(
@@ -30,7 +32,7 @@ def load_config() -> Config:
         book_thread_reply_provider_url = os.getenv('BOOK_THREAD_REPLY_PROVIDER_URL'),
         book_review_provider_url = os.getenv('BOOK_REVIEW_PROVIDER_URL'),
         user_provider_url = os.getenv('USER_PROVIDER_URL'),
-        user_signup_url = os.getenv('USER_PROVIDER_URL'),
+        user_signup_url = os.getenv('USER_SIGNUP_URL'),
         user_otp_verify_url = os.getenv('USER_OTP_VERIFY_URL'),
         mailslurp_api_key = os.getenv('MAILSLURP_API_KEY')
     )
