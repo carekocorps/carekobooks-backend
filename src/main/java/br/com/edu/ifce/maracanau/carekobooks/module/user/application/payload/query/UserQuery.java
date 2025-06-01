@@ -17,11 +17,13 @@ import java.util.Map;
 public class UserQuery extends BaseApplicationQuery<User> {
 
     private String username;
+    private Boolean isEnabled;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
         if (username != null) specs = specs.and(usernameContains(username));
+        if (isEnabled != null) specs = specs.and(isEnabledEquals(isEnabled));
         return specs;
     }
 
