@@ -12,13 +12,13 @@ class BookThreadGenerator:
         self.__thread_factory = thread_factory
         self.__config = config
 
-    def generate(self, max_users_per_thread: int = 3) -> None:
+    def generate(self, user_review_prob: float = 0.05) -> None:
         cookies = AuthProvider.cookies(self.__config)
         books = BookProvider.existing_books(self.__config)
         users = UserProvider.existing_users(self.__config)
 
         for book in books:
-            for user in random.sample(users, random.randint(0, max_users_per_thread)):
+            for user in random.sample(users, int(len(books) * user_review_prob)):
                 try:
                     payload = self.__thread_factory.generate(book, user)
                     response = requests.post(self.__config.book_thread_provider_url, json = payload, cookies = cookies)

@@ -4,15 +4,27 @@ import requests
 class BookGenreProvider:
     @staticmethod
     def existing_genres(config: Config) -> list[dict]:
-        params = {
-            'pageSize': 50,
-            'orderBy': 'created-at',
-            'isAscendingOrder': False
-        }
+        genres = []
+        page_num = 0
 
-        response = requests.get(config.book_genre_provider_url, params = params)
-        response.raise_for_status()
-        return response.json().get('content')
+        while True:
+            params = {
+                'pageNumber': page_num,
+                'pageSize': 25,
+                'orderBy': 'created-at',
+                'isAscendingOrder': False
+            }
+
+            response = requests.get(config.book_genre_provider_url, params = params)
+            response.raise_for_status()
+            content = response.json().get('content')
+
+            if not content:
+                break
+
+            genres.extend(content)
+            page_num += 1
+        return genres
     
     @staticmethod
     def existing_genre_names(config: Config) -> list[str]:

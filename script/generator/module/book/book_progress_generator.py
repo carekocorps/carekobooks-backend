@@ -12,13 +12,13 @@ class BookProgressGenerator:
     def __init__(self, config: Config):
         self.__config = config
 
-    def generate(self) -> None:
+    def generate(self, user_progress_prob: float = 0.25) -> None:
         cookies = AuthProvider.cookies(self.__config)
         books = BookProvider.existing_books(self.__config)
         users = UserProvider.existing_users(self.__config)
 
         for user in users:
-            for book in random.sample(books, random.randint(0, len(books))):
+            for book in random.sample(books, int(len(books) * user_progress_prob)):
                 try:
                     url = self.__config.book_progress_provider_url
                     payload = {

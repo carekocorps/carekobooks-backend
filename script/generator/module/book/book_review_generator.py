@@ -12,7 +12,7 @@ class BookReviewGenerator:
         self.__review_factory = review_factory
         self.__config = config
     
-    def generate(self, book_review_prob: float = 0.8, user_review_prob: float = 0.2) -> None:
+    def generate(self, book_review_prob: float = 0.75, user_review_prob: float = 0.10) -> None:
         url = self.__config.book_review_provider_url
         cookies = AuthProvider.cookies(self.__config)
         books = BookProvider.existing_books(self.__config)

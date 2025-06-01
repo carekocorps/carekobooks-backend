@@ -22,7 +22,7 @@ class BookThreadReplyGenerator:
         return response.json()
 
     def __generate_base_reply_child(self, reply_response: dict, cookies: dict, users: list[dict]):
-        url = urllib.parse.urljoin(self.__config.book_thread_reply_provider_url, f'{reply_response.get('id')}/children')
+        url = urllib.parse.urljoin(self.__config.book_thread_reply_provider_url + '/', f'{reply_response.get('id')}/children')
         payload = self.__reply_factory.generate(random.choice(users).get('username'), reply_response.get('thread').get('id'))
         response = requests.post(url, json = payload, cookies = cookies)
         logging.info(response.text)
@@ -35,10 +35,10 @@ class BookThreadReplyGenerator:
         threads = BookThreadProvider.existing_threads(self.__config)
 
         for book_thread in threads:
-            try:
-                for _ in range(random.randint(0, max_base_replies_per_thread)):
+            for _ in range(random.randint(0, max_base_replies_per_thread)):
+                try:
                     response = self.__generate_base_reply(book_thread.get('id'), cookies, users)
                     for _ in range(random.randint(0, max_children_per_base_reply)):
                         self.__generate_base_reply_child(response, cookies, users)
-            except Exception as ex:
-                logging.error(ex)
+                except Exception as ex:
+                    logging.error(ex)
