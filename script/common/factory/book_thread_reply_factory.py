@@ -3,7 +3,7 @@ from faker import Faker
 
 class IBookThreadReplyFactory(ABC):
     @abstractmethod
-    def generate(self) -> dict:
+    def generate(self, username: str, thread_id: int) -> dict:
         pass
 
 class BookThreadReplyFactory(IBookThreadReplyFactory):

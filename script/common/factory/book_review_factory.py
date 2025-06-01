@@ -4,7 +4,7 @@ import random
 
 class IBookReviewFactory(ABC):
     @abstractmethod
-    def generate(self) -> dict:
+    def generate(self, book: dict, user: dict) -> dict:
         pass
 
 class BookReviewFactory(IBookReviewFactory):

@@ -22,4 +22,4 @@ class ImageFactory(IImageFactory):
 
     def generate(self, width: int = 500, height: int = 500) -> bytes:
         url = self.__faker.image_url(width, height)
-        return self.generate(url, width, height)
+        return self.generate_by_url(url)

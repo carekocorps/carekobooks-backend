@@ -4,7 +4,7 @@ import requests
 
 class IBookFactory(ABC):
     @abstractmethod
-    def generate(self) -> dict:
+    def generate(self, genre_names: list[str]) -> dict:
         pass
 
 class BookRequestParams:
