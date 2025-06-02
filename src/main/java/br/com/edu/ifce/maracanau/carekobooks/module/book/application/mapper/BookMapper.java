@@ -3,6 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
@@ -34,6 +35,7 @@ public abstract class BookMapper {
     @Mapping(target = "threads", ignore = true)
     public abstract Book toModel(BookRequest request);
     public abstract BookResponse toResponse(Book book);
+    public abstract SimplifiedBookResponse toSimplifiedResponse(Book book);
 
     @IgnoreBaseModelFields
     @Mapping(target = "userAverageScore", ignore = true)

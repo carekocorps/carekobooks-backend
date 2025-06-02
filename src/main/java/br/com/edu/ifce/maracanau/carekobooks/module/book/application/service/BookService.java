@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookAlreadyContainingGenreException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotContainingGenreException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotFoundException;
@@ -42,11 +43,11 @@ public class BookService {
     private final BookMapper bookMapper;
 
     @Transactional(readOnly = true)
-    public ApplicationPage<BookResponse> search(BookQuery query) {
+    public ApplicationPage<SimplifiedBookResponse> search(BookQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toResponse));
+        return new ApplicationPage<>(bookRepository.findAll(specification, pageRequest).map(bookMapper::toSimplifiedResponse));
     }
 
     @Cacheable(value = "book", key = "#id")

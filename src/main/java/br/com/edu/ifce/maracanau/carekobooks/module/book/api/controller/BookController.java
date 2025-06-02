@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
@@ -28,7 +29,7 @@ public class BookController implements BaseController, BookControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<BookResponse>> search(@ParameterObject BookQuery query) {
+    public ResponseEntity<ApplicationPage<SimplifiedBookResponse>> search(@ParameterObject BookQuery query) {
         var responses = bookService.search(query);
         return ResponseEntity.ok(responses);
     }

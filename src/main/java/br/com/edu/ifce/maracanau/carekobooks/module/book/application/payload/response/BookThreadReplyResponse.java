@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.response.BaseResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +16,7 @@ public class BookThreadReplyResponse implements BaseResponse {
     private Boolean isContainingChildren;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UserResponse user;
+    private SimplifiedUserResponse user;
     private BookThreadResponse thread;
 
 }

@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotVerifiedException;
@@ -41,11 +42,11 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public ApplicationPage<UserResponse> search(UserQuery query) {
+    public ApplicationPage<SimplifiedUserResponse> search(UserQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
+        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toSimplifiedResponse));
     }
 
     @Transactional(readOnly = true)

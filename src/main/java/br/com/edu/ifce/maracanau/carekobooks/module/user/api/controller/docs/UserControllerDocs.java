@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Encoding;
@@ -37,7 +38,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserQuery query);
+    ResponseEntity<ApplicationPage<SimplifiedUserResponse>> search(@ParameterObject UserQuery query);
 
     @Operation(
             summary = "Find a user by username",

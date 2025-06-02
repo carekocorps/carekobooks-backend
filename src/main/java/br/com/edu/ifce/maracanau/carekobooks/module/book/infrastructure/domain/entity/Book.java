@@ -61,7 +61,7 @@ public class Book extends BaseModel {
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookThread> threads;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Double getUserAverageScore() {
         if (progresses == null || progresses.isEmpty()) {
             return null;
@@ -78,7 +78,7 @@ public class Book extends BaseModel {
                 : null;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Double getReviewAverageScore() {
         if (reviews == null || reviews.isEmpty()) {
             return null;

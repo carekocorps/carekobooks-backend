@@ -137,7 +137,7 @@ public class User extends BaseModel implements UserDetails {
         return isEnabled;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer getProgressesCount() {
         if (progresses == null) {
             return null;
@@ -146,7 +146,7 @@ public class User extends BaseModel implements UserDetails {
         return progresses.size();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer getFollowingCount() {
         if (following == null) {
             return null;
@@ -155,7 +155,7 @@ public class User extends BaseModel implements UserDetails {
         return following.size();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer getFollowersCount() {
         if (followers == null) {
             return null;

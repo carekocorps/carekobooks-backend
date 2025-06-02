@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
@@ -27,7 +28,7 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @GetMapping
-    public ResponseEntity<ApplicationPage<UserResponse>> search(@ParameterObject UserQuery query) {
+    public ResponseEntity<ApplicationPage<SimplifiedUserResponse>> search(@ParameterObject UserQuery query) {
         var responses = userService.search(query);
         return ResponseEntity.ok(responses);
     }
