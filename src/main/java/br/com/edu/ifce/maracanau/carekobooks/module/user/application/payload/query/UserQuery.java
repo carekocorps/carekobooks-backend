@@ -7,6 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.qu
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -17,12 +18,14 @@ import java.util.Map;
 public class UserQuery extends BaseApplicationQuery<User> {
 
     private String username;
+    private String displayName;
     private Boolean isEnabled;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
-        if (username != null) specs = specs.and(usernameContains(username));
+        if (StringUtils.isNotBlank(username)) specs = specs.and(usernameContains(username));
+        if (StringUtils.isNotBlank(displayName)) specs = specs.and(displayNameContains(displayName));
         if (isEnabled != null) specs = specs.and(isEnabledEquals(isEnabled));
         return specs;
     }

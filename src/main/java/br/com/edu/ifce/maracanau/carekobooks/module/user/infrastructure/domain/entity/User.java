@@ -17,6 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -134,6 +135,33 @@ public class User extends BaseModel implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    @Transactional
+    public Integer getProgressesCount() {
+        if (progresses == null) {
+            return null;
+        }
+
+        return progresses.size();
+    }
+
+    @Transactional
+    public Integer getFollowingCount() {
+        if (following == null) {
+            return null;
+        }
+
+        return following.size();
+    }
+
+    @Transactional
+    public Integer getFollowersCount() {
+        if (followers == null) {
+            return null;
+        }
+
+        return followers.size();
     }
 
 }

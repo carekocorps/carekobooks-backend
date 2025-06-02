@@ -13,6 +13,11 @@ public class UserSpecification {
                 cb.like(cb.upper(root.get("username")), "%" + username.toUpperCase() + "%");
     }
 
+    public static Specification<User> displayNameContains(String displayName) {
+        return (root, query, cb) ->
+                cb.like(cb.upper(root.get("displayName")), "%" + displayName.toUpperCase() + "%");
+    }
+
     public static Specification<User> isEnabledEquals(Boolean isEnabled) {
         return (root, query, cb) ->
                 cb.equal(root.get("isEnabled"), isEnabled);

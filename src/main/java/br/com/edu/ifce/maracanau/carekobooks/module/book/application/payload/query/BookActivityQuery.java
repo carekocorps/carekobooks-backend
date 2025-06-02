@@ -19,6 +19,7 @@ import java.util.Map;
 public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
 
     private String username;
+    private String genre;
     private BookProgressStatus status;
     private Integer pageCount;
     private Long bookId;
@@ -27,6 +28,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
     public Specification<BookActivity> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
+        if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));
         if (status != null) specs = specs.and(statusEqual(status));
         if (pageCount != null) specs = specs.and(pageCountEqual(pageCount));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));
