@@ -35,9 +35,14 @@ public class BookSpecification {
                 cb.greaterThanOrEqualTo(root.get("publishedAt"), publishedAfter);
     }
 
-    public static Specification<Book> pageCountEquals(Integer totalPages) {
+    public static Specification<Book> pageCountLower(Integer pageCount) {
         return (root, query, cb) ->
-                cb.equal(root.get("pageCount"), totalPages);
+                cb.lessThanOrEqualTo(root.get("pageCount"), pageCount);
+    }
+
+    public static Specification<Book> pageCountGreater(Integer pageCount) {
+        return (root, query, cb) ->
+                cb.greaterThanOrEqualTo(root.get("pageCount"), pageCount);
     }
 
     public static Specification<Book> genreEquals(String genre) {

@@ -34,6 +34,11 @@ public class BookProgressSpecification {
                 cb.equal(root.get("user").get("username"), username);
     }
 
+    public static Specification<BookProgress> genreEqual(String genre) {
+        return (root, query, cb) ->
+                cb.equal(root.join("book").join("genres").get("name"), genre);
+    }
+
     public static Specification<BookProgress> bookIdEqual(Long bookId) {
         return (root, query, cb) ->
                 cb.equal(root.get("book").get("id"), bookId);

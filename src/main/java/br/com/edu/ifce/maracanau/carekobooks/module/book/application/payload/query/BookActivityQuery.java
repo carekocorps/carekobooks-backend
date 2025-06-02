@@ -28,7 +28,7 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
     public Specification<BookActivity> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
-        if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));
+        if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEqual(genre));
         if (status != null) specs = specs.and(statusEqual(status));
         if (pageCount != null) specs = specs.and(pageCountEqual(pageCount));
         if (bookId != null) specs = specs.and(bookIdEqual(bookId));

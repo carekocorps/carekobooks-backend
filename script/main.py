@@ -50,7 +50,7 @@ def main() -> None:
     config = load_config()
     mail_manager = MailSlurpManager(config)
     user_generator = UserGenerator(mail_manager, image_factory, user_factory, config)
-    user_social_generaetor = UserSocialGenerator(config)
+    user_social_generator = UserSocialGenerator(config)
     book_generator = BookGenerator(book_factory, config)
     book_progress_generator = BookProgressGenerator(config)
     book_review_generator = BookReviewGenerator(book_review_factory, config)
@@ -58,7 +58,7 @@ def main() -> None:
     book_thread_reply_generator = BookThreadReplyGenerator(book_thread_reply_factory, config)
 
     user_generator.generate()
-    user_social_generaetor.generate()
+    user_social_generator.generate()
     book_generator.generate()
     book_progress_generator.generate()
     book_review_generator.generate()

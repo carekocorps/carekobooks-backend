@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -139,29 +140,37 @@ public class User extends BaseModel implements UserDetails {
 
     @Transactional(readOnly = true)
     public Integer getProgressesCount() {
-        if (progresses == null) {
-            return null;
-        }
+        return Optional.ofNullable(progresses).map(List::size).orElse(null);
+    }
 
-        return progresses.size();
+    @Transactional(readOnly = true)
+    public Integer getActivitiesCount() {
+        return Optional.ofNullable(activities).map(List::size).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getReviewsCount() {
+        return Optional.ofNullable(reviews).map(List::size).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getThreadsCount() {
+        return Optional.ofNullable(threads).map(List::size).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getRepliesCount() {
+        return Optional.ofNullable(replies).map(List::size).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public Integer getFollowingCount() {
-        if (following == null) {
-            return null;
-        }
-
-        return following.size();
+        return Optional.ofNullable(following).map(List::size).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public Integer getFollowersCount() {
-        if (followers == null) {
-            return null;
-        }
-
-        return followers.size();
+        return Optional.ofNullable(followers).map(List::size).orElse(null);
     }
 
 }

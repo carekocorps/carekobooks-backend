@@ -32,7 +32,7 @@ public class BookValidator implements BaseValidator<Book> {
         query.setPublisherName(book.getPublisherName());
         query.setPublishedBefore(book.getPublishedAt());
         query.setPublishedAfter(book.getPublishedAt());
-        query.setPageCount(book.getPageCount());
+        query.setPageCountLower(book.getPageCount());
 
         var books = bookRepository.findAll(query.getSpecification());
         return books.stream().anyMatch(b -> !b.getId().equals(book.getId()));

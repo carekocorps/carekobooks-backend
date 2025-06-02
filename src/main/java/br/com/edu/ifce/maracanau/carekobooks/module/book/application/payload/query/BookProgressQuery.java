@@ -19,6 +19,7 @@ import java.util.Map;
 public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
 
     private String username;
+    private String genre;
     private BookProgressStatus status;
     private Boolean isFavorite;
     private Integer score;
@@ -29,6 +30,7 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
     public Specification<BookProgress> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameEqual(username));
+        if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEqual(genre));
         if (status != null) specs = specs.and(statusEqual(status));
         if (isFavorite != null) specs = specs.and(isFavoriteEqual(isFavorite));
         if (score != null) specs = specs.and(scoreEqual(score));

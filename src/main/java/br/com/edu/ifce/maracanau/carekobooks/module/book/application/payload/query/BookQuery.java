@@ -24,7 +24,8 @@ public class BookQuery extends BaseApplicationQuery<Book> {
     private String genre;
     private LocalDate publishedBefore;
     private LocalDate publishedAfter;
-    private Integer pageCount;
+    private Integer pageCountLower;
+    private Integer pageCountGreater;
 
     @Override
     public Specification<Book> getSpecification() {
@@ -35,7 +36,8 @@ public class BookQuery extends BaseApplicationQuery<Book> {
         if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));
         if (publishedBefore != null) specs = specs.and(publishedBefore(publishedBefore));
         if (publishedAfter != null) specs = specs.and(publishedAfter(publishedAfter));
-        if (pageCount != null) specs = specs.and(pageCountEquals(pageCount));
+        if (pageCountLower != null) specs = specs.and(pageCountLower(pageCountLower));
+        if (pageCountGreater != null) specs = specs.and(pageCountGreater(pageCountGreater));
         return specs;
     }
 
