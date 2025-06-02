@@ -15,7 +15,6 @@ public class UserResponse implements BaseResponse {
     private Long id;
     private String username;
     private String displayName;
-    private String email;
     private String description;
     private UserRole role;
     private Boolean isEnabled;
