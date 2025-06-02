@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,12 +36,6 @@ public class Book extends BaseModel {
     @Column(name = "page_count", nullable = false)
     private Integer pageCount;
 
-    @Column(name = "user_average_score")
-    private Double userAverageScore;
-
-    @Column(name = "review_average_score")
-    private Double reviewAverageScore;
-
     @ManyToOne
     @JoinColumn(name = "image_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
@@ -65,5 +60,39 @@ public class Book extends BaseModel {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<BookThread> threads;
+
+    @Transactional
+    public Double getUserAverageScore() {
+        if (progresses == null || progresses.isEmpty()) {
+            return null;
+        }
+
+        var average = progresses
+                .stream()
+                .filter(x -> x.getScore() != null)
+                .mapToInt(BookProgress::getScore)
+                .average();
+
+        return average.isPresent()
+                ? average.getAsDouble()
+                : null;
+    }
+
+    @Transactional
+    public Double getReviewAverageScore() {
+        if (reviews == null || reviews.isEmpty()) {
+            return null;
+        }
+
+        var average = reviews
+                .stream()
+                .filter(x -> x.getScore() != null)
+                .mapToInt(BookReview::getScore)
+                .average();
+
+        return average.isPresent()
+                ? average.getAsDouble()
+                : null;
+    }
 
 }

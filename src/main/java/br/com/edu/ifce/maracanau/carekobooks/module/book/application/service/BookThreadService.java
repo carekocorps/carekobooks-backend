@@ -12,10 +12,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.Book
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookThreadValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,6 +28,7 @@ public class BookThreadService {
     private final BookThreadMapper bookThreadMapper;
     private final BookThreadNotificationSubject bookThreadNotificationSubject;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookThreadResponse> search(BookThreadQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -35,6 +36,7 @@ public class BookThreadService {
         return new ApplicationPage<>(bookThreadRepository.findAll(specification, pageRequest).map(bookThreadMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public Optional<BookThreadResponse> find(Long id) {
         return bookThreadRepository.findById(id).map(bookThreadMapper::toResponse);
     }

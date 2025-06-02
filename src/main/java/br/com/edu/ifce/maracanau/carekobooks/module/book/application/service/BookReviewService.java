@@ -11,10 +11,10 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,12 +22,11 @@ import java.util.Optional;
 @Service
 public class BookReviewService {
 
-    private final BookService bookService;
-
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewValidator bookReviewValidator;
     private final BookReviewMapper bookReviewMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<BookReviewResponse> search(BookReviewQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -35,6 +34,7 @@ public class BookReviewService {
         return new ApplicationPage<>(bookReviewRepository.findAll(specification, pageRequest).map(bookReviewMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public Optional<BookReviewResponse> find(Long id) {
         return bookReviewRepository.findById(id).map(bookReviewMapper::toResponse);
     }
@@ -44,12 +44,7 @@ public class BookReviewService {
     public BookReviewResponse create(BookReviewRequest request) {
         var review = bookReviewMapper.toModel(request);
         bookReviewValidator.validate(review);
-        var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
-
-        var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
-        bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
-        response.getBook().setReviewAverageScore(reviewAverageScore);
-        return response;
+        return bookReviewMapper.toResponse(bookReviewRepository.save(review));
     }
 
     @Transactional
@@ -61,12 +56,7 @@ public class BookReviewService {
 
         bookReviewMapper.updateModel(review, request);
         bookReviewValidator.validate(review);
-        var response = bookReviewMapper.toResponse(bookReviewRepository.save(review));
-
-        var reviewAverageScore = bookReviewRepository.calculateReviewAverageScore(request.getBookId());
-        bookService.changeReviewAverageScore(request.getBookId(), reviewAverageScore);
-        response.getBook().setReviewAverageScore(reviewAverageScore);
-        return response;
+        return bookReviewMapper.toResponse(bookReviewRepository.save(review));
     }
 
     @Transactional

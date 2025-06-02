@@ -24,6 +24,11 @@ public class BookActivitySpecification {
                 cb.equal(root.get("user").get("username"), username);
     }
 
+    public static Specification<BookActivity> genreEquals(String genre) {
+        return (root, query, cb) ->
+                cb.equal(root.join("book").join("genres").get("name"), genre);
+    }
+
     public static Specification<BookActivity> followerUsernameEqual(String username) {
         return (root, query, cb) -> {
             var users = root.get("user").get("followers");

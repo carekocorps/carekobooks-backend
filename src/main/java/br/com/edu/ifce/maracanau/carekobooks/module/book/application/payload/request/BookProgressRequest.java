@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.constraints.Username;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.enums.BookProgressStatus;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,10 @@ public class BookProgressRequest implements BaseRequest {
     @Min(0)
     private Integer pageCount;
 
-    @Username
+    @NotBlank
+    @Size(max = 50)
+    @Pattern(regexp = "^[a-z0-9]+$", message = "Username should only contain letters and numbers")
+    @Schema(example = "string")
     private String username;
 
     @NotNull

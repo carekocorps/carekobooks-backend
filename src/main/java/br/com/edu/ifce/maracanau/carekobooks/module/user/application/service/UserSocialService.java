@@ -3,16 +3,16 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.enums.UserRelationship;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ public class UserSocialService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional(readOnly = true)
     public ApplicationPage<UserResponse> search(UserSocialQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
@@ -31,6 +32,7 @@ public class UserSocialService {
         return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> findFollowers(String username) {
         var query = new UserSocialQuery();
         query.setUsername(username);

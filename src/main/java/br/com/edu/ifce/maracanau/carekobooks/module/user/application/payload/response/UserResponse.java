@@ -19,6 +19,9 @@ public class UserResponse implements BaseResponse {
     private String description;
     private UserRole role;
     private Boolean isEnabled;
+    private Integer followingCount;
+    private Integer followersCount;
+    private Integer progressesCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private ImageResponse image;

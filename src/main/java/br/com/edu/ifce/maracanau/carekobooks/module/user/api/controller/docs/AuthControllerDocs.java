@@ -65,6 +65,7 @@ public interface AuthControllerDocs {
 
     @Operation(
             summary = "Validate the OTP (One-Time Password) sent to the user",
+            description = "The 'validationType' field must be one of the following values: REGISTRATION, PASSWORD or EMAIL",
             tags = {"Auth"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204",content = @Content),

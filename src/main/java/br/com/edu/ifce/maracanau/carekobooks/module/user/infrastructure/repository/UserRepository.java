@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
-import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;

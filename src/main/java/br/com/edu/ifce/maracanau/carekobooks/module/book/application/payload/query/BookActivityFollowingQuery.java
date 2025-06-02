@@ -18,9 +18,7 @@ public class BookActivityFollowingQuery extends BaseApplicationQuery<BookActivit
 
     @Override
     public Specification<BookActivity> getSpecification() {
-        var specs = super.getSpecification();
-        specs = specs.and(followerUsernameEqual(username));
-        return specs;
+        return super.getSpecification().and(followerUsernameEqual(username));
     }
 
 }
