@@ -21,7 +21,7 @@ class UserFactory(IUserFactory):
         return {
             'username': username,
             'email': email,
-            'display_name': self.__faker.name(),
+            'displayName': self.__faker.name(),
             'password': self.__faker.password(length = 10),
             'description': self.__faker.sentence(nb_words = 20)
         }
