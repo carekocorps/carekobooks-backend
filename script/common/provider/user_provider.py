@@ -11,7 +11,7 @@ class UserProvider:
             params = {
                 'isEnabled': True,
                 'pageNumber': page_num,
-                'pageSize': 25,
+                'pageSize': 50,
                 'orderBy': 'created-at',
                 'isAscendingOrder': False
             }

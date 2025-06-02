@@ -38,7 +38,7 @@ public abstract class BaseApplicationQuery<T extends BaseModel> extends BaseAppl
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
-        return Sort.by(direction, fieldMapping.getOrDefault(orderBy, DEFAULT_ORDER_BY));
+        return Sort.by(direction, fieldMapping.getOrDefault(orderBy, "id"));
     }
 
 }

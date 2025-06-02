@@ -4,7 +4,7 @@ spring:
   application:
     name: carekobooks
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME:carekobooks}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
   jpa:
@@ -18,7 +18,7 @@ spring:
     type: redis
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
+      host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
   mail:
     host: smtp.gmail.com
@@ -50,8 +50,8 @@ spring:
 security:
   jwt:
     key:
-      private: file:${JWT_PRIVATE_KEY_PATH:.secrets/keys/app.key}
-      public: file:${JWT_PUBLIC_KEY_PATH:.secrets/keys/app.pub}
+      private: file:${JWT_PRIVATE_KEY_PATH}
+      public: file:${JWT_PUBLIC_KEY_PATH}
     token:
       access:
         cookie-name: access_token
@@ -66,8 +66,8 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
 minio:
+  inner-endpoint: ${MINIO_INNER_ENDPOINT}
   outer-endpoint: ${MINIO_OUTER_ENDPOINT:${minio.inner-endpoint}}
-  inner-endpoint: ${MINIO_INNER_ENDPOINT:http://localhost:9000}
   access-key: ${MINIO_ACCESS_KEY}
   secret-key: ${MINIO_SECRET_KEY}
   bucket: ${MINIO_BUCKET}

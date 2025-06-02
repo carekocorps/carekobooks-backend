@@ -57,7 +57,6 @@ jobs:
 
       - name: deploy
         env:
-          DB_NAME: ${{ secrets.DB_NAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
@@ -67,5 +66,5 @@ jobs:
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
-          SONAR_JDBC_PASSWORD: ${{ secrets.SONAR_JDBC_PASSWORD }}
-        run: docker compose up -d --no-deps --build backend
+        working-directory: docker
+        run: docker compose -f docker-compose.staging.yml up -d --no-deps --build carekobooks-backend

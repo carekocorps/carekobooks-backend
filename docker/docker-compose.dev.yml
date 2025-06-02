@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: carekobooks-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: carekobooks
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - carekobooks-postgres-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: carekobooks-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - carekobooks-minio-data:/data
+    entrypoint: >
+      /bin/sh -c '
+        isAlive() { curl -sf http://carekobooks-minio:9000/minio/health/live; }
+        minio $0 "$@" --quiet & echo $! > /tmp/minio.pid
+        until isAlive; do sleep 1; done
+        echo "MinIO is ready. Proceeding with setup..."
+        mc alias set myminio http://carekobooks-minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+        mc mb myminio/${MINIO_BUCKET}/ --ignore-existing
+        mc anonymous set public myminio/${MINIO_BUCKET}
+        kill -s INT $(cat /tmp/minio.pid) && rm /tmp/minio.pid
+        while isAlive; do sleep 0.1; done
+        exec minio $0 "$@"
+      '
+    command: server /data
+
+  redis:
+    image: redis:latest
+    container_name: carekobooks-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - carekobooks-redis-data:/data
+
+volumes:
+  carekobooks-postgres-data:
+  carekobooks-minio-data:
+  carekobooks-redis-data:

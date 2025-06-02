@@ -10,7 +10,7 @@ class BookGenreProvider:
         while True:
             params = {
                 'pageNumber': page_num,
-                'pageSize': 25,
+                'pageSize': 50,
                 'orderBy': 'created-at',
                 'isAscendingOrder': False
             }

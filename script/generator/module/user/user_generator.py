@@ -33,7 +33,7 @@ class UserGenerator:
         response.raise_for_status()
 
     def __extract_otp(self) -> Optional[str]:
-        content = self.__mail_manager.latest_email()
+        content = self.__mail_manager.latest_email
         match = self.__otp_pattern.search(content)
         if not match:
             return None

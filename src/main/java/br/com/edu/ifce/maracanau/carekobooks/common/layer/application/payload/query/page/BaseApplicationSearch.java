@@ -1,6 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,16 +10,14 @@ import lombok.Setter;
 @Setter
 public abstract class BaseApplicationSearch {
 
-    public static final int DEFAULT_PAGE_NUMBER = 0;
-    public static final int DEFAULT_PAGE_SIZE = 10;
-    public static final String DEFAULT_ORDER_BY = "id";
-    public static final boolean DEFAULT_IS_ASCENDING_ORDER = true;
-
+    @Min(0)
     @Schema(defaultValue = "0")
-    protected Integer pageNumber = DEFAULT_PAGE_NUMBER;
+    protected Integer pageNumber = 0;
 
+    @Min(0)
+    @Max(50)
     @Schema(defaultValue = "10")
-    protected Integer pageSize = DEFAULT_PAGE_SIZE;
+    protected Integer pageSize = 10;
 
     @Schema(
             defaultValue = "id",
@@ -27,8 +27,9 @@ public abstract class BaseApplicationSearch {
                     "updated-at"
             }
     )
-    protected String orderBy = DEFAULT_ORDER_BY;
+    protected String orderBy = "id";
 
     @Schema(defaultValue = "true")
-    protected Boolean isAscendingOrder = DEFAULT_IS_ASCENDING_ORDER;
+    protected Boolean isAscendingOrder = true;
+
 }

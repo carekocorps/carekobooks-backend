@@ -1,14 +1,14 @@
 from common.provider.auth_provider import AuthProvider
 from common.provider.book_provider import BookProvider
 from common.provider.user_provider import UserProvider
-from common.factory.book_review_factory import BookReviewFactory
+from common.factory.book_review_factory import IBookReviewFactory
 from config import Config
 import requests
 import logging
 import random
 
 class BookReviewGenerator:
-    def __init__(self, review_factory: BookReviewFactory, config: Config):
+    def __init__(self, review_factory: IBookReviewFactory, config: Config):
         self.__review_factory = review_factory
         self.__config = config
     

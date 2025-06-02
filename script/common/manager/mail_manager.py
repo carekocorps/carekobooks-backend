@@ -13,6 +13,7 @@ class IMailManager(ABC):
     def email_address(self) -> str:
         pass
 
+    @property
     @abstractmethod
     def latest_email(self, timeout_ms: int = 60000) -> str:
         pass
@@ -44,6 +45,7 @@ class MailSlurpManager(IMailManager):
     def email_address(self) -> str:
         return self.inbox.email_address
 
+    @property
     def latest_email(self, timeout_ms: int = 60000) -> None:
         email = self.__wait_controller.wait_for_latest_email(inbox_id = self.inbox.id, timeout = timeout_ms)
         return email.body

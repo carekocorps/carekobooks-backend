@@ -3,14 +3,14 @@ import requests
 
 class BookThreadProvider:
     @staticmethod
-    def existing_threads(config: Config):
+    def existing_threads(config: Config) -> list[dict]:
         threads = []
         page_num = 0
 
         while True:
             params = {
                 'pageNumber': page_num,
-                'pageSize': 25,
+                'pageSize': 50,
                 'orderBy': 'created-at',
                 'isAscendingOrder': False
             }

@@ -3,14 +3,14 @@ import requests
 
 class BookProvider:
     @staticmethod
-    def existing_books(config: Config):
+    def existing_books(config: Config) -> list[dict]:
         books = []
         page_num = 0
 
         while True:
             params = {
                 'pageNumber': page_num,
-                'pageSize': 25,
+                'pageSize': 50,
                 'orderBy': 'created-at',
                 'isAscendingOrder': False
             }
