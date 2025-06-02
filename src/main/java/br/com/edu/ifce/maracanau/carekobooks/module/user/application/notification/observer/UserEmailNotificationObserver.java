@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.observer;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.AuthUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.auth.AuthEmailNotificationException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,7 +16,7 @@ public class UserEmailNotificationObserver implements BaseUserNotificationObserv
     private final JavaMailSender mailSender;
 
     @Override
-    public void notify(UserResponse response, NotificationContent content) {
+    public void notify(AuthUserResponse response, NotificationContent content) {
         try {
             var message = mailSender.createMimeMessage();
             var helper = new MimeMessageHelper(message);

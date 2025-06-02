@@ -39,7 +39,7 @@ public class OtpService {
             throw new UserNotVerifiedException();
         }
 
-        var response = userMapper.toResponse(user);
+        var response = userMapper.toAuthResponse(user);
         response.setEmail(targetEmail);
 
         userNotificationSubject.notify(

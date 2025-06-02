@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.notificati
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notification.subject.BaseNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.content.NotificationContent;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.observer.BaseUserNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.AuthUserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class UserNotificationSubject implements BaseNotificationSubject<BaseUser
 
     private final List<BaseUserNotificationObserver> observers = new ArrayList<>();
 
-    public void notify(UserResponse response, NotificationContent content) {
+    public void notify(AuthUserResponse response, NotificationContent content) {
         observers.forEach(observer -> observer.notify(response, content));
     }
 

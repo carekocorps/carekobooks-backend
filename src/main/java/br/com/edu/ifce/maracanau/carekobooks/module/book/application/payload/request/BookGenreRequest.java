@@ -14,7 +14,7 @@ public class BookGenreRequest implements BaseRequest {
 
     @NotBlank
     @Size(max = 50)
-    @Pattern(regexp = "^[a-z0-9]+$", message = "Name should only contain letters and numbers")
+    @Pattern(regexp = "^(?!_+$)[a-z0-9_]+$", message = "Name should only contain letters and numbers")
     @Schema(example = "string")
     private String name;
 

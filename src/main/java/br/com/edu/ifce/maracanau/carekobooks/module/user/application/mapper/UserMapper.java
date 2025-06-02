@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.ann
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.AuthUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
@@ -44,6 +45,7 @@ public abstract class UserMapper {
     public abstract User toModel(UserSignUpRequest request);
     public abstract UserResponse toResponse(User user);
     public abstract SimplifiedUserResponse toSimplifiedResponse(User user);
+    public abstract AuthUserResponse toAuthResponse(User user);
 
     @IgnoreBaseModelFields
     @Mapping(target = "username", ignore = true)
