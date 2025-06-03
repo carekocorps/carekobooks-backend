@@ -34,6 +34,7 @@ public class CookieFactory {
         cookie.setPath("/");
         cookie.setMaxAge(expirationTimeInSeconds);
         cookie.setAttribute("SameSite", "None");
+        cookie.setAttribute("Partitioned", "true");
         return cookie;
     }
 
