@@ -33,6 +33,7 @@ public class CookieFactory {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(expirationTimeInSeconds);
+        cookie.setAttribute("SameSite", "None");
         return cookie;
     }
 
