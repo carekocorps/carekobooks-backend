@@ -60,6 +60,10 @@ security:
         cookie-name: refresh_token
         expiry-in-seconds: 10800
     roles-claim-name: roles
+  web:
+    cors:
+      allowed-origins:
+        - http://localhost:*
 springdoc:
   swagger-ui:
     custom-css-path: /static/swagger-ui.css
