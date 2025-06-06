@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class SwaggerCustomizer extends SwaggerIndexPageTransformer {
 
     @Value("${springdoc.swagger-ui.custom-css-path}")
-    private String cssPath;
+    private String path;
 
     public SwaggerCustomizer(
             final SwaggerUiConfigProperties swaggerUiConfig,
@@ -53,7 +53,7 @@ public class SwaggerCustomizer extends SwaggerIndexPageTransformer {
     private String getTransformedHtml(String html) {
         var linkTag = """
             <link rel="stylesheet" type="text/css" href="%s"/>
-            """.formatted(cssPath);
+            """.formatted(path);
 
         return html.replace("</head>", linkTag + "</head>");
     }

@@ -1,22 +1,19 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotVerifiedException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.validator.UserValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -25,21 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final KeycloakService keycloakService;
+    private final UserContextProvider userContextProvider;
+
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final ImageService imageService;
     private final ImageMapper imageMapper;
-
-    private final UserRepository userRepository;
-    private final UserValidator userValidator;
-    private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
     public ApplicationPage<SimplifiedUserResponse> search(UserQuery query) {
@@ -55,40 +52,44 @@ public class UserService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
-    public UserResponse update(String username, UserUpdateRequest request, MultipartFile image) {
+    public UserResponse signUp(UserSignUpRequest request, MultipartFile image) {
+        var keycloakId = UUID.fromString(keycloakService.signUp(request).getId());
+        try {
+            var user = userMapper.toEntity(keycloakId, request);
+            if (image != null) {
+                user.setImage(imageMapper.toEntity(imageService.create(image)));
+            }
+
+            return userMapper.toResponse(userRepository.save(user));
+        } catch (Exception e) {
+            keycloakService.delete(keycloakId);
+            throw e;
+        }
+    }
+
+    public void resetVerificationEmail(String username) {
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!user.isEnabled()) {
-            throw new UserNotVerifiedException();
-        }
+        keycloakService.resetVerificationEmail(user.getKeycloakId());
+    }
 
-        if (user.getImage() != null) {
-            imageService.delete(user.getImage().getId());
-        }
+    public void changeEmail(String username) {
+        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
 
-        if (image != null) {
-            user.setImage(imageMapper.toModel(imageService.create(image)));
-        }
-
-        entityManager.detach(user);
-        userMapper.updateModel(user, request);
-        userValidator.validate(user);
-        return userMapper.toResponse(userRepository.save(entityManager.merge(user)));
+        keycloakService.resetEmail(user.getKeycloakId());
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
     public void changeImage(String username, MultipartFile image) {
+        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
-
-        if (!user.isEnabled()) {
-            throw new UserNotVerifiedException();
-        }
 
         if (image == null && user.getImage() == null) {
             throw new ImageNotFoundException();
@@ -100,7 +101,7 @@ public class UserService {
 
         user.setImage(Optional
                 .ofNullable(image)
-                .map(file -> imageMapper.toModel(imageService.create(file)))
+                .map(file -> imageMapper.toEntity(imageService.create(file)))
                 .orElse(null)
         );
 
@@ -108,13 +109,34 @@ public class UserService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "username", exception = UserModificationForbiddenException.class)
-    public void delete(String username) {
-        if (!userRepository.existsByUsername(username)) {
-            throw new UserNotFoundException();
+    public void update(String username, UserUpdateRequest request, MultipartFile image) {
+        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (user.getImage() != null) {
+            imageService.delete(user.getImage().getId());
         }
 
-        userRepository.deleteByUsername(username);
+        if (image != null) {
+            user.setImage(imageMapper.toEntity(imageService.create(image)));
+        }
+
+        userMapper.updateEntity(user, request);
+        userRepository.save(user);
+        keycloakService.update(user.getKeycloakId(), request);
+    }
+
+    @Transactional
+    public void delete(String username) {
+        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        userRepository.delete(user);
+        keycloakService.delete(user.getKeycloakId());
     }
 
 }

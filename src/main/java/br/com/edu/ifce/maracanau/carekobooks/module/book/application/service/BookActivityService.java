@@ -6,13 +6,12 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.e
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookActivityValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookActivityService {
+
+    private final UserContextProvider userContextProvider;
 
     private final BookActivityRepository bookActivityRepository;
     private final BookActivityMapper bookActivityMapper;
@@ -51,9 +52,9 @@ public class BookActivityService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "request", exception = BookActivityModificationForbiddenException.class)
     public BookActivityResponse create(BookProgressRequest request) {
-        var activity = bookActivityMapper.toModel(request);
+        userContextProvider.assertAuthorized(request.getUsername(), BookActivityModificationForbiddenException.class);
+        var activity = bookActivityMapper.toEntity(request);
         bookActivityValidator.validate(activity);
         bookActivityRepository.save(activity);
 
@@ -68,11 +69,8 @@ public class BookActivityService {
                 .findById(id)
                 .orElseThrow(BookActivityNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(activity.getUser().getUsername())) {
-            throw new BookActivityModificationForbiddenException();
-        }
-
-        bookActivityRepository.deleteById(id);
+        userContextProvider.assertAuthorized(activity.getUser().getUsername(), BookActivityModificationForbiddenException.class);
+        bookActivityRepository.delete(activity);
     }
 
 }

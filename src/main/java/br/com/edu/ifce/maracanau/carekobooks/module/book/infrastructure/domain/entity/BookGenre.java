@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,10 +13,10 @@ import java.util.List;
 @Table(
         name = "book_genres",
         indexes = {
-                @Index(name = "idx_name", columnList = "name")
+                @Index(name = "idx_name", columnList = "name", unique = true)
         }
 )
-public class BookGenre extends BaseModel {
+public class BookGenre extends BaseEntity {
 
     @Column(length = 50, unique = true, nullable = false)
     private String name;

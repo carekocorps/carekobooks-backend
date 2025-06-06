@@ -11,8 +11,5 @@ create table book_genres
             unique
 );
 
-alter table book_genres
-    owner to postgres;
-
 create index idx_name
     on book_genres (name);

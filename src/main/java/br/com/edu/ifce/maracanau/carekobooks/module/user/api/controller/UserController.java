@@ -1,12 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserControllerDocs;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +43,35 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserResponse> signUp(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image) {
+        var response = userService.signUp(request, image);
+        var uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{username}")
+                .buildAndExpand(response.getUsername())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(response);
+    }
+
+    @Override
+    @PostMapping("/{username}/reset-verification-email")
+    public ResponseEntity<Void> resetVerificationEmail(@PathVariable String username) {
+        userService.resetVerificationEmail(username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
+    @PostMapping("/{username}/reset-email")
+    public ResponseEntity<Void> resetEmail(@PathVariable String username) {
+        userService.changeEmail(username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
     @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
         userService.update(username, request, image);
@@ -49,7 +79,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile image) {
         userService.changeImage(username, image);
@@ -57,7 +87,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping(value = "/{username}/images")
     public ResponseEntity<Void> unassignImage(@PathVariable String username) {
         userService.changeImage(username, null);
@@ -65,7 +95,7 @@ public class UserController implements BaseController, UserControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{username}")
     public ResponseEntity<Void> delete(@PathVariable String username) {
         userService.delete(username);

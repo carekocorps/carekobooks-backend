@@ -1,9 +1,10 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,6 +60,60 @@ public interface UserControllerDocs {
     ResponseEntity<UserResponse> find(@PathVariable String username);
 
     @Operation(
+            summary = "Register a new user account",
+            tags = {"User"},
+            requestBody = @RequestBody(
+                    content = @Content(
+                            encoding = @Encoding(
+                                    name = "request",
+                                    contentType = "application/json"
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            description = "Created",
+                            responseCode = "201",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserResponse.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<UserResponse> signUp(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image);
+
+    @Operation(
+            summary = "Resend verification email",
+            description = "Resends the verification email for the specified user if they are not yet verified. Requires user role.",
+            tags = {"User"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> resetVerificationEmail(@PathVariable String username);
+
+    @Operation(
+            summary = "Reset user email",
+            description = "Resets the email address of the specified user. Requires user role.",
+            tags = {"User"},
+            security = @SecurityRequirement(name = "Bearer"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> resetEmail(@PathVariable String username);
+
+    @Operation(
             summary = "Update a user",
             tags = {"User"},
             requestBody = @RequestBody(
@@ -69,7 +124,7 @@ public interface UserControllerDocs {
                             )
                     )
             ),
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -85,7 +140,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Update a user image by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -101,7 +156,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Delete a user image by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -115,7 +170,7 @@ public interface UserControllerDocs {
     @Operation(
             summary = "Delete a user by username",
             tags = {"User"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

@@ -5,43 +5,25 @@ services:
       dockerfile: docker/Dockerfile
     container_name: carekobooks-backend
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - postgres
       - minio
       - redis
+      - keycloak
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
-      EMAIL_USERNAME: ${EMAIL_USERNAME}
-      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      CORS_ORIGIN: ${CORS_ORIGIN}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
       MINIO_OUTER_ENDPOINT: ${MINIO_OUTER_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
-    volumes:
-      - carekobooks-backend-data:/app/.secrets/keys
-    entrypoint: >
-      /bin/sh -c '
-        readonly OUTPUT_DIR="/app/.secrets/keys"
-        readonly PRIVATE_KEY_PATH="$${OUTPUT_DIR}/app.key"
-        readonly PUBLIC_KEY_PATH="$${OUTPUT_DIR}/app.pub"
-        if [ ! -f "$${PRIVATE_KEY_PATH}" ] || [ ! -f "$${PUBLIC_KEY_PATH}" ]; then
-          openssl genpkey -algorithm RSA -out "$${PRIVATE_KEY_PATH}" -pkeyopt rsa_keygen_bits:2048 &> /dev/null
-          openssl rsa -pubout -in "$${PRIVATE_KEY_PATH}" -out "$${PUBLIC_KEY_PATH}" &> /dev/null
-          echo "RSA Keys generated successfully in $${OUTPUT_DIR}"
-        fi
-        exec $0 "$@"
-      '
-    command: java -jar app.jar --spring.profiles.active=staging
     restart: unless-stopped
     networks:
       - carekonet
 
   postgres:
-    image: postgres:latest
+    image: postgres:17
     container_name: carekobooks-postgres
     ports:
       - "5432:5432"
@@ -84,7 +66,7 @@ services:
       - carekonet
 
   redis:
-    image: redis:latest
+    image: redis:8
     container_name: carekobooks-redis
     ports:
       - "6379:6379"
@@ -94,12 +76,48 @@ services:
     networks:
       - carekonet
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.5
+    container_name: carekobooks-keycloak
+    depends_on:
+      - keycloak-postgres
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/carekobooks-keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_FEATURES: update-email
+    command: start-dev
+    restart: unless-stopped
+    networks:
+      - carekonet
+      - keycloaknet
+
+  keycloak-postgres:
+    image: postgres:17
+    container_name: keycloak-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: carekobooks-keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - keycloaknet
+
 volumes:
-  carekobooks-backend-data:
   carekobooks-postgres-data:
   carekobooks-minio-data:
   carekobooks-redis-data:
+  carekobooks-keycloak-postgres-data:
 
 networks:
   carekonet:
-    driver: bridge
+  keycloaknet:

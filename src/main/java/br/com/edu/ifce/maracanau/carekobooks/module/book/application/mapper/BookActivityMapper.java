@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseEntityFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookActivity;
@@ -17,10 +17,10 @@ import org.mapstruct.Mapping;
 )
 public interface BookActivityMapper {
 
-    @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
-    @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    BookActivity toModel(BookProgressRequest request);
+    @IgnoreBaseEntityFields
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(request.getUsername()))")
+    @Mapping(target = "book", expression = "java(bookMapper.toEntity(request.getBookId()))")
+    BookActivity toEntity(BookProgressRequest request);
     BookActivityResponse toResponse(BookActivity activity);
 
 }

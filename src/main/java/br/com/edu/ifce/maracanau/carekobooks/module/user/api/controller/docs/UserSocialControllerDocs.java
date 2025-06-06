@@ -52,7 +52,7 @@ public interface UserSocialControllerDocs {
     @Operation(
             summary = "Follow a user by username",
             tags = {"User Social"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -66,7 +66,7 @@ public interface UserSocialControllerDocs {
     @Operation(
             summary = "Unfollow a user by username",
             tags = {"User Social"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

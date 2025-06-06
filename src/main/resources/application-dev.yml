@@ -7,21 +7,13 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-  mail:
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-security:
-  jwt:
-    key:
-      private: file:.secrets/keys/app.key
-      public: file:.secrets/keys/app.pub
+  flyway:
+    enabled: true
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8080}
+  realm: ${KEYCLOAK_REALM:carekobooks-realm}
+  client-id: ${KEYCLOAK_CLIENT_ID:carekobooks-client}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
 minio:
   inner-endpoint: ${MINIO_INNER_ENDPOINT:http://localhost:9000}
   outer-endpoint: ${MINIO_OUTER_ENDPOINT:${minio.inner-endpoint}}

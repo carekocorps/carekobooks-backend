@@ -8,8 +8,4 @@ public class UserUnauthorizedException extends RuntimeException {
         super(DEFAULT_ERROR_MESSAGE);
     }
 
-    public UserUnauthorizedException(String message) {
-        super(message);
-    }
-
 }

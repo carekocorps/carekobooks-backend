@@ -21,7 +21,7 @@ public abstract class ImageMapper {
 
     @Mapping(target = "users", ignore = true)
     @Mapping(target = "books", ignore = true)
-    public abstract Image toModel(ImageResponse response);
+    public abstract Image toEntity(ImageResponse response);
 
     @Mapping(
             target = "url",

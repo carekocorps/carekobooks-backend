@@ -3,9 +3,9 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class UserSocialService {
+
+    private final UserContextProvider userContextProvider;
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -44,10 +46,7 @@ public class UserSocialService {
 
     @Transactional
     public void changeFollowing(String username, String targetUsername, boolean isFollowingRequested) {
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(username)) {
-            throw new UserModificationForbiddenException();
-        }
-
+        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         if (username.equals(targetUsername)) {
             throw new UserSelfFollowingException();
         }
@@ -63,14 +62,10 @@ public class UserSocialService {
             throw new UserNotFoundException("One or both users were not found");
         }
 
-        if (!user.isEnabled() || !target.isEnabled()) {
-            throw new UserNotVerifiedException("One or both users are not verified");
-        }
-
         var isUserFollowing = user.getFollowing().contains(target);
         if (isUserFollowing == isFollowingRequested) {
             throw isFollowingRequested
-                    ? new UserAlreadyVerifiedException()
+                    ? new UserAlreadyFollowingException()
                     : new UserNotFollowingException();
         }
 

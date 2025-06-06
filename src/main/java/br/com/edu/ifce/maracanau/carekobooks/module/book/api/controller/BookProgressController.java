@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookProgressQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping
     public ResponseEntity<BookProgressResponse> create(@RequestBody @Valid BookProgressRequest request) {
         var response = bookProgressService.create(request);
@@ -50,7 +50,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookProgressRequest request) {
         bookProgressService.update(id, request);
@@ -61,7 +61,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping("/{id}/favorites")
     public ResponseEntity<Void> assignAsFavorite(@PathVariable Long id) {
         bookProgressService.changeAsFavorite(id, true);
@@ -69,7 +69,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{id}/favorites")
     public ResponseEntity<Void> unassignAsFavorite(@PathVariable Long id) {
         bookProgressService.changeAsFavorite(id, false);
@@ -77,7 +77,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookProgressService.delete(id);

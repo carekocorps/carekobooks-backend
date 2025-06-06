@@ -59,9 +59,9 @@ public class BookService {
     @CacheEvict(value = "book", allEntries = true)
     @Transactional
     public BookResponse create(BookRequest request, MultipartFile image) {
-        var book = bookMapper.toModel(request);
+        var book = bookMapper.toEntity(request);
         if (image != null) {
-            book.setImage(imageMapper.toModel(imageService.create(image)));
+            book.setImage(imageMapper.toEntity(imageService.create(image)));
         }
 
         bookValidator.validate(book);
@@ -84,10 +84,10 @@ public class BookService {
         }
 
         if (image != null) {
-            book.setImage(imageMapper.toModel(imageService.create(image)));
+            book.setImage(imageMapper.toEntity(imageService.create(image)));
         }
 
-        bookMapper.updateModel(book, request);
+        bookMapper.updateEntity(book, request);
         bookValidator.validate(book);
         if (book.getGenres().size() != request.getGenres().size()) {
             throw new BookGenreCountMismatchException();
@@ -105,7 +105,7 @@ public class BookService {
 
         var genre = bookGenreService
                 .find(genreName)
-                .map(bookGenreMapper::toModel)
+                .map(bookGenreMapper::toEntity)
                 .orElseThrow(BookGenreNotFoundException::new);
 
         var isBookContainingGenre = book
@@ -140,7 +140,7 @@ public class BookService {
 
         book.setImage(Optional
                 .ofNullable(image)
-                .map(file -> imageMapper.toModel(imageService.create(file)))
+                .map(file -> imageMapper.toEntity(imageService.create(file)))
                 .orElse(null)
         );
 
@@ -150,11 +150,11 @@ public class BookService {
     @CacheEvict(value = "book", key = "#id")
     @Transactional
     public void delete(Long id) {
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException();
-        }
+        var book = bookRepository
+                .findById(id)
+                .orElseThrow(BookNotFoundException::new);
 
-        bookRepository.deleteById(id);
+        bookRepository.delete(book);
     }
 
     @CacheEvict(value = "book", allEntries = true)

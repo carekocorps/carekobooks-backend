@@ -56,7 +56,7 @@ public interface BookReviewControllerDocs {
     @Operation(
             summary = "Create a book review",
             tags = {"Book Review"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -78,7 +78,7 @@ public interface BookReviewControllerDocs {
     @Operation(
             summary = "Update a book review",
             tags = {"Book Review"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
@@ -92,7 +92,7 @@ public interface BookReviewControllerDocs {
     @Operation(
             summary = "Delete a book review by ID",
             tags = {"Book Review"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),

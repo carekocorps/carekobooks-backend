@@ -18,10 +18,10 @@ services:
       - sonarnet
 
   sonarqube-db:
-    image: postgres:latest
+    image: postgres:17
     container_name: sonarqube-db
     ports:
-      - "5433:5432"
+      - "5434:5432"
     environment:
       POSTGRES_DB: sonarqube
       POSTGRES_PASSWORD: ${SONAR_JDBC_PASSWORD}
@@ -38,4 +38,3 @@ volumes:
 
 networks:
   sonarnet:
-    driver: bridge

@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.thread.thread.BookThreadModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.thread.thread.BookThreadNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadRequest;
@@ -11,7 +11,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookThreadValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookThreadService {
+
+    private final UserContextProvider userContextProvider;
 
     private final BookThreadRepository bookThreadRepository;
     private final BookThreadValidator bookThreadValidator;
@@ -42,9 +43,9 @@ public class BookThreadService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadModificationForbiddenException.class)
     public BookThreadResponse create(BookThreadRequest request) {
-        var thread = bookThreadMapper.toModel(request);
+        userContextProvider.assertAuthorized(request.getUsername(), BookThreadModificationForbiddenException.class);
+        var thread = bookThreadMapper.toEntity(request);
         bookThreadValidator.validate(thread);
 
         var response = bookThreadMapper.toResponse(bookThreadRepository.save(thread));
@@ -53,13 +54,13 @@ public class BookThreadService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "request", exception = BookThreadModificationForbiddenException.class)
     public BookThreadResponse update(Long id, BookThreadRequest request) {
+        userContextProvider.assertAuthorized(request.getUsername(), BookThreadModificationForbiddenException.class);
         var thread = bookThreadRepository
                 .findById(id)
                 .orElseThrow(BookThreadNotFoundException::new);
 
-        bookThreadMapper.updateModel(thread, request);
+        bookThreadMapper.updateEntity(thread, request);
         bookThreadValidator.validate(thread);
         return bookThreadMapper.toResponse(bookThreadRepository.save(thread));
     }
@@ -70,11 +71,8 @@ public class BookThreadService {
                 .findById(id)
                 .orElseThrow(BookThreadNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(thread.getUser().getUsername())) {
-            throw new BookThreadModificationForbiddenException();
-        }
-
-        bookThreadRepository.deleteById(id);
+        userContextProvider.assertAuthorized(thread.getUser().getUsername(), BookThreadModificationForbiddenException.class);
+        bookThreadRepository.delete(thread);
     }
 
 }

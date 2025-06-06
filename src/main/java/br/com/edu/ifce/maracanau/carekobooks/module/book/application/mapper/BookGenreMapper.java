@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseEntityFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
@@ -19,19 +19,19 @@ public abstract class BookGenreMapper {
     @Setter(onMethod_ = @Autowired)
     protected BookGenreRepository bookGenreRepository;
 
-    @IgnoreBaseModelFields
+    @IgnoreBaseEntityFields
     @Mapping(target = "books", ignore = true)
-    public abstract BookGenre toModel(BookGenreRequest request);
+    public abstract BookGenre toEntity(BookGenreRequest request);
 
     @Mapping(target = "books", ignore = true)
-    public abstract BookGenre toModel(BookGenreResponse response);
+    public abstract BookGenre toEntity(BookGenreResponse response);
     public abstract BookGenreResponse toResponse(BookGenre genre);
 
-    @IgnoreBaseModelFields
+    @IgnoreBaseEntityFields
     @Mapping(target = "books", ignore = true)
-    public abstract void updateModel(@MappingTarget BookGenre genre, BookGenreRequest request);
+    public abstract void updateEntity(@MappingTarget BookGenre genre, BookGenreRequest request);
 
-    public List<BookGenre> toModel(List<String> genreNames) {
+    public List<BookGenre> toEntity(List<String> genreNames) {
         return bookGenreRepository.findAllByNameIn(genreNames);
     }
 

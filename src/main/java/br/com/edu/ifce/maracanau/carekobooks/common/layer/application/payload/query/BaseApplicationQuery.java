@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.q
 import static br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.repository.specification.BaseSpecification.*;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.BaseApplicationSearch;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Sort;
@@ -14,13 +14,13 @@ import java.util.Map;
 
 @Getter
 @Setter
-public abstract class BaseApplicationQuery<T extends BaseModel> extends BaseApplicationSearch {
+public abstract class BaseApplicationQuery<T extends BaseEntity> extends BaseApplicationSearch {
 
     protected LocalDate createdBefore;
     protected LocalDate createdAfter;
 
     public Specification<T> getSpecification() {
-        Specification<T> specs = Specification.where(null);
+        Specification<T> specs = (root, query, cb) -> cb.conjunction();
         if (createdBefore != null) specs = specs.and(createdBefore(createdBefore));
         if (createdAfter != null) specs = specs.and(createdAfter(createdAfter));
         return specs;

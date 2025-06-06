@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseEntityFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
@@ -18,15 +18,15 @@ import org.mapstruct.MappingTarget;
 )
 public interface BookProgressMapper {
 
-    @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
-    @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    BookProgress toModel(BookProgressRequest request);
+    @IgnoreBaseEntityFields
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(request.getUsername()))")
+    @Mapping(target = "book", expression = "java(bookMapper.toEntity(request.getBookId()))")
+    BookProgress toEntity(BookProgressRequest request);
     BookProgressResponse toResponse(BookProgress progress);
 
-    @IgnoreBaseModelFields
-    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
-    @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    void updateModel(@MappingTarget BookProgress progress, BookProgressRequest request);
+    @IgnoreBaseEntityFields
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(request.getUsername()))")
+    @Mapping(target = "book", expression = "java(bookMapper.toEntity(request.getBookId()))")
+    void updateEntity(@MappingTarget BookProgress progress, BookProgressRequest request);
 
 }

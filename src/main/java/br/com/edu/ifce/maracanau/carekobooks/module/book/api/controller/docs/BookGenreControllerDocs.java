@@ -56,7 +56,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Create a book genre [ADMIN]",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -77,7 +77,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Update a book genre [ADMIN]",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -91,7 +91,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Delete a book genre by name [ADMIN]",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -105,7 +105,7 @@ public interface BookGenreControllerDocs {
     @Operation(
             summary = "Clear book genre cache [ADMIN]",
             tags = {"Book Genre"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
