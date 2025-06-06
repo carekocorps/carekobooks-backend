@@ -38,8 +38,8 @@ spring:
       static-locations: classpath:/static/
 keycloak:
   server-url: ${KEYCLOAK_SERVER_URL}
-  realm: ${KEYCLOAK_REALM:carekobooks-realm}
-  client-id: ${KEYCLOAK_CLIENT_ID:carekobooks-client}
+  realm: ${KEYCLOAK_REALM:carekobooks}
+  client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
   client-secret: ${KEYCLOAK_CLIENT_SECRET}
 minio:
   inner-endpoint: ${MINIO_INNER_ENDPOINT}

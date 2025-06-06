@@ -14,7 +14,7 @@ import lombok.Setter;
 public class UserSignUpRequest implements BaseRequest {
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 3, max = 50)
     @Pattern(regexp = "^(?!_+$)[a-z0-9_]+$", message = "Username should only contain letters and numbers")
     @Schema(example = "string")
     private String username;

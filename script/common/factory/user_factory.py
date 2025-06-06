@@ -1,27 +1,19 @@
 from abc import ABC, abstractmethod
 from faker import Faker
 
-class IUserFactory:
+class IUserFactory(ABC):
     @abstractmethod
-    def generate_username(self) -> str:
-        pass
-
-    @abstractmethod
-    def generate(self, username:str, email: str) -> dict:
+    def generate(self) -> dict[str, str]:
         pass
 
 class UserFactory(IUserFactory):
     def __init__(self, faker: Faker):
         self.__faker = faker
-
-    def generate_username(self) -> str:
-        return self.__faker.user_name()
-
-    def generate(self, username: str, email: str) -> dict:
+    
+    def generate(self) -> dict[str, str]:
         return {
-            'username': username,
-            'email': email,
+            'username': self.__faker.user_name(),
             'displayName': self.__faker.name(),
-            'password': self.__faker.password(length = 10),
-            'description': self.__faker.sentence(nb_words = 20)
+            'email': self.__faker.email(),
+            'description': self.__faker.sentence(nb_words = 25)
         }

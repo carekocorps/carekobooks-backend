@@ -93,7 +93,7 @@ services:
       KC_FEATURES: update-email
     command: start-dev --import-realm
     volumes:
-      - ../keycloak/data/import:/opt/keycloak/data/import
+      - ./keycloak/data/import:/opt/keycloak/data/import
     restart: unless-stopped
     networks:
       - carekonet
@@ -102,8 +102,6 @@ services:
   keycloak-postgres:
     image: postgres:17
     container_name: keycloak-postgres
-    ports:
-      - "5433:5432"
     environment:
       POSTGRES_DB: carekobooks-keycloak
       POSTGRES_USER: postgres
