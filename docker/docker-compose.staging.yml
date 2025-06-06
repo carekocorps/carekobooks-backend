@@ -91,7 +91,9 @@ services:
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KC_FEATURES: update-email
-    command: start-dev
+    command: start-dev --import-realm
+    volumes:
+      - ../keycloak/data/import:/opt/keycloak/data/import
     restart: unless-stopped
     networks:
       - carekonet

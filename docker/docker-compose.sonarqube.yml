@@ -20,8 +20,6 @@ services:
   sonarqube-db:
     image: postgres:17
     container_name: sonarqube-db
-    ports:
-      - "5434:5432"
     environment:
       POSTGRES_DB: sonarqube
       POSTGRES_PASSWORD: ${SONAR_JDBC_PASSWORD}
