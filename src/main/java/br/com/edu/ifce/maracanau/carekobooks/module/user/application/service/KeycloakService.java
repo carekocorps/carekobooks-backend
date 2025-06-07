@@ -5,8 +5,11 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.*;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.enums.KeycloakExceptionStrategy;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserAlreadyVerifiedException;
+import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.keycloak.representations.idm.AbstractUserRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -16,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class KeycloakService {
@@ -24,60 +28,81 @@ public class KeycloakService {
     private final KeycloakUserMapper keycloakUserMapper;
 
     public UserRepresentation signUp(UserSignUpRequest request) {
-        var resource = keycloakProvider.getUsersResource();
-        var response = resource.create(keycloakUserMapper.toRepresentation(request));
-        if (response.getStatus() != HttpStatus.SC_CREATED) {
-            throw switch (response.getStatus()) {
-                case HttpStatus.SC_BAD_REQUEST -> new KeycloakBadRequestException();
-                case HttpStatus.SC_CONFLICT -> new KeycloakConflictException();
-                case HttpStatus.SC_FORBIDDEN -> new KeycloakForbiddenException();
-                default -> new KeycloakBadGatewayException();
-            };
+        try {
+            var resource = keycloakProvider.getUsersResource();
+            try (var response = resource.create(keycloakUserMapper.toRepresentation(request))) {
+                if (response.getStatus() != HttpStatus.SC_CREATED) {
+                    throw KeycloakExceptionStrategy.of(response.getStatus());
+                }
+            }
+
+            var representation = resource
+                    .searchByUsername(request.getUsername(), true)
+                    .stream()
+                    .filter(Predicate.not(AbstractUserRepresentation::isEmailVerified))
+                    .findFirst()
+                    .orElseThrow(KeycloakNotFoundException::new);
+
+            resource.get(representation.getId()).sendVerifyEmail();
+            return representation;
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
         }
-
-        var representation = resource
-                .searchByUsername(request.getUsername(), true)
-                .stream()
-                .filter(Predicate.not(AbstractUserRepresentation::isEmailVerified))
-                .findFirst()
-                .orElseThrow(KeycloakUserNotFoundException::new);
-
-        resource.get(representation.getId()).sendVerifyEmail();
-        return representation;
     }
 
     public void resetVerificationEmail(UUID keycloakId) {
-        var resource = keycloakProvider.getUsersResource();
-        var representation = resource
-                .get(keycloakId.toString())
-                .toRepresentation();
+        try {
+            var resource = keycloakProvider.getUsersResource();
+            var representation = resource
+                    .get(keycloakId.toString())
+                    .toRepresentation();
 
-        if (Boolean.TRUE.equals(representation.isEmailVerified())) {
-            throw new UserAlreadyVerifiedException();
+            if (Boolean.TRUE.equals(representation.isEmailVerified())) {
+                throw new UserAlreadyVerifiedException();
+            }
+
+            resource.get(representation.getId()).sendVerifyEmail();
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
         }
-
-        resource.get(representation.getId()).sendVerifyEmail();
     }
 
     public void resetEmail(UUID keycloakId) {
-        keycloakProvider
-                .getUsersResource()
-                .get(keycloakId.toString())
-                .executeActionsEmail(List.of("UPDATE_EMAIL"));
+        try {
+            keycloakProvider
+                    .getUsersResource()
+                    .get(keycloakId.toString())
+                    .executeActionsEmail(List.of("UPDATE_EMAIL"));
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
+        }
     }
 
     public void update(UUID keycloakId, UserUpdateRequest request) {
-        keycloakProvider
-                .getUsersResource()
-                .get(keycloakId.toString())
-                .update(keycloakUserMapper.toRepresentation(request));
+        try {
+            keycloakProvider
+                    .getUsersResource()
+                    .get(keycloakId.toString())
+                    .update(keycloakUserMapper.toRepresentation(request));
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
+        }
     }
 
     public void delete(UUID keycloakId) {
-        keycloakProvider
-                .getUsersResource()
-                .get(keycloakId.toString())
-                .remove();
+        try {
+            keycloakProvider
+                    .getUsersResource()
+                    .get(keycloakId.toString())
+                    .remove();
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
+        }
     }
 
 }

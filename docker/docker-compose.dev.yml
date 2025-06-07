@@ -67,7 +67,7 @@ services:
     volumes:
       - ../keycloak/data/import:/opt/keycloak/data/import
     networks:
-      - keycloaknet
+      - carekonet-keycloak-postgres
 
   keycloak-postgres:
     image: postgres:17
@@ -79,7 +79,7 @@ services:
     volumes:
       - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
     networks:
-      - keycloaknet
+      - carekonet-keycloak-postgres
 
 volumes:
   carekobooks-postgres-data:
@@ -88,4 +88,4 @@ volumes:
   carekobooks-keycloak-postgres-data:
 
 networks:
-  keycloaknet:
+  carekonet-keycloak-postgres:

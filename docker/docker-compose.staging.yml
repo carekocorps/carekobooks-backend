@@ -13,14 +13,17 @@ services:
       - keycloak
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
-      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
       MINIO_OUTER_ENDPOINT: ${MINIO_OUTER_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     restart: unless-stopped
     networks:
-      - carekonet
+      - carekonet-postgres
+      - carekonet-minio
+      - carekonet-redis
+      - carekonet-keycloak
 
   postgres:
     image: postgres:17
@@ -34,7 +37,7 @@ services:
       - carekobooks-postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - carekonet
+      - carekonet-postgres
 
   minio:
     image: minio/minio:latest
@@ -49,11 +52,11 @@ services:
       - carekobooks-minio-data:/data
     entrypoint: >
       /bin/sh -c '
-        isAlive() { curl -sf http://carekobooks-minio:9000/minio/health/live; }
+        isAlive() { curl -sf http://minio:9000/minio/health/live; }
         minio $0 "$@" --quiet & echo $! > /tmp/minio.pid
         until isAlive; do sleep 1; done
         echo "MinIO is ready. Proceeding with setup..."
-        mc alias set myminio http://carekobooks-minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+        mc alias set myminio http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
         mc mb myminio/${MINIO_BUCKET}/ --ignore-existing
         mc anonymous set public myminio/${MINIO_BUCKET}
         kill -s INT $(cat /tmp/minio.pid) && rm /tmp/minio.pid
@@ -63,7 +66,7 @@ services:
     command: server /data
     restart: unless-stopped
     networks:
-      - carekonet
+      - carekonet-minio
 
   redis:
     image: redis:8
@@ -74,7 +77,7 @@ services:
       - carekobooks-redis-data:/data
     restart: unless-stopped
     networks:
-      - carekonet
+      - carekonet-redis
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.5
@@ -90,14 +93,18 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/carekobooks-keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_HOSTNAME_STRICT: true
+      KC_HTTP_ENABLED: true
+      KC_PROXY: xforwarded
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_FEATURES: update-email
-    command: start-dev --import-realm
+    command: start --import-realm
     volumes:
-      - ./keycloak/data/import:/opt/keycloak/data/import
+      - ../keycloak/data/import:/opt/keycloak/data/import
     restart: unless-stopped
     networks:
-      - carekonet
-      - keycloaknet
+      - carekonet-keycloak
+      - carekonet-keycloak-postgres
 
   keycloak-postgres:
     image: postgres:17
@@ -110,7 +117,7 @@ services:
       - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - keycloaknet
+      - carekonet-keycloak-postgres
 
 volumes:
   carekobooks-postgres-data:
@@ -119,5 +126,8 @@ volumes:
   carekobooks-keycloak-postgres-data:
 
 networks:
-  carekonet:
-  keycloaknet:
+  carekonet-postgres:
+  carekonet-minio:
+  carekonet-redis:
+  carekonet-keycloak:
+  carekonet-keycloak-postgres:

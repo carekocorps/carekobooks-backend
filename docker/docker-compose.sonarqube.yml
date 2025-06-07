@@ -15,7 +15,7 @@ services:
       - sonarqube-logs:/opt/sonarqube/logs
     restart: unless-stopped
     networks:
-      - sonarnet
+      - carekonet-sonarqube
 
   sonarqube-db:
     image: postgres:17
@@ -27,7 +27,7 @@ services:
       - sonarqube-db-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - sonarnet
+      - carekonet-sonarqube
 
 volumes:
   sonarqube-data:
@@ -35,4 +35,4 @@ volumes:
   sonarqube-db-data:
 
 networks:
-  sonarnet:
+  carekonet-sonarqube:
