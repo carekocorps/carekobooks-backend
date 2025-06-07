@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireAdminPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @PostMapping
     public ResponseEntity<BookGenreResponse> create(@RequestBody @Valid BookGenreRequest request) {
         var response = bookGenreService.create(request);
@@ -47,7 +47,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @PutMapping("/{name}")
     public ResponseEntity<Void> update(@PathVariable String name, @RequestBody @Valid BookGenreRequest request) {
         bookGenreService.update(name, request);
@@ -55,7 +55,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @DeleteMapping("/{name}")
     public ResponseEntity<Void> delete(@PathVariable String name) {
         bookGenreService.delete(name);
@@ -63,7 +63,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @DeleteMapping("/cache")
     public ResponseEntity<Void> clearCache() {
         bookGenreService.clearCache();

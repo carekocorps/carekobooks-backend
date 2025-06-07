@@ -1,20 +1,22 @@
-from common.factory.book_factory import IBookFactory
-from common.provider.auth_provider import AuthProvider
-from common.provider.book_genre_provider import BookGenreProvider
-from config import Config
+import urllib.parse
+from common.factory.book_request_factory import IBookRequestFactory
+from common.manager.auth_manager import IAuthManager
+from common.provider.api_provider import ApiProvider
+from config import ApiConfig
 import requests
 import logging
+import urllib
 import json
 
 class BookGenerator:
-    def __init__(self, book_factory: IBookFactory, config: Config):
-        self.__book_factory = book_factory
-        self.__config = config
+    def __init__(self, request_factory: IBookRequestFactory, auth_manager: IAuthManager):
+        self.__request_factory = request_factory
+        self.__auth_manager = auth_manager
 
     def generate(self) -> None:
-        cookies = AuthProvider.cookies(self.__config)
-        genre_names = BookGenreProvider.existing_genre_names(self.__config)
-        books = self.__book_factory.generate(genre_names)
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books')
+        genre_names = [genre.get('name') for genre in ApiProvider.fetch_book_genres()]
+        books = self.__request_factory.generate(genre_names)
 
         for book in books:
             try:
@@ -23,8 +25,8 @@ class BookGenerator:
                     'image': ('cover.png', book.image, 'image/jpeg')
                 }
 
-                response = requests.post(self.__config.book_provider_url, files = files, cookies = cookies)
+                response = requests.post(url, files = files, headers = self.__auth_manager.authorization_header)
                 logging.info(response.text)
                 response.raise_for_status()
-            except Exception as ex:
-                logging.error(ex)
+            except Exception as e:
+                logging.error(e)

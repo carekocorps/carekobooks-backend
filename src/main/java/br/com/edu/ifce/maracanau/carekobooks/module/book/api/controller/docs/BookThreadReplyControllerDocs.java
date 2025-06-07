@@ -56,7 +56,7 @@ public interface BookThreadReplyControllerDocs {
     @Operation(
             summary = "Create a thread reply",
             tags = {"Book Thread Reply"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -77,7 +77,7 @@ public interface BookThreadReplyControllerDocs {
     @Operation(
             summary = "Add a child reply to a thread",
             tags = {"Book Thread Reply"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(
                             description = "Created",
@@ -98,7 +98,7 @@ public interface BookThreadReplyControllerDocs {
     @Operation(
             summary = "Update a thread reply",
             tags = {"Book Thread Reply"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -112,7 +112,7 @@ public interface BookThreadReplyControllerDocs {
     @Operation(
             summary = "Delete a thread reply by ID",
             tags = {"Book Thread Reply"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

@@ -1,14 +1,16 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17
     container_name: carekobooks-postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: carekobooks
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - carekobooks-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   minio:
     image: minio/minio:latest
@@ -23,28 +25,67 @@ services:
       - carekobooks-minio-data:/data
     entrypoint: >
       /bin/sh -c '
-        isAlive() { curl -sf http://carekobooks-minio:9000/minio/health/live; }
-        minio $0 "$@" --quiet & echo $! > /tmp/minio.pid
+        isAlive() { curl -sf http://localhost:9000/minio/health/live; }
+        minio server /data --quiet & echo $! > /tmp/minio.pid
         until isAlive; do sleep 1; done
         echo "MinIO is ready. Proceeding with setup..."
-        mc alias set myminio http://carekobooks-minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-        mc mb myminio/${MINIO_BUCKET}/ --ignore-existing
+        mc alias set myminio http://localhost:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+        mc mb myminio/${MINIO_BUCKET} --ignore-existing
         mc anonymous set public myminio/${MINIO_BUCKET}
         kill -s INT $(cat /tmp/minio.pid) && rm /tmp/minio.pid
         while isAlive; do sleep 0.1; done
-        exec minio $0 "$@"
+        exec minio server /data
       '
     command: server /data
+    restart: unless-stopped
 
   redis:
-    image: redis:latest
+    image: redis:8
     container_name: carekobooks-redis
     ports:
       - "6379:6379"
     volumes:
       - carekobooks-redis-data:/data
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.5
+    container_name: carekobooks-keycloak
+    depends_on:
+      - keycloak-postgres
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/carekobooks-keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_FEATURES: update-email
+    command: start-dev --import-realm
+    volumes:
+      - ../keycloak/data/import:/opt/keycloak/data/import
+    networks:
+      - carekonet-keycloak-postgres
+
+  keycloak-postgres:
+    image: postgres:17
+    container_name: keycloak-postgres
+    environment:
+      POSTGRES_DB: carekobooks-keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
+    networks:
+      - carekonet-keycloak-postgres
 
 volumes:
   carekobooks-postgres-data:
   carekobooks-minio-data:
   carekobooks-redis-data:
+  carekobooks-keycloak-postgres-data:
+
+networks:
+  carekonet-keycloak-postgres:

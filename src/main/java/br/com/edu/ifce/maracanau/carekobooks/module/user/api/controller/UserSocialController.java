@@ -6,7 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserSocialService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping("/following/{targetUsername}")
     public ResponseEntity<Void> follow(@PathVariable String username, @PathVariable String targetUsername) {
         userSocialService.changeFollowing(username, targetUsername, true);
@@ -49,7 +49,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/following/{targetUsername}")
     public ResponseEntity<Void> unfollow(@PathVariable String username, @PathVariable String targetUsername) {
         userSocialService.changeFollowing(username, targetUsername, false);

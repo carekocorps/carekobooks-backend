@@ -1,34 +1,28 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.jwt.converter;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-@RequiredArgsConstructor
 @Component
 public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    @Value("${security.jwt.roles-claim-name}")
-    private String rolesClaimName;
-
-    private final UserDetailsService userDetailsService;
-
     @Override
     public AbstractAuthenticationToken convert(Jwt source) {
-        var username = source.getSubject();
-        var roles = Optional.ofNullable(source.getClaimAsStringList(rolesClaimName)).orElse(List.of());
-        var grantedAuthorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
-        var userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, grantedAuthorities);
+        Map<String, List<String>> realmAccess = source.getClaim("realm_access");
+        List<SimpleGrantedAuthority> grantedAuthorities = realmAccess
+                .get("roles")
+                .stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                .toList();
+
+        return new JwtAuthenticationToken(source, grantedAuthorities);
     }
 
 }

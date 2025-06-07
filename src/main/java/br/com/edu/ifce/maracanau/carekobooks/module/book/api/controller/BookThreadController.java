@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookThreadControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
@@ -38,7 +38,7 @@ public class BookThreadController implements BaseController, BookThreadControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping
     public ResponseEntity<BookThreadResponse> create(@RequestBody @Valid BookThreadRequest request) {
         var response = bookThreadService.create(request);
@@ -47,7 +47,7 @@ public class BookThreadController implements BaseController, BookThreadControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookThreadRequest request) {
         bookThreadService.update(id, request);
@@ -55,7 +55,7 @@ public class BookThreadController implements BaseController, BookThreadControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookThreadService.delete(id);

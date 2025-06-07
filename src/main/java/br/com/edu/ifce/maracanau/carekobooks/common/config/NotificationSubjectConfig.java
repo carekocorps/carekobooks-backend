@@ -6,8 +6,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notificatio
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.observer.BookThreadWebSocketNotificationObserver;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.thread.subject.BookThreadNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.observer.UserEmailNotificationObserver;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.notification.subject.UserNotificationSubject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,13 +29,6 @@ public class NotificationSubjectConfig {
     @Bean
     public BookThreadReplyNotificationSubject bookThreadReplyNotificationSubject(BookThreadReplyWebSocketNotificationObserver observer) {
         var subject = new BookThreadReplyNotificationSubject();
-        subject.addObserver(observer);
-        return subject;
-    }
-
-    @Bean
-    public UserNotificationSubject userSubject(UserEmailNotificationObserver observer) {
-        var subject = new UserNotificationSubject();
         subject.addObserver(observer);
         return subject;
     }

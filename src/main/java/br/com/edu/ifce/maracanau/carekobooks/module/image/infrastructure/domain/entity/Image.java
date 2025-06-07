@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseModel;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.infrastructure.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "images")
-public class Image extends BaseModel {
+public class Image extends BaseEntity {
 
     @Column(nullable = false)
     private String name;

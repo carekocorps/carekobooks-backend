@@ -19,14 +19,12 @@ public class UserQuery extends BaseApplicationQuery<User> {
 
     private String username;
     private String displayName;
-    private Boolean isEnabled;
 
     @Override
     public Specification<User> getSpecification() {
         var specs = super.getSpecification();
         if (StringUtils.isNotBlank(username)) specs = specs.and(usernameContains(username));
         if (StringUtils.isNotBlank(displayName)) specs = specs.and(displayNameContains(displayName));
-        if (isEnabled != null) specs = specs.and(isEnabledEquals(isEnabled));
         return specs;
     }
 

@@ -6,13 +6,12 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.e
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookActivityValidator;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -51,12 +50,12 @@ public class BookActivityService {
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "request", exception = BookActivityModificationForbiddenException.class)
     public BookActivityResponse create(BookProgressRequest request) {
-        var activity = bookActivityMapper.toModel(request);
+        var activity = bookActivityMapper.toEntity(request);
         bookActivityValidator.validate(activity);
-        bookActivityRepository.save(activity);
+        activity = bookActivityRepository.save(activity);
 
+        KeycloakContextProvider.assertAuthorized(activity.getUser().getKeycloakId(), BookActivityModificationForbiddenException.class);
         var response = bookActivityMapper.toResponse(activity);
         bookActivityNotificationSubject.notify(response);
         return response;
@@ -68,11 +67,8 @@ public class BookActivityService {
                 .findById(id)
                 .orElseThrow(BookActivityNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(activity.getUser().getUsername())) {
-            throw new BookActivityModificationForbiddenException();
-        }
-
-        bookActivityRepository.deleteById(id);
+        KeycloakContextProvider.assertAuthorized(activity.getUser().getKeycloakId(), BookActivityModificationForbiddenException.class);
+        bookActivityRepository.delete(activity);
     }
 
 }

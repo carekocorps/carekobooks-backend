@@ -61,7 +61,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Create a book [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             requestBody = @RequestBody(
                     content = @Content(
                             encoding = @Encoding(
@@ -100,7 +100,7 @@ public interface BookControllerDocs {
                             )
                     )
             ),
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -114,7 +114,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Assign a book genre to a book by ID [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -128,7 +128,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Unassign a book genre to a book by ID [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -142,7 +142,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Update a book image by ID [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -158,7 +158,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Delete a book image by ID [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -172,7 +172,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Delete a book by ID [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
@@ -186,7 +186,7 @@ public interface BookControllerDocs {
     @Operation(
             summary = "Clear book cache [ADMIN]",
             tags = {"Book"},
-            security = @SecurityRequirement(name = "access_token"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

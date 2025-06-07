@@ -2,7 +2,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.progress.BookProgressNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.progress.BookProgressModificationForbiddenException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.AuthenticatedUserProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookProgressMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookProgressQuery;
@@ -10,7 +9,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookProgressValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.annotation.AuthenticatedUserMatchRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.Optional;
 public class BookProgressService {
 
     private final BookActivityService bookActivityService;
-
     private final BookProgressRepository bookProgressRepository;
     private final BookProgressValidator bookProgressValidator;
     private final BookProgressMapper bookProgressMapper;
@@ -43,26 +41,23 @@ public class BookProgressService {
 
     @Transactional
     public BookProgressResponse create(BookProgressRequest request) {
-        var progress = bookProgressMapper.toModel(request);
+        var progress = bookProgressMapper.toEntity(request);
         bookProgressValidator.validate(progress);
         progress = bookProgressRepository.save(progress);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(request.getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
-
+        KeycloakContextProvider.assertAuthorized(progress.getUser().getKeycloakId(), BookProgressModificationForbiddenException.class);
         bookActivityService.create(request);
         return bookProgressMapper.toResponse(progress);
     }
 
     @Transactional
-    @AuthenticatedUserMatchRequired(target = "request", exception = BookProgressNotFoundException.class)
     public BookProgressResponse update(Long id, BookProgressRequest request) {
         var progress = bookProgressRepository
                 .findById(id)
                 .orElseThrow(BookProgressNotFoundException::new);
 
-        bookProgressMapper.updateModel(progress, request);
+        KeycloakContextProvider.assertAuthorized(progress.getUser().getKeycloakId(), BookProgressModificationForbiddenException.class);
+        bookProgressMapper.updateEntity(progress, request);
         bookProgressValidator.validate(progress);
         progress = bookProgressRepository.save(progress);
 
@@ -76,10 +71,7 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(BookProgressNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
-
+        KeycloakContextProvider.assertAuthorized(progress.getUser().getKeycloakId(), BookProgressModificationForbiddenException.class);
         bookProgressRepository.changeAsFavoriteById(id, isFavorite);
     }
 
@@ -89,11 +81,8 @@ public class BookProgressService {
                 .findById(id)
                 .orElseThrow(BookProgressNotFoundException::new);
 
-        if (AuthenticatedUserProvider.isAuthenticatedUserUnauthorized(progress.getUser().getUsername())) {
-            throw new BookProgressModificationForbiddenException();
-        }
-
-        bookProgressRepository.deleteById(id);
+        KeycloakContextProvider.assertAuthorized(progress.getUser().getKeycloakId(), BookProgressModificationForbiddenException.class);
+        bookProgressRepository.delete(progress);
     }
 
 }

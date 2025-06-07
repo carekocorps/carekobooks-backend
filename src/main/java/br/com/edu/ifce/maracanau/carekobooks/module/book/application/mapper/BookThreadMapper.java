@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseModelFields;
+import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseEntityFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadRepository;
@@ -22,20 +22,20 @@ public abstract class BookThreadMapper {
     @Setter(onMethod_ = @Autowired)
     protected BookThreadRepository bookThreadRepository;
 
-    @IgnoreBaseModelFields
+    @IgnoreBaseEntityFields
     @Mapping(target = "replies", ignore = true)
-    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
-    @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    public abstract BookThread toModel(BookThreadRequest request);
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(request.getUsername()))")
+    @Mapping(target = "book", expression = "java(bookMapper.toEntity(request.getBookId()))")
+    public abstract BookThread toEntity(BookThreadRequest request);
     public abstract BookThreadResponse toResponse(BookThread thread);
 
-    @IgnoreBaseModelFields
+    @IgnoreBaseEntityFields
     @Mapping(target = "replies", ignore = true)
-    @Mapping(target = "user", expression = "java(userMapper.toModel(request.getUsername()))")
-    @Mapping(target = "book", expression = "java(bookMapper.toModel(request.getBookId()))")
-    public abstract void updateModel(@MappingTarget BookThread thread, BookThreadRequest request);
+    @Mapping(target = "user", expression = "java(userMapper.toEntity(request.getUsername()))")
+    @Mapping(target = "book", expression = "java(bookMapper.toEntity(request.getBookId()))")
+    public abstract void updateEntity(@MappingTarget BookThread thread, BookThreadRequest request);
 
-    public BookThread toModel(Long id) {
+    public BookThread toEntity(Long id) {
         return bookThreadRepository.findById(id).orElse(null);
     }
 

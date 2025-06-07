@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookThreadReplyQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookThreadReplyService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping
     public ResponseEntity<BookThreadReplyResponse> create(@RequestBody @Valid BookThreadReplyRequest request) {
         var response = bookThreadReplyService.create(request);
@@ -47,7 +47,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping("/{id}/children")
     public ResponseEntity<BookThreadReplyResponse> addChild(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request) {
         var response = bookThreadReplyService.createChild(id, request);
@@ -56,7 +56,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookThreadReplyRequest request) {
         bookThreadReplyService.update(id, request);
@@ -64,7 +64,7 @@ public class BookThreadReplyController implements BaseController, BookThreadRepl
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookThreadReplyService.delete(id);

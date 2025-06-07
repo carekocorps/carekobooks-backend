@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookReviewQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +38,7 @@ public class BookReviewController implements BaseController, BookReviewControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping
     public ResponseEntity<BookReviewResponse> create(@RequestBody @Valid BookReviewRequest request) {
         var response = bookReviewService.create(request);
@@ -47,7 +47,7 @@ public class BookReviewController implements BaseController, BookReviewControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid BookReviewRequest request) {
         bookReviewService.update(id, request);
@@ -55,7 +55,7 @@ public class BookReviewController implements BaseController, BookReviewControlle
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookReviewService.delete(id);

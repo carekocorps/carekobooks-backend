@@ -14,7 +14,7 @@ import lombok.Setter;
 public class UserSignUpRequest implements BaseRequest {
 
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 3, max = 50)
     @Pattern(regexp = "^(?!_+$)[a-z0-9_]+$", message = "Username should only contain letters and numbers")
     @Schema(example = "string")
     private String username;
@@ -23,16 +23,10 @@ public class UserSignUpRequest implements BaseRequest {
     private String displayName;
 
     @NotBlank
-    @Email
     @Size(max = 255)
+    @Email
     @Schema(example = "string@gmail.com")
     private String email;
-
-    @NotBlank
-    @Size(min = 5, max = 255)
-    @Pattern(regexp = "^\\S+$", message = "Password should not contain spaces")
-    @Schema(example = "string")
-    private String password;
 
     @Size(max = 1000)
     private String description;

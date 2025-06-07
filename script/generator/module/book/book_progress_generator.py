@@ -1,35 +1,27 @@
-from common.provider.auth_provider import AuthProvider
-from common.provider.user_provider import UserProvider
-from common.provider.book_provider import BookProvider
-from config import Config
+from common.factory.book_progress_request_factory import IBookProgressRequestFactory
+from common.manager.auth_manager import IAuthManager
+from common.provider.api_provider import ApiProvider
+from config import ApiConfig
 import requests
 import logging
 import random
+import urllib
 
 class BookProgressGenerator:
-    __progress_statuses = ('READING', 'PLANS_TO_READ', 'FINISHED')
-    
-    def __init__(self, config: Config):
-        self.__config = config
+    def __init__(self, request_factory: IBookProgressRequestFactory, auth_manager: IAuthManager):
+        self.__request_factory = request_factory
+        self.__auth_manager = auth_manager
 
     def generate(self, user_progress_prob: float = 0.25) -> None:
-        cookies = AuthProvider.cookies(self.__config)
-        books = BookProvider.existing_books(self.__config)
-        users = UserProvider.existing_users(self.__config)
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/progresses') 
+        books = ApiProvider.fetch_books()
+        users = ApiProvider.fetch_users()
 
         for user in users:
             for book in random.sample(books, int(len(books) * user_progress_prob)):
                 try:
-                    url = self.__config.book_progress_provider_url
-                    payload = {
-                        'username': user.get('username'),
-                        'bookId': book.get('id'),
-                        'status': random.choice(self.__progress_statuses),
-                        'isFavorite': bool(random.getrandbits(1)),
-                        'score': random.randint(0, 100)
-                    }
-
-                    response = requests.post(url, json = payload, cookies = cookies)
+                    request = self.__request_factory.generate(book, user)
+                    response = requests.post(url, json = request.payload, headers = self.__auth_manager.authorization_header)
                     logging.info(response.text)                    
-                except Exception as ex:
-                    logging.error(ex)
+                except Exception as e:
+                    logging.error(e)

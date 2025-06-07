@@ -49,7 +49,7 @@ public class BookGenreService {
     @CacheEvict(value = {"book", "book:genre"}, allEntries = true)
     @Transactional
     public BookGenreResponse create(BookGenreRequest request) {
-        var genre = bookGenreMapper.toModel(request);
+        var genre = bookGenreMapper.toEntity(request);
         bookGenreValidator.validate(genre);
         return bookGenreMapper.toResponse(bookGenreRepository.save(genre));
     }
@@ -65,7 +65,7 @@ public class BookGenreService {
                 .orElseThrow(BookGenreNotFoundException::new);
 
         entityManager.detach(genre);
-        bookGenreMapper.updateModel(genre, request);
+        bookGenreMapper.updateEntity(genre, request);
         bookGenreValidator.validate(genre);
         return bookGenreMapper.toResponse(bookGenreRepository.save(entityManager.merge(genre)));
     }
@@ -76,11 +76,11 @@ public class BookGenreService {
     })
     @Transactional
     public void delete(String name) {
-        if (!bookGenreRepository.existsByName(name)) {
-            throw new BookGenreNotFoundException();
-        }
+        var genre = bookGenreRepository
+                .findByName(name)
+                .orElseThrow(BookGenreNotFoundException::new);
 
-        bookGenreRepository.deleteByName(name);
+        bookGenreRepository.delete(genre);
     }
 
     @CacheEvict(

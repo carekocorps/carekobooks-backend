@@ -2,8 +2,8 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.AdminRoleRequired;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.UserRoleRequired;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireAdminPermission;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
@@ -42,7 +42,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BookResponse> create(@RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image) {
         var response = bookService.create(request, image);
@@ -51,7 +51,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) {
         bookService.update(id, request, image);
@@ -59,7 +59,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @PostMapping("/{id}/genres/{genreName}")
     public ResponseEntity<Void> assignGenre(@PathVariable Long id, @PathVariable String genreName) {
         bookService.changeGenre(id, genreName, true);
@@ -67,7 +67,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @DeleteMapping("/{id}/genres/{genreName}")
     public ResponseEntity<Void> unassignGenre(@PathVariable Long id, @PathVariable String genreName) {
         bookService.changeGenre(id, genreName, false);
@@ -75,7 +75,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> assignImage(@PathVariable Long id, @RequestParam(required = false) MultipartFile image) {
         bookService.changeImage(id, image);
@@ -83,7 +83,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @UserRoleRequired
+    @RequireUserPermission
     @DeleteMapping(value = "/{id}/images")
     public ResponseEntity<Void> unassignImage(@PathVariable Long id) {
         bookService.changeImage(id, null);
@@ -91,7 +91,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);
@@ -99,7 +99,7 @@ public class BookController implements BaseController, BookControllerDocs {
     }
 
     @Override
-    @AdminRoleRequired
+    @RequireAdminPermission
     @DeleteMapping("/cache")
     public ResponseEntity<Void> clearCache() {
         bookService.clearCache();

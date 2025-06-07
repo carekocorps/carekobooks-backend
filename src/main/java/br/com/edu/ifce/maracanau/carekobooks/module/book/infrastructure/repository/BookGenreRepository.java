@@ -13,7 +13,5 @@ public interface BookGenreRepository extends JpaRepository<BookGenre, Long>, Jpa
 
     List<BookGenre> findAllByNameIn(List<String> names);
     Optional<BookGenre> findByName(String name);
-    boolean existsByName(String name);
-    void deleteByName(String name);
 
 }

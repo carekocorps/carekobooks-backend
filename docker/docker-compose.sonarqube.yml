@@ -15,13 +15,11 @@ services:
       - sonarqube-logs:/opt/sonarqube/logs
     restart: unless-stopped
     networks:
-      - sonarnet
+      - carekonet-sonarqube
 
   sonarqube-db:
-    image: postgres:latest
+    image: postgres:17
     container_name: sonarqube-db
-    ports:
-      - "5433:5432"
     environment:
       POSTGRES_DB: sonarqube
       POSTGRES_PASSWORD: ${SONAR_JDBC_PASSWORD}
@@ -29,7 +27,7 @@ services:
       - sonarqube-db-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - sonarnet
+      - carekonet-sonarqube
 
 volumes:
   sonarqube-data:
@@ -37,5 +35,4 @@ volumes:
   sonarqube-db-data:
 
 networks:
-  sonarnet:
-    driver: bridge
+  carekonet-sonarqube:

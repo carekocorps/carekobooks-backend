@@ -45,7 +45,7 @@ public class ImageService {
                 .orElseThrow(ImageNotFoundException::new);
 
         minioService.delete(image.getName());
-        imageRepository.deleteById(id);
+        imageRepository.delete(image);
     }
 
 }

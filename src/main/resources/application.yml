@@ -1,4 +1,5 @@
 server:
+  port: 8081
   forward-headers-strategy: framework
 spring:
   application:
@@ -20,58 +21,34 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   security:
     oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.server-url}/realms/${keycloak.realm}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  web:
+    resources:
+      static-locations: classpath:/static/
+  mvc:
+    static-path-pattern: /static/**
   servlet:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
-  mvc:
-    static-path-pattern: /static/**
-  web:
-    resources:
-      static-locations: classpath:/static/
-security:
-  jwt:
-    key:
-      private: file:${JWT_PRIVATE_KEY_PATH}
-      public: file:${JWT_PUBLIC_KEY_PATH}
-    token:
-      access:
-        cookie-name: access_token
-        expiry-in-seconds: 3600
-      refresh:
-        cookie-name: refresh_token
-        expiry-in-seconds: 10800
-    roles-claim-name: roles
-  web:
-    cors:
-      allowed-origins:
-        - http://localhost:*
-springdoc:
-  swagger-ui:
-    custom-css-path: /static/swagger-ui.css
-    operations-sorter: method
-    tags-sorter: alpha
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL}
+  realm: ${KEYCLOAK_REALM:carekobooks}
+  client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
 minio:
   inner-endpoint: ${MINIO_INNER_ENDPOINT}
   outer-endpoint: ${MINIO_OUTER_ENDPOINT:${minio.inner-endpoint}}
   access-key: ${MINIO_ACCESS_KEY}
   secret-key: ${MINIO_SECRET_KEY}
   bucket: ${MINIO_BUCKET}
+springdoc:
+  swagger-ui:
+    custom-css-path: /static/swagger-ui.css
+    operations-sorter: method
+    tags-sorter: alpha
