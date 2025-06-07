@@ -27,15 +27,15 @@ spring:
         jwt:
           issuer-uri: ${keycloak.server-url}/realms/${keycloak.realm}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  web:
+    resources:
+      static-locations: classpath:/static/
+  mvc:
+    static-path-pattern: /static/**
   servlet:
     multipart:
       max-file-size: 1MB
       max-request-size: 1MB
-  mvc:
-    static-path-pattern: /static/**
-  web:
-    resources:
-      static-locations: classpath:/static/
 keycloak:
   server-url: ${KEYCLOAK_SERVER_URL}
   realm: ${KEYCLOAK_REALM:carekobooks}

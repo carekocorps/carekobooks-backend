@@ -8,7 +8,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookReviewService {
-
-    private final UserContextProvider userContextProvider;
 
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewValidator bookReviewValidator;
@@ -42,19 +40,21 @@ public class BookReviewService {
 
     @Transactional
     public BookReviewResponse create(BookReviewRequest request) {
-        userContextProvider.assertAuthorized(request.getUsername(), BookReviewModificationForbiddenException.class);
         var review = bookReviewMapper.toEntity(request);
         bookReviewValidator.validate(review);
+        review = bookReviewRepository.save(review);
+
+        KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class);
         return bookReviewMapper.toResponse(bookReviewRepository.save(review));
     }
 
     @Transactional
     public BookReviewResponse update(Long id, BookReviewRequest request) {
-        userContextProvider.assertAuthorized(request.getUsername(), BookReviewModificationForbiddenException.class);
         var review = bookReviewRepository
                 .findById(id)
                 .orElseThrow(BookReviewNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class);
         bookReviewMapper.updateEntity(review, request);
         bookReviewValidator.validate(review);
         return bookReviewMapper.toResponse(bookReviewRepository.save(review));
@@ -66,7 +66,7 @@ public class BookReviewService {
                 .findById(id)
                 .orElseThrow(BookReviewNotFoundException::new);
 
-        userContextProvider.assertAuthorized(review.getUser().getUsername(), BookReviewModificationForbiddenException.class);
+        KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class);
         bookReviewRepository.delete(review);
     }
 

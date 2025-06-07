@@ -5,7 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
@@ -30,8 +30,6 @@ import java.util.UUID;
 public class UserService {
 
     private final KeycloakService keycloakService;
-    private final UserContextProvider userContextProvider;
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -76,21 +74,21 @@ public class UserService {
     }
 
     public void changeEmail(String username) {
-        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         keycloakService.resetEmail(user.getKeycloakId());
     }
 
     @Transactional
     public void changeImage(String username, MultipartFile image) {
-        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         if (image == null && user.getImage() == null) {
             throw new ImageNotFoundException();
         }
@@ -110,11 +108,11 @@ public class UserService {
 
     @Transactional
     public void update(String username, UserUpdateRequest request, MultipartFile image) {
-        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         if (user.getImage() != null) {
             imageService.delete(user.getImage().getId());
         }
@@ -130,11 +128,11 @@ public class UserService {
 
     @Transactional
     public void delete(String username) {
-        userContextProvider.assertAuthorized(username, UserModificationForbiddenException.class);
         var user = userRepository
                 .findByUsername(username)
                 .orElseThrow(UserNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         userRepository.delete(user);
         keycloakService.delete(user.getKeycloakId());
     }

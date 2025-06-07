@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.thread.reply.BookThreadReplyModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.thread.reply.BookThreadReplyNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.UserContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadReplyResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadReplyMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookThreadReplyQuery;
@@ -11,6 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.req
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookThreadReplyValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookThreadReplyRepository;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookThreadReplyService {
-
-    private final UserContextProvider userContextProvider;
 
     private final BookThreadReplyRepository bookThreadReplyRepository;
     private final BookThreadReplyValidator bookThreadReplyValidator;
@@ -44,22 +42,23 @@ public class BookThreadReplyService {
 
     @Transactional
     public BookThreadReplyResponse create(BookThreadReplyRequest request) {
-        userContextProvider.assertAuthorized(request.getUsername(), BookThreadReplyModificationForbiddenException.class);
         var reply = bookThreadReplyMapper.toEntity(request);
         bookThreadReplyValidator.validate(reply);
+        reply = bookThreadReplyRepository.save(reply);
 
-        var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
+        KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class);
+        var response = bookThreadReplyMapper.toResponse(reply);
         bookThreadReplyNotificationSubject.notify(response);
         return response;
     }
 
     @Transactional
     public BookThreadReplyResponse update(Long id, BookThreadReplyRequest request) {
-        userContextProvider.assertAuthorized(request.getUsername(), BookThreadReplyModificationForbiddenException.class);
         var reply = bookThreadReplyRepository
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
 
+        KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class);
         bookThreadReplyMapper.updateEntity(reply, request);
         bookThreadReplyValidator.validate(reply);
         return bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
@@ -67,7 +66,6 @@ public class BookThreadReplyService {
 
     @Transactional
     public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
-        userContextProvider.assertAuthorized(request.getUsername(), BookThreadReplyModificationForbiddenException.class);
         var parent = bookThreadReplyRepository
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
@@ -87,7 +85,7 @@ public class BookThreadReplyService {
                 .findById(id)
                 .orElseThrow(BookThreadReplyNotFoundException::new);
 
-        userContextProvider.assertAuthorized(reply.getUser().getUsername(), BookThreadReplyModificationForbiddenException.class);
+        KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class);
         bookThreadReplyRepository.delete(reply);
     }
 

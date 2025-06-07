@@ -1,34 +1,28 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserUnauthorizedException;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Component
-public class UserContextProvider {
+public class KeycloakContextProvider {
 
-    private final UserRepository userRepository;
+    private KeycloakContextProvider() {
+    }
 
-    public void assertAuthorized(String expectedUsername, Class<? extends RuntimeException> exception) {
+    public static void assertAuthorized(UUID expectedKeycloakId, Class<? extends RuntimeException> exception) {
         var jwt = getCurrentJwt();
-        var user = userRepository
-                .findByKeycloakId(UUID.fromString(jwt.getSubject()))
-                .orElseThrow(UserNotFoundException::new);
-
-        if (!expectedUsername.equals(user.getUsername()) && !hasAdminRole(jwt)) {
+        var keycloakId = UUID.fromString(jwt.getSubject());
+        if (!expectedKeycloakId.equals(keycloakId) && !hasAdminRole(jwt)) {
             try {
                 throw exception.getDeclaredConstructor().newInstance();
-            } catch (Exception ex) {
-                throw new UserUnauthorizedException();
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+                throw new UserForbiddenException();
             }
         }
     }
