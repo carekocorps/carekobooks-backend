@@ -17,6 +17,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL:-http://keycloak:8080}
       KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     restart: unless-stopped
     networks:
@@ -96,7 +97,7 @@ services:
       KC_HOSTNAME_STRICT: true
       KC_HTTP_ENABLED: true
       KC_PROXY: xforwarded
-      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-keycloak}
       KC_FEATURES: update-email
     command: start --import-realm
     volumes:

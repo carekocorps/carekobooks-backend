@@ -64,6 +64,7 @@ jobs:
           MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
           KEYCLOAK_USERNAME: ${{ secrets.KEYCLOAK_USERNAME }}
           KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
+          KEYCLOAK_SERVER_URL: ${{ secrets.KEYCLOAK_SERVER_URL }}
           KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
           KEYCLOAK_DB_PASSWORD: ${{ secrets.KEYCLOAK_DB_PASSWORD }}
           KEYCLOAK_HOSTNAME: ${{ secrets.KEYCLOAK_HOSTNAME }}

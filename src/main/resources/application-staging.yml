@@ -8,7 +8,7 @@ spring:
       host: ${REDIS_HOST:carekobooks-redis}
       port: ${REDIS_PORT:6379}
 keycloak:
-  server-url: ${KEYCLOAK_SERVER_URL:http://keycloak:8080}
+  server-url: ${KEYCLOAK_SERVER_URL}
   realm: ${KEYCLOAK_REALM:carekobooks}
   client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
   client-secret: ${KEYCLOAK_CLIENT_SECRET}

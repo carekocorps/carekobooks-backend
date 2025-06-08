@@ -34,7 +34,7 @@ public class KeycloakContextProvider {
 
     private static Jwt getCurrentJwt() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getCredentials() instanceof Jwt)) {
             throw new UserUnauthorizedException();
         }
 
