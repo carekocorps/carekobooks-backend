@@ -1,5 +1,4 @@
 from typing import Optional
-from faker import Faker
 import requests
 import logging
 

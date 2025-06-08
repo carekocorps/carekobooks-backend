@@ -24,32 +24,32 @@ logging.basicConfig(
 
 def main() -> None:
     faker = Faker()
+    user_request_factory = UserRequestFactory(faker)
     credentials_factory = CredentialsFactory(faker)
     book_request_factory = BookRequestFactory()
     book_progress_request_factory = BookProgressRequestFactory()
     book_review_request_factory = BookReviewRequestFactory(faker)
     book_thread_request_factory = BookThreadRequestFactory(faker)
     book_thread_reply_request_factory = BookThreadReplyRequestFactory(faker)
-    user_request_factory = UserRequestFactory(faker)
 
     auth_manager = KeycloakAuthManager()
     verification_manager = KeycloakVerificationManager(credentials_factory)
 
+    user_generator = UserGenerator(user_request_factory, verification_manager)
+    user_social_generator = UserSocialGenerator(auth_manager)
     book_generator = BookGenerator(book_request_factory, auth_manager)
     book_progress_generator = BookProgressGenerator(book_progress_request_factory, auth_manager)
     book_review_generator = BookReviewGenerator(book_review_request_factory, auth_manager)
     book_thread_generator = BookThreadGenerator(book_thread_request_factory, auth_manager)
     book_thread_reply_generator = BookThreadReplyGenerator(book_thread_reply_request_factory, auth_manager)
-    user_generator = UserGenerator(user_request_factory, verification_manager)
-    user_social_generator = UserSocialGenerator(auth_manager)
 
+    user_generator.generate()
+    user_social_generator.generate()
     book_generator.generate()
     book_review_generator.generate()
     book_thread_generator.generate()
     book_progress_generator.generate()
     book_thread_reply_generator.generate()
-    user_generator.generate()
-    user_social_generator.generate()
 
 if __name__ == '__main__':
     main()

@@ -25,5 +25,5 @@ class UserRequestFactory(IUserRequestFactory):
             'description': self.__faker.sentence(nb_words = 25)
         }
 
-        image = ImageProvider.fetch(self.__faker.image_url())
+        image = ImageProvider.fetch(self.__faker.image_url(500, 500))
         return UserRequest(payload, image)
