@@ -64,7 +64,7 @@ services:
         while isAlive; do sleep 0.1; done
         exec minio $0 "$@"
       '
-    command: server /data
+    command: server /data --console-address ":9001"
     restart: unless-stopped
     networks:
       - carekonet-minio
