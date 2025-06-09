@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: docker/backend/Dockerfile
     container_name: carekobooks-backend
     ports:
       - "8081:8081"
@@ -101,7 +101,7 @@ services:
       KC_FEATURES: update-email
     command: start --import-realm
     volumes:
-      - ../keycloak/data/import:/opt/keycloak/data/import
+      - ./docker/keycloak/data/import:/opt/keycloak/data/import
     restart: unless-stopped
     networks:
       - carekonet-keycloak

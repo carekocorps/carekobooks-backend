@@ -36,7 +36,7 @@ services:
         while isAlive; do sleep 0.1; done
         exec minio server /data
       '
-    command: server /data
+    command: server /data --console-address ":9001"
     restart: unless-stopped
 
   redis:
@@ -65,7 +65,7 @@ services:
       KC_FEATURES: update-email
     command: start-dev --import-realm
     volumes:
-      - ../keycloak/data/import:/opt/keycloak/data/import
+      - ./docker/keycloak/data/import:/opt/keycloak/data/import
     networks:
       - carekonet-keycloak-postgres
 

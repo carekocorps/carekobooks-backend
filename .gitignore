@@ -158,3 +158,6 @@ buildNumber.properties
 
 # "temporary" build files
 /target
+
+# environment variables
+*.env
