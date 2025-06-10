@@ -73,7 +73,7 @@ services:
 
   keycloak-realm-setup:
     build:
-      context: docker/dropbox
+      context: ./docker/dropbox
       dockerfile: Dockerfile
     container_name: keycloak-realm-setup
     environment:
@@ -82,8 +82,7 @@ services:
       /bin/sh -c '
         readonly DATA_PATH="/app/data"
         readonly KEYCLOAK_REALM_PATH="$${DATA_PATH}/carekobooks-realm.json"
-        readonly KEYCLOAK_USERS_PATH="$${DATA_PATH}/carekobooks-users-0.json"
-        if [ ! -f "$${KEYCLOAK_REALM_PATH}" ] || [ ! -f "$${KEYCLOAK_USERS_PATH}" ]; then
+        if [ ! -f "$${KEYCLOAK_REALM_PATH}" ]; then
           python main.py
         fi
       '
@@ -107,8 +106,8 @@ volumes:
   carekobooks-postgres-data:
   carekobooks-minio-data:
   carekobooks-redis-data:
-  carekobooks-keycloak-postgres-data:
   carekobooks-keycloak-realm-data:
+  carekobooks-keycloak-postgres-data:
 
 networks:
   carekonet-keycloak-postgres:
