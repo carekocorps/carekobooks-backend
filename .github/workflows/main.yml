@@ -11,10 +11,12 @@ jobs:
     runs-on: self-hosted
     environment: carekenvironment
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-      - name: deploy
+      - name: Deploy
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MINIO_OUTER_ENDPOINT: ${{ secrets.MINIO_OUTER_ENDPOINT }}
