@@ -7,6 +7,7 @@ from common.factory.book_thread_reply_request_factory import BookThreadReplyRequ
 from common.factory.user_request_factory import UserRequestFactory
 from common.manager.auth_manager import KeycloakAuthManager
 from common.manager.verification_manager import KeycloakVerificationManager
+from common.manager.mail_manager import MailSlurpManager
 from generator.module.book.book_generator import BookGenerator
 from generator.module.book.book_progress_generator import BookProgressGenerator
 from generator.module.book.book_review_generator import BookReviewGenerator
@@ -34,8 +35,9 @@ def main() -> None:
 
     auth_manager = KeycloakAuthManager()
     verification_manager = KeycloakVerificationManager(credentials_factory)
+    mail_manager = MailSlurpManager()
 
-    user_generator = UserGenerator(user_request_factory, verification_manager)
+    user_generator = UserGenerator(user_request_factory, verification_manager, mail_manager)
     user_social_generator = UserSocialGenerator(auth_manager)
     book_generator = BookGenerator(book_request_factory, auth_manager)
     book_progress_generator = BookProgressGenerator(book_progress_request_factory, auth_manager)

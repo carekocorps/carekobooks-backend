@@ -13,3 +13,6 @@ class KeycloakConfig:
     REALM_NAME = getenv('KEYCLOAK_REALM_NAME')
     CLIENT_ID = getenv('KEYCLOAK_CLIENT_ID')
     CLIENT_SECRET = getenv('KEYCLOAK_CLIENT_SECRET')
+
+class MailSlurpConfig:
+    API_KEY = getenv('MAILSLURP_API_KEY')

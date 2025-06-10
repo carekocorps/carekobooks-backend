@@ -10,18 +10,18 @@ class UserRequest:
 
 class IUserRequestFactory(ABC):
     @abstractmethod
-    def generate(self) -> UserRequest:
+    def generate(self, email: str) -> UserRequest:
         pass
 
 class UserRequestFactory(IUserRequestFactory):
     def __init__(self, faker: Faker):
         self.__faker = faker
     
-    def generate(self) -> UserRequest:
+    def generate(self, email: str) -> UserRequest:
         payload = {
+            'email': email,
             'username': self.__faker.user_name(),
             'displayName': self.__faker.name(),
-            'email': self.__faker.email(),
             'description': self.__faker.sentence(nb_words = 25)
         }
 

@@ -11,8 +11,8 @@ class DropboxCredentials:
         self.access_token = access_token
 
 class DropboxFileDownloader:
-    def __init__(self, config: DropboxCredentials):
-        self.__dbx = Dropbox(config.access_token)
+    def __init__(self, credentials: DropboxCredentials):
+        self.__dbx = Dropbox(credentials.access_token)
 
     @property
     def file_names(self) -> list[str]:
