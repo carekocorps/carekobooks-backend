@@ -103,6 +103,7 @@ services:
     command: start --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
+      - ./docker/keywind/theme:/opt/keycloak/themes
     restart: unless-stopped
     networks:
       - carekonet-keycloak
@@ -110,7 +111,7 @@ services:
 
   keycloak-realm-setup:
     build:
-      context: docker/dropbox-downloader
+      context: docker/dropbox
       dockerfile: Dockerfile
     container_name: keycloak-realm-setup
     environment:
