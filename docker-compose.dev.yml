@@ -52,8 +52,10 @@ services:
     image: quay.io/keycloak/keycloak:26.0.5
     container_name: carekobooks-keycloak
     depends_on:
-      - keycloak-postgres
-      - keycloak-realm-setup
+      keycloak-postgres:
+        condition: service_started
+      keycloak-realm-setup:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
     environment:
@@ -67,7 +69,7 @@ services:
     command: start-dev --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
-      - ./docker/keywind/theme:/opt/keycloak/themes
+      - ./docker/keycloak/keywind/theme:/opt/keycloak/themes
     networks:
       - carekonet-keycloak-postgres
 
@@ -80,9 +82,8 @@ services:
       DROPBOX_ACCESS_TOKEN: ${DROPBOX_ACCESS_TOKEN}
     entrypoint: >
       /bin/sh -c '
-        readonly DATA_PATH="/app/data"
-        readonly KEYCLOAK_REALM_PATH="$${DATA_PATH}/carekobooks-realm.json"
-        if [ ! -f "$${KEYCLOAK_REALM_PATH}" ]; then
+        set -e
+        if [ ! -f "/app/data/carekobooks-realm.json" ]; then
           python main.py
         fi
       '

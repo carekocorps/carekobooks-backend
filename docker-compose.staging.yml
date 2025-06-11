@@ -7,17 +7,21 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - postgres
-      - minio
-      - redis
-      - keycloak
+      postgres:
+        condition: service_started
+      minio:
+        condition: service_started
+      redis:
+        condition: service_started
+      keycloak:
+        condition: service_started
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
       MINIO_OUTER_ENDPOINT: ${MINIO_OUTER_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
-      KEYCLOAK_SERVER_URL: ${KEYCLOAK_HOSTNAME:-http://keycloak:8080}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_HOSTNAME}
       KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
     restart: unless-stopped
     networks:
@@ -84,8 +88,10 @@ services:
     image: quay.io/keycloak/keycloak:26.0.5
     container_name: carekobooks-keycloak
     depends_on:
-      - keycloak-postgres
-      - keycloak-realm-setup
+      keycloak-postgres:
+        condition: service_started
+      keycloak-realm-setup:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
     environment:
@@ -95,15 +101,17 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/carekobooks-keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
-      KC_HOSTNAME_STRICT: true
       KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: true
+      KC_HOSTNAME_STRICT_BACKCHANNEL: true
       KC_PROXY: xforwarded
-      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-keycloak}
+      KC_PROXY_ADDRESS_FORWARDING: true
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
       KC_FEATURES: update-email
     command: start --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
-      - ./docker/keywind/theme:/opt/keycloak/themes
+      - ./docker/keycloak/keywind/theme:/opt/keycloak/themes
     restart: unless-stopped
     networks:
       - carekonet-keycloak
@@ -118,9 +126,8 @@ services:
       DROPBOX_ACCESS_TOKEN: ${DROPBOX_ACCESS_TOKEN}
     entrypoint: >
       /bin/sh -c '
-        readonly DATA_PATH="/app/data"
-        readonly KEYCLOAK_REALM_PATH="$${DATA_PATH}/carekobooks-realm.json"
-        if [ ! -f "$${KEYCLOAK_REALM_PATH}" ]; then
+        set -e
+        if [ ! -f "/app/data/carekobooks-realm.json" ]; then
           python main.py
         fi
       '
