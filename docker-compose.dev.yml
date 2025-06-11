@@ -69,7 +69,7 @@ services:
     command: start-dev --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
-      - ./docker/keycloak/keywind/theme:/opt/keycloak/themes
+      - ./docker/keycloak/ekosutrisno/theme/potluck.warzone:/opt/keycloak/themes/ekosutrisno
     networks:
       - carekonet-keycloak-postgres
 
