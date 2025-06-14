@@ -45,7 +45,7 @@ public class BookReviewService {
         review = bookReviewRepository.save(review);
 
         KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class);
-        return bookReviewMapper.toResponse(bookReviewRepository.save(review));
+        return bookReviewMapper.toResponse(review);
     }
 
     @Transactional

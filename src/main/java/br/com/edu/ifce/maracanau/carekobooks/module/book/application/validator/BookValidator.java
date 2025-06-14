@@ -35,7 +35,7 @@ public class BookValidator implements BaseValidator<Book> {
         query.setPageCountLower(book.getPageCount());
 
         var books = bookRepository.findAll(query.getSpecification());
-        return books.stream().anyMatch(b -> !b.getId().equals(book.getId()));
+        return books.stream().anyMatch(x -> !x.getId().equals(book.getId()));
     }
 
     private boolean isBookExceedingGenreLimit(Book book) {

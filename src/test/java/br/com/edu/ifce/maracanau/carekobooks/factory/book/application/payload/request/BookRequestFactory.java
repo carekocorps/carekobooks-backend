@@ -1,0 +1,122 @@
+package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request;
+
+import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookRequestFactory {
+
+    private BookRequestFactory() {
+    }
+
+    public static BookRequest validRequest(Book book) {
+        var request = new BookRequest();
+        request.setTitle(book.getTitle());
+        request.setSynopsis(book.getSynopsis());
+        request.setAuthorName(book.getAuthorName());
+        request.setPublisherName(book.getPublisherName());
+        request.setPublishedAt(book.getPublishedAt());
+        request.setPageCount(book.getPageCount());
+        request.setGenres(book.getGenres().stream().map(BookGenre::getName).toList());
+        return request;
+    }
+
+    public static BookRequest validRequest() {
+        var book = BookFactory.validBook();
+        return validRequest(book);
+    }
+
+    public static BookRequest invalidRequestByRepeatingGenres() {
+        var request = validRequest();
+        var genres = new ArrayList<>(request.getGenres());
+        genres.add(request.getGenres().getFirst());
+        request.setGenres(genres);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByBlankTitle() {
+        var request = validRequest();
+        request.setTitle(null);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByTitleExceedingMaxLength() {
+        var request = validRequest();
+        request.setTitle("a".repeat(256));
+        return request;
+    }
+
+    public static BookRequest invalidRequestBySynopsisExceedingMaxLength() {
+        var request = validRequest();
+        request.setSynopsis("a".repeat(1001));
+        return request;
+    }
+
+    public static BookRequest invalidRequestByBlankAuthorName() {
+        var request = validRequest();
+        request.setAuthorName(null);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByAuthorNameExceedingMaxLength() {
+        var request = validRequest();
+        request.setAuthorName("a".repeat(256));
+        return request;
+    }
+
+    public static BookRequest invalidRequestByBlankPublisherName() {
+        var request = validRequest();
+        request.setPublisherName(null);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByPublisherNameExceedingMaxLength() {
+        var request = validRequest();
+        request.setPublisherName("a".repeat(256));
+        return request;
+    }
+
+    public static BookRequest invalidRequestByInvalidPublishedAt() {
+        var request = validRequest();
+        request.setPublishedAt(LocalDate.now().plusYears(1));
+        return request;
+    }
+
+    public static BookRequest invalidRequestByNullPageCount() {
+        var request = validRequest();
+        request.setPageCount(null);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByNegativePageCount() {
+        var request = validRequest();
+        request.setPageCount(-10);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByBlankGenre() {
+        var request = validRequest();
+        request.setGenres(List.of(""));
+        return request;
+    }
+
+    public static BookRequest invalidRequestByGenreExceedingMaxLength() {
+        var request = validRequest();
+        var genres = new ArrayList<>(request.getGenres());
+        genres.set(0, "a".repeat(51));
+        request.setGenres(genres);
+        return request;
+    }
+
+    public static BookRequest invalidRequestByTooManyGenres() {
+        var request = validRequest();
+        request.setGenres(List.of("Romance", "Drama", "Terror", "Aventura", "Ficção", "Suspense"));
+        return request;
+    }
+
+}
