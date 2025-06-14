@@ -57,7 +57,7 @@ public class BookGenreRequestFactory {
 
     public static BookGenreRequest invalidRequestByDescriptionExceedingMaxLength() {
         var request = validRequest();
-        request.setDescription(faker.lorem().characters());
+        request.setDescription(faker.lorem().characters(256));
         return request;
     }
 

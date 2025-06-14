@@ -29,4 +29,10 @@ public class UserFactory {
         return user;
     }
 
+    public static User validUserWithNullId() {
+        var user = validUser();
+        user.setId(null);
+        return user;
+    }
+
 }

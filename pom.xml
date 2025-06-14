@@ -25,6 +25,7 @@
 		<minio.version>8.5.17</minio.version>
 		<keycloak-admin-client.version>26.0.5</keycloak-admin-client.version>
 		<javafaker.version>1.0.2</javafaker.version>
+		<testcontainers-keycloak.version>3.7.0</testcontainers-keycloak.version>
 		<jacoco.version>0.8.13</jacoco.version>
 	</properties>
 
@@ -144,6 +145,25 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>minio</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.redis</groupId>
+			<artifactId>testcontainers-redis</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.dasniko</groupId>
+			<artifactId>testcontainers-keycloak</artifactId>
+			<version>${testcontainers-keycloak.version}</version>
 			<scope>test</scope>
 		</dependency>
 

@@ -29,12 +29,13 @@ public class BookGenreFactory {
         return updatedGenre;
     }
 
-    public static BookGenre validGenre(BookGenreRequest request) {
+    public static BookGenre validGenreWithNullId() {
         var genre = new BookGenre();
-        genre.setId(faker.number().randomNumber());
-        genre.setName(request.getName());
-        genre.setDisplayName(request.getDisplayName());
-        genre.setDescription(request.getDescription());
+        var genreName = faker.book().genre();
+        genre.setId(null);
+        genre.setName(genreName.toLowerCase().replaceAll("[^a-z0-9]", ""));
+        genre.setDisplayName(genreName);
+        genre.setDescription(faker.lorem().paragraph());
         genre.setBooks(List.of());
         genre.setCreatedAt(LocalDateTime.now());
         genre.setUpdatedAt(genre.getCreatedAt());
@@ -42,12 +43,17 @@ public class BookGenreFactory {
     }
 
     public static BookGenre validGenre() {
-        var genre = new BookGenre();
-        var genreName = faker.book().genre();
+        var genre = validGenreWithNullId();
         genre.setId(faker.number().randomNumber());
-        genre.setName(genreName.toLowerCase().replaceAll("[^a-z0-9]", ""));
-        genre.setDisplayName(genreName);
-        genre.setDescription(faker.lorem().paragraph());
+        return genre;
+    }
+
+    public static BookGenre validGenre(BookGenreRequest request) {
+        var genre = new BookGenre();
+        genre.setId(faker.number().randomNumber());
+        genre.setName(request.getName());
+        genre.setDisplayName(request.getDisplayName());
+        genre.setDescription(request.getDescription());
         genre.setBooks(List.of());
         genre.setCreatedAt(LocalDateTime.now());
         genre.setUpdatedAt(genre.getCreatedAt());
