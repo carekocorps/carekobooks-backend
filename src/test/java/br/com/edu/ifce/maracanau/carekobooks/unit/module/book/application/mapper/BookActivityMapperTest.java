@@ -7,8 +7,10 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.user.payload.response.simpl
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookActivity;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -32,43 +34,45 @@ class BookActivityMapperTest {
     private BookActivityMapper bookActivityMapper = Mappers.getMapper(BookActivityMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullActivityRequest_shouldReturnNullActivity() {
         // Arrange
-        BookProgressRequest request = null;
+        BookProgressRequest progressRequest = null;
 
         // Act
-        var result = bookActivityMapper.toEntity(request);
+        var result = bookActivityMapper.toEntity(progressRequest);
 
         // Assert
         assertNull(result);
+        verify(userMapper, never()).toEntity(any(String.class));
+        verify(bookMapper, never()).toEntity(any(Long.class));
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidModel() {
+    void toEntity_withValidActivityRequest_shouldReturnActivity() {
         // Arrange
-        var request = BookProgressRequestFactory.validRequest();
-        var activity = BookActivityFactory.validActivity(request);
+        var progressRequest = BookProgressRequestFactory.validRequest();
+        var activity = BookActivityFactory.validActivity(progressRequest);
 
-        when(userMapper.toEntity(request.getUsername()))
+        when(userMapper.toEntity(progressRequest.getUsername()))
                 .thenReturn(activity.getUser());
 
-        when(bookMapper.toEntity(request.getBookId()))
+        when(bookMapper.toEntity(progressRequest.getBookId()))
                 .thenReturn(activity.getBook());
 
         // Act
-        var result = bookActivityMapper.toEntity(request);
+        var result = bookActivityMapper.toEntity(progressRequest);
 
         // Assert
         assertEquals(activity.getStatus(), result.getStatus());
         assertEquals(activity.getPageCount(), result.getPageCount());
         assertEquals(activity.getUser().getUsername(), result.getUser().getUsername());
         assertEquals(activity.getBook().getId(), result.getBook().getId());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }
 
     @Test
-    void toResponse_withNullEntity_shouldReturnNull() {
+    void toResponse_withNullActivity_shouldReturnNullActivityResponse() {
         // Arrange
         BookActivity activity = null;
 
@@ -77,10 +81,12 @@ class BookActivityMapperTest {
 
         // Assert
         assertNull(result);
+        verify(userMapper, never()).toSimplifiedResponse(any(User.class));
+        verify(bookMapper, never()).toSimplifiedResponse(any(Book.class));
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidResponse() {
+    void toResponse_withValidActivity_shouldReturnActivityResponse() {
         // Arrange
         var activity = BookActivityFactory.validActivity();
 

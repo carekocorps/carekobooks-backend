@@ -6,6 +6,9 @@ import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BookGenreFactory {
 
@@ -51,16 +54,37 @@ public class BookGenreFactory {
         return genre;
     }
 
+    public static BookGenre validGenre(Long id, String name) {
+        var genre = validGenre();
+        genre.setId(id);
+        genre.setName(name);
+        return genre;
+    }
+
     public static BookGenre validGenre(String name) {
         var genre = validGenre();
         genre.setName(name);
         return genre;
     }
 
-    public static BookGenre validGenre(Long id, String name) {
-        var genre = validGenre(name);
-        genre.setId(id);
-        return genre;
+    public static List<BookGenre> validGenres(List<String> genreNames) {
+        return genreNames
+                .stream()
+                .map(BookGenreFactory::validGenre)
+                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .toList();
+    }
+
+    public static List<BookGenre> validGenres(int numGenres) {
+        return IntStream
+                .range(0, numGenres)
+                .mapToObj(i -> BookGenreFactory.validGenre())
+                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .toList();
     }
 
 }

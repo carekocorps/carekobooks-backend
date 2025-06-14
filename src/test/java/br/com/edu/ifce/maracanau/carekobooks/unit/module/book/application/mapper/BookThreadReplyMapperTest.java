@@ -37,12 +37,12 @@ class BookThreadReplyMapperTest {
     private BookThreadReplyMapper bookThreadReplyMapper = Mappers.getMapper(BookThreadReplyMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullReplyRequest_shouldReturnNullReplyResponse() {
         // Arrange
-        BookThreadReplyRequest request = null;
+        BookThreadReplyRequest replyRequest = null;
 
         // Act
-        var result = bookThreadReplyMapper.toEntity(request);
+        var result = bookThreadReplyMapper.toEntity(replyRequest);
 
         // Assert
         assertNull(result);
@@ -51,31 +51,32 @@ class BookThreadReplyMapperTest {
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidEntity() {
+    void toEntity_withValidReplyRequest_shouldReturnReplyResponse() {
         // Arrange
-        var request = BookThreadReplyRequestFactory.validRequest();
-        var reply = BookThreadReplyFactory.validReply(request);
+        var replyRequest = BookThreadReplyRequestFactory.validRequest();
+        var reply = BookThreadReplyFactory.validReply(replyRequest);
 
-        when(userMapper.toEntity(request.getUsername()))
+        when(userMapper.toEntity(replyRequest.getUsername()))
                 .thenReturn(reply.getUser());
 
-        when(bookThreadMapper.toEntity(request.getThreadId()))
+        when(bookThreadMapper.toEntity(replyRequest.getThreadId()))
                 .thenReturn(reply.getThread());
 
         // Act
-        var result = bookThreadReplyMapper.toEntity(request);
+        var result = bookThreadReplyMapper.toEntity(replyRequest);
 
         // Assert
+        assertNotNull(result);
         assertEquals(reply.getContent(), result.getContent());
         assertEquals(reply.getUser().getUsername(), result.getUser().getUsername());
         assertEquals(reply.getThread().getId(), result.getThread().getId());
         assertEquals(reply.getIsContainingChildren(), result.getIsContainingChildren());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookThreadMapper, times(1)).toEntity(request.getThreadId());
+        verify(userMapper, times(1)).toEntity(replyRequest.getUsername());
+        verify(bookThreadMapper, times(1)).toEntity(replyRequest.getThreadId());
     }
 
     @Test
-    void toResponse_withNullEntity_shouldReturnNull() {
+    void toResponse_withNullReply_shouldReturnNullReplyResponse() {
         // Arrange
         BookThreadReply reply = null;
 
@@ -89,7 +90,7 @@ class BookThreadReplyMapperTest {
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidResponse() {
+    void toResponse_withValidReply_shouldReturnReplyResponse() {
         // Arrange
         var reply = BookThreadReplyFactory.validReply();
 
@@ -103,6 +104,7 @@ class BookThreadReplyMapperTest {
         var result = bookThreadReplyMapper.toResponse(reply);
 
         // Assert
+        assertNotNull(result);
         assertEquals(reply.getId(), result.getId());
         assertEquals(reply.getContent(), result.getContent());
         assertEquals(reply.getUser().getId(), result.getUser().getId());
@@ -115,14 +117,14 @@ class BookThreadReplyMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndNullRequest_shouldPreserveEntity() {
+    void updateEntity_withValidReplyAndNullReplyRequest_shouldPreserveReply() {
         // Arrange
-        BookThreadReplyRequest request = null;
+        BookThreadReplyRequest replyRequest = null;
         var reply = BookThreadReplyFactory.validReply();
         var newReply = SerializationUtils.clone(reply);
 
         // Act
-        bookThreadReplyMapper.updateEntity(newReply, request);
+        bookThreadReplyMapper.updateEntity(newReply, replyRequest);
 
         // Assert
         assertEquals(reply.getId(), newReply.getId());
@@ -136,30 +138,30 @@ class BookThreadReplyMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndValidRequest_shouldUpdatedEntity() {
+    void updateEntity_withValidReplyAndValidReplyRequest_shouldUpdateReply() {
         // Arrange
+        var replyRequest = BookThreadReplyRequestFactory.validRequest();
         var reply = BookThreadReplyFactory.validReply();
         var newReply = SerializationUtils.clone(reply);
-        var request = BookThreadReplyRequestFactory.validRequest();
 
-        when(userMapper.toEntity(request.getUsername()))
-                .thenReturn(UserFactory.validUser(request.getUsername()));
+        when(userMapper.toEntity(replyRequest.getUsername()))
+                .thenReturn(UserFactory.validUser(replyRequest.getUsername()));
 
-        when(bookThreadMapper.toEntity(request.getThreadId()))
-                .thenReturn(BookThreadFactory.validThread(request.getThreadId()));
+        when(bookThreadMapper.toEntity(replyRequest.getThreadId()))
+                .thenReturn(BookThreadFactory.validThread(replyRequest.getThreadId()));
 
         // Act
-        bookThreadReplyMapper.updateEntity(newReply, request);
+        bookThreadReplyMapper.updateEntity(newReply, replyRequest);
 
         // Assert
         assertEquals(reply.getId(), newReply.getId());
-        assertEquals(request.getContent(), newReply.getContent());
-        assertEquals(request.getUsername(), newReply.getUser().getUsername());
-        assertEquals(request.getThreadId(), newReply.getThread().getId());
+        assertEquals(replyRequest.getContent(), newReply.getContent());
+        assertEquals(replyRequest.getUsername(), newReply.getUser().getUsername());
+        assertEquals(replyRequest.getThreadId(), newReply.getThread().getId());
         assertEquals(reply.getIsContainingChildren(), newReply.getIsContainingChildren());
         assertEquals(reply.getCreatedAt(), newReply.getCreatedAt());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookThreadMapper, times(1)).toEntity(request.getThreadId());
+        verify(userMapper, times(1)).toEntity(replyRequest.getUsername());
+        verify(bookThreadMapper, times(1)).toEntity(replyRequest.getThreadId());
     }
 
 }

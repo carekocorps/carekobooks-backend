@@ -25,17 +25,17 @@ public class ImageResponseFactory {
         return response;
     }
 
+    public static ImageResponse validResponse(String outerEndpoint, String bucket) {
+        var image = ImageFactory.validImage();
+        return validResponse(image, outerEndpoint, bucket);
+    }
+
     public static ImageResponse validResponse(Image image) {
         return validResponse(image, faker.internet().url(), faker.app().name());
     }
 
     public static ImageResponse validResponse() {
         return validResponse(ImageFactory.validImage());
-    }
-
-    public static ImageResponse validResponse(String outerEndpoint, String bucket) {
-        var image = ImageFactory.validImage();
-        return validResponse(image, outerEndpoint, bucket);
     }
 
     public static String validResponseUrl(String name, String outerEndpoint, String bucket) {

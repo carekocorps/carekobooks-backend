@@ -37,12 +37,12 @@ class BookProgressMapperTest {
     private BookProgressMapper bookProgressMapper = Mappers.getMapper(BookProgressMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullProgressRequest_shouldReturnNullProgress() {
         // Arrange
-        BookProgressRequest request = null;
+        BookProgressRequest progressRequest = null;
 
         // Act
-        var result = bookProgressMapper.toEntity(request);
+        var result = bookProgressMapper.toEntity(progressRequest);
 
         // Assert
         assertNull(result);
@@ -51,33 +51,34 @@ class BookProgressMapperTest {
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidModel() {
+    void toEntity_withValidProgressRequest_shouldReturnProgress() {
         // Arrange
-        var request = BookProgressRequestFactory.validRequest();
-        var progress = BookProgressFactory.validProgress(request);
+        var progressRequest = BookProgressRequestFactory.validRequest();
+        var progress = BookProgressFactory.validProgress(progressRequest);
 
-        when(userMapper.toEntity(request.getUsername()))
+        when(userMapper.toEntity(progressRequest.getUsername()))
                 .thenReturn(progress.getUser());
 
-        when(bookMapper.toEntity(request.getBookId()))
+        when(bookMapper.toEntity(progressRequest.getBookId()))
                 .thenReturn(progress.getBook());
 
         // Act
-        var result = bookProgressMapper.toEntity(request);
+        var result = bookProgressMapper.toEntity(progressRequest);
 
         // Assert
+        assertNotNull(result);
         assertEquals(progress.getStatus(), result.getStatus());
         assertEquals(progress.getIsFavorite(), result.getIsFavorite());
         assertEquals(progress.getScore(), result.getScore());
         assertEquals(progress.getPageCount(), result.getPageCount());
         assertEquals(progress.getUser().getUsername(), result.getUser().getUsername());
         assertEquals(progress.getBook().getId(), result.getBook().getId());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }
 
     @Test
-    void toResponse_withNullModel_shouldReturnNull() {
+    void toResponse_withNullProgress_shouldReturnProgressResponse() {
         // Arrange
         BookProgress progress = null;
 
@@ -91,7 +92,7 @@ class BookProgressMapperTest {
     }
 
     @Test
-    void toResponse_withValidModel_shouldReturnValidResponse() {
+    void toResponse_withValidProgress_shouldReturnProgressResponse() {
         // Arrange
         var progress = BookProgressFactory.validProgress();
 
@@ -105,6 +106,7 @@ class BookProgressMapperTest {
         var result = bookProgressMapper.toResponse(progress);
 
         // Assert
+        assertNotNull(result);
         assertEquals(progress.getId(), result.getId());
         assertEquals(progress.getStatus(), result.getStatus());
         assertEquals(progress.getIsFavorite(), result.getIsFavorite());
@@ -119,14 +121,14 @@ class BookProgressMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndNullRequest_shouldPreserveEntity() {
+    void updateEntity_withValidProgressAndNullProgressRequest_shouldPreserveProgress() {
         // Arrange
-        BookProgressRequest request = null;
+        BookProgressRequest progressRequest = null;
         var progress = BookProgressFactory.validProgress();
         var newProgress = SerializationUtils.clone(progress);
 
         // Act
-        bookProgressMapper.updateEntity(newProgress, request);
+        bookProgressMapper.updateEntity(newProgress, progressRequest);
 
         // Assert
         assertEquals(progress.getId(), newProgress.getId());
@@ -142,32 +144,32 @@ class BookProgressMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndValidRequest_shouldUpdateEntity() {
+    void updateEntity_withValidProgressAndValidProgressRequest_shouldUpdateProgress() {
         // Arrange
+        var progressRequest = BookProgressRequestFactory.validRequest();
         var progress = BookProgressFactory.validProgress();
         var newProgress = SerializationUtils.clone(progress);
-        var request = BookProgressRequestFactory.validRequest();
 
-        when(userMapper.toEntity(request.getUsername()))
-                .thenReturn(UserFactory.validUser(request.getUsername()));
+        when(userMapper.toEntity(progressRequest.getUsername()))
+                .thenReturn(UserFactory.validUser(progressRequest.getUsername()));
 
-        when(bookMapper.toEntity(request.getBookId()))
-                .thenReturn(BookFactory.validBook(request.getBookId()));
+        when(bookMapper.toEntity(progressRequest.getBookId()))
+                .thenReturn(BookFactory.validBook(progressRequest.getBookId()));
 
         // Act
-        bookProgressMapper.updateEntity(newProgress, request);
+        bookProgressMapper.updateEntity(newProgress, progressRequest);
 
         // Assert
         assertEquals(progress.getId(), newProgress.getId());
-        assertEquals(request.getStatus(), newProgress.getStatus());
-        assertEquals(request.getIsFavorite(), newProgress.getIsFavorite());
-        assertEquals(request.getScore(), newProgress.getScore());
-        assertEquals(request.getPageCount(), newProgress.getPageCount());
-        assertEquals(request.getUsername(), newProgress.getUser().getUsername());
-        assertEquals(request.getBookId(), newProgress.getBook().getId());
+        assertEquals(progressRequest.getStatus(), newProgress.getStatus());
+        assertEquals(progressRequest.getIsFavorite(), newProgress.getIsFavorite());
+        assertEquals(progressRequest.getScore(), newProgress.getScore());
+        assertEquals(progressRequest.getPageCount(), newProgress.getPageCount());
+        assertEquals(progressRequest.getUsername(), newProgress.getUser().getUsername());
+        assertEquals(progressRequest.getBookId(), newProgress.getBook().getId());
         assertEquals(progress.getCreatedAt(), newProgress.getCreatedAt());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }
 
 }

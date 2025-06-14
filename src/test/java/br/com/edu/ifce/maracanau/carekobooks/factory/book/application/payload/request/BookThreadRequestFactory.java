@@ -3,8 +3,11 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.r
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookThreadFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThread;
+import com.github.javafaker.Faker;
 
 public class BookThreadRequestFactory {
+
+    private static final Faker faker = new Faker();
 
     private BookThreadRequestFactory() {
     }
@@ -31,7 +34,7 @@ public class BookThreadRequestFactory {
 
     public static BookThreadRequest invalidRequestByTitleExceedingMaxLength() {
         var request = validRequest();
-        request.setTitle("a".repeat(256));
+        request.setTitle(faker.lorem().characters(256));
         return request;
     }
 
@@ -43,7 +46,7 @@ public class BookThreadRequestFactory {
 
     public static BookThreadRequest invalidRequestByDescriptionExceedingMaxLength() {
         var request = validRequest();
-        request.setDescription("a".repeat(1001));
+        request.setDescription(faker.lorem().characters(1001));
         return request;
     }
 
@@ -55,13 +58,13 @@ public class BookThreadRequestFactory {
 
     public static BookThreadRequest invalidRequestByUsernameExceedingMaxLength() {
         var request = validRequest();
-        request.setUsername("a".repeat(51));
+        request.setUsername(faker.lorem().characters(51));
         return request;
     }
 
     public static BookThreadRequest invalidRequestByUsernameRegexMismatch() {
         var request = validRequest();
-        request.setUsername("example-user");
+        request.setUsername("example@name");
         return request;
     }
 

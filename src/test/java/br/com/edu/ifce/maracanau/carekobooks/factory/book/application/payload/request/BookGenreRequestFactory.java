@@ -3,8 +3,11 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.r
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
+import com.github.javafaker.Faker;
 
 public class BookGenreRequestFactory {
+
+    private static final Faker faker = new Faker();
 
     private BookGenreRequestFactory() {
     }
@@ -24,37 +27,37 @@ public class BookGenreRequestFactory {
 
     public static BookGenreRequest invalidRequestByBlankName() {
         var request = validRequest();
-        request.setName("");
+        request.setName(null);
         return request;
     }
 
     public static BookGenreRequest invalidRequestByNameRegexMismatch() {
         var request = validRequest();
-        request.setName("example-genre");
+        request.setName("invalid@name");
         return request;
     }
 
     public static BookGenreRequest invalidRequestByNameExceedingMaxLength() {
         var request = validRequest();
-        request.setName("a".repeat(51));
+        request.setName(faker.lorem().characters(51));
         return request;
     }
 
     public static BookGenreRequest invalidRequestByBlankDisplayName() {
         var request = validRequest();
-        request.setDisplayName("");
+        request.setDisplayName(null);
         return request;
     }
 
     public static BookGenreRequest invalidRequestByDisplayNameExceedingMaxLength() {
         var request = validRequest();
-        request.setDisplayName("a".repeat(101));
+        request.setDisplayName(faker.lorem().characters(101));
         return request;
     }
 
     public static BookGenreRequest invalidRequestByDescriptionExceedingMaxLength() {
         var request = validRequest();
-        request.setDescription("a".repeat(256));
+        request.setDescription(faker.lorem().characters());
         return request;
     }
 

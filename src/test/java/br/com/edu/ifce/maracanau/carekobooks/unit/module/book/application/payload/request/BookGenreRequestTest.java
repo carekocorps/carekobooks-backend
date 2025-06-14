@@ -19,79 +19,79 @@ class BookGenreRequestTest {
     }
 
     @Test
-    void validate_withValidRequest_shouldPass() {
+    void validate_withValidGenreRequest_shouldSucceed() {
         // Arrange
-        var request = BookGenreRequestFactory.validRequest();
+        var genreRequest = BookGenreRequestFactory.validRequest();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void validate_withInvalidRequestByBlankName_shouldFail() {
+    void validate_withInvalidGenreRequestByBlankName_shouldFail() {
         // Arrange
-        var request = BookGenreRequestFactory.invalidRequestByBlankName();
+        var genreRequest = BookGenreRequestFactory.invalidRequestByBlankName();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
     }
 
     @Test
-    void validate_withInvalidRequestByNameRegexMismatch_shouldFail() {
+    void validate_withInvalidGenreRequestByNameRegexMismatch_shouldFail() {
         // Arrange
-        var request = BookGenreRequestFactory.invalidRequestByNameRegexMismatch();
+        var genreRequest = BookGenreRequestFactory.invalidRequestByNameRegexMismatch();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
     }
 
     @Test
-    void validate_withInvalidRequestByNameExceedingMaxLength_shouldFail() {
+    void validate_withInvalidGenreRequestByNameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookGenreRequestFactory.invalidRequestByNameExceedingMaxLength();
+        var genreRequest = BookGenreRequestFactory.invalidRequestByNameExceedingMaxLength();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
     }
 
     @Test
-    void validate_withInvalidRequestByBlankDisplayName_shouldFail() {
+    void validate_withInvalidGenreRequestByBlankDisplayName_shouldFail() {
         // Arrange
-        var request = BookGenreRequestFactory.invalidRequestByBlankDisplayName();
+        var genreRequest = BookGenreRequestFactory.invalidRequestByBlankDisplayName();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("displayName")));
     }
 
     @Test
-    void validate_withInvalidRequestByDisplayNameExceedingMaxLength_shouldFail() {
+    void validate_withInvalidGenreRequestByDisplayNameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookGenreRequestFactory.invalidRequestByDisplayNameExceedingMaxLength();
+        var genreRequest = BookGenreRequestFactory.invalidRequestByDisplayNameExceedingMaxLength();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(genreRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("displayName")));
     }
 
     @Test
-    void validate_withInvalidRequestByDescriptionExceedingMaxLength_shouldFail() {
+    void validate_withInvalidGenreRequestByDescriptionExceedingMaxLength_shouldFail() {
         // Arrange
         var request = BookGenreRequestFactory.invalidRequestByDescriptionExceedingMaxLength();
 

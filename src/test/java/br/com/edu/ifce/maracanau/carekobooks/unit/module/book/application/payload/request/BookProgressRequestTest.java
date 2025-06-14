@@ -19,120 +19,120 @@ class BookProgressRequestTest {
     }
 
     @Test
-    void validate_withValidRequest_shouldPass() {
+    void validate_withValidProgressRequest_shouldSucceed() {
         // Arrange
-        var request = BookProgressRequestFactory.validRequest();
+        var progressRequest = BookProgressRequestFactory.validRequest();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void validate_withInvalidRequestByBlankUsername_shouldFail() {
+    void validate_withInvalidProgressRequestByBlankUsername_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByBlankUsername();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByBlankUsername();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
     }
 
     @Test
-    void validate_withInvalidRequestByUsernameExceedingMaxLength_shouldFail() {
+    void validate_withInvalidProgressRequestByUsernameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByUsernameExceedingMaxLength();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByUsernameExceedingMaxLength();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
     }
 
     @Test
-    void validate_withInvalidRequestByUsernameRegexMismatch_shouldFail() {
+    void validate_withInvalidProgressRequestByUsernameRegexMismatch_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByUsernameRegexMismatch();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByUsernameRegexMismatch();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
     }
 
     @Test
-    void validate_withInvalidRequestByBlankBookId_shouldFail() {
+    void validate_withInvalidProgressRequestByBlankBookId_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByBlankBookId();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByBlankBookId();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("bookId")));
     }
 
     @Test
-    void validate_withInvalidRequestByScoreExceedingMax_shouldFail() {
+    void validate_withInvalidProgressRequestByScoreExceedingMax_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByScoreExceedingMax();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByScoreExceedingMax();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("score")));
     }
 
     @Test
-    void validate_withInvalidRequestByNegativeScore_shouldFail() {
+    void validate_withInvalidProgressRequestByNegativeScore_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByNegativeScore();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByNegativeScore();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("score")));
     }
 
     @Test
-    void validate_withInvalidRequestByNegativePageCount_shouldFail() {
+    void validate_withInvalidProgressRequestByNegativePageCount_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByNegativePageCount();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByNegativePageCount();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("pageCount")));
     }
 
     @Test
-    void validate_withInvalidRequestByBlankStatus_shouldFail() {
+    void validate_withInvalidProgressRequestByBlankStatus_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByBlankStatus();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByBlankStatus();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("status")));
     }
 
     @Test
-    void validate_withInvalidRequestByBlankIsFavorite_shouldFail() {
+    void validate_withInvalidProgressRequestByBlankIsFavorite_shouldFail() {
         // Arrange
-        var request = BookProgressRequestFactory.invalidRequestByBlankIsFavorite();
+        var progressRequest = BookProgressRequestFactory.invalidRequestByBlankIsFavorite();
 
         // Act
-        var result = validator.validate(request);
+        var result = validator.validate(progressRequest);
 
         // Assert
         assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("isFavorite")));

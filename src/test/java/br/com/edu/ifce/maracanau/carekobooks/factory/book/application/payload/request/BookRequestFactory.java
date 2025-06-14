@@ -4,12 +4,15 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
+import com.github.javafaker.Faker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookRequestFactory {
+
+    private static final Faker faker = new Faker();
 
     private BookRequestFactory() {
     }
@@ -47,13 +50,13 @@ public class BookRequestFactory {
 
     public static BookRequest invalidRequestByTitleExceedingMaxLength() {
         var request = validRequest();
-        request.setTitle("a".repeat(256));
+        request.setTitle(faker.lorem().characters(256));
         return request;
     }
 
     public static BookRequest invalidRequestBySynopsisExceedingMaxLength() {
         var request = validRequest();
-        request.setSynopsis("a".repeat(1001));
+        request.setSynopsis(faker.lorem().characters(1001));
         return request;
     }
 
@@ -65,7 +68,7 @@ public class BookRequestFactory {
 
     public static BookRequest invalidRequestByAuthorNameExceedingMaxLength() {
         var request = validRequest();
-        request.setAuthorName("a".repeat(256));
+        request.setAuthorName(faker.lorem().characters(256));
         return request;
     }
 
@@ -77,7 +80,7 @@ public class BookRequestFactory {
 
     public static BookRequest invalidRequestByPublisherNameExceedingMaxLength() {
         var request = validRequest();
-        request.setPublisherName("a".repeat(256));
+        request.setPublisherName(faker.lorem().characters(256));
         return request;
     }
 
@@ -108,14 +111,14 @@ public class BookRequestFactory {
     public static BookRequest invalidRequestByGenreExceedingMaxLength() {
         var request = validRequest();
         var genres = new ArrayList<>(request.getGenres());
-        genres.set(0, "a".repeat(51));
+        genres.set(0, faker.lorem().characters(51));
         request.setGenres(genres);
         return request;
     }
 
     public static BookRequest invalidRequestByTooManyGenres() {
         var request = validRequest();
-        request.setGenres(List.of("Romance", "Drama", "Terror", "Aventura", "Ficção", "Suspense"));
+        request.setGenres(List.of("romance", "drama", "horror", "adventure", "fiction", "thriller"));
         return request;
     }
 

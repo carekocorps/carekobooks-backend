@@ -37,12 +37,12 @@ class BookReviewMapperTest {
     private BookReviewMapper bookReviewMapper = Mappers.getMapper(BookReviewMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullReviewRequest_shouldReturnNullReview() {
         // Arrange
-        BookReviewRequest review = null;
+        BookReviewRequest reviewRequest = null;
 
         // Act
-        var result = bookReviewMapper.toEntity(review);
+        var result = bookReviewMapper.toEntity(reviewRequest);
 
         // Assert
         assertNull(result);
@@ -51,32 +51,33 @@ class BookReviewMapperTest {
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidEntity() {
+    void toEntity_withValidReviewRequest_shouldReturnReview() {
         // Arrange
-        var request = BookReviewRequestFactory.validRequest();
-        var review = BookReviewFactory.validReview(request);
+        var reviewRequest = BookReviewRequestFactory.validRequest();
+        var review = BookReviewFactory.validReview(reviewRequest);
 
-        when(userMapper.toEntity(request.getUsername()))
+        when(userMapper.toEntity(reviewRequest.getUsername()))
                 .thenReturn(review.getUser());
 
-        when(bookMapper.toEntity(request.getBookId()))
+        when(bookMapper.toEntity(reviewRequest.getBookId()))
                 .thenReturn(review.getBook());
 
         // Act
-        var result = bookReviewMapper.toEntity(request);
+        var result = bookReviewMapper.toEntity(reviewRequest);
 
         // Assert
-        assertEquals(request.getTitle(), result.getTitle());
-        assertEquals(request.getContent(), result.getContent());
-        assertEquals(request.getScore(), result.getScore());
-        assertEquals(request.getUsername(), result.getUser().getUsername());
-        assertEquals(request.getBookId(), result.getBook().getId());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        assertNotNull(result);
+        assertEquals(reviewRequest.getTitle(), result.getTitle());
+        assertEquals(reviewRequest.getContent(), result.getContent());
+        assertEquals(reviewRequest.getScore(), result.getScore());
+        assertEquals(reviewRequest.getUsername(), result.getUser().getUsername());
+        assertEquals(reviewRequest.getBookId(), result.getBook().getId());
+        verify(userMapper, times(1)).toEntity(reviewRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(reviewRequest.getBookId());
     }
 
     @Test
-    void toResponse_withNullEntity_shouldReturnNull() {
+    void toResponse_withNullReview_shouldReturnNullReviewResponse() {
         // Arrange
         BookReview review = null;
 
@@ -90,7 +91,7 @@ class BookReviewMapperTest {
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidResponse() {
+    void toResponse_withValidReview_shouldReturnReviewResponse() {
         // Arrange
         var review = BookReviewFactory.validReview();
 
@@ -104,6 +105,7 @@ class BookReviewMapperTest {
         var result = bookReviewMapper.toResponse(review);
 
         // Assert
+        assertNotNull(result);
         assertEquals(review.getId(), result.getId());
         assertEquals(review.getTitle(), result.getTitle());
         assertEquals(review.getContent(), result.getContent());
@@ -116,14 +118,14 @@ class BookReviewMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndNullRequest_shouldPreserveEntity() {
+    void updateEntity_withValidReviewAndNullReviewRequest_shouldPreserveReview() {
         // Arrange
-        BookReviewRequest request = null;
+        BookReviewRequest reviewRequest = null;
         var review = BookReviewFactory.validReview();
         var newReview = SerializationUtils.clone(review);
 
         // Act
-        bookReviewMapper.updateEntity(newReview, request);
+        bookReviewMapper.updateEntity(newReview, reviewRequest);
 
         // Assert
         assertEquals(review.getId(), newReview.getId());
@@ -138,31 +140,31 @@ class BookReviewMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndValidRequest_shouldUpdateEntity() {
+    void updateEntity_withValidReviewAndValidReviewRequest_shouldUpdateReview() {
         // Arrange
+        var reviewRequest = BookReviewRequestFactory.validRequest();
         var review = BookReviewFactory.validReview();
         var newReview = SerializationUtils.clone(review);
-        var request = BookReviewRequestFactory.validRequest();
 
-        when(userMapper.toEntity(request.getUsername()))
-                .thenReturn(UserFactory.validUser(request.getUsername()));
+        when(userMapper.toEntity(reviewRequest.getUsername()))
+                .thenReturn(UserFactory.validUser(reviewRequest.getUsername()));
 
-        when(bookMapper.toEntity(request.getBookId()))
-                .thenReturn(BookFactory.validBook(request.getBookId()));
+        when(bookMapper.toEntity(reviewRequest.getBookId()))
+                .thenReturn(BookFactory.validBook(reviewRequest.getBookId()));
 
         // Act
-        bookReviewMapper.updateEntity(newReview, request);
+        bookReviewMapper.updateEntity(newReview, reviewRequest);
 
         // Assert
         assertEquals(review.getId(), newReview.getId());
-        assertEquals(request.getTitle(), newReview.getTitle());
-        assertEquals(request.getContent(), newReview.getContent());
-        assertEquals(request.getScore(), newReview.getScore());
-        assertEquals(request.getUsername(), newReview.getUser().getUsername());
-        assertEquals(request.getBookId(), newReview.getBook().getId());
+        assertEquals(reviewRequest.getTitle(), newReview.getTitle());
+        assertEquals(reviewRequest.getContent(), newReview.getContent());
+        assertEquals(reviewRequest.getScore(), newReview.getScore());
+        assertEquals(reviewRequest.getUsername(), newReview.getUser().getUsername());
+        assertEquals(reviewRequest.getBookId(), newReview.getBook().getId());
         assertEquals(review.getCreatedAt(), newReview.getCreatedAt());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        verify(userMapper, times(1)).toEntity(reviewRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(reviewRequest.getBookId());
     }
 
 }

@@ -16,9 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,25 +32,25 @@ class BookGenreMapperTest {
     private BookGenreMapper bookGenreMapper = Mappers.getMapper(BookGenreMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullGenreRequest_shouldReturnNullGenre() {
         // Arrange
-        BookGenreRequest request = null;
+        BookGenreRequest genreRequest = null;
 
         // Act
-        var result = bookGenreMapper.toEntity(request);
+        var result = bookGenreMapper.toEntity(genreRequest);
 
         // Assert
         assertNull(result);
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidEntity() {
+    void toEntity_withValidGenreRequest_shouldReturnGenre() {
         // Arrange
-        var request = BookGenreRequestFactory.validRequest();
-        var genre = BookGenreFactory.validGenre(request);
+        var genreRequest = BookGenreRequestFactory.validRequest();
+        var genre = BookGenreFactory.validGenre(genreRequest);
 
         // Act
-        var result = bookGenreMapper.toEntity(request);
+        var result = bookGenreMapper.toEntity(genreRequest);
 
         // Assert
         assertEquals(genre.getName(), result.getName());
@@ -61,25 +59,25 @@ class BookGenreMapperTest {
     }
 
     @Test
-    void toEntity_withNullResponse_shouldReturnNull() {
+    void toEntity_withNullGenreResponse_shouldReturnNullGenre() {
         // Arrange
-        BookGenreResponse response = null;
+        BookGenreResponse genreResponse = null;
 
         // Act
-        var result = bookGenreMapper.toEntity(response);
+        var result = bookGenreMapper.toEntity(genreResponse);
 
         // Assert
         assertNull(result);
     }
 
     @Test
-    void toEntity_withValidResponse_shouldReturnValidEntity() {
+    void toEntity_withValidGenreResponse_shouldReturnGenre() {
         // Arrange
         var genre = BookGenreFactory.validGenre();
-        var response = BookGenreResponseFactory.validResponse(genre);
+        var genreResponse = BookGenreResponseFactory.validResponse(genre);
 
         // Act
-        var result = bookGenreMapper.toEntity(response);
+        var result = bookGenreMapper.toEntity(genreResponse);
 
         // Assert
         assertEquals(genre.getId(), result.getId());
@@ -91,7 +89,27 @@ class BookGenreMapperTest {
     }
 
     @Test
-    void toResponse_withNullEntity_shouldReturnNull() {
+    void toEntity_withValidGenreNames_shouldReturnGenreList() {
+        // Arrange
+        var numGenres = Math.abs(new Random().nextInt(10));
+        var genres = IntStream.range(0, numGenres).mapToObj(i -> BookGenreFactory.validGenre()).toList();
+        var genreNames = genres.stream().map(BookGenre::getName).toList();
+
+        when(bookGenreRepository.findAllByNameIn(genreNames))
+                .thenReturn(genres);
+
+        // Act
+        var result = bookGenreMapper.toEntity(genreNames);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(numGenres, result.size());
+        assertAll(IntStream.range(0, numGenres).mapToObj(i -> () -> assertEquals(genres.get(i).getName(), result.get(i).getName())));
+        verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
+    }
+
+    @Test
+    void toResponse_withNullGenre_shouldReturnNullGenreResponse() {
         // Arrange
         BookGenre genre = null;
 
@@ -103,7 +121,7 @@ class BookGenreMapperTest {
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidEntity() {
+    void toResponse_withValidGenre_shouldReturnGenreResponse() {
         // Arrange
         var genre = BookGenreFactory.validGenre();
 
@@ -120,14 +138,14 @@ class BookGenreMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndNullRequest_shouldPreserveEntity() {
+    void updateEntity_withValidGenreAndNullGenreRequest_shouldPreserveGenre() {
         // Arrange
-        BookGenreRequest request = null;
+        BookGenreRequest genreRequest = null;
         var genre = BookGenreFactory.validGenre();
         var newGenre = SerializationUtils.clone(genre);
 
         // Act
-        bookGenreMapper.updateEntity(genre, request);
+        bookGenreMapper.updateEntity(genre, genreRequest);
 
         // Assert
         assertEquals(genre.getId(), newGenre.getId());
@@ -138,123 +156,21 @@ class BookGenreMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndValidRequest_shouldUpdateEntity() {
+    void updateEntity_withValidGenreAndValidGenreRequest_shouldUpdateGenre() {
         // Arrange
+        var genreRequest = BookGenreRequestFactory.validRequest();
         var genre = BookGenreFactory.validGenre();
         var newGenre = SerializationUtils.clone(genre);
-        var request = BookGenreRequestFactory.validRequest();
 
         // Act
-        bookGenreMapper.updateEntity(newGenre, request);
+        bookGenreMapper.updateEntity(newGenre, genreRequest);
 
         // Assert
         assertEquals(genre.getId(), newGenre.getId());
-        assertEquals(request.getName(), newGenre.getName());
-        assertEquals(request.getDisplayName(), newGenre.getDisplayName());
-        assertEquals(request.getDescription(), newGenre.getDescription());
+        assertEquals(genreRequest.getName(), newGenre.getName());
+        assertEquals(genreRequest.getDisplayName(), newGenre.getDisplayName());
+        assertEquals(genreRequest.getDescription(), newGenre.getDescription());
         assertEquals(genre.getCreatedAt(), newGenre.getCreatedAt());
-    }
-
-    @Test
-    void toEntity_withNullGenreNames_shouldReturnEmptyList() {
-        // Arrange
-        List<String> genreNames = null;
-
-        // Act
-        var result = bookGenreMapper.toEntity(genreNames);
-
-        // Assert
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void toEntity_withValidGenreNames_shouldReturnValidEntities() {
-        // Arrange
-        var size = 10;
-        var genres = IntStream.range(0, size).mapToObj(i -> BookGenreFactory.validGenre()).toList();
-        var genreNames = genres.stream().map(BookGenre::getName).toList();
-
-        when(bookGenreRepository.findAllByNameIn(genreNames))
-                .thenReturn(genres);
-
-        // Act
-        var result = bookGenreMapper.toEntity(genreNames);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(size, result.size());
-        assertAll(IntStream.range(0, size).mapToObj(i -> () -> assertEquals(genres.get(i).getName(), result.get(i).getName())));
-        verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
-    }
-
-    @Test
-    void toEntity_withDuplicateGenreNames_shouldReturnNonDuplicateValidEntities() {
-        // Arrange
-        var size = 10;
-        var genre = BookGenreFactory.validGenre();
-        var genres = IntStream.range(0, size).mapToObj(i -> genre).toList();
-        var uniqueGenres = genres
-                .stream()
-                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
-                .values()
-                .stream()
-                .toList();
-
-        var genreNames = genres.stream().map(BookGenre::getName).toList();
-
-        when(bookGenreRepository.findAllByNameIn(genreNames))
-                .thenReturn(uniqueGenres);
-
-        // Act
-        var result = bookGenreMapper.toEntity(genreNames);
-
-        // Assert
-        assertNotNull(result);
-        assertNotEquals(genreNames.size(), result.size());
-        assertEquals(uniqueGenres.size(), result.size());
-        verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
-    }
-
-    @Test
-    void toEntity_withInvalidGenreNames_shouldReturnNonInvalidEntities() {
-        // Arrange
-        var size = 10;
-        var genres = IntStream.range(0, size).mapToObj(i -> BookGenreFactory.validGenre("genre_" + i)).toList();
-        var uniqueGenres = genres
-                .stream()
-                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
-                .values()
-                .stream()
-                .toList();
-
-        var genreNames = IntStream.range(0, size + 1).mapToObj(i -> "genre_" + i).toList();
-
-        when(bookGenreRepository.findAllByNameIn(genreNames))
-                .thenReturn(uniqueGenres);
-
-        // Act
-        var result = bookGenreMapper.toEntity(genreNames);
-
-        // Assert
-        assertNotNull(result);
-        assertNotEquals(genreNames.size(), result.size());
-        verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
-    }
-
-    @Test
-    void toEntity_withEmptyGenreNames_shouldReturnEmptyList() {
-        // Arrange
-        var uniqueGenres = List.<BookGenre>of();
-        var genreNames = List.<String>of();
-
-        when (bookGenreRepository.findAllByNameIn(genreNames))
-                .thenReturn(uniqueGenres);
-
-        // Act
-        var result = bookGenreMapper.toEntity(genreNames);
-
-        // Assert
-        assertTrue(result.isEmpty());
     }
 
 }

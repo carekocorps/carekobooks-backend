@@ -3,8 +3,11 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.r
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookProgressFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
+import com.github.javafaker.Faker;
 
 public class BookProgressRequestFactory {
+
+    private static final Faker faker = new Faker();
 
     private BookProgressRequestFactory() {
     }
@@ -33,13 +36,13 @@ public class BookProgressRequestFactory {
 
     public static BookProgressRequest invalidRequestByUsernameExceedingMaxLength() {
         var request = validRequest();
-        request.setUsername("a".repeat(51));
+        request.setUsername(faker.lorem().characters(51));
         return request;
     }
 
     public static BookProgressRequest invalidRequestByUsernameRegexMismatch() {
         var request = validRequest();
-        request.setUsername("invalid-username");
+        request.setUsername("invalid@name");
         return request;
     }
 

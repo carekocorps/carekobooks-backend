@@ -3,14 +3,10 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain
 import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class BookFactory {
 
@@ -21,15 +17,7 @@ public class BookFactory {
 
     public static Book updatedBook(Book book, BookRequest request) {
         var updatedBook = new Book();
-        var genres = request
-                .getGenres()
-                .stream()
-                .map(BookGenreFactory::validGenre)
-                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
-                .values()
-                .stream()
-                .toList();
-
+        var genres = BookGenreFactory.validGenres(request.getGenres());
         updatedBook.setId(book.getId());
         updatedBook.setTitle(request.getTitle());
         updatedBook.setSynopsis(request.getSynopsis());
@@ -49,15 +37,7 @@ public class BookFactory {
 
     public static Book validBook(BookRequest request) {
         var book = new Book();
-        var genres = request
-                .getGenres()
-                .stream()
-                .map(BookGenreFactory::validGenre)
-                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
-                .values()
-                .stream()
-                .toList();
-
+        var genres = BookGenreFactory.validGenres(request.getGenres());
         book.setTitle(request.getTitle());
         book.setSynopsis(request.getSynopsis());
         book.setAuthorName(request.getAuthorName());
@@ -75,22 +55,9 @@ public class BookFactory {
         return book;
     }
 
-    public static Book validBookWithImage(BookRequest request) {
-        var book = validBook(request);
-        book.setImage(ImageFactory.validImage());
-        return book;
-    }
-
-    public static Book validBook(int numGenres) {
+    public static Book validBook() {
         var book = new Book();
-        var genres = IntStream
-                .range(0, numGenres)
-                .mapToObj(i -> BookGenreFactory.validGenre())
-                .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
-                .values()
-                .stream()
-                .toList();
-
+        var genres = BookGenreFactory.validGenres(faker.number().numberBetween(1, 4));
         book.setId(faker.number().randomNumber());
         book.setTitle(faker.book().title());
         book.setSynopsis(faker.lorem().paragraph());
@@ -105,16 +72,6 @@ public class BookFactory {
         book.setThreads(List.of());
         book.setCreatedAt(LocalDateTime.now());
         book.setUpdatedAt(book.getCreatedAt());
-        return book;
-    }
-
-    public static Book validBook() {
-        return validBook(faker.number().numberBetween(1, 4));
-    }
-
-    public static Book validBookWithImage() {
-        var book = validBook();
-        book.setImage(ImageFactory.validImage());
         return book;
     }
 
@@ -134,6 +91,18 @@ public class BookFactory {
         var book = validBook();
         book.setId(id);
         book.setPageCount(pageCount);
+        return book;
+    }
+
+    public static Book validBookWithImage(BookRequest request) {
+        var book = validBook(request);
+        book.setImage(ImageFactory.validImage());
+        return book;
+    }
+
+    public static Book validBookWithImage() {
+        var book = validBook();
+        book.setImage(ImageFactory.validImage());
         return book;
     }
 

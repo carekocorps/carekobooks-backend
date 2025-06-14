@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -43,12 +44,12 @@ class BookThreadMapperTest {
     private BookThreadMapper bookThreadMapper = Mappers.getMapper(BookThreadMapper.class);
 
     @Test
-    void toEntity_withNullRequest_shouldReturnNull() {
+    void toEntity_withNullThreadRequest_shouldReturnNullThread() {
         // Arrange
-        BookThreadRequest request = null;
+        BookThreadRequest threadRequest = null;
 
         // Act
-        var result = bookThreadMapper.toEntity(request);
+        var result = bookThreadMapper.toEntity(threadRequest);
 
         // Assert
         assertNull(result);
@@ -57,31 +58,32 @@ class BookThreadMapperTest {
     }
 
     @Test
-    void toEntity_withValidRequest_shouldReturnValidEntity() {
+    void toEntity_withValidThreadRequest_shouldReturnThread() {
         // Arrange
-        var request = BookThreadRequestFactory.validRequest();
-        var thread = BookThreadFactory.validThread(request);
+        var threadRequest = BookThreadRequestFactory.validRequest();
+        var thread = BookThreadFactory.validThread(threadRequest);
 
-        when(userMapper.toEntity(request.getUsername()))
+        when(userMapper.toEntity(threadRequest.getUsername()))
                 .thenReturn(thread.getUser());
 
-        when(bookMapper.toEntity(request.getBookId()))
+        when(bookMapper.toEntity(threadRequest.getBookId()))
                 .thenReturn(thread.getBook());
 
         // Act
-        var result = bookThreadMapper.toEntity(request);
+        var result = bookThreadMapper.toEntity(threadRequest);
 
         // Assert
+        assertNotNull(result);
         assertEquals(thread.getTitle(), result.getTitle());
         assertEquals(thread.getDescription(), result.getDescription());
         assertEquals(thread.getUser().getUsername(), result.getUser().getUsername());
         assertEquals(thread.getBook().getId(), result.getBook().getId());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
+        verify(userMapper, times(1)).toEntity(threadRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(thread.getBook().getId());
     }
 
     @Test
-    void toResponse_withNullEntity_shouldReturnNull() {
+    void toResponse_withNullThread_shouldReturnNullThreadResponse() {
         // Arrange
         BookThread thread = null;
 
@@ -95,7 +97,7 @@ class BookThreadMapperTest {
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidResponse() {
+    void toResponse_withValidThread_shouldReturnThreadResponse() {
         // Arrange
         var thread = BookThreadFactory.validThread();
 
@@ -109,6 +111,7 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toResponse(thread);
 
         // Assert
+        assertNotNull(result);
         assertEquals(thread.getTitle(), result.getTitle());
         assertEquals(thread.getDescription(), result.getDescription());
         assertEquals(thread.getUser().getUsername(), result.getUser().getUsername());
@@ -120,14 +123,14 @@ class BookThreadMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndNullRequest_shouldPreserveEntity() {
+    void updateEntity_withValidThreadAndNullThreadRequest_shouldPreserveThread() {
         // Arrange
-        BookThreadRequest request = null;
+        BookThreadRequest threadRequest = null;
         var thread = BookThreadFactory.validThread();
         var newThread = SerializationUtils.clone(thread);
 
         // Act
-        bookThreadMapper.updateEntity(newThread, request);
+        bookThreadMapper.updateEntity(newThread, threadRequest);
 
         // Assert
         assertEquals(thread.getId(), newThread.getId());
@@ -141,36 +144,36 @@ class BookThreadMapperTest {
     }
 
     @Test
-    void updateEntity_withValidEntityAndValidRequest_shouldUpdateEntity() {
+    void updateEntity_withValidThreadAndValidThreadRequest_shouldUpdateThread() {
         // Arrange
+        var threadRequest = BookThreadRequestFactory.validRequest();
         var thread = BookThreadFactory.validThread();
         var newThread = SerializationUtils.clone(thread);
-        var request = BookThreadRequestFactory.validRequest();
 
-        when(userMapper.toEntity(request.getUsername()))
-                .thenReturn(UserFactory.validUser(request.getUsername()));
+        when(userMapper.toEntity(threadRequest.getUsername()))
+                .thenReturn(UserFactory.validUser(threadRequest.getUsername()));
 
-        when(bookMapper.toEntity(request.getBookId()))
-                .thenReturn(BookFactory.validBook(request.getBookId()));
+        when(bookMapper.toEntity(threadRequest.getBookId()))
+                .thenReturn(BookFactory.validBook(threadRequest.getBookId()));
 
         // Act
-        bookThreadMapper.updateEntity(newThread, request);
+        bookThreadMapper.updateEntity(newThread, threadRequest);
 
         // Assert
         assertEquals(thread.getId(), newThread.getId());
-        assertEquals(request.getTitle(), newThread.getTitle());
-        assertEquals(request.getDescription(), newThread.getDescription());
-        assertEquals(request.getUsername(), newThread.getUser().getUsername());
-        assertEquals(request.getBookId(), newThread.getBook().getId());
+        assertEquals(threadRequest.getTitle(), newThread.getTitle());
+        assertEquals(threadRequest.getDescription(), newThread.getDescription());
+        assertEquals(threadRequest.getUsername(), newThread.getUser().getUsername());
+        assertEquals(threadRequest.getBookId(), newThread.getBook().getId());
         assertEquals(thread.getCreatedAt(), newThread.getCreatedAt());
-        verify(userMapper, times(1)).toEntity(request.getUsername());
-        verify(bookMapper, times(1)).toEntity(request.getBookId());
+        verify(userMapper, times(1)).toEntity(threadRequest.getUsername());
+        verify(bookMapper, times(1)).toEntity(threadRequest.getBookId());
     }
 
     @Test
-    void toEntity_withNonExistingBookId_shouldReturnNull() {
+    void toEntity_withNonExistingBookId_shouldReturnNullThread() {
         // Arrange
-        var threadId = 1L;
+        var threadId = Math.abs(new Random().nextLong()) + 1;
 
         when(bookThreadRepository.findById(threadId))
                 .thenReturn(Optional.empty());
@@ -184,7 +187,7 @@ class BookThreadMapperTest {
     }
 
     @Test
-    void toEntity_withExistingBookId_shouldReturnValidEntity() {
+    void toEntity_withExistingBookId_shouldReturnValidThread() {
         // Arrange
         var thread = BookThreadFactory.validThread();
 
@@ -195,6 +198,7 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toEntity(thread.getId());
 
         // Assert
+        assertNotNull(result);
         assertEquals(thread.getId(), result.getId());
         assertEquals(thread.getTitle(), result.getTitle());
         assertEquals(thread.getDescription(), result.getDescription());
