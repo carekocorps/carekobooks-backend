@@ -6,8 +6,8 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookProgressFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestContainersConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestSecurityConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerTestConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.SecurityTestConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
@@ -15,6 +15,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({TestContainersConfig.class, TestSecurityConfig.class})
+@Import({PostgresContainerTestConfig.class, SecurityTestConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookProgressControllerTest {
 
@@ -85,10 +89,10 @@ class BookProgressControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullId(List.of(genre)));
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var progress = bookProgressRepository.save(BookProgressFactory.validProgressWithNullId(book, user));
+        var uri = BookProgressQueryFactory.validURIString(progress, orderBy, isAscendingOrder);
 
         // Act
-        var uri = BookProgressQueryFactory.validURI(progress, orderBy, isAscendingOrder);
-        var response = restTemplate.exchange(uri.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookProgressResponse>>() {});
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookProgressResponse>>() {});
         var result = response.getBody();
 
         // Assert
@@ -100,6 +104,49 @@ class BookProgressControllerTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().getId()).isEqualTo(progress.getId());
+    }
+
+    @Test
+    void find_withNonExistingProgress_shouldReturnNotFound() {
+        // Arrange
+        var progressId = Math.abs(new Random().nextLong()) + 1;
+        var uri = UriComponentsBuilder
+                .fromPath("/api/v1/books/progresses")
+                .pathSegment(String.valueOf(progressId))
+                .build()
+                .toUriString();
+
+        // Act
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookProgressResponse.class);
+
+        // Assert
+        assertThat(bookProgressRepository.count()).isZero();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void find_withExistingProgress_shouldReturnProgressResponse() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var progress = bookProgressRepository.save(BookProgressFactory.validProgressWithNullId(book, user));
+        var uri = UriComponentsBuilder
+                .fromPath("/api/v1/books/progresses")
+                .pathSegment(String.valueOf(progress.getId()))
+                .build()
+                .toUriString();
+
+        // Act
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookProgressResponse.class);
+        var result = response.getBody();
+
+        // Assert
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookProgressRepository.count()).isEqualTo(1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(progress.getId());
     }
 
 }

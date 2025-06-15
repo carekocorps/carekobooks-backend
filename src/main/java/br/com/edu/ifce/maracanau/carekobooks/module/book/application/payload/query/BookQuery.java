@@ -30,7 +30,7 @@ public class BookQuery extends BaseApplicationQuery<Book> {
     @Override
     public Specification<Book> getSpecification() {
         var specs = super.getSpecification();
-        if (title != null) specs = specs.and(titleContains(title));
+        if (StringUtils.isNotBlank(title)) specs = specs.and(titleContains(title));
         if (StringUtils.isNotBlank(authorName)) specs = specs.and(authorNameContains(authorName));
         if (StringUtils.isNotBlank(publisherName)) specs = specs.and(publisherNameContains(publisherName));
         if (StringUtils.isNotBlank(genre)) specs = specs.and(genreEquals(genre));

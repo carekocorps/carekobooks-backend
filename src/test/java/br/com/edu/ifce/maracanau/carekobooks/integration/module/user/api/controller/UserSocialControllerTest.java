@@ -3,8 +3,8 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.contro
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.query.UserSocialQueryFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestContainersConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestSecurityConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerTestConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.SecurityTestConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +20,7 @@ import org.springframework.http.HttpMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({TestContainersConfig.class, TestSecurityConfig.class})
+@Import({PostgresContainerTestConfig.class, SecurityTestConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserSocialControllerTest {
 
@@ -55,10 +55,10 @@ class UserSocialControllerTest {
         // Arrange
         var userFollowed = userRepository.save(UserFactory.validUserWithNullId());
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
+        var uri = UserSocialQueryFactory.validFollowingURIString(userFollowing, userFollowed, orderBy, isAscendingOrder);
 
         // Act
-        var uri = UserSocialQueryFactory.validFollowingURI(userFollowing, userFollowed, orderBy, isAscendingOrder);
-        var response = restTemplate.exchange(uri.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
         var result = response.getBody();
 
         // Assert
@@ -85,8 +85,8 @@ class UserSocialControllerTest {
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
 
         // Act
-        var uri = UserSocialQueryFactory.validFollowersURI(userFollowing, userFollowed, orderBy, isAscendingOrder);
-        var response = restTemplate.exchange(uri.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
+        var uri = UserSocialQueryFactory.validFollowersURIString(userFollowing, userFollowed, orderBy, isAscendingOrder);
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
         var result = response.getBody();
 
         // Assert

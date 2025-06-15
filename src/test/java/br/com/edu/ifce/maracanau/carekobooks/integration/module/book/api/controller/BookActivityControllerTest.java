@@ -7,8 +7,8 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestContainersConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestSecurityConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerTestConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.SecurityTestConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -16,6 +16,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.reposito
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({TestContainersConfig.class, TestSecurityConfig.class})
+@Import({PostgresContainerTestConfig.class, SecurityTestConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookActivityControllerTest {
 
@@ -82,10 +86,10 @@ class BookActivityControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullId(List.of(genre)));
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
+        var uri = BookActivityQueryFactory.validURIString(activity, orderBy, isAscendingOrder);
 
         // Act
-        var uri = BookActivityQueryFactory.validURI(activity, orderBy, isAscendingOrder);
-        var response = restTemplate.exchange(uri.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
         var result = response.getBody();
 
         // Assert
@@ -114,10 +118,10 @@ class BookActivityControllerTest {
         var userFollowed = userRepository.save(UserFactory.validUserWithNullId());
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, userFollowed));
+        var uri = BookActivityFollowingQueryFactory.validURIString(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
 
         // Act
-        var uri = BookActivityFollowingQueryFactory.validURI(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
-        var response = restTemplate.exchange(uri.toString(), HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
         var result = response.getBody();
 
         // Assert
@@ -128,6 +132,49 @@ class BookActivityControllerTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().getId()).isEqualTo(activity.getId());
+    }
+
+    @Test
+    void find_withNonExistingActivity_shouldReturnNotFound() {
+        // Arrange
+        var activityId = Math.abs(new Random().nextLong()) + 1;
+        var uri = UriComponentsBuilder
+                .fromPath("/api/v1/books/activities")
+                .pathSegment(String.valueOf(activityId))
+                .build()
+                .toUriString();
+
+        // Act
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookActivityResponse.class);
+
+        // Assert
+        assertThat(bookActivityRepository.count()).isZero();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void find_withExistingActivity_shouldReturnActivityResponse() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
+        var uri = UriComponentsBuilder
+                .fromPath("/api/v1/books/activities")
+                .pathSegment(String.valueOf(activity.getId()))
+                .build()
+                .toUriString();
+
+        // Act
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookActivityResponse.class);
+        var result = response.getBody();
+
+        // Assert
+        assertThat(bookActivityRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookActivityRepository.count()).isEqualTo(1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(activity.getId());
     }
 
 }

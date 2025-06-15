@@ -3,14 +3,12 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pa
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThreadReply;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-
 public class BookThreadReplyQueryFactory {
 
     private BookThreadReplyQueryFactory() {
     }
 
-    public static URI validURI(BookThreadReply reply, String orderBy, boolean isAscendingOrder) {
+    public static String validURIString(BookThreadReply reply, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/threads/replies")
                 .queryParam("parentId", reply.getParent().getId())
@@ -21,7 +19,7 @@ public class BookThreadReplyQueryFactory {
                 .queryParam("orderBy", orderBy)
                 .queryParam("isAscendingOrder", isAscendingOrder)
                 .build()
-                .toUri();
+                .toUriString();
     }
 
 }

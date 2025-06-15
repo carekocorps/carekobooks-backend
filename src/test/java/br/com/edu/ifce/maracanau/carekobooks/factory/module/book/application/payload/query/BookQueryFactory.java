@@ -3,19 +3,17 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pa
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-
 public class BookQueryFactory {
 
     private BookQueryFactory() {
     }
 
-    public static URI validURI(Book book, String orderBy, boolean isAscendingOrder) {
+    public static String validURIString(Book book, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books")
-//                .queryParam("title", book.getTitle())
-//                .queryParam("authorName", book.getAuthorName())
-//                .queryParam("publisherName", book.getPublisherName())
+                .queryParam("title", book.getTitle())
+                .queryParam("authorName", book.getAuthorName())
+                .queryParam("publisherName", book.getPublisherName())
                 .queryParam("genre", book.getGenres().getFirst().getName())
                 .queryParam("publishedBefore", book.getPublishedAt())
                 .queryParam("publishedAfter", book.getPublishedAt())
@@ -26,7 +24,7 @@ public class BookQueryFactory {
                 .queryParam("orderBy", orderBy)
                 .queryParam("isAscendingOrder", isAscendingOrder)
                 .build()
-                .toUri();
+                .toUriString();
     }
 
 }

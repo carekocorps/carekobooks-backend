@@ -3,14 +3,12 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pa
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookActivity;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-
 public class BookActivityQueryFactory {
 
     private BookActivityQueryFactory() {
     }
 
-    public static URI validURI(BookActivity activity, String orderBy, boolean isAscendingOrder) {
+    public static String validURIString(BookActivity activity, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/activities")
                 .queryParam("username", activity.getUser().getUsername())
@@ -23,7 +21,7 @@ public class BookActivityQueryFactory {
                 .queryParam("orderBy", orderBy)
                 .queryParam("isAscendingOrder", isAscendingOrder)
                 .build()
-                .toUri();
+                .toUriString();
     }
 
 }
