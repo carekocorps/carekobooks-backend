@@ -55,6 +55,9 @@ class BookRepositoryTest {
         var updatedBook = bookRepository.findById(book.getId()).orElseThrow();
 
         // Assert
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
+        assertThat(bookRepository.count()).isEqualTo(1);
+
         assertThat(updatedBook.getGenres()).hasSize(1);
         assertThat(updatedBook.getGenres().stream().map(BookGenre::getName)).containsExactly(genre.getName());
     }
@@ -71,6 +74,9 @@ class BookRepositoryTest {
         var updatedBook = bookRepository.findById(book.getId()).orElseThrow();
 
         // Assert
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
+        assertThat(bookRepository.count()).isEqualTo(1);
+
         assertThat(updatedBook.getGenres()).isEmpty();
     }
 

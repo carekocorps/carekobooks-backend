@@ -67,7 +67,7 @@ class BookControllerTest {
             "createdAt,true",
             "updatedAt,true"
     })
-    void search_withValidBookQuery_shouldReturnPagedBookResponse(String orderBy, boolean isAscendingOrder) {
+    void search_withValidBookQuery_shouldReturnPagedSimplifiedBookResponse(String orderBy, boolean isAscendingOrder) {
         // Arrange
         var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
         var book = bookRepository.save(BookFactory.validBookWithNullId(List.of(genre)));

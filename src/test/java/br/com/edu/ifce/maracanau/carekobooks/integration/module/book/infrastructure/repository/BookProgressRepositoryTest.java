@@ -53,15 +53,20 @@ class BookProgressRepositoryTest {
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var progress = BookProgressFactory.validProgressWithNullId(book, user);
         var progressIsFavorite = progress.getIsFavorite();
+        var newProgressIsFavorite = !progressIsFavorite;
         bookProgressRepository.save(progress);
 
         // Act
-        bookProgressRepository.changeAsFavoriteById(progress.getId(), !progressIsFavorite);
+        bookProgressRepository.changeAsFavoriteById(progress.getId(), newProgressIsFavorite);
         entityManager.clear();
         var updatedProgress = bookProgressRepository.findById(progress.getId()).orElseThrow();
 
         // Assert
-        assertThat(updatedProgress.getIsFavorite()).isEqualTo(!progressIsFavorite);
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookProgressRepository.count()).isEqualTo(1);
+
+        assertThat(updatedProgress.getIsFavorite()).isEqualTo(newProgressIsFavorite);
     }
 
 }

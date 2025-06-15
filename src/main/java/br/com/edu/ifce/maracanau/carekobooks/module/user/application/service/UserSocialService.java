@@ -3,9 +3,9 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -25,21 +25,21 @@ public class UserSocialService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public ApplicationPage<UserResponse> search(UserSocialQuery query) {
+    public ApplicationPage<SimplifiedUserResponse> search(UserSocialQuery query) {
         var specification = query.getSpecification();
         var sort = query.getSort();
         var pageRequest = PageRequest.of(query.getPageNumber(), query.getPageSize(), sort);
-        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toResponse));
+        return new ApplicationPage<>(userRepository.findAll(specification, pageRequest).map(userMapper::toSimplifiedResponse));
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> findFollowers(String username) {
+    public List<SimplifiedUserResponse> findFollowers(String username) {
         var query = new UserSocialQuery();
         query.setUsername(username);
         query.setRelationship(UserRelationship.FOLLOWER);
 
         var specification = query.getSpecification();
-        return userRepository.findAll(specification).stream().map(userMapper::toResponse).toList();
+        return userRepository.findAll(specification).stream().map(userMapper::toSimplifiedResponse).toList();
     }
 
     @Transactional

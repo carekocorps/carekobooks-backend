@@ -10,13 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     List<User> findByUsernameIn(List<String> usernames);
-    Optional<User> findByKeycloakId(UUID keycloakId);
     Optional<User> findByUsername(String username);
 
     @Modifying
