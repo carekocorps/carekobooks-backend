@@ -45,12 +45,12 @@ public class BookQuery extends BaseApplicationQuery<Book> {
     public Sort getSort() {
         return getSort(Map.of(
                 "title", "title",
-                "author-name", "authorName",
-                "publisher-name", "publisherName",
-                "published-at", "publishedAt",
-                "page-count", "pageCount",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "authorName", "authorName",
+                "publisherName", "publisherName",
+                "publishedAt", "publishedAt",
+                "pageCount", "pageCount",
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -60,12 +60,12 @@ public class BookQuery extends BaseApplicationQuery<Book> {
             allowableValues = {
                     "id",
                     "title",
-                    "author-name",
-                    "publisher-name",
-                    "published-at",
-                    "page-count",
-                    "created-at",
-                    "updated-at"
+                    "authorName",
+                    "publisherName",
+                    "publishedAt",
+                    "pageCount",
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

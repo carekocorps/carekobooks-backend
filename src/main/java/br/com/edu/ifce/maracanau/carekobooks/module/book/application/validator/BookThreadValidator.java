@@ -9,22 +9,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookThreadValidator implements BaseValidator<BookThread> {
 
-    public void validate(BookThread bookThread) {
-        if (isUserEmpty(bookThread)) {
+    public void validate(BookThread thread) {
+        if (isUserEmpty(thread)) {
             throw new UserNotFoundException();
         }
 
-        if (isBookEmpty(bookThread)) {
+        if (isBookEmpty(thread)) {
             throw new BookNotFoundException();
         }
     }
 
-    private boolean isUserEmpty(BookThread bookThread) {
-        return bookThread.getUser() == null;
+    private boolean isUserEmpty(BookThread thread) {
+        return thread.getUser() == null;
     }
 
-    private boolean isBookEmpty(BookThread bookThread) {
-        return bookThread.getBook() == null;
+    private boolean isBookEmpty(BookThread thread) {
+        return thread.getBook() == null;
     }
 
 }

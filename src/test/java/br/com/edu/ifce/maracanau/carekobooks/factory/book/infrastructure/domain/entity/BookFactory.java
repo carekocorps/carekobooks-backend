@@ -6,6 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.e
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import com.github.javafaker.Faker;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class BookFactory {
         book.setSynopsis(faker.lorem().paragraph());
         book.setAuthorName(faker.book().author());
         book.setPublisherName(faker.book().publisher());
+        book.setPublishedAt(LocalDate.now().minusDays(faker.number().numberBetween(0, 365 * 10)));
         book.setPageCount(faker.number().numberBetween(0, 1000));
         book.setImage(null);
         book.setGenres(genres);
@@ -112,6 +114,13 @@ public class BookFactory {
     public static Book validBookWithImage() {
         var book = validBook();
         book.setImage(ImageFactory.validImage());
+        return book;
+    }
+
+    public static Book invalidBookByExceedingGenreLimit() {
+        var genres = BookGenreFactory.validGenres(10);
+        var book = validBookWithNullId(genres);
+        book.setId(faker.number().randomNumber());
         return book;
     }
 

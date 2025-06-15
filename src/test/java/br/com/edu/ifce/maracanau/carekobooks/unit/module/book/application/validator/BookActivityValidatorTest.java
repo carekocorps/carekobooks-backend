@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BookActivityValidatorTest {
 
-    private BookActivityValidator validator;
+    private BookActivityValidator bookActivityValidator;
 
     @BeforeEach
     void setUp() {
-        validator = new BookActivityValidator();
+        bookActivityValidator = new BookActivityValidator();
     }
 
     @Test
@@ -25,7 +25,7 @@ class BookActivityValidatorTest {
         var activity = BookActivityFactory.validActivity();
 
         // Act && Assert
-        assertDoesNotThrow(() -> validator.validate(activity));
+        assertDoesNotThrow(() -> bookActivityValidator.validate(activity));
     }
 
     @Test
@@ -34,7 +34,7 @@ class BookActivityValidatorTest {
         var activity = BookActivityFactory.invalidActivityByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> validator.validate(activity));
+        assertThrows(UserNotFoundException.class, () -> bookActivityValidator.validate(activity));
     }
 
     @Test
@@ -43,7 +43,7 @@ class BookActivityValidatorTest {
         var progress = BookActivityFactory.invalidActivityByEmptyBook();
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> validator.validate(progress));
+        assertThrows(BookNotFoundException.class, () -> bookActivityValidator.validate(progress));
     }
 
 }

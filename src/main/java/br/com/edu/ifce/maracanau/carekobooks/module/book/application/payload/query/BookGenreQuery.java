@@ -32,9 +32,9 @@ public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
     public Sort getSort() {
         return getSort(Map.of(
                 "name", "name",
-                "display-name", "displayName",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "displayName", "displayName",
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -44,9 +44,9 @@ public class BookGenreQuery extends BaseApplicationQuery<BookGenre> {
             allowableValues = {
                     "id",
                     "name",
-                    "display-name",
-                    "created-at",
-                    "updated-at"
+                    "displayName",
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

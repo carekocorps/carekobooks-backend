@@ -28,8 +28,8 @@ public abstract class BaseApplicationQuery<T extends BaseEntity> extends BaseApp
 
     public Sort getSort() {
         return getSort(Map.of(
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 

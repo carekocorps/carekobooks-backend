@@ -35,7 +35,7 @@ public class BookGenreFactory {
         genre.setId(null);
         genre.setName(genreName.toLowerCase().replaceAll("[^a-z0-9]", ""));
         genre.setDisplayName(genreName);
-        genre.setDescription(faker.lorem().paragraph());
+        genre.setDescription(faker.lorem().characters(255));
         genre.setBooks(List.of());
         genre.setCreatedAt(LocalDateTime.now());
         genre.setUpdatedAt(genre.getCreatedAt());

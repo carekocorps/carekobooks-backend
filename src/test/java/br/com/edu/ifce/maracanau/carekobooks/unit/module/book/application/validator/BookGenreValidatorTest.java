@@ -22,7 +22,7 @@ class BookGenreValidatorTest {
     private BookGenreRepository bookGenreRepository;
 
     @InjectMocks
-    private BookGenreValidator validator;
+    private BookGenreValidator bookGenreValidator;
 
     @Test
     void validate_withNewAndUniqueGenre_shouldPass() {
@@ -30,7 +30,7 @@ class BookGenreValidatorTest {
         var genre = BookGenreFactory.validGenre();
 
         // Act && Assert
-        assertDoesNotThrow(() -> validator.validate(genre));
+        assertDoesNotThrow(() -> bookGenreValidator.validate(genre));
     }
 
     @Test
@@ -43,7 +43,7 @@ class BookGenreValidatorTest {
                 .thenReturn(Optional.of(existingGenre));
 
         // Act && Assert
-        assertDoesNotThrow(() -> validator.validate(existingGenreModified));
+        assertDoesNotThrow(() -> bookGenreValidator.validate(existingGenreModified));
     }
 
     @Test
@@ -56,7 +56,7 @@ class BookGenreValidatorTest {
                 .thenReturn(Optional.of(existingGenre));
 
         // Act && Assert
-        assertThrows(BookGenreNameConflictException.class, () -> validator.validate(newGenre));
+        assertThrows(BookGenreNameConflictException.class, () -> bookGenreValidator.validate(newGenre));
     }
 
 }

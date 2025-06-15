@@ -2,7 +2,9 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookReview;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,31 @@ public class BookReviewFactory {
         return updatedReview;
     }
 
+    public static BookReview validReviewWithNullId(Book book, User user) {
+        var review = new BookReview();
+        review.setId(null);
+        review.setTitle(faker.lorem().sentence());
+        review.setContent(faker.lorem().paragraph());
+        review.setScore(faker.number().numberBetween(0, 100));
+        review.setUser(user);
+        review.setBook(book);
+        review.setCreatedAt(LocalDateTime.now());
+        review.setUpdatedAt(review.getCreatedAt());
+        return review;
+    }
+
+    public static BookReview validReviewWithNullId() {
+        var book = BookFactory.validBook();
+        var user = UserFactory.validUser();
+        return validReviewWithNullId(book, user);
+    }
+
+    public static BookReview validReview() {
+        var review = validReviewWithNullId();
+        review.setId(faker.number().randomNumber());
+        return review;
+    }
+
     public static BookReview validReview(BookReviewRequest request) {
         var review = new BookReview();
         review.setId(faker.number().randomNumber());
@@ -35,19 +62,6 @@ public class BookReviewFactory {
         review.setScore(request.getScore());
         review.setUser(UserFactory.validUser(request.getUsername()));
         review.setBook(BookFactory.validBook(request.getBookId()));
-        review.setCreatedAt(LocalDateTime.now());
-        review.setUpdatedAt(review.getCreatedAt());
-        return review;
-    }
-
-    public static BookReview validReview() {
-        var review = new BookReview();
-        review.setId(faker.number().randomNumber());
-        review.setTitle(faker.lorem().sentence());
-        review.setContent(faker.lorem().paragraph());
-        review.setScore(faker.number().numberBetween(0, 100));
-        review.setUser(UserFactory.validUser());
-        review.setBook(BookFactory.validBook());
         review.setCreatedAt(LocalDateTime.now());
         review.setUpdatedAt(review.getCreatedAt());
         return review;

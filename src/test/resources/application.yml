@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+keycloak:
+  server-url: http://localhost:8080
+  realm: fake
+  client-id: fake
+  client-secret: fake
+minio:
+  inner-endpoint: http://localhost:9000
+  outer-endpoint: http://localhost:9000
+  access-key: fake
+  secret-key: fake
+  bucket: test-bucket
+springdoc:
+  swagger-ui:
+    custom-css-path: /static/swagger-ui.css

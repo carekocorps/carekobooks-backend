@@ -3,10 +3,11 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.infrastruc
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookProgressFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.TestcontainersConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.TestContainersConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookProgressRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import({TestContainersConfig.class})
 @DataJpaTest
-@Import(TestcontainersConfig.class)
 class BookProgressRepositoryTest {
 
     @Autowired
@@ -34,10 +35,15 @@ class BookProgressRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        bookProgressRepository.deleteAllInBatch();
         bookRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
-        bookProgressRepository.deleteAllInBatch();
         entityManager.clear();
+    }
+
+    @AfterEach
+    void tearDown() {
+        setUp();
     }
 
     @Test

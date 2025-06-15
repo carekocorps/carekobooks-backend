@@ -35,8 +35,8 @@ public class BookReviewQuery extends BaseApplicationQuery<BookReview> {
         return getSort(Map.of(
                 "username", "user.username",
                 "score", "score",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -47,8 +47,8 @@ public class BookReviewQuery extends BaseApplicationQuery<BookReview> {
                     "id",
                     "username",
                     "score",
-                    "created-at",
-                    "updated-at"
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

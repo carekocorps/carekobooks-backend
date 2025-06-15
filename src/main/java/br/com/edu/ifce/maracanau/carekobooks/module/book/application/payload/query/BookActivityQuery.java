@@ -40,9 +40,9 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
         return getSort(Map.of(
                 "username", "user.username",
                 "status", "status",
-                "page-count", "pageCount",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "pageCount", "pageCount",
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -53,9 +53,9 @@ public class BookActivityQuery extends BaseApplicationQuery<BookActivity> {
                     "id",
                     "username",
                     "status",
-                    "page-count",
-                    "created-at",
-                    "updated-at"
+                    "pageCount",
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

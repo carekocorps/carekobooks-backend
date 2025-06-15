@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class BookThreadValidatorTest {
 
-    private BookThreadValidator validator;
+    private BookThreadValidator bookThreadValidator;
 
     @BeforeEach
     void setUp() {
-        validator = new BookThreadValidator();
+        bookThreadValidator = new BookThreadValidator();
     }
 
     @Test
@@ -28,7 +28,7 @@ class BookThreadValidatorTest {
         var thread = BookThreadFactory.validThread();
 
        // Act && Assert
-        assertDoesNotThrow(() -> validator.validate(thread));
+        assertDoesNotThrow(() -> bookThreadValidator.validate(thread));
     }
 
     @Test
@@ -37,7 +37,7 @@ class BookThreadValidatorTest {
         var thread = BookThreadFactory.invalidReviewByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> validator.validate(thread));
+        assertThrows(UserNotFoundException.class, () -> bookThreadValidator.validate(thread));
     }
 
     @Test
@@ -46,7 +46,7 @@ class BookThreadValidatorTest {
         var thread = BookThreadFactory.invalidReviewByEmptyBook();
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> validator.validate(thread));
+        assertThrows(BookNotFoundException.class, () -> bookThreadValidator.validate(thread));
     }
 
 }

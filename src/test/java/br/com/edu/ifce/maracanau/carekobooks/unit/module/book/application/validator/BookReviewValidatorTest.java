@@ -27,7 +27,7 @@ class BookReviewValidatorTest {
     private BookReviewRepository bookReviewRepository;
 
     @InjectMocks
-    private BookReviewValidator validator;
+    private BookReviewValidator bookReviewValidator;
 
     @Test
     void validate_withValidReview_shouldPass() {
@@ -35,7 +35,7 @@ class BookReviewValidatorTest {
         var review = BookReviewFactory.validReview();
 
         // Act && Assert
-        assertDoesNotThrow(() -> validator.validate(review));
+        assertDoesNotThrow(() -> bookReviewValidator.validate(review));
     }
 
     @Test
@@ -44,7 +44,7 @@ class BookReviewValidatorTest {
         var review = BookReviewFactory.invalidReviewByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> validator.validate(review));
+        assertThrows(UserNotFoundException.class, () -> bookReviewValidator.validate(review));
     }
 
     @Test
@@ -53,11 +53,11 @@ class BookReviewValidatorTest {
         var review = BookReviewFactory.invalidReviewByEmptyBook();
 
         // Act & Assert
-        assertThrows(BookNotFoundException.class, () -> validator.validate(review));
+        assertThrows(BookNotFoundException.class, () -> bookReviewValidator.validate(review));
     }
 
     @Test
-    void validate_withInvalidReviewByDuplicatedReview_shouldFail() {
+    void validate_withInvalidReviewByUserDuplicatedReview_shouldFail() {
         // Arrange
         var existingReview = BookReviewFactory.validReview();
         var review = BookReviewFactory.validReview();
@@ -68,7 +68,7 @@ class BookReviewValidatorTest {
                 .thenReturn(List.of(existingReview));
 
         // Act & Assert
-        assertThrows(BookReviewUserConflictException.class, () -> validator.validate(review));
+        assertThrows(BookReviewUserConflictException.class, () -> bookReviewValidator.validate(review));
     }
 
 }

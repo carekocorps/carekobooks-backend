@@ -2,7 +2,9 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThread;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,37 @@ public class BookThreadFactory {
         return updatedThread;
     }
 
+    public static BookThread validThreadWithNullId(Book book, User user) {
+        var thread = new BookThread();
+        thread.setId(null);
+        thread.setTitle(faker.lorem().sentence());
+        thread.setDescription(faker.lorem().paragraph());
+        thread.setBook(book);
+        thread.setUser(user);
+        thread.setReplies(List.of());
+        thread.setCreatedAt(LocalDateTime.now());
+        thread.setUpdatedAt(thread.getCreatedAt());
+        return thread;
+    }
+
+    public static BookThread validThreadWithNullId() {
+        var book = BookFactory.validBook();
+        var user = UserFactory.validUser();
+        return validThreadWithNullId(book, user);
+    }
+
+    public static BookThread validThread() {
+        var thread = validThreadWithNullId();
+        thread.setId(faker.number().randomNumber());
+        return thread;
+    }
+
+    public static BookThread validThread(Long id) {
+        var thread = validThreadWithNullId();
+        thread.setId(id);
+        return thread;
+    }
+
     public static BookThread validThread(BookThreadRequest request) {
         var thread = new BookThread();
         thread.setId(Math.abs(new Random().nextLong()) + 1);
@@ -39,25 +72,6 @@ public class BookThreadFactory {
         thread.setReplies(List.of());
         thread.setCreatedAt(LocalDateTime.now());
         thread.setUpdatedAt(thread.getCreatedAt());
-        return thread;
-    }
-
-    public static BookThread validThread() {
-        var thread = new BookThread();
-        thread.setId(faker.number().randomNumber());
-        thread.setTitle(faker.lorem().sentence());
-        thread.setDescription(faker.lorem().paragraph());
-        thread.setBook(BookFactory.validBook());
-        thread.setUser(UserFactory.validUser());
-        thread.setReplies(List.of());
-        thread.setCreatedAt(LocalDateTime.now());
-        thread.setUpdatedAt(thread.getCreatedAt());
-        return thread;
-    }
-
-    public static BookThread validThread(Long id) {
-        var thread = validThread();
-        thread.setId(id);
         return thread;
     }
 

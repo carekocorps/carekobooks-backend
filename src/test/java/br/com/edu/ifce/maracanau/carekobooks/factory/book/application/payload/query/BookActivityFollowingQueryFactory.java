@@ -5,19 +5,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-public class BookActivityQueryFactory {
+public class BookActivityFollowingQueryFactory {
 
-    private BookActivityQueryFactory() {
+    private BookActivityFollowingQueryFactory() {
     }
 
-    public static URI validURI(BookActivity activity, String orderBy, boolean isAscendingOrder) {
+    public static URI validURI(String username, BookActivity activity, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
-                .queryParam("username", activity.getUser().getUsername())
-                .queryParam("genre", activity.getBook().getGenres().getFirst().getName())
-                .queryParam("status", activity.getStatus())
-                .queryParam("pageCount", activity.getPageCount())
-                .queryParam("bookId", activity.getBook().getId())
+                .fromPath("/api/v1/books/activities/social/following")
+                .queryParam("username", username)
                 .queryParam("createdBefore", activity.getCreatedAt().toLocalDate())
                 .queryParam("createdAfter", activity.getCreatedAt().toLocalDate())
                 .queryParam("orderBy", orderBy)

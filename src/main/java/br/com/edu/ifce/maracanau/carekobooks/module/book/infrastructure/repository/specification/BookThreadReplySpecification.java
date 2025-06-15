@@ -20,7 +20,7 @@ public class BookThreadReplySpecification {
 
     public static Specification<BookThreadReply> bookIdEqual(Long bookId) {
         return (root, query, cb) ->
-                cb.equal(root.get("book").get("id"), bookId);
+                cb.equal(root.get("thread").get("book").get("id"), bookId);
     }
 
 }

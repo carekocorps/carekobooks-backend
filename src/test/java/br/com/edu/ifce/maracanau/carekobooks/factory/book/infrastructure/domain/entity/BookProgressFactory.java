@@ -51,6 +51,7 @@ public class BookProgressFactory {
         var book = BookFactory.validBook();
         var user = UserFactory.validUser();
         var progress = validProgressWithNullId(book, user);
+        book.setPageCount(progress.getPageCount() + faker.number().numberBetween(0, book.getPageCount()));
         progress.setId(faker.number().randomNumber());
         return progress;
     }

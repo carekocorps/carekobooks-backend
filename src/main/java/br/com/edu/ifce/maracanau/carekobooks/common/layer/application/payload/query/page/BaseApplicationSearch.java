@@ -23,8 +23,8 @@ public abstract class BaseApplicationSearch {
             defaultValue = "id",
             allowableValues = {
                     "id",
-                    "created-at",
-                    "updated-at"
+                    "createdAt",
+                    "updatedAt"
             }
     )
     protected String orderBy = "id";

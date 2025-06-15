@@ -41,8 +41,8 @@ public class UserSocialQuery extends BaseApplicationQuery<User> {
     public Sort getSort() {
         return getSort(Map.of(
                 "username", "username",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -52,8 +52,8 @@ public class UserSocialQuery extends BaseApplicationQuery<User> {
             allowableValues = {
                     "id",
                     "username",
-                    "created-at",
-                    "updated-at"
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

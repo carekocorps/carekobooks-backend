@@ -13,15 +13,15 @@ public class BookGenreValidator implements BaseValidator<BookGenre> {
 
     private final BookGenreRepository bookGenreRepository;
 
-    public void validate(BookGenre bookGenre) {
-        if (isNameDuplicated(bookGenre)) {
+    public void validate(BookGenre genre) {
+        if (isNameDuplicated(genre)) {
             throw new BookGenreNameConflictException();
         }
     }
 
-    private boolean isNameDuplicated(BookGenre bookGenre) {
-        var genre = bookGenreRepository.findByName(bookGenre.getName());
-        return genre.isPresent() && !genre.get().getId().equals(bookGenre.getId());
+    private boolean isNameDuplicated(BookGenre genre) {
+        var existingGenre = bookGenreRepository.findByName(genre.getName());
+        return existingGenre.isPresent() && !existingGenre.get().getId().equals(genre.getId());
     }
 
 }

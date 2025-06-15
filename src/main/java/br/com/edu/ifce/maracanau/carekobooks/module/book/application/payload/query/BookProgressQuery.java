@@ -44,11 +44,11 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
         return getSort(Map.of(
                 "username", "user.username",
                 "status", "status",
-                "is-favorite", "isFavorite",
+                "isFavorite", "isFavorite",
                 "score", "score",
-                "page-count", "pageCount",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "pageCount", "pageCount",
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -59,11 +59,11 @@ public class BookProgressQuery extends BaseApplicationQuery<BookProgress> {
                     "id",
                     "username",
                     "status",
-                    "is-favorite",
+                    "isFavorite",
                     "score",
-                    "page-count",
-                    "created-at",
-                    "updated-at"
+                    "pageCount",
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {
