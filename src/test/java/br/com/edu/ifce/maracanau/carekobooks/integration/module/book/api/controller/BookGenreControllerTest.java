@@ -3,8 +3,8 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.contro
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookGenreQueryFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.TestContainersConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.TestSecurityConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestContainersConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestSecurityConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import org.junit.jupiter.api.AfterEach;

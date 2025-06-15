@@ -34,12 +34,11 @@ public class BookProgressFactory {
 
     public static BookProgress validProgressWithNullId(Book book, User user) {
         var progress = new BookProgress();
-        progress.setId(faker.number().randomNumber());
+        progress.setId(null);
         progress.setStatus(faker.options().option(BookProgressStatus.class));
         progress.setIsFavorite(faker.bool().bool());
         progress.setScore(faker.number().numberBetween(0, 100));
         progress.setPageCount(faker.number().numberBetween(0, book.getPageCount()));
-        progress.setId(null);
         progress.setUser(user);
         progress.setBook(book);
         progress.setCreatedAt(LocalDateTime.now());
@@ -51,7 +50,6 @@ public class BookProgressFactory {
         var book = BookFactory.validBook();
         var user = UserFactory.validUser();
         var progress = validProgressWithNullId(book, user);
-        book.setPageCount(progress.getPageCount() + faker.number().numberBetween(0, book.getPageCount()));
         progress.setId(faker.number().randomNumber());
         return progress;
     }
@@ -85,7 +83,7 @@ public class BookProgressFactory {
     public static BookProgress invalidProgressByExceedingPageCount() {
         var progress = validProgress();
         progress.getBook().setPageCount(faker.number().numberBetween(0, 1000));
-        progress.setPageCount(progress.getBook().getPageCount() + 1);
+        progress.setPageCount(progress.getBook().getPageCount() + faker.number().numberBetween(0, progress.getPageCount()));
         return progress;
     }
 

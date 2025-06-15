@@ -252,17 +252,86 @@ class BookProgressServiceTest {
     }
 
     @Test
-    void delete_withNonExistingProgress_shouldThrowNotFoundException() {
+    void changeAsFavorite_withNonExistingProgress_shouldThrowNotFoundException() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
-            var id = 1L;
+            var progressId = Math.abs(new Random().nextLong()) + 1;
+            var isFavorite = new Random().nextBoolean();
 
-            when(bookProgressRepository.findById(id))
+            when(bookProgressRepository.findById(progressId))
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.delete(id));
-            verify(bookProgressRepository, times(1)).findById(id);
+            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
+            verify(bookProgressRepository, never()).changeAsFavoriteById(any(Long.class), any(Boolean.class));
+        }
+    }
+
+    @Test
+    void changeAsFavorite_withExistingProgressAndUnauthorizedUser_shouldThrowModificationForbiddenException() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var progress = BookProgressFactory.validProgress();
+            var progressId = progress.getId();
+
+            var userKeycloakId = progress.getUser().getKeycloakId();
+            var isFavorite = new Random().nextBoolean();
+
+            when(bookProgressRepository.findById(progressId))
+                    .thenReturn(Optional.of(progress));
+
+            mockedStatic
+                    .when(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class))
+                    .thenThrow(BookProgressModificationForbiddenException.class);
+
+            // Act && Assert
+            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class), times(1));
+            verify(bookProgressRepository, never()).changeAsFavoriteById(any(Long.class), any(Boolean.class));
+        }
+    }
+
+    @Test
+    void changeAsFavorite_withExistingProgressAndAuthorizedUser_shouldSucceed() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var progress = BookProgressFactory.validProgress();
+            var progressId = progress.getId();
+
+            var userKeycloakId = progress.getUser().getKeycloakId();
+            var isFavorite = new Random().nextBoolean();
+
+            when(bookProgressRepository.findById(progressId))
+                    .thenReturn(Optional.of(progress));
+
+            mockedStatic
+                    .when(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class))
+                    .thenAnswer(invocation -> null);
+
+            doNothing()
+                    .when(bookProgressRepository)
+                    .changeAsFavoriteById(progressId, isFavorite);
+
+            // Act && Assert
+            assertDoesNotThrow(() -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class), times(1));
+            verify(bookProgressRepository, times(1)).changeAsFavoriteById(progressId, isFavorite);
+        }
+    }
+
+    @Test
+    void delete_withNonExistingProgress_shouldThrowNotFoundException() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var progressId = Math.abs(new Random().nextLong()) + 1;
+
+            when(bookProgressRepository.findById(progressId))
+                    .thenReturn(Optional.empty());
+
+            // Act && Assert
+            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.delete(progressId));
+            verify(bookProgressRepository, times(1)).findById(progressId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
         }
     }

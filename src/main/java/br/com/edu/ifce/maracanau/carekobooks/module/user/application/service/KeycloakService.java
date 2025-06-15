@@ -69,7 +69,7 @@ public class KeycloakService {
         }
     }
 
-    public void resetEmail(UUID keycloakId) {
+    public void changeEmail(UUID keycloakId) {
         try {
             keycloakProvider
                     .getUsersResource()

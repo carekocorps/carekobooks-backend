@@ -86,7 +86,7 @@ class BookMapperTest {
     }
 
     @Test
-    void toEntity_withNonExistingBookId_shouldReturnNull() {
+    void toEntity_withNonExistingBookId_shouldReturnNullBook() {
         // Arrange
         var id = Math.abs(new Random().nextLong()) + 1;
 

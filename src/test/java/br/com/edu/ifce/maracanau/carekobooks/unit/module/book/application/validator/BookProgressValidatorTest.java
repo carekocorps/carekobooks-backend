@@ -82,6 +82,7 @@ class BookProgressValidatorTest {
         var progress = BookProgressFactory.validProgress();
         progress.setUser(existingProgress.getUser());
         progress.setBook(existingProgress.getBook());
+        progress.setPageCount(Math.min(progress.getPageCount(), progress.getBook().getPageCount()));
 
         when(bookProgressRepository.findAll(ArgumentMatchers.<Specification<BookProgress>>any()))
                 .thenReturn(List.of(existingProgress));

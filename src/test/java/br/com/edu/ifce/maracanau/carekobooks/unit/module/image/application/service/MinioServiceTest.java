@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.MinioService;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageDeletionException;
@@ -62,7 +63,7 @@ class MinioServiceTest {
     @Test
     void delete_withRemoveObjectSucceeding_shouldPass() throws Exception {
         // Arrange
-        var filename = "example.png";
+        var filename = ImageFactory.validImage().getName();
 
         // Act && Assert
         assertDoesNotThrow(() -> minioService.delete(filename));
@@ -72,7 +73,7 @@ class MinioServiceTest {
     @Test
     void delete_withRemoveObjectFailing_shouldFail() throws Exception {
         // Arrange
-        var filename = "example.png";
+        var filename = ImageFactory.validImage().getName();
 
         doThrow(new RuntimeException())
                 .when(minioClient)

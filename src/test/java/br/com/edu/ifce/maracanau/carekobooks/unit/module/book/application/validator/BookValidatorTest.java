@@ -35,8 +35,25 @@ class BookValidatorTest {
         // Arrange
         var book = BookFactory.validBook();
 
+        when(bookRepository.findAll(ArgumentMatchers.<Specification<Book>>any()))
+                .thenReturn(List.of(book));
+
         // Act && Assert
         assertDoesNotThrow(() -> bookValidator.validate(book));
+        verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
+    }
+
+    @Test
+    void validate_withNullBookGenres_shouldSucceed() {
+        // Arrange
+        var book = BookFactory.validBookWithNullGenres();
+
+        when(bookRepository.findAll(ArgumentMatchers.<Specification<Book>>any()))
+                .thenReturn(List.of(book));
+
+        // Act && Assert
+        assertDoesNotThrow(() -> bookValidator.validate(book));
+        verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
     }
 
     @Test
@@ -51,6 +68,7 @@ class BookValidatorTest {
 
         // Act && Assert
         assertThrows(BookConflictException.class, () -> bookValidator.validate(book));
+        verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
     }
 
     @Test

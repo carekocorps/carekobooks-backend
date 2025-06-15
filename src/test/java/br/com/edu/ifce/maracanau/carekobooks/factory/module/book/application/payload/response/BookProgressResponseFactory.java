@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response;
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.payload.response.simplified.SimplifiedUserResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.response.simplified.SimplifiedUserResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookProgressResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
 

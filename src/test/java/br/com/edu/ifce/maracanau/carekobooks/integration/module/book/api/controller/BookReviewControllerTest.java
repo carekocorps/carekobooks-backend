@@ -5,8 +5,8 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pay
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.TestContainersConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.TestSecurityConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestContainersConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.TestSecurityConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookReviewRepository;

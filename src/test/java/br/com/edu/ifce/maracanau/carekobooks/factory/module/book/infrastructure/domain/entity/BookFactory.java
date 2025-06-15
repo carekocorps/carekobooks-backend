@@ -45,7 +45,7 @@ public class BookFactory {
         book.setAuthorName(faker.book().author());
         book.setPublisherName(faker.book().publisher());
         book.setPublishedAt(LocalDate.now().minusDays(faker.number().numberBetween(0, 365 * 10)));
-        book.setPageCount(faker.number().numberBetween(0, 1000));
+        book.setPageCount(faker.number().numberBetween(1, 1000));
         book.setImage(null);
         book.setGenres(genres);
         book.setProgresses(List.of());
@@ -114,6 +114,13 @@ public class BookFactory {
     public static Book validBookWithImage() {
         var book = validBook();
         book.setImage(ImageFactory.validImage());
+        return book;
+    }
+
+    public static Book validBookWithNullGenres() {
+        var book = validBookWithNullIdAndEmptyGenres();
+        book.setId(faker.number().randomNumber());
+        book.setGenres(null);
         return book;
     }
 
