@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookConflictException;

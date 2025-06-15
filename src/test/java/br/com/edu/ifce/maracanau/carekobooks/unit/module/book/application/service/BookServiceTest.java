@@ -1,13 +1,13 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookGenreResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookGenreFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.application.payload.response.ImageResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.MultipartFileFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookGenreResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.application.payload.response.ImageResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;

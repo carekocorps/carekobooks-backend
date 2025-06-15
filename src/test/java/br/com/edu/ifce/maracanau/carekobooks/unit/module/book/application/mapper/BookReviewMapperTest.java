@@ -1,11 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookReviewRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookReviewFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.user.payload.response.simplified.SimplifiedUserResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookReviewRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.payload.response.simplified.SimplifiedUserResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;

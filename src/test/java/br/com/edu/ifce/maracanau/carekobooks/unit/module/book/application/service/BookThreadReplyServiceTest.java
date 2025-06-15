@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookThreadReplyRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.BookThreadReplyResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookThreadReplyFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookThreadReplyRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookThreadReplyResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookThreadReplyFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookThreadReplyMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.subject.BookThreadReplyNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;

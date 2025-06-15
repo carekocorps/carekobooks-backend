@@ -1,9 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.request.BookProgressRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookActivityFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.user.payload.response.simplified.SimplifiedUserResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookProgressRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookActivityFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.payload.response.simplified.SimplifiedUserResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookActivityMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;

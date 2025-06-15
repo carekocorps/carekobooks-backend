@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.infrastructure.domain.entity.MultipartFileFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.image.application.payload.response.ImageResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.application.payload.response.ImageResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.MinioService;

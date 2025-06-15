@@ -1,8 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.application.payload.query.BookGenreQueryFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.book.infrastructure.domain.entity.BookGenreFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookGenreQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.TestContainersConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.TestSecurityConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
