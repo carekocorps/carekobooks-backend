@@ -1,4 +1,4 @@
-package br.com.edu.ifce.maracanau.carekobooks.common.config;
+package br.com.edu.ifce.maracanau.carekobooks.module.book.api.config;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.observer.BookActivityWebSocketNotificationObserver;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.activity.subject.BookActivityNotificationSubject;
