@@ -3,9 +3,9 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.contro
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookGenreQueryFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerTestConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisContainerTestConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.SecurityTestConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresContainerTestConfig.class, RedisContainerTestConfig.class, SecurityTestConfig.class})
+@Import({PostgresTestcontainerConfig.class, RedisTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookGenreControllerTest {
 

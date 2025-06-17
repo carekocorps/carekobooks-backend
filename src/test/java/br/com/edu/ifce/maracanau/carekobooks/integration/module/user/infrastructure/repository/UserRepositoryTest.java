@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.infrastructure.repository;
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerTestConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresContainerTestConfig.class})
+@Import({PostgresTestcontainerConfig.class})
 @DataJpaTest
 class UserRepositoryTest {
 
