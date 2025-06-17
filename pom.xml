@@ -23,6 +23,7 @@
 		<springdoc-openapi-start-webmvc-ui.version>2.8.8</springdoc-openapi-start-webmvc-ui.version>
 		<error-handling-wimdeblauwe.version>4.5.0</error-handling-wimdeblauwe.version>
 		<minio.version>8.5.17</minio.version>
+		<commons-io.version>2.19.0</commons-io.version>
 		<keycloak-admin-client.version>26.0.5</keycloak-admin-client.version>
 		<javafaker.version>1.0.2</javafaker.version>
 		<testcontainers-keycloak.version>3.7.0</testcontainers-keycloak.version>
@@ -121,6 +122,12 @@
 			<groupId>io.minio</groupId>
 			<artifactId>minio</artifactId>
 			<version>${minio.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
 		</dependency>
 
 		<dependency>

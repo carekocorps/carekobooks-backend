@@ -1,6 +1,6 @@
-package br.com.edu.ifce.maracanau.carekobooks.integration.common.auth;
+package br.com.edu.ifce.maracanau.carekobooks.integration.common.auth.provider;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.auth.token.KeycloakToken;
 import org.keycloak.OAuth2Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -17,6 +17,8 @@ import java.util.Collections;
 @Component
 public class KeycloakAuthProvider {
 
+    private static final RestTemplate restTemplate = new RestTemplate();
+
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 
@@ -26,36 +28,42 @@ public class KeycloakAuthProvider {
     @Value("${keycloak.client-secret}")
     private String clientSecret;
 
-    public HttpHeaders getHeaders() {
+    @Value("${keycloak.admin.username}")
+    private String username;
+
+    @Value("${keycloak.admin.password}")
+    private String password;
+
+    public HttpHeaders getHttpHeaders() {
         var headers = new HttpHeaders();
         headers.setBearerAuth(getToken());
         return headers;
     }
 
     private String getToken() {
-        var restTemplate = new RestTemplate();
         var httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.put("grant_type", Collections.singletonList(OAuth2Constants.CLIENT_CREDENTIALS));
         map.put("client_id", Collections.singletonList(clientId));
         map.put("client_secret", Collections.singletonList(clientSecret));
+        map.put("username", Collections.singletonList(username));
+        map.put("password", Collections.singletonList(password));
+        map.put("grant_type", Collections.singletonList(OAuth2Constants.PASSWORD));
 
-        var url = UriComponentsBuilder
-                .fromPath(issuerUri)
+        var request = new HttpEntity<>(map, httpHeaders);
+        var token = restTemplate.postForObject(getTokenUri(), request, KeycloakToken.class);
+
+        assert token != null;
+        return token.getAccessToken();
+    }
+
+    private String getTokenUri() {
+        return UriComponentsBuilder
+                .fromUriString(issuerUri)
                 .pathSegment("protocol", "openid-connect", "token")
                 .build()
                 .toUriString();
-
-        var request = new HttpEntity<>(map, httpHeaders);
-        var token = restTemplate.postForObject(url, request, KeyCloakToken.class);
-
-        assert token != null;
-        return token.accessToken();
-    }
-
-    record KeyCloakToken(@JsonProperty("access_token") String accessToken) {
     }
 
 }

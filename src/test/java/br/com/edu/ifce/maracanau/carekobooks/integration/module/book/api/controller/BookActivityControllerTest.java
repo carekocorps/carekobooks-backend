@@ -7,6 +7,7 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.auth.provider.KeycloakAuthProvider;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
@@ -24,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,6 +41,9 @@ class BookActivityControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private KeycloakAuthProvider authProvider;
 
     @Autowired
     private BookGenreRepository bookGenreRepository;
@@ -175,6 +180,26 @@ class BookActivityControllerTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(activity.getId());
+    }
+
+    @Test
+    void delete_withExistingActivity_shouldReturnNoContent() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
+        var uri = UriComponentsBuilder
+                .fromPath("/api/v1/books/activities")
+                .pathSegment(String.valueOf(activity.getId()))
+                .build()
+                .toUriString();
+
+        // Act
+        var response = restTemplate.exchange(uri, HttpMethod.DELETE, new HttpEntity<>(authProvider.getHttpHeaders()), Void.class);
+
+        // Assert
+        assertThat(bookActivityRepository.count()).isZero();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }
