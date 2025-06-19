@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @Getter
 @Setter
-public class BookActivityFollowingQuery extends BaseApplicationQuery<BookActivity> {
+public class BookActivityFeedQuery extends BaseApplicationQuery<BookActivity> {
 
     @NotBlank
     private String username;

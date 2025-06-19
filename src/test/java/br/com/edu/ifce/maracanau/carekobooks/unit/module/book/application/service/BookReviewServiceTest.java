@@ -4,7 +4,9 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pay
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookReviewResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.review.subject.BookReviewNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookReviewRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookReviewService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookReviewValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookReview;
@@ -37,6 +39,9 @@ class BookReviewServiceTest {
 
     @Mock
     private BookReviewMapper bookReviewMapper;
+
+    @Mock
+    private BookReviewNotificationSubject bookReviewNotificationSubject;
 
     @InjectMocks
     private BookReviewService bookReviewService;
@@ -108,6 +113,7 @@ class BookReviewServiceTest {
             verify(bookReviewRepository, times(1)).save(review);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class), times(1));
             verify(bookReviewMapper, never()).toResponse(any(BookReview.class));
+            verify(bookReviewNotificationSubject, never()).notify(any(BookReviewResponse.class));
         }
     }
 
@@ -136,6 +142,10 @@ class BookReviewServiceTest {
             when(bookReviewMapper.toResponse(review))
                     .thenReturn(response);
 
+            doNothing()
+                    .when(bookReviewNotificationSubject)
+                    .notify(response);
+
             // Act
             var result = bookReviewService.create(request);
 
@@ -146,6 +156,7 @@ class BookReviewServiceTest {
             verify(bookReviewRepository, times(1)).save(review);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class), times(1));
             verify(bookReviewMapper, times(1)).toResponse(review);
+            verify(bookReviewNotificationSubject, times(1)).notify(response);
         }
     }
 

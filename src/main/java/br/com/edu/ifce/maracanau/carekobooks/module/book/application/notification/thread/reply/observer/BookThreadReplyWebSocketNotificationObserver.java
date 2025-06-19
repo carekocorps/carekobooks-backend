@@ -15,7 +15,7 @@ public class BookThreadReplyWebSocketNotificationObserver implements BaseBookThr
     public void notify(BookThreadReplyResponse response) {
         var bookId = response.getThread().getBook().getId();
         var threadId = response.getThread().getId();
-        var destination = "/topic/books/" + bookId + "/threads/" + threadId;
+        var destination = String.format("/topic/books/%d/threads/%d/replies", bookId, threadId);
         messagingTemplate.convertAndSend(destination, response);
     }
 

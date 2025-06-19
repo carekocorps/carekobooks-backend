@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 
 @Component
-public class KeycloakPropertyContributor implements PropertyContributor {
+public class KeycloakPropertyContributor implements BasePropertyContributor {
 
     @Autowired(required = false)
     private KeycloakContainer keycloak;

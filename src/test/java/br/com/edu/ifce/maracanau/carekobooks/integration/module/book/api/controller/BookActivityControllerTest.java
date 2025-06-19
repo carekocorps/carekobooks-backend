@@ -129,7 +129,7 @@ class BookActivityControllerTest {
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, userFollowed));
 
         // Act
-        var uri = BookActivityUriFactory.validFollowingQueryUri(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
+        var uri = BookActivityUriFactory.validFeedQueryUri(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
         var result = response.getBody();
 

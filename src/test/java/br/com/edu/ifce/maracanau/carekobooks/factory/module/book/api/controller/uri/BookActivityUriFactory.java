@@ -32,9 +32,9 @@ public class BookActivityUriFactory {
                 .toUriString();
     }
 
-    public static String validFollowingQueryUri(String username, BookActivity activity, String orderBy, boolean isAscendingOrder) {
+    public static String validFeedQueryUri(String username, BookActivity activity, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities/social/following")
+                .fromPath("/api/v1/books/activities/social/feed")
                 .queryParam("username", username)
                 .queryParam("createdBefore", activity.getCreatedAt().toLocalDate())
                 .queryParam("createdAfter", activity.getCreatedAt().toLocalDate())
