@@ -1,12 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri.BookUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -21,21 +23,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, RedisTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class,
+        RedisContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private KeycloakAuthProvider keycloakAuthProvider;
 
     @Autowired
     private BookGenreRepository bookGenreRepository;
@@ -45,13 +55,14 @@ class BookControllerTest {
 
     @BeforeEach
     void setUp() {
-        bookRepository.deleteAllInBatch();
-        bookGenreRepository.deleteAllInBatch();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        bookRepository.deleteAllInBatch();
+        bookGenreRepository.deleteAllInBatch();
+        keycloakAuthProvider.tearDown();
     }
 
     @ParameterizedTest
@@ -77,9 +88,9 @@ class BookControllerTest {
         // Arrange
         var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
         var book = bookRepository.save(BookFactory.validBookWithNullId(List.of(genre)));
-        var uri = BookQueryFactory.validURIString(book, orderBy, isAscendingOrder);
 
         // Act
+        var uri = BookUriFactory.validQueryUri(book, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedBookResponse>>() {});
         var result = response.getBody();
 
@@ -96,13 +107,9 @@ class BookControllerTest {
     void find_withNonExistingBook_shouldReturnNotFound() {
         // Arrange
         var bookId = Math.abs(new Random().nextLong()) + 1;
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books")
-                .pathSegment(String.valueOf(bookId))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookUriFactory.validUri(bookId);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookResponse.class);
 
         // Assert
@@ -114,13 +121,9 @@ class BookControllerTest {
     void find_withExistingBook_shouldReturnBookResponse() {
         // Arrange
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books")
-                .pathSegment(String.valueOf(book.getId()))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookUriFactory.validUri(book.getId());
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookResponse.class);
         var result = response.getBody();
 
@@ -128,6 +131,22 @@ class BookControllerTest {
         assertThat(bookRepository.count()).isEqualTo(1);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(book.getId());
+    }
+
+    @Test
+    void delete_withExistingBook_shouldReturnNoContent() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+
+        // Act
+        var uri = BookUriFactory.validUri(book.getId());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Assert
+        assertThat(bookRepository.count()).isZero();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

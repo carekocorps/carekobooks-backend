@@ -6,7 +6,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 
 @TestConfiguration(proxyBeanMethods = false)
-public class RedisTestcontainerConfig {
+public class RedisContainerConfig {
 
     @Bean
     @ServiceConnection

@@ -1,10 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.query.UserQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.UserUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
@@ -20,11 +21,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
 
@@ -36,12 +40,12 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAllInBatch();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        userRepository.deleteAllInBatch();
     }
 
     @ParameterizedTest
@@ -58,9 +62,9 @@ class UserControllerTest {
     void search_withValidUserQuery_shouldReturnPagedSimplifiedUserResponse(String orderBy, boolean isAscendingOrder) {
         // Arrange
         var user = userRepository.save(UserFactory.validUserWithNullId());
-        var uri = UserQueryFactory.validURIString(user, orderBy, isAscendingOrder);
 
         // Act
+        var uri = UserUriFactory.validQueryUri(user, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
         var result = response.getBody();
 
@@ -75,13 +79,9 @@ class UserControllerTest {
     void find_withNonExistingUser_shouldReturnNotFound() {
         // Arrange
         var username = UserFactory.validUser().getUsername();
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/users")
-                .pathSegment(String.valueOf(username))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = UserUriFactory.validUri(username);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, UserResponse.class);
 
         // Assert
@@ -93,13 +93,9 @@ class UserControllerTest {
     void find_withExistingUser_shouldReturnUserResponse() {
         // Arrange
         var user = userRepository.save(UserFactory.validUserWithNullId());
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/users")
-                .pathSegment(String.valueOf(user.getUsername()))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = UserUriFactory.validUri(user.getUsername());
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, UserResponse.class);
         var result = response.getBody();
 

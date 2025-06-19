@@ -1,11 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookGenreQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri.BookGenreUriFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookGenreRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.RedisContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -18,13 +21,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, RedisTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class,
+        RedisContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookGenreControllerTest {
 
@@ -32,16 +40,20 @@ class BookGenreControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
+    private KeycloakAuthProvider keycloakAuthProvider;
+
+    @Autowired
     private BookGenreRepository bookGenreRepository;
 
     @BeforeEach
     void setUp() {
-        bookGenreRepository.deleteAllInBatch();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        bookGenreRepository.deleteAllInBatch();
+        keycloakAuthProvider.tearDown();
     }
 
     @ParameterizedTest
@@ -58,9 +70,9 @@ class BookGenreControllerTest {
     void search_withValidGenreQuery_shouldReturnPagedGenreResponse(String orderBy, boolean isAscendingOrder) {
         // Arrange
         var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
-        var uri = BookGenreQueryFactory.validURIString(genre, orderBy, isAscendingOrder);
 
         // Act
+        var uri = BookGenreUriFactory.validQueryUri(genre, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookGenreResponse>>() {});
         var result = response.getBody();
 
@@ -75,13 +87,9 @@ class BookGenreControllerTest {
     void find_withNonExistingGenre_shouldReturnNotFound() {
         // Arrange
         var genreName = BookGenreFactory.validGenre().getName();
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/genres")
-                .pathSegment(genreName)
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookGenreUriFactory.validUri(genreName);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookGenreResponse.class);
 
         // Assert
@@ -93,13 +101,9 @@ class BookGenreControllerTest {
     void find_withExistingGenre_shouldReturnGenreResponse() {
         // Arrange
         var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/genres")
-                .pathSegment(genre.getName())
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookGenreUriFactory.validUri(genre.getName());
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookGenreResponse.class);
         var result = response.getBody();
 
@@ -107,6 +111,58 @@ class BookGenreControllerTest {
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(genre.getId());
+    }
+
+    @Test
+    void create_withValidGenreRequest_shouldReturnGenre() {
+        // Arrange
+        var request = BookGenreRequestFactory.validRequest();
+
+        // Act
+        var uri = BookGenreUriFactory.validUri();
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri,  HttpMethod.POST, httpEntity, BookGenreResponse.class);
+
+        // Assert
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void update_withExistingGenreAndValidGenreRequest_shouldReturnNoContent() {
+        // Arrange
+        var existingGenre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
+        var request = BookGenreRequestFactory.validRequest();
+
+        // Act
+        var uri = BookGenreUriFactory.validUri(existingGenre.getName());
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri,  HttpMethod.PUT, httpEntity, Void.class);
+        var updatedGenre = bookGenreRepository.findByName(request.getName()).orElseThrow();
+
+        // Assert
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(updatedGenre.getId()).isEqualTo(existingGenre.getId());
+        assertThat(updatedGenre.getName()).isEqualTo(request.getName());
+        assertThat(updatedGenre.getDisplayName()).isEqualTo(request.getDisplayName());
+        assertThat(updatedGenre.getDescription()).isEqualTo(request.getDescription());
+        assertThat(updatedGenre.getCreatedAt()).isEqualToIgnoringNanos(existingGenre.getCreatedAt());
+    }
+
+    @Test
+    void delete_withExistingGenre_shouldReturnNoContent() {
+        // Arrange
+        var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
+
+        // Act
+        var uri = BookGenreUriFactory.validUri(genre.getName());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, BookGenreResponse.class);
+
+        // Assert
+        assertThat(bookGenreRepository.count()).isZero();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

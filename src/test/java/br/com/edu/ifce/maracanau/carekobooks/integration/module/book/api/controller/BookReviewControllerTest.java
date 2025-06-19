@@ -1,12 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookReviewQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri.BookReviewUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookReviewResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
@@ -22,20 +24,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookReviewControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private KeycloakAuthProvider keycloakAuthProvider;
 
     @Autowired
     private BookRepository bookRepository;
@@ -48,14 +57,15 @@ class BookReviewControllerTest {
 
     @BeforeEach
     void setUp() {
-        bookReviewRepository.deleteAllInBatch();
-        bookRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        bookReviewRepository.deleteAllInBatch();
+        bookRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+        keycloakAuthProvider.tearDown();
     }
 
     @ParameterizedTest
@@ -76,9 +86,9 @@ class BookReviewControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var review = bookReviewRepository.save(BookReviewFactory.validReviewWithNullId(book, user));
-        var uri = BookReviewQueryFactory.validURIString(review, orderBy, isAscendingOrder);
 
         // Act
+        var uri = BookReviewUriFactory.validQueryUri(review, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedBookResponse>>() {});
         var result = response.getBody();
 
@@ -96,13 +106,9 @@ class BookReviewControllerTest {
     void find_withNonExistingReview_shouldReturnNotFound() {
         // Arrange
         var reviewId = Math.abs(new Random().nextLong()) + 1;
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/reviews")
-                .pathSegment(String.valueOf(reviewId))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookReviewUriFactory.validUri(reviewId);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookReviewResponse.class);
 
         // Assert
@@ -116,13 +122,9 @@ class BookReviewControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var review = bookReviewRepository.save(BookReviewFactory.validReviewWithNullId(book, user));
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/reviews")
-                .pathSegment(String.valueOf(review.getId()))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookReviewUriFactory.validUri(review.getId());
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookReviewResponse.class);
         var result = response.getBody();
 
@@ -133,6 +135,26 @@ class BookReviewControllerTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(review.getId());
+    }
+
+    @Test
+    void delete_withExistingReview_shouldReturnNoContent() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var review = bookReviewRepository.save(BookReviewFactory.validReviewWithNullId(book, user));
+
+        // Act
+        var uri = BookReviewUriFactory.validUri(review.getId());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Assert
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookReviewRepository.count()).isZero();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

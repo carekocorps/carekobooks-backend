@@ -1,14 +1,22 @@
-package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query;
+package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookReview;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class BookReviewQueryFactory {
+public class BookReviewUriFactory {
 
-    private BookReviewQueryFactory() {
+    private BookReviewUriFactory() {
     }
 
-    public static String validURIString(BookReview review, String orderBy, boolean isAscendingOrder) {
+    public static String validUri(Long reviewId) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/reviews")
+                .pathSegment(String.valueOf(reviewId))
+                .build()
+                .toUriString();
+    }
+
+    public static String validQueryUri(BookReview review, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/reviews")
                 .queryParam("username", review.getUser().getUsername())

@@ -1,10 +1,11 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.query.UserSocialQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.UserUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +21,11 @@ import org.springframework.http.HttpMethod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserSocialControllerTest {
 
@@ -32,12 +37,12 @@ class UserSocialControllerTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        userRepository.deleteAll();
     }
 
     @ParameterizedTest
@@ -55,15 +60,14 @@ class UserSocialControllerTest {
         // Arrange
         var userFollowed = userRepository.save(UserFactory.validUserWithNullId());
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
-        var uri = UserSocialQueryFactory.validFollowingURIString(userFollowing, userFollowed, orderBy, isAscendingOrder);
 
         // Act
+        var uri = UserUriFactory.validSocialFollowingQueryUri(userFollowing, userFollowed, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
         var result = response.getBody();
 
         // Assert
         assertThat(userRepository.count()).isEqualTo(2);
-
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
     }
@@ -85,13 +89,12 @@ class UserSocialControllerTest {
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
 
         // Act
-        var uri = UserSocialQueryFactory.validFollowersURIString(userFollowing, userFollowed, orderBy, isAscendingOrder);
+        var uri = UserUriFactory.validSocialFollowersQueryUri(userFollowing, userFollowed, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<SimplifiedUserResponse>>() {});
         var result = response.getBody();
 
         // Assert
         assertThat(userRepository.count()).isEqualTo(2);
-
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
     }

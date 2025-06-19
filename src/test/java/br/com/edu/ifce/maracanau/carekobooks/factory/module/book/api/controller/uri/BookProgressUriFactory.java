@@ -1,14 +1,22 @@
-package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query;
+package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookProgress;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class BookProgressQueryFactory {
+public class BookProgressUriFactory {
 
-    private BookProgressQueryFactory() {
+    private BookProgressUriFactory() {
     }
 
-    public static String validURIString(BookProgress progress, String orderBy, boolean isAscendingOrder) {
+    public static String validUri(Long progressId) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/progresses")
+                .pathSegment(String.valueOf(progressId))
+                .build()
+                .toUriString();
+    }
+
+    public static String validQueryUri(BookProgress progress, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/progresses")
                 .queryParam("username", progress.getUser().getUsername())

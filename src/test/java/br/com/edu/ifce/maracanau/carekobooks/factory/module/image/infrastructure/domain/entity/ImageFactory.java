@@ -14,12 +14,13 @@ public class ImageFactory {
     private ImageFactory() {
     }
 
-    public static Image validImage(MultipartFile file) {
+    public static Image validImageWithNullId() {
         var image = new Image();
-        image.setId(faker.number().randomNumber());
-        image.setName(file.getName());
-        image.setContentType(file.getContentType());
-        image.setSizeInBytes(file.getSize());
+        var contentType = faker.options().option("jpeg", "png");
+        image.setId(null);
+        image.setName(faker.file().fileName(null, null, contentType, null));
+        image.setContentType("image/" + contentType);
+        image.setSizeInBytes(faker.number().randomNumber());
         image.setUsers(List.of());
         image.setBooks(List.of());
         image.setCreatedAt(LocalDateTime.now());
@@ -27,13 +28,19 @@ public class ImageFactory {
         return image;
     }
 
+
     public static Image validImage() {
-        var image = new Image();
-        var contentType = faker.options().option("jpeg", "png");
+        var image = validImageWithNullId();
         image.setId(faker.number().randomNumber());
-        image.setName(faker.file().fileName(null, null, contentType, null));
-        image.setContentType("image/" + contentType);
-        image.setSizeInBytes(faker.number().randomNumber());
+        return image;
+    }
+
+    public static Image validImage(MultipartFile file) {
+        var image = new Image();
+        image.setId(faker.number().randomNumber());
+        image.setName(file.getName());
+        image.setContentType(file.getContentType());
+        image.setSizeInBytes(file.getSize());
         image.setUsers(List.of());
         image.setBooks(List.of());
         image.setCreatedAt(LocalDateTime.now());

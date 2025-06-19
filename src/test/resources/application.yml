@@ -8,13 +8,11 @@ spring:
 keycloak:
   realm: carekobooks
   client-id: backend-client
-  client-secret: fake
+  client-secret: zIpeiqZF4eH0oSICxVuUeNCwaMd0N57J
   admin:
-    username: fake
-    password: fake
+    username: admin
+    password: admin
 minio:
-  inner-endpoint: http://localhost:9000
-  outer-endpoint: http://localhost:9000
   access-key: fake
   secret-key: fake
   bucket: test-bucket

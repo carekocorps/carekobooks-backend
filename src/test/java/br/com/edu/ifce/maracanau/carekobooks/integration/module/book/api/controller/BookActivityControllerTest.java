@@ -1,15 +1,15 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookActivityFollowingQueryFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.query.BookActivityQueryFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri.BookActivityUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookActivityFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.auth.provider.KeycloakAuthProvider;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresTestcontainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakTestcontainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookGenreRepository;
@@ -28,14 +28,17 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PostgresTestcontainerConfig.class, KeycloakTestcontainerConfig.class})
+@Import({
+        DynamicPropertyRegistrarConfig.class,
+        KeycloakContainerConfig.class,
+        PostgresContainerConfig.class
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookActivityControllerTest {
 
@@ -43,7 +46,7 @@ class BookActivityControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private KeycloakAuthProvider authProvider;
+    private KeycloakAuthProvider keycloakAuthProvider;
 
     @Autowired
     private BookGenreRepository bookGenreRepository;
@@ -59,15 +62,16 @@ class BookActivityControllerTest {
 
     @BeforeEach
     void setUp() {
-        bookActivityRepository.deleteAllInBatch();
-        bookRepository.deleteAllInBatch();
-        bookGenreRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        bookActivityRepository.deleteAllInBatch();
+        bookRepository.deleteAllInBatch();
+        bookGenreRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+        keycloakAuthProvider.tearDown();
     }
 
     @ParameterizedTest
@@ -91,9 +95,9 @@ class BookActivityControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullId(List.of(genre)));
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
-        var uri = BookActivityQueryFactory.validURIString(activity, orderBy, isAscendingOrder);
 
         // Act
+        var uri = BookActivityUriFactory.validQueryUri(activity, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
         var result = response.getBody();
 
@@ -123,9 +127,9 @@ class BookActivityControllerTest {
         var userFollowed = userRepository.save(UserFactory.validUserWithNullId());
         var userFollowing = userRepository.save(UserFactory.validUserWithNullIdAndFollowing(userFollowed));
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, userFollowed));
-        var uri = BookActivityFollowingQueryFactory.validURIString(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
 
         // Act
+        var uri = BookActivityUriFactory.validFollowingQueryUri(userFollowing.getUsername(), activity, orderBy, isAscendingOrder);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookActivityResponse>>() {});
         var result = response.getBody();
 
@@ -143,13 +147,9 @@ class BookActivityControllerTest {
     void find_withNonExistingActivity_shouldReturnNotFound() {
         // Arrange
         var activityId = Math.abs(new Random().nextLong()) + 1;
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
-                .pathSegment(String.valueOf(activityId))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookActivityUriFactory.validUri(activityId);
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookActivityResponse.class);
 
         // Assert
@@ -163,13 +163,9 @@ class BookActivityControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
-                .pathSegment(String.valueOf(activity.getId()))
-                .build()
-                .toUriString();
 
         // Act
+        var uri = BookActivityUriFactory.validUri(activity.getId());
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookActivityResponse.class);
         var result = response.getBody();
 
@@ -177,7 +173,6 @@ class BookActivityControllerTest {
         assertThat(bookActivityRepository.count()).isEqualTo(1);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookActivityRepository.count()).isEqualTo(1);
-
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(activity.getId());
     }
@@ -188,16 +183,15 @@ class BookActivityControllerTest {
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
         var user = userRepository.save(UserFactory.validUserWithNullId());
         var activity = bookActivityRepository.save(BookActivityFactory.validActivityWithNullId(book, user));
-        var uri = UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
-                .pathSegment(String.valueOf(activity.getId()))
-                .build()
-                .toUriString();
 
         // Act
-        var response = restTemplate.exchange(uri, HttpMethod.DELETE, new HttpEntity<>(authProvider.getHttpHeaders()), Void.class);
+        var uri = BookActivityUriFactory.validUri(activity.getId());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, Void.class);
 
         // Assert
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookActivityRepository.count()).isZero();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
