@@ -41,6 +41,12 @@ public class BookActivityFactory {
         return activity;
     }
 
+    public static BookActivity validActivity(User user) {
+        var activity = validActivity();
+        activity.setUser(user);
+        return activity;
+    }
+
     public static BookActivity validActivity(BookProgressRequest request) {
         var activity = new BookActivity();
         activity.setId(faker.number().randomNumber());
