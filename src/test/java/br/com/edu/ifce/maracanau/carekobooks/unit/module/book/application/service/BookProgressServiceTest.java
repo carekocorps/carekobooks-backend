@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -60,7 +60,7 @@ class BookProgressServiceTest {
         var result = bookProgressService.find(progressId);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookProgressRepository, times(1)).findById(progressId);
         verify(bookProgressMapper, never()).toResponse(any(BookProgress.class));
     }
@@ -81,8 +81,10 @@ class BookProgressServiceTest {
         var result = bookProgressService.find(progress.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), response);
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookProgressRepository, times(1)).findById(progress.getId());
         verify(bookProgressMapper, times(1)).toResponse(progress);
     }
@@ -109,7 +111,7 @@ class BookProgressServiceTest {
                     .thenThrow(BookProgressModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.create(request));
+            assertThatThrownBy(() -> bookProgressService.create(request)).isInstanceOf(BookProgressModificationForbiddenException.class);
             verify(bookProgressMapper, times(1)).toEntity(request);
             verify(bookProgressValidator, times(1)).validate(progress);
             verify(bookProgressRepository, times(1)).save(progress);
@@ -148,8 +150,10 @@ class BookProgressServiceTest {
             var result = bookProgressService.create(request);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(result, response);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(response);
+
             verify(bookProgressMapper, times(1)).toEntity(request);
             verify(bookProgressValidator, times(1)).validate(progress);
             verify(bookProgressRepository, times(1)).save(progress);
@@ -167,7 +171,7 @@ class BookProgressServiceTest {
             var updateRequest = BookProgressRequestFactory.validRequest();
 
             // Act && Assert
-            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.update(activityId, updateRequest));
+            assertThatThrownBy(() -> bookProgressService.update(activityId, updateRequest)).isInstanceOf(BookProgressNotFoundException.class);
             verify(bookProgressRepository, times(1)).findById(activityId);
             verify(bookProgressMapper, never()).updateEntity(any(BookProgress.class), any(BookProgressRequest.class));
             verify(bookProgressValidator, never()).validate(any(BookProgress.class));
@@ -194,7 +198,7 @@ class BookProgressServiceTest {
                     .thenThrow(BookProgressModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.update(progressId, updateRequest));
+            assertThatThrownBy(() -> bookProgressService.update(progressId, updateRequest)).isInstanceOf(BookProgressModificationForbiddenException.class);
             verify(bookProgressRepository, times(1)).findById(progressId);
             verify(bookProgressMapper, never()).updateEntity(any(BookProgress.class), any(BookProgressRequest.class));
             verify(bookProgressValidator, never()).validate(any(BookProgress.class));
@@ -241,8 +245,10 @@ class BookProgressServiceTest {
             var result = bookProgressService.update(progress.getId(), updateRequest);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(updatedProgressResponse, result);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(updatedProgressResponse);
+
             verify(bookProgressRepository, times(1)).findById(progress.getId());
             verify(bookProgressMapper, times(1)).updateEntity(progress, updateRequest);
             verify(bookProgressValidator, times(1)).validate(progress);
@@ -264,7 +270,7 @@ class BookProgressServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            assertThatThrownBy(() -> bookProgressService.changeAsFavorite(progressId, isFavorite)).isInstanceOf(BookProgressNotFoundException.class);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(bookProgressRepository, never()).changeAsFavoriteById(any(Long.class), any(Boolean.class));
         }
@@ -288,7 +294,7 @@ class BookProgressServiceTest {
                     .thenThrow(BookProgressModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            assertThatThrownBy(() -> bookProgressService.changeAsFavorite(progressId, isFavorite)).isInstanceOf(BookProgressModificationForbiddenException.class);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class), times(1));
             verify(bookProgressRepository, never()).changeAsFavoriteById(any(Long.class), any(Boolean.class));
         }
@@ -316,7 +322,7 @@ class BookProgressServiceTest {
                     .changeAsFavoriteById(progressId, isFavorite);
 
             // Act && Assert
-            assertDoesNotThrow(() -> bookProgressService.changeAsFavorite(progressId, isFavorite));
+            assertThatCode(() -> bookProgressService.changeAsFavorite(progressId, isFavorite)).doesNotThrowAnyException();
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userKeycloakId, BookProgressModificationForbiddenException.class), times(1));
             verify(bookProgressRepository, times(1)).changeAsFavoriteById(progressId, isFavorite);
         }
@@ -332,7 +338,7 @@ class BookProgressServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(BookProgressNotFoundException.class, () -> bookProgressService.delete(progressId));
+            assertThatThrownBy(() -> bookProgressService.delete(progressId)).isInstanceOf(BookProgressNotFoundException.class);
             verify(bookProgressRepository, times(1)).findById(progressId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
         }
@@ -353,7 +359,7 @@ class BookProgressServiceTest {
                     .thenThrow(BookProgressModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookProgressModificationForbiddenException.class, () -> bookProgressService.delete(progressId));
+            assertThatThrownBy(() -> bookProgressService.delete(progressId)).isInstanceOf(BookProgressModificationForbiddenException.class);
             verify(bookProgressRepository, times(1)).findById(progressId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(progress.getUser().getKeycloakId(), BookProgressModificationForbiddenException.class), times(1));
         }

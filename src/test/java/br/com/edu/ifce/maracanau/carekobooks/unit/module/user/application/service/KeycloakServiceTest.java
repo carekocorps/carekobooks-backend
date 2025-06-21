@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -65,7 +65,7 @@ class KeycloakServiceTest {
                 .thenThrow(new WebApplicationException(Response.status(Response.Status.CONFLICT).build()));
 
         // Act & Assert
-        assertThrows(KeycloakConflictException.class, () -> keycloakService.signUp(signUpRequest));
+        assertThatThrownBy(() -> keycloakService.signUp(signUpRequest)).isInstanceOf(KeycloakConflictException.class);
     }
 
     @Test
@@ -87,7 +87,7 @@ class KeycloakServiceTest {
                 .thenReturn(HttpStatus.SC_BAD_REQUEST);
 
         // Act && Assert
-        assertThrows(KeycloakBadRequestException.class, () -> keycloakService.signUp(signUpRequest));
+        assertThatThrownBy(() -> keycloakService.signUp(signUpRequest)).isInstanceOf(KeycloakBadRequestException.class);
     }
 
     @Test
@@ -122,9 +122,9 @@ class KeycloakServiceTest {
         var result = keycloakService.signUp(signUpRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(signUpRequest.getUsername(), result.getUsername());
-        assertEquals(signUpRequest.getEmail(), result.getEmail());
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo(signUpRequest.getUsername());
+        assertThat(result.getEmail()).isEqualTo(signUpRequest.getEmail());
     }
 
     @Test
@@ -140,7 +140,7 @@ class KeycloakServiceTest {
                 .thenThrow(new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()));
 
         // Act & Assert
-        assertThrows(KeycloakBadGatewayException.class, () -> keycloakService.resetVerificationEmail(userRepresentationUUID));
+        assertThatThrownBy(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).isInstanceOf(KeycloakBadGatewayException.class);
     }
 
     @Test
@@ -159,7 +159,7 @@ class KeycloakServiceTest {
                 .thenReturn(userRepresentation);
 
         // Act && Assert
-        assertThrows(UserAlreadyVerifiedException.class, () -> keycloakService.resetVerificationEmail(userRepresentationUUID));
+        assertThatThrownBy(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).isInstanceOf(UserAlreadyVerifiedException.class);
     }
 
     @Test
@@ -182,7 +182,7 @@ class KeycloakServiceTest {
                 .sendVerifyEmail();
 
         // Act && Assert
-        assertDoesNotThrow(() -> keycloakService.resetVerificationEmail(userRepresentationUUID));
+        assertThatCode(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).doesNotThrowAnyException();
     }
 
     @Test
@@ -198,7 +198,7 @@ class KeycloakServiceTest {
                 .thenThrow(new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build()));
 
         // Act & Assert
-        assertThrows(KeycloakNotFoundException.class, () -> keycloakService.changeEmail(userRepresentationUUID));
+        assertThatThrownBy(() -> keycloakService.changeEmail(userRepresentationUUID)).isInstanceOf(KeycloakNotFoundException.class);
     }
 
     @Test
@@ -218,7 +218,7 @@ class KeycloakServiceTest {
                 .executeActionsEmail(ArgumentMatchers.any());
 
         // Act && Assert
-        assertDoesNotThrow(() -> keycloakService.changeEmail(userRepresentationUUID));
+        assertThatCode(() -> keycloakService.changeEmail(userRepresentationUUID)).doesNotThrowAnyException();
     }
 
     @Test
@@ -242,7 +242,7 @@ class KeycloakServiceTest {
                 .update(userRepresentation);
 
         // Act & Assert
-        assertThrows(KeycloakForbiddenException.class, () -> keycloakService.update(userRepresentationUUID, updateRequest));
+        assertThatThrownBy(() -> keycloakService.update(userRepresentationUUID, updateRequest)).isInstanceOf(KeycloakForbiddenException.class);
     }
 
     @Test
@@ -266,7 +266,7 @@ class KeycloakServiceTest {
                 .update(userRepresentation);
 
         // Act && Assert
-        assertDoesNotThrow(() -> keycloakService.update(userRepresentationUUID, updateRequest));
+        assertThatCode(() -> keycloakService.update(userRepresentationUUID, updateRequest)).doesNotThrowAnyException();
     }
 
     @Test
@@ -286,7 +286,7 @@ class KeycloakServiceTest {
                 .remove();
 
         // Act & Assert
-        assertThrows(KeycloakNotFoundException.class, () -> keycloakService.delete(userRepresentationUUID));
+        assertThatThrownBy(() -> keycloakService.delete(userRepresentationUUID)).isInstanceOf(KeycloakNotFoundException.class);
     }
 
     @Test
@@ -306,7 +306,7 @@ class KeycloakServiceTest {
                 .remove();
 
         // Act && Assert
-        assertDoesNotThrow(() -> keycloakService.delete(userRepresentationUUID));
+        assertThatCode(() -> keycloakService.delete(userRepresentationUUID)).doesNotThrowAnyException();
     }
 
 }

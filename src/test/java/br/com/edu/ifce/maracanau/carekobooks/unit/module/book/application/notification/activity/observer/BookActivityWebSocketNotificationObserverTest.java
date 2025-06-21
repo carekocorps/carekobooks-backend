@@ -16,7 +16,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -33,7 +33,7 @@ class BookActivityWebSocketNotificationObserverTest {
     private BookActivityWebSocketNotificationObserver bookActivityWebSocketNotificationObserver;
 
     @Test
-    void notify_withValidActivityResponseAndValidUerAndValidFollowers() {
+    void notify_withValidActivityResponseAndValidUserAndValidFollowers() {
         // Arrange
         var userFollowed = UserFactory.validUser();
         var userFollowing = UserFactory.validUserWithFollowing(userFollowed);
@@ -50,7 +50,7 @@ class BookActivityWebSocketNotificationObserverTest {
                 .thenReturn(userFollowed.getFollowers().stream().map(SimplifiedUserResponseFactory::validResponse).toList());
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookActivityWebSocketNotificationObserver.notify(activityResponse));
+        assertThatCode(() -> bookActivityWebSocketNotificationObserver.notify(activityResponse)).doesNotThrowAnyException();
         verify(messagingTemplate, times(userFollowed.getFollowers().size() + 1)).convertAndSend(any(String.class), eq(activityResponse));
         verify(userSocialService, times(1)).findFollowers(userFollowed.getUsername());
     }

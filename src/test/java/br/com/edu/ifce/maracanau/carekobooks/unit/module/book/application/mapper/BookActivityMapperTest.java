@@ -19,7 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -44,7 +44,7 @@ class BookActivityMapperTest {
         var result = bookActivityMapper.toEntity(progressRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -65,10 +65,10 @@ class BookActivityMapperTest {
         var result = bookActivityMapper.toEntity(progressRequest);
 
         // Assert
-        assertEquals(activity.getStatus(), result.getStatus());
-        assertEquals(activity.getPageCount(), result.getPageCount());
-        assertEquals(activity.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(activity.getBook().getId(), result.getBook().getId());
+        assertThat(activity.getStatus()).isEqualTo(result.getStatus());
+        assertThat(activity.getPageCount()).isEqualTo(result.getPageCount());
+        assertThat(activity.getUser().getUsername()).isEqualTo(result.getUser().getUsername());
+        assertThat(activity.getBook().getId()).isEqualTo(result.getBook().getId());
         verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }
@@ -82,7 +82,7 @@ class BookActivityMapperTest {
         var result = bookActivityMapper.toResponse(activity);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toSimplifiedResponse(any(User.class));
         verify(bookMapper, never()).toSimplifiedResponse(any(Book.class));
     }
@@ -102,13 +102,13 @@ class BookActivityMapperTest {
         var result = bookActivityMapper.toResponse(activity);
 
         // Assert
-        assertEquals(activity.getId(), result.getId());
-        assertEquals(activity.getStatus(), result.getStatus());
-        assertEquals(activity.getPageCount(), result.getPageCount());
-        assertEquals(activity.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(activity.getBook().getId(), result.getBook().getId());
-        assertEquals(activity.getCreatedAt(), result.getCreatedAt());
-        assertEquals(activity.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(activity.getId()).isEqualTo(result.getId());
+        assertThat(activity.getStatus()).isEqualTo(result.getStatus());
+        assertThat(activity.getPageCount()).isEqualTo(result.getPageCount());
+        assertThat(activity.getUser().getUsername()).isEqualTo(result.getUser().getUsername());
+        assertThat(activity.getBook().getId()).isEqualTo(result.getBook().getId());
+        assertThat(activity.getCreatedAt()).isEqualToIgnoringNanos(result.getCreatedAt());
+        assertThat(activity.getUpdatedAt()).isEqualToIgnoringNanos(result.getUpdatedAt());
         verify(userMapper, times(1)).toSimplifiedResponse(activity.getUser());
         verify(bookMapper, times(1)).toSimplifiedResponse(activity.getBook());
     }

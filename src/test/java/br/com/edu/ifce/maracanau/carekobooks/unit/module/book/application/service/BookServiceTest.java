@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -68,7 +68,7 @@ class BookServiceTest {
     private BookService bookService;
 
     @Test
-    void find_withNonExistingBook_shouldReturnEmpty() {
+    void find_withNonExistingBook_shouldReturnEmptyBook() {
         // Arrange
         var id = Math.abs(new Random().nextLong()) + 1;
 
@@ -79,13 +79,13 @@ class BookServiceTest {
         var result = bookService.find(id);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookRepository, times(1)).findById(id);
         verify(bookMapper, never()).toResponse(any(Book.class));
     }
 
     @Test
-    void find_withExistingBook_shouldReturnValidResponse() {
+    void find_withExistingBook_shouldReturnBookResponse() {
         // Arrange
         var book = BookFactory.validBook();
         var response = BookResponseFactory.validResponse(book);
@@ -100,14 +100,16 @@ class BookServiceTest {
         var result = bookService.find(book.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), response);
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookRepository, times(1)).findById(book.getId());
         verify(bookMapper, times(1)).toResponse(book);
     }
 
     @Test
-    void create_withBookGenreCountMismatch_shouldFail() {
+    void create_withBookGenreCountMismatch_shouldThrowGenreCountMismatchException() {
         // Arrange
         MultipartFile multipartFile = null;
         var request = BookRequestFactory.invalidRequestByRepeatingGenres();
@@ -121,7 +123,7 @@ class BookServiceTest {
                 .validate(book);
 
         // Act && Assert
-        assertThrows(BookGenreCountMismatchException.class, () -> bookService.create(request, multipartFile));
+        assertThatThrownBy(() -> bookService.create(request, multipartFile)).isInstanceOf(BookGenreCountMismatchException.class);
         verify(bookMapper, times(1)).toEntity(request);
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
@@ -131,7 +133,7 @@ class BookServiceTest {
     }
 
     @Test
-    void create_withValidBookAndNonNullImage_shouldReturnValidResponse() {
+    void create_withValidBookRequestAndNonNullImage_shouldReturnBookResponse() {
         // Arrange
         var request = BookRequestFactory.validRequest();
         var book = BookFactory.validBook(request);
@@ -164,8 +166,10 @@ class BookServiceTest {
         var result = bookService.create(request, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(result, bookResponse);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(bookResponse);
+
         verify(bookMapper, times(1)).toEntity(request);
         verify(imageService, times(1)).create(multipartFile);
         verify(imageMapper, times(1)).toEntity(imageResponse);
@@ -175,7 +179,7 @@ class BookServiceTest {
     }
 
     @Test
-    void create_withValidBookAndNullImage_shouldReturnValidResponse() {
+    void create_withValidBookRequestAndNullImage_shouldReturnBookResponse() {
         // Arrange
         MultipartFile multipartFile = null;
         var request = BookRequestFactory.validRequest();
@@ -199,8 +203,10 @@ class BookServiceTest {
         var result = bookService.create(request, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(result, bookResponse);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(bookResponse);
+
         verify(bookMapper, times(1)).toEntity(request);
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
@@ -210,7 +216,7 @@ class BookServiceTest {
     }
 
     @Test
-    void update_withNonExistingBook_shouldFail() {
+    void update_withNonExistingBook_shouldThrowNotFoundException() {
         // Arrange
         var id = Math.abs(new Random().nextLong()) + 1;
         var request = BookRequestFactory.validRequest();
@@ -220,7 +226,7 @@ class BookServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookService.update(id, request, multipartFile));
+        assertThatThrownBy(() -> bookService.update(id, request, multipartFile)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(id);
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -232,7 +238,7 @@ class BookServiceTest {
     }
 
     @Test
-    void update_withExistingBookAndValidRequestAndNullImage_shouldPass() {
+    void update_withExistingBookAndValidBookRequestAndNullImage_shouldSucceed() {
         // Arrange
         MultipartFile multipartFile = null;
         var request = BookRequestFactory.validRequest();
@@ -261,8 +267,10 @@ class BookServiceTest {
         var result = bookService.update(updatedBook.getId(), request, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(result, updatedBookResponse);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(updatedBookResponse);
+
         verify(bookRepository, times(1)).findById(book.getId());
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -274,7 +282,7 @@ class BookServiceTest {
     }
 
     @Test
-    void update_withExistingBookAndInvalidRequestByGenreCountMismatchAndNullImage_shouldFail() {
+    void update_withExistingBookAndInvalidBookRequestByGenreCountMismatchAndNullImage_shouldThrowGenreCountMismatchException() {
         // Arrange
         MultipartFile multipartFile = null;
         var request = BookRequestFactory.invalidRequestByRepeatingGenres();
@@ -293,7 +301,7 @@ class BookServiceTest {
                 .validate(book);
 
         // Act && Assert
-        assertThrows(BookGenreCountMismatchException.class, () -> bookService.update(bookId, request, multipartFile));
+        assertThatThrownBy(() -> bookService.update(bookId, request, multipartFile)).isInstanceOf(BookGenreCountMismatchException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -305,7 +313,7 @@ class BookServiceTest {
     }
 
     @Test
-    void update_withExistingBookAndValidRequestAndNonNullImage_shouldPass() {
+    void update_withExistingBookAndValidBookRequestAndNonNullImage_shouldSucceed() {
         // Arrange
         var request = BookRequestFactory.validRequest();
         var book = BookFactory.validBookWithImage(request);
@@ -348,8 +356,10 @@ class BookServiceTest {
         var result = bookService.update(book.getId(), request, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(result, updatedBookResponse);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(updatedBookResponse);
+
         verify(bookRepository, times(1)).findById(book.getId());
         verify(imageService, times(1)).delete(bookImageId);
         verify(imageService, times(1)).create(multipartFile);
@@ -371,7 +381,7 @@ class BookServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookService.changeGenre(bookId, genreName, isAdditionRequired));
+        assertThatThrownBy(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookGenreService, never()).find(any(String.class));
         verify(bookRepository, never()).addGenre(any(Long.class), any(Long.class));
@@ -395,7 +405,7 @@ class BookServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookGenreNotFoundException.class, () -> bookService.changeGenre(bookId, genreName, isAdditionRequired));
+        assertThatThrownBy(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired)).isInstanceOf(BookGenreNotFoundException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookGenreService, times(1)).find(genreName);
         verify(bookRepository, never()).addGenre(any(Long.class), any(Long.class));
@@ -424,7 +434,7 @@ class BookServiceTest {
                 .thenReturn(genre);
 
         // Act && Assert
-        assertThrows(BookAlreadyContainingGenreException.class, () -> bookService.changeGenre(bookId, genreName, isAdditionRequired));
+        assertThatThrownBy(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired)).isInstanceOf(BookAlreadyContainingGenreException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookGenreService, times(1)).find(genreName);
         verify(bookGenreMapper, times(1)).toEntity(genreResponse);
@@ -454,7 +464,7 @@ class BookServiceTest {
                 .thenReturn(genre);
 
         // Act && Assert
-        assertThrows(BookNotContainingGenreException.class, () -> bookService.changeGenre(bookId, genreName, isAdditionRequired));
+        assertThatThrownBy(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired)).isInstanceOf(BookNotContainingGenreException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookGenreService, times(1)).find(genreName);
         verify(bookGenreMapper, times(1)).toEntity(genreResponse);
@@ -492,7 +502,7 @@ class BookServiceTest {
                 .validate(book);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired));
+        assertThatCode(() -> bookService.changeGenre(bookId, genreName, isAdditionRequired)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookGenreService, times(1)).find(genreName);
         verify(bookGenreMapper, times(1)).toEntity(genreResponse);
@@ -527,7 +537,7 @@ class BookServiceTest {
                 .validate(book);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.changeGenre(book.getId(), genre.getName(), isAdditionRequired));
+        assertThatCode(() -> bookService.changeGenre(book.getId(), genre.getName(), isAdditionRequired)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(book.getId());
         verify(bookGenreService, times(1)).find(genre.getName());
         verify(bookGenreMapper, times(1)).toEntity(genreResponse);
@@ -546,7 +556,7 @@ class BookServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookService.changeImage(bookId, multipartFile));
+        assertThatThrownBy(() -> bookService.changeImage(bookId, multipartFile)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -565,7 +575,7 @@ class BookServiceTest {
                 .thenReturn(Optional.of(book));
 
         // Act && Assert
-        assertThrows(ImageNotFoundException.class, () -> bookService.changeImage(bookId, multipartFile));
+        assertThatThrownBy(() -> bookService.changeImage(bookId, multipartFile)).isInstanceOf(ImageNotFoundException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -591,7 +601,7 @@ class BookServiceTest {
                 .thenReturn(book);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.changeImage(book.getId(), multipartFile));
+        assertThatCode(() -> bookService.changeImage(book.getId(), multipartFile)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(book.getId());
         verify(imageService, times(1)).delete(bookImageId);
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -620,7 +630,7 @@ class BookServiceTest {
                 .thenReturn(book);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.changeImage(book.getId(), multipartFile));
+        assertThatCode(() -> bookService.changeImage(book.getId(), multipartFile)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(book.getId());
         verify(imageService, never()).delete(any(Long.class));
         verify(imageService, times(1)).create(multipartFile);
@@ -655,7 +665,7 @@ class BookServiceTest {
                 .thenReturn(book);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.changeImage(book.getId(), multipartFile));
+        assertThatCode(() -> bookService.changeImage(book.getId(), multipartFile)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(book.getId());
         verify(imageService, times(1)).delete(bookImageId);
         verify(imageService, times(1)).create(multipartFile);
@@ -672,7 +682,7 @@ class BookServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookService.delete(bookId));
+        assertThatThrownBy(() -> bookService.delete(bookId)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(bookId);
         verify(bookRepository, never()).delete(any(Book.class));
     }
@@ -686,7 +696,7 @@ class BookServiceTest {
                 .thenReturn(Optional.of(book));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookService.delete(book.getId()));
+        assertThatCode(() -> bookService.delete(book.getId())).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findById(book.getId());
         verify(bookRepository, times(1)).delete(book);
     }

@@ -34,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -71,7 +71,7 @@ class UserServiceTest {
         var result = userService.find(username);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(userRepository, times(1)).findByUsername(username);
         verify(userMapper, never()).toResponse(any(User.class));
     }
@@ -92,7 +92,7 @@ class UserServiceTest {
         var result = userService.find(user.getUsername());
 
         // Assert
-        assertTrue(result.isPresent());
+        assertThat(result).isPresent();
         verify(userRepository, times(1)).findByUsername(user.getUsername());
         verify(userMapper, times(1)).toResponse(user);
     }
@@ -115,7 +115,7 @@ class UserServiceTest {
                 .thenThrow(ImageUploadException.class);
 
         // Act && Assert
-        assertThrows(ImageUploadException.class, () -> userService.signUp(signUpRequest, multipartFile));
+        assertThatThrownBy(() -> userService.signUp(signUpRequest, multipartFile)).isInstanceOf(ImageUploadException.class);
         verify(keycloakService, times(1)).signUp(signUpRequest);
         verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
         verify(imageService, times(1)).create(multipartFile);
@@ -149,8 +149,10 @@ class UserServiceTest {
         var result = userService.signUp(signUpRequest, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(userResponse, result);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(userResponse);
+
         verify(keycloakService, times(1)).signUp(signUpRequest);
         verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
         verify(imageService, never()).create(any(MultipartFile.class));
@@ -193,8 +195,10 @@ class UserServiceTest {
         var result = userService.signUp(signUpRequest, multipartFile);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(userResponse, result);
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(userResponse);
+
         verify(keycloakService, times(1)).signUp(signUpRequest);
         verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
         verify(imageService, times(1)).create(multipartFile);
@@ -212,7 +216,7 @@ class UserServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> userService.resetVerificationEmail(username));
+        assertThatThrownBy(() -> userService.resetVerificationEmail(username)).isInstanceOf(UserNotFoundException.class);
         verify(userRepository, times(1)).findByUsername(username);
         verify(keycloakService, never()).resetVerificationEmail(any(UUID.class));
     }
@@ -230,7 +234,7 @@ class UserServiceTest {
                 .resetVerificationEmail(user.getKeycloakId());
 
         // Act && Assert
-        assertDoesNotThrow(() -> userService.resetVerificationEmail(user.getUsername()));
+        assertThatCode(() -> userService.resetVerificationEmail(user.getUsername())).doesNotThrowAnyException();
         verify(userRepository, times(1)).findByUsername(user.getUsername());
         verify(keycloakService, times(1)).resetVerificationEmail(user.getKeycloakId());
     }
@@ -245,7 +249,7 @@ class UserServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userService.changeEmail(username));
+            assertThatThrownBy(() -> userService.changeEmail(username)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(keycloakService, never()).changeEmail(any(UUID.class));
@@ -268,7 +272,7 @@ class UserServiceTest {
                     .thenThrow(UserModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(UserModificationForbiddenException.class, () -> userService.changeEmail(username));
+            assertThatThrownBy(() -> userService.changeEmail(username)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(keycloakService, never()).changeEmail(any(UUID.class));
@@ -295,7 +299,7 @@ class UserServiceTest {
                     .changeEmail(keycloakId);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.changeEmail(username));
+            assertThatCode(() -> userService.changeEmail(username)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(keycloakService, times(1)).changeEmail(keycloakId);
@@ -313,7 +317,7 @@ class UserServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userService.changeImage(username, multipartFile));
+            assertThatThrownBy(() -> userService.changeImage(username, multipartFile)).isInstanceOf(UserNotFoundException.class);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, times(1)).findByUsername(username);
             verify(imageService, never()).delete(any(Long.class));
@@ -339,7 +343,7 @@ class UserServiceTest {
                     .thenThrow(UserModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(UserModificationForbiddenException.class, () -> userService.changeImage(username, multipartFile));
+            assertThatThrownBy(() -> userService.changeImage(username, multipartFile)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, never()).delete(any(Long.class));
@@ -366,7 +370,7 @@ class UserServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertThrows(ImageNotFoundException.class, () -> userService.changeImage(username, multipartFile));
+            assertThatThrownBy(() -> userService.changeImage(username, multipartFile)).isInstanceOf(ImageNotFoundException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, never()).delete(any(Long.class));
@@ -401,7 +405,7 @@ class UserServiceTest {
                     .thenReturn(user);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.changeImage(username, multipartFile));
+            assertThatCode(() -> userService.changeImage(username, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, times(1)).delete(userImageId);
@@ -440,7 +444,7 @@ class UserServiceTest {
                     .thenReturn(user);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.changeImage(username, multipartFile));
+            assertThatCode(() -> userService.changeImage(username, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, never()).delete(any(Long.class));
@@ -484,7 +488,7 @@ class UserServiceTest {
                     .thenReturn(user);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.changeImage(username, multipartFile));
+            assertThatCode(() -> userService.changeImage(username, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, times(1)).delete(userImageId);
@@ -506,7 +510,7 @@ class UserServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userService.update(username, updateRequest, multipartFile));
+            assertThatThrownBy(() -> userService.update(username, updateRequest, multipartFile)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(imageService, never()).delete(any(Long.class));
@@ -536,7 +540,7 @@ class UserServiceTest {
                     .thenThrow(UserModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(UserModificationForbiddenException.class, () -> userService.update(username, updateRequest, multipartFile));
+            assertThatThrownBy(() -> userService.update(username, updateRequest, multipartFile)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, never()).delete(any(Long.class));
@@ -577,7 +581,7 @@ class UserServiceTest {
                     .update(keycloakId, updateRequest);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.update(username, updateRequest, multipartFile));
+            assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, never()).delete(any(Long.class));
@@ -632,7 +636,7 @@ class UserServiceTest {
                     .update(keycloakId, updateRequest);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.update(username, updateRequest, multipartFile));
+            assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(imageService, times(1)).delete(userImageId);
@@ -654,7 +658,7 @@ class UserServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userService.delete(username));
+            assertThatThrownBy(() -> userService.delete(username)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, never()).delete(any(User.class));
@@ -678,7 +682,7 @@ class UserServiceTest {
                     .thenThrow(UserModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(UserModificationForbiddenException.class, () -> userService.delete(username));
+            assertThatThrownBy(() -> userService.delete(username)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, never()).delete(any(User.class));
@@ -710,7 +714,7 @@ class UserServiceTest {
                     .delete(keycloakId);
 
             // Act && Assert
-            assertDoesNotThrow(() -> userService.delete(username));
+            assertThatCode(() -> userService.delete(username)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, times(1)).delete(user);

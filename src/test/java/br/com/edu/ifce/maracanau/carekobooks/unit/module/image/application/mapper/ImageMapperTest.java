@@ -4,14 +4,14 @@ import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.application.payload.response.ImageResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @UnitTest
 class ImageMapperTest {
@@ -29,16 +29,19 @@ class ImageMapperTest {
     }
 
     @Test
-    void toEntity_withNullResponse_shouldReturnNull() {
+    void toEntity_withNullImageResponse_shouldReturnNullImage() {
+        // Arrange
+        ImageResponse response = null;
+
         // Act
-        var result = imageMapper.toEntity(null);
+        var result = imageMapper.toEntity(response);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
-    void toEntity_withValidResponse_shouldReturnValidEntity() {
+    void toEntity_withValidImageResponse_shouldReturnImage() {
         // Arrange
         var response = ImageResponseFactory.validResponse(OUTER_ENDPOINT, BUCKET);
 
@@ -46,12 +49,12 @@ class ImageMapperTest {
         var result = imageMapper.toEntity(response);
 
         // Assert
-        assertEquals(response.getId(), result.getId());
-        assertEquals(response.getName(), result.getName());
-        assertEquals(response.getContentType(), result.getContentType());
-        assertEquals(response.getSizeInBytes(), result.getSizeInBytes());
-        assertEquals(response.getCreatedAt(), result.getCreatedAt());
-        assertEquals(response.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result.getId()).isEqualTo(response.getId());
+        assertThat(result.getName()).isEqualTo(response.getName());
+        assertThat(result.getContentType()).isEqualTo(response.getContentType());
+        assertThat(result.getSizeInBytes()).isEqualTo(response.getSizeInBytes());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(response.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(response.getUpdatedAt());
     }
 
     @Test
@@ -63,11 +66,11 @@ class ImageMapperTest {
         var result = imageMapper.toResponse(image);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
-    void toResponse_withValidEntity_shouldReturnValidResponse() {
+    void toResponse_withValidImage_shouldReturnImageResponse() {
         // Arrange
         var image = ImageFactory.validImage();
         var expectedUrl = ImageResponseFactory.validResponseUrl(image.getName(), OUTER_ENDPOINT, BUCKET);
@@ -76,13 +79,13 @@ class ImageMapperTest {
         var result = imageMapper.toResponse(image);
 
         // Assert
-        assertEquals(result.getId(), image.getId());
-        assertEquals(result.getName(), image.getName());
-        assertEquals(result.getUrl(), expectedUrl);
-        assertEquals(result.getContentType(), image.getContentType());
-        assertEquals(result.getSizeInBytes(), image.getSizeInBytes());
-        assertEquals(result.getCreatedAt(), image.getCreatedAt());
-        assertEquals(result.getUpdatedAt(), image.getUpdatedAt());
+        assertThat(result.getId()).isEqualTo(image.getId());
+        assertThat(result.getName()).isEqualTo(image.getName());
+        assertThat(result.getUrl()).isEqualTo(expectedUrl);
+        assertThat(result.getContentType()).isEqualTo(image.getContentType());
+        assertThat(result.getSizeInBytes()).isEqualTo(image.getSizeInBytes());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(image.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(image.getUpdatedAt());
     }
 
 }

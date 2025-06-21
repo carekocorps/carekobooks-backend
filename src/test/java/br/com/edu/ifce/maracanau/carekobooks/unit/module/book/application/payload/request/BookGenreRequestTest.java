@@ -7,7 +7,7 @@ import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @UnitTest
 class BookGenreRequestTest {
@@ -29,7 +29,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -41,7 +41,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("name"));
     }
 
     @Test
@@ -53,7 +53,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("name"));
     }
 
     @Test
@@ -65,7 +65,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("name")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("name"));
     }
 
     @Test
@@ -77,7 +77,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("displayName")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("displayName"));
     }
 
     @Test
@@ -89,7 +89,7 @@ class BookGenreRequestTest {
         var result = validator.validate(genreRequest);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("displayName")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("displayName"));
     }
 
     @Test
@@ -101,7 +101,7 @@ class BookGenreRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("description")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("description"));
     }
 
 }

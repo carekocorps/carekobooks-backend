@@ -22,7 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -61,7 +61,7 @@ class BookGenreServiceTest {
         var result = bookGenreService.find(genreName);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookGenreRepository, times(1)).findByName(genreName);
         verify(bookGenreMapper, never()).toResponse(any(BookGenre.class));
     }
@@ -82,8 +82,10 @@ class BookGenreServiceTest {
         var result = bookGenreService.find(genre.getName());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), response);
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookGenreRepository, times(1)).findByName(genre.getName());
         verify(bookGenreMapper, times(1)).toResponse(genre);
     }
@@ -112,7 +114,7 @@ class BookGenreServiceTest {
         var result = bookGenreService.create(request);
 
         // Assert
-        assertEquals(response, result);
+        assertThat(result).isEqualTo(response);
         verify(bookGenreMapper, times(1)).toEntity(request);
         verify(bookGenreValidator, times(1)).validate(genre);
         verify(bookGenreRepository, times(1)).save(genre);
@@ -126,7 +128,7 @@ class BookGenreServiceTest {
         var updateRequest = BookGenreRequestFactory.validRequest();
 
         // Act && Assert
-        assertThrows(BookGenreNotFoundException.class, () -> bookGenreService.update(genreName, updateRequest));
+        assertThatThrownBy(() -> bookGenreService.update(genreName, updateRequest)).isInstanceOf(BookGenreNotFoundException.class);
         verify(bookGenreRepository, times(1)).findByName(genreName);
         verify(entityManager, never()).detach(any(BookGenre.class));
         verify(bookGenreMapper, never()).updateEntity(any(BookGenre.class), any(BookGenreRequest.class));
@@ -170,7 +172,7 @@ class BookGenreServiceTest {
                 .thenReturn(updatedGenreResponse);
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookGenreService.update(genre.getName(), updateRequest));
+        assertThatCode(() -> bookGenreService.update(genre.getName(), updateRequest)).doesNotThrowAnyException();
         verify(bookGenreRepository, times(1)).findByName(genre.getName());
         verify(entityManager, times(1)).detach(genre);
         verify(bookGenreMapper, times(1)).updateEntity(genre, updateRequest);
@@ -189,7 +191,7 @@ class BookGenreServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(BookGenreNotFoundException.class, () -> bookGenreService.delete(genreName));
+        assertThatThrownBy(() -> bookGenreService.delete(genreName)).isInstanceOf(BookGenreNotFoundException.class);
         verify(bookGenreRepository, times(1)).findByName(genreName);
         verify(bookGenreRepository, never()).delete(any(BookGenre.class));
     }
@@ -203,7 +205,7 @@ class BookGenreServiceTest {
                 .thenReturn(Optional.of(genre));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookGenreService.delete(genre.getName()));
+        assertThatCode(() -> bookGenreService.delete(genre.getName())).doesNotThrowAnyException();
         verify(bookGenreRepository, times(1)).findByName(genre.getName());
         verify(bookGenreRepository, times(1)).delete(genre);
     }

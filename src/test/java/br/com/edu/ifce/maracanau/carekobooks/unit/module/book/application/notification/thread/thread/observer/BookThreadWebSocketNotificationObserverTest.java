@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -35,7 +35,7 @@ class BookThreadWebSocketNotificationObserverTest {
                 .convertAndSend(any(String.class), eq(response));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookThreadWebSocketNotificationObserver.notify(response));
+        assertThatCode(() -> bookThreadWebSocketNotificationObserver.notify(response)).doesNotThrowAnyException();
         verify(messagingTemplate, times(1)).convertAndSend(any(String.class), eq(response));
     }
 

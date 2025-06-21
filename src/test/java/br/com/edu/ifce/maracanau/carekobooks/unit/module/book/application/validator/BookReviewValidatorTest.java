@@ -18,7 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @UnitTest
@@ -32,12 +33,12 @@ class BookReviewValidatorTest {
     private BookReviewValidator bookReviewValidator;
 
     @Test
-    void validate_withValidReview_shouldPass() {
+    void validate_withValidReview_shouldSucceed() {
         // Arrange
         var review = BookReviewFactory.validReview();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookReviewValidator.validate(review));
+        assertThatCode(() -> bookReviewValidator.validate(review)).doesNotThrowAnyException();
     }
 
     @Test
@@ -46,7 +47,7 @@ class BookReviewValidatorTest {
         var review = BookReviewFactory.invalidReviewByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> bookReviewValidator.validate(review));
+        assertThatThrownBy(() -> bookReviewValidator.validate(review)).isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -55,7 +56,7 @@ class BookReviewValidatorTest {
         var review = BookReviewFactory.invalidReviewByEmptyBook();
 
         // Act & Assert
-        assertThrows(BookNotFoundException.class, () -> bookReviewValidator.validate(review));
+        assertThatThrownBy(() -> bookReviewValidator.validate(review)).isInstanceOf(BookNotFoundException.class);
     }
 
     @Test
@@ -70,7 +71,7 @@ class BookReviewValidatorTest {
                 .thenReturn(List.of(existingReview));
 
         // Act & Assert
-        assertThrows(BookReviewUserConflictException.class, () -> bookReviewValidator.validate(review));
+        assertThatThrownBy(() -> bookReviewValidator.validate(review)).isInstanceOf(BookReviewUserConflictException.class);
     }
 
 }

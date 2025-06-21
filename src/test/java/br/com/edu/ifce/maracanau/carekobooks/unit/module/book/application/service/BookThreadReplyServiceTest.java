@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -61,7 +61,7 @@ class BookThreadReplyServiceTest {
         var result = bookThreadReplyService.find(replyId);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookThreadReplyRepository, times(1)).findById(replyId);
         verify(bookThreadReplyMapper, never()).toResponse(any(BookThreadReply.class));
     }
@@ -82,8 +82,10 @@ class BookThreadReplyServiceTest {
         var result = bookThreadReplyService.find(thread.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(response, result.get());
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookThreadReplyRepository, times(1)).findById(thread.getId());
         verify(bookThreadReplyMapper, times(1)).toResponse(thread);
     }
@@ -110,7 +112,7 @@ class BookThreadReplyServiceTest {
                     .thenThrow(BookThreadReplyModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadReplyModificationForbiddenException.class, () -> bookThreadReplyService.create(request));
+            assertThatThrownBy(() -> bookThreadReplyService.create(request)).isInstanceOf(BookThreadReplyModificationForbiddenException.class);
             verify(bookThreadReplyMapper, times(1)).toEntity(request);
             verify(bookThreadReplyValidator, times(1)).validate(reply);
             verify(bookThreadReplyRepository, times(1)).save(reply);
@@ -152,8 +154,10 @@ class BookThreadReplyServiceTest {
             var result = bookThreadReplyService.create(request);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(response, result);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(response);
+
             verify(bookThreadReplyMapper, times(1)).toEntity(request);
             verify(bookThreadReplyValidator, times(1)).validate(reply);
             verify(bookThreadReplyRepository, times(1)).save(reply);
@@ -174,7 +178,7 @@ class BookThreadReplyServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(BookThreadReplyNotFoundException.class, () -> bookThreadReplyService.createChild(parentId, request));
+            assertThatThrownBy(() -> bookThreadReplyService.createChild(parentId, request)).isInstanceOf(BookThreadReplyNotFoundException.class);
             verify(bookThreadReplyRepository, times(1)).findById(parentId);
             verify(bookThreadReplyMapper, never()).toEntity(any(BookThreadReplyRequest.class));
             verify(bookThreadReplyValidator, never()).validate(any(BookThreadReply.class));
@@ -213,7 +217,7 @@ class BookThreadReplyServiceTest {
                     .thenThrow(BookThreadReplyModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadReplyModificationForbiddenException.class, () -> bookThreadReplyService.createChild(parentId, childRequest));
+            assertThatThrownBy(() -> bookThreadReplyService.createChild(parentId, childRequest)).isInstanceOf(BookThreadReplyModificationForbiddenException.class);
             verify(bookThreadReplyRepository, times(1)).findById(parentId);
             verify(bookThreadReplyMapper, times(1)).toEntity(childRequest);
             verify(bookThreadReplyValidator, times(1)).validate(child);
@@ -261,8 +265,10 @@ class BookThreadReplyServiceTest {
             var result = bookThreadReplyService.createChild(parent.getId(), childRequest);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(childResponse, result);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(childResponse);
+
             verify(bookThreadReplyRepository, times(1)).findById(parent.getId());
             verify(bookThreadReplyMapper, times(1)).toEntity(childRequest);
             verify(bookThreadReplyValidator, times(1)).validate(child);
@@ -281,7 +287,7 @@ class BookThreadReplyServiceTest {
             var updateRequest = BookThreadReplyRequestFactory.validRequest();
 
             // Act && Assert
-            assertThrows(BookThreadReplyNotFoundException.class, () -> bookThreadReplyService.update(replyId, updateRequest));
+            assertThatThrownBy(() -> bookThreadReplyService.update(replyId, updateRequest)).isInstanceOf(BookThreadReplyNotFoundException.class);
             verify(bookThreadReplyRepository, times(1)).findById(replyId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(bookThreadReplyMapper, never()).updateEntity(any(BookThreadReply.class), any(BookThreadReplyRequest.class));
@@ -306,7 +312,7 @@ class BookThreadReplyServiceTest {
                     .thenThrow(BookThreadReplyModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadReplyModificationForbiddenException.class, () -> bookThreadReplyService.update(replyId, updateRequest));
+            assertThatThrownBy(() -> bookThreadReplyService.update(replyId, updateRequest)).isInstanceOf(BookThreadReplyModificationForbiddenException.class);
             verify(bookThreadReplyRepository, times(1)).findById(replyId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class), times(1));
             verify(bookThreadReplyMapper, never()).updateEntity(any(BookThreadReply.class), any(BookThreadReplyRequest.class));
@@ -350,8 +356,10 @@ class BookThreadReplyServiceTest {
             var result = bookThreadReplyService.update(reply.getId(), updateRequest);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(updatedReplyResponse, result);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(updatedReplyResponse);
+
             verify(bookThreadReplyRepository, times(1)).findById(reply.getId());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class), times(1));
             verify(bookThreadReplyMapper, times(1)).updateEntity(reply, updateRequest);
@@ -376,7 +384,7 @@ class BookThreadReplyServiceTest {
                     .thenThrow(BookThreadReplyModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadReplyModificationForbiddenException.class, () -> bookThreadReplyService.delete(replyId));
+            assertThatThrownBy(() -> bookThreadReplyService.delete(replyId)).isInstanceOf(BookThreadReplyModificationForbiddenException.class);
             verify(bookThreadReplyRepository, times(1)).findById(replyId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class), times(1));
         }
@@ -397,7 +405,7 @@ class BookThreadReplyServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertDoesNotThrow(() -> bookThreadReplyService.delete(replyId));
+            assertThatCode(() -> bookThreadReplyService.delete(replyId)).doesNotThrowAnyException();
             verify(bookThreadReplyRepository, times(1)).findById(replyId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(reply.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class), times(1));
         }

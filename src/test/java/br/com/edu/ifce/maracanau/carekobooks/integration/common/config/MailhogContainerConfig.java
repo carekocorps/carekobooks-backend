@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.common.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,7 @@ public class MailhogContainerConfig {
     private Integer smtpPort;
 
     @Bean
+    @Qualifier("mailhogContainer")
     public GenericContainer<?> mailhogContainer(Network network) {
         return new GenericContainer<>(DOCKER_IMAGE)
                 .withExposedPorts(smtpPort, httpPort)

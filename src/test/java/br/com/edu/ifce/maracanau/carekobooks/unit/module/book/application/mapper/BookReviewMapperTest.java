@@ -22,7 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -47,7 +47,7 @@ class BookReviewMapperTest {
         var result = bookReviewMapper.toEntity(reviewRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -68,12 +68,12 @@ class BookReviewMapperTest {
         var result = bookReviewMapper.toEntity(reviewRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(reviewRequest.getTitle(), result.getTitle());
-        assertEquals(reviewRequest.getContent(), result.getContent());
-        assertEquals(reviewRequest.getScore(), result.getScore());
-        assertEquals(reviewRequest.getUsername(), result.getUser().getUsername());
-        assertEquals(reviewRequest.getBookId(), result.getBook().getId());
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo(reviewRequest.getTitle());
+        assertThat(result.getContent()).isEqualTo(reviewRequest.getContent());
+        assertThat(result.getScore()).isEqualTo(reviewRequest.getScore());
+        assertThat(result.getUser().getUsername()).isEqualTo(reviewRequest.getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(reviewRequest.getBookId());
         verify(userMapper, times(1)).toEntity(reviewRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(reviewRequest.getBookId());
     }
@@ -87,7 +87,7 @@ class BookReviewMapperTest {
         var result = bookReviewMapper.toResponse(review);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toSimplifiedResponse(any(User.class));
         verify(bookMapper, never()).toSimplifiedResponse(any(Book.class));
     }
@@ -107,14 +107,14 @@ class BookReviewMapperTest {
         var result = bookReviewMapper.toResponse(review);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(review.getId(), result.getId());
-        assertEquals(review.getTitle(), result.getTitle());
-        assertEquals(review.getContent(), result.getContent());
-        assertEquals(review.getScore(), result.getScore());
-        assertEquals(review.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(review.getBook().getId(), result.getBook().getId());
-        assertEquals(review.getCreatedAt(), result.getCreatedAt());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(review.getId());
+        assertThat(result.getTitle()).isEqualTo(review.getTitle());
+        assertThat(result.getContent()).isEqualTo(review.getContent());
+        assertThat(result.getScore()).isEqualTo(review.getScore());
+        assertThat(result.getUser().getUsername()).isEqualTo(review.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(review.getBook().getId());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(review.getCreatedAt());
         verify(userMapper, times(1)).toSimplifiedResponse(review.getUser());
         verify(bookMapper, times(1)).toSimplifiedResponse(review.getBook());
     }
@@ -130,13 +130,13 @@ class BookReviewMapperTest {
         bookReviewMapper.updateEntity(newReview, reviewRequest);
 
         // Assert
-        assertEquals(review.getId(), newReview.getId());
-        assertEquals(review.getTitle(), newReview.getTitle());
-        assertEquals(review.getContent(), newReview.getContent());
-        assertEquals(review.getScore(), newReview.getScore());
-        assertEquals(review.getUser().getUsername(), newReview.getUser().getUsername());
-        assertEquals(review.getBook().getId(), newReview.getBook().getId());
-        assertEquals(review.getCreatedAt(), newReview.getCreatedAt());
+        assertThat(newReview.getId()).isEqualTo(review.getId());
+        assertThat(newReview.getTitle()).isEqualTo(review.getTitle());
+        assertThat(newReview.getContent()).isEqualTo(review.getContent());
+        assertThat(newReview.getScore()).isEqualTo(review.getScore());
+        assertThat(newReview.getUser().getUsername()).isEqualTo(review.getUser().getUsername());
+        assertThat(newReview.getBook().getId()).isEqualTo(review.getBook().getId());
+        assertThat(newReview.getCreatedAt()).isEqualToIgnoringNanos(review.getCreatedAt());
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -158,13 +158,13 @@ class BookReviewMapperTest {
         bookReviewMapper.updateEntity(newReview, reviewRequest);
 
         // Assert
-        assertEquals(review.getId(), newReview.getId());
-        assertEquals(reviewRequest.getTitle(), newReview.getTitle());
-        assertEquals(reviewRequest.getContent(), newReview.getContent());
-        assertEquals(reviewRequest.getScore(), newReview.getScore());
-        assertEquals(reviewRequest.getUsername(), newReview.getUser().getUsername());
-        assertEquals(reviewRequest.getBookId(), newReview.getBook().getId());
-        assertEquals(review.getCreatedAt(), newReview.getCreatedAt());
+        assertThat(newReview.getId()).isEqualTo(review.getId());
+        assertThat(newReview.getTitle()).isEqualTo(reviewRequest.getTitle());
+        assertThat(newReview.getContent()).isEqualTo(reviewRequest.getContent());
+        assertThat(newReview.getScore()).isEqualTo(reviewRequest.getScore());
+        assertThat(newReview.getUser().getUsername()).isEqualTo(reviewRequest.getUsername());
+        assertThat(newReview.getBook().getId()).isEqualTo(reviewRequest.getBookId());
+        assertThat(newReview.getCreatedAt()).isEqualToIgnoringNanos(review.getCreatedAt());
         verify(userMapper, times(1)).toEntity(reviewRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(reviewRequest.getBookId());
     }

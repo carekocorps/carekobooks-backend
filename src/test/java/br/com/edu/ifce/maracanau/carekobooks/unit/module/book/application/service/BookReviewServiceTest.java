@@ -26,7 +26,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -60,7 +61,7 @@ class BookReviewServiceTest {
         var result = bookReviewService.find(reviewId);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookReviewRepository, times(1)).findById(reviewId);
         verify(bookReviewMapper, never()).toResponse(any(BookReview.class));
     }
@@ -81,8 +82,10 @@ class BookReviewServiceTest {
         var result = bookReviewService.find(review.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), response);
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookReviewRepository, times(1)).findById(review.getId());
         verify(bookReviewMapper, times(1)).toResponse(review);
     }
@@ -109,7 +112,7 @@ class BookReviewServiceTest {
                     .thenThrow(BookReviewModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookReviewModificationForbiddenException.class, () -> bookReviewService.create(request));
+            assertThatThrownBy(() -> bookReviewService.create(request)).isInstanceOf(BookReviewModificationForbiddenException.class);
             verify(bookReviewMapper, times(1)).toEntity(request);
             verify(bookReviewValidator, times(1)).validate(review);
             verify(bookReviewRepository, times(1)).save(review);
@@ -152,7 +155,7 @@ class BookReviewServiceTest {
             var result = bookReviewService.create(request);
 
             // Assert
-            assertEquals(response, result);
+            assertThat(result).isEqualTo(response);
             verify(bookReviewMapper, times(1)).toEntity(request);
             verify(bookReviewValidator, times(1)).validate(review);
             verify(bookReviewRepository, times(1)).save(review);
@@ -170,7 +173,7 @@ class BookReviewServiceTest {
             var updateRequest = BookReviewRequestFactory.validRequest();
 
             // Act && Assert
-            assertThrows(BookReviewNotFoundException.class, () -> bookReviewService.update(reviewId, updateRequest));
+            assertThatThrownBy(() -> bookReviewService.update(reviewId, updateRequest)).isInstanceOf(BookReviewNotFoundException.class);
             verify(bookReviewRepository, times(1)).findById(reviewId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(bookReviewMapper, never()).updateEntity(any(BookReview.class), any(BookReviewRequest.class));
@@ -196,7 +199,7 @@ class BookReviewServiceTest {
                     .thenThrow(BookReviewModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookReviewModificationForbiddenException.class, () -> bookReviewService.update(reviewId, updateRequest));
+            assertThatThrownBy(() -> bookReviewService.update(reviewId, updateRequest)).isInstanceOf(BookReviewModificationForbiddenException.class);
             verify(bookReviewRepository, times(1)).findById(reviewId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class), times(1));
             verify(bookReviewMapper, never()).updateEntity(any(BookReview.class), any(BookReviewRequest.class));
@@ -237,8 +240,10 @@ class BookReviewServiceTest {
             var result = bookReviewService.update(review.getId(), updateRequest);
 
             // Assert
-            assertNotNull(result);
-            assertEquals(updatedReviewResponse, result);
+            assertThat(result)
+                    .isNotNull()
+                    .isEqualTo(updatedReviewResponse);
+
             verify(bookReviewRepository, times(1)).findById(review.getId());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class), times(1));
             verify(bookReviewMapper, times(1)).updateEntity(review, updateRequest);
@@ -258,7 +263,7 @@ class BookReviewServiceTest {
                     .thenReturn(Optional.empty());
 
             // Act && Assert
-            assertThrows(BookReviewNotFoundException.class, () -> bookReviewService.delete(reviewId));
+            assertThatThrownBy(() -> bookReviewService.delete(reviewId)).isInstanceOf(BookReviewNotFoundException.class);
             verify(bookReviewRepository).findById(reviewId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
         }
@@ -279,7 +284,7 @@ class BookReviewServiceTest {
                     .thenThrow(BookReviewModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookReviewModificationForbiddenException.class, () -> bookReviewService.delete(reviewId));
+            assertThatThrownBy(() -> bookReviewService.delete(reviewId)).isInstanceOf(BookReviewModificationForbiddenException.class);
             verify(bookReviewRepository, times(1)).findById(reviewId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class), times(1));
         }

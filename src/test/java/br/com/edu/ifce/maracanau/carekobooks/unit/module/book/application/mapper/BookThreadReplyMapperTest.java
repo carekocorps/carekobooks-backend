@@ -22,7 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -47,7 +47,7 @@ class BookThreadReplyMapperTest {
         var result = bookThreadReplyMapper.toEntity(replyRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookThreadMapper, never()).toEntity(any(Long.class));
     }
@@ -68,11 +68,11 @@ class BookThreadReplyMapperTest {
         var result = bookThreadReplyMapper.toEntity(replyRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(reply.getContent(), result.getContent());
-        assertEquals(reply.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(reply.getThread().getId(), result.getThread().getId());
-        assertEquals(reply.getIsContainingChildren(), result.getIsContainingChildren());
+        assertThat(result).isNotNull();
+        assertThat(result.getContent()).isEqualTo(reply.getContent());
+        assertThat(result.getUser().getUsername()).isEqualTo(reply.getUser().getUsername());
+        assertThat(result.getThread().getId()).isEqualTo(reply.getThread().getId());
+        assertThat(result.getIsContainingChildren()).isEqualTo(reply.getIsContainingChildren());
         verify(userMapper, times(1)).toEntity(replyRequest.getUsername());
         verify(bookThreadMapper, times(1)).toEntity(replyRequest.getThreadId());
     }
@@ -86,7 +86,7 @@ class BookThreadReplyMapperTest {
         var result = bookThreadReplyMapper.toResponse(reply);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toSimplifiedResponse(any(User.class));
         verify(bookThreadMapper, never()).toResponse(any(BookThread.class));
     }
@@ -106,14 +106,14 @@ class BookThreadReplyMapperTest {
         var result = bookThreadReplyMapper.toResponse(reply);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(reply.getId(), result.getId());
-        assertEquals(reply.getContent(), result.getContent());
-        assertEquals(reply.getUser().getId(), result.getUser().getId());
-        assertEquals(reply.getThread().getId(), result.getThread().getId());
-        assertEquals(reply.getIsContainingChildren(), result.getIsContainingChildren());
-        assertEquals(reply.getCreatedAt(), result.getCreatedAt());
-        assertEquals(reply.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(reply.getId());
+        assertThat(result.getContent()).isEqualTo(reply.getContent());
+        assertThat(result.getUser().getId()).isEqualTo(reply.getUser().getId());
+        assertThat(result.getThread().getId()).isEqualTo(reply.getThread().getId());
+        assertThat(result.getIsContainingChildren()).isEqualTo(reply.getIsContainingChildren());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(reply.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(reply.getUpdatedAt());
         verify(userMapper, times(1)).toSimplifiedResponse(reply.getUser());
         verify(bookThreadMapper, times(1)).toResponse(reply.getThread());
     }
@@ -129,12 +129,12 @@ class BookThreadReplyMapperTest {
         bookThreadReplyMapper.updateEntity(newReply, replyRequest);
 
         // Assert
-        assertEquals(reply.getId(), newReply.getId());
-        assertEquals(reply.getContent(), newReply.getContent());
-        assertEquals(reply.getUser().getUsername(), newReply.getUser().getUsername());
-        assertEquals(reply.getThread().getId(), newReply.getThread().getId());
-        assertEquals(reply.getIsContainingChildren(), newReply.getIsContainingChildren());
-        assertEquals(reply.getCreatedAt(), newReply.getCreatedAt());
+        assertThat(newReply.getId()).isEqualTo(reply.getId());
+        assertThat(newReply.getContent()).isEqualTo(reply.getContent());
+        assertThat(newReply.getUser().getUsername()).isEqualTo(reply.getUser().getUsername());
+        assertThat(newReply.getThread().getId()).isEqualTo(reply.getThread().getId());
+        assertThat(newReply.getIsContainingChildren()).isEqualTo(reply.getIsContainingChildren());
+        assertThat(newReply.getCreatedAt()).isEqualToIgnoringNanos(reply.getCreatedAt());
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookThreadMapper, never()).toEntity(any(Long.class));
     }
@@ -156,12 +156,12 @@ class BookThreadReplyMapperTest {
         bookThreadReplyMapper.updateEntity(newReply, replyRequest);
 
         // Assert
-        assertEquals(reply.getId(), newReply.getId());
-        assertEquals(replyRequest.getContent(), newReply.getContent());
-        assertEquals(replyRequest.getUsername(), newReply.getUser().getUsername());
-        assertEquals(replyRequest.getThreadId(), newReply.getThread().getId());
-        assertEquals(reply.getIsContainingChildren(), newReply.getIsContainingChildren());
-        assertEquals(reply.getCreatedAt(), newReply.getCreatedAt());
+        assertThat(newReply.getId()).isEqualTo(reply.getId());
+        assertThat(newReply.getContent()).isEqualTo(replyRequest.getContent());
+        assertThat(newReply.getUser().getUsername()).isEqualTo(replyRequest.getUsername());
+        assertThat(newReply.getThread().getId()).isEqualTo(replyRequest.getThreadId());
+        assertThat(newReply.getIsContainingChildren()).isEqualTo(reply.getIsContainingChildren());
+        assertThat(newReply.getCreatedAt()).isEqualToIgnoringNanos(reply.getCreatedAt());
         verify(userMapper, times(1)).toEntity(replyRequest.getUsername());
         verify(bookThreadMapper, times(1)).toEntity(replyRequest.getThreadId());
     }

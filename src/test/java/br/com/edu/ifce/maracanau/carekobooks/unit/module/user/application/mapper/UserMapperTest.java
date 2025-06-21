@@ -25,7 +25,7 @@ import org.testcontainers.shaded.org.apache.commons.lang3.SerializationUtils;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -51,7 +51,7 @@ class UserMapperTest {
         var result = userMapper.toEntity(keycloakId, signUpRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -64,8 +64,8 @@ class UserMapperTest {
         var result = userMapper.toEntity(keycloakId, signUpRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(keycloakId, result.getKeycloakId());
+        assertThat(result).isNotNull();
+        assertThat(result.getKeycloakId()).isEqualTo(keycloakId);
     }
 
     @Test
@@ -79,11 +79,11 @@ class UserMapperTest {
         var result = userMapper.toEntity(keycloakId, signUpRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(user.getKeycloakId(), result.getKeycloakId());
-        assertEquals(user.getUsername(), result.getUsername());
-        assertEquals(user.getDisplayName(), result.getDisplayName());
-        assertEquals(user.getDescription(), result.getDescription());
+        assertThat(result).isNotNull();
+        assertThat(result.getKeycloakId()).isEqualTo(user.getKeycloakId());
+        assertThat(result.getUsername()).isEqualTo(user.getUsername());
+        assertThat(result.getDisplayName()).isEqualTo(user.getDisplayName());
+        assertThat(result.getDescription()).isEqualTo(user.getDescription());
     }
 
     @Test
@@ -98,7 +98,7 @@ class UserMapperTest {
         var result = userMapper.toEntity(username);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userRepository, times(1)).findByUsername(username);
     }
 
@@ -114,7 +114,7 @@ class UserMapperTest {
         var result = userMapper.toEntity(user.getUsername());
 
         // Assert
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         verify(userRepository, times(1)).findByUsername(user.getUsername());
     }
 
@@ -127,7 +127,7 @@ class UserMapperTest {
         var result = userMapper.toResponse(user);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(imageMapper, never()).toResponse(any(Image.class));
     }
 
@@ -144,21 +144,21 @@ class UserMapperTest {
         var result = userMapper.toResponse(user);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(userResponse.getId(), result.getId());
-        assertEquals(userResponse.getKeycloakId(), result.getKeycloakId());
-        assertEquals(userResponse.getUsername(), result.getUsername());
-        assertEquals(userResponse.getDisplayName(), result.getDisplayName());
-        assertEquals(userResponse.getDescription(), result.getDescription());
-        assertEquals(userResponse.getProgressesCount(), result.getProgressesCount());
-        assertEquals(userResponse.getReviewsCount(), result.getReviewsCount());
-        assertEquals(userResponse.getThreadsCount(), result.getThreadsCount());
-        assertEquals(userResponse.getRepliesCount(), result.getRepliesCount());
-        assertEquals(userResponse.getFollowingCount(), result.getFollowingCount());
-        assertEquals(userResponse.getFollowersCount(), result.getFollowersCount());
-        assertEquals(userResponse.getCreatedAt(), result.getCreatedAt());
-        assertEquals(userResponse.getUpdatedAt(), result.getUpdatedAt());
-        assertEquals(Optional.ofNullable(userResponse.getImage()).map(ImageResponse::getId).orElse(null), Optional.ofNullable(result.getImage()).map(ImageResponse::getId).orElse(null));
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(userResponse.getId());
+        assertThat(result.getKeycloakId()).isEqualTo(userResponse.getKeycloakId());
+        assertThat(result.getUsername()).isEqualTo(userResponse.getUsername());
+        assertThat(result.getDisplayName()).isEqualTo(userResponse.getDisplayName());
+        assertThat(result.getDescription()).isEqualTo(userResponse.getDescription());
+        assertThat(result.getProgressesCount()).isEqualTo(userResponse.getProgressesCount());
+        assertThat(result.getReviewsCount()).isEqualTo(userResponse.getReviewsCount());
+        assertThat(result.getThreadsCount()).isEqualTo(userResponse.getThreadsCount());
+        assertThat(result.getRepliesCount()).isEqualTo(userResponse.getRepliesCount());
+        assertThat(result.getFollowingCount()).isEqualTo(userResponse.getFollowingCount());
+        assertThat(result.getFollowersCount()).isEqualTo(userResponse.getFollowersCount());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(userResponse.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(userResponse.getUpdatedAt());
+        assertThat(Optional.ofNullable(result.getImage()).map(ImageResponse::getId).orElse(null)).isEqualTo(Optional.ofNullable(userResponse.getImage()).map(ImageResponse::getId).orElse(null));
     }
 
     @Test
@@ -170,7 +170,7 @@ class UserMapperTest {
         var result = userMapper.toSimplifiedResponse(user);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(imageMapper, never()).toResponse(any(Image.class));
     }
 
@@ -187,14 +187,14 @@ class UserMapperTest {
         var result = userMapper.toSimplifiedResponse(user);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(userResponse.getId(), result.getId());
-        assertEquals(userResponse.getKeycloakId(), result.getKeycloakId());
-        assertEquals(userResponse.getUsername(), result.getUsername());
-        assertEquals(userResponse.getDisplayName(), result.getDisplayName());
-        assertEquals(userResponse.getCreatedAt(), result.getCreatedAt());
-        assertEquals(userResponse.getUpdatedAt(), result.getUpdatedAt());
-        assertEquals(Optional.ofNullable(userResponse.getImage()).map(ImageResponse::getId).orElse(null), Optional.ofNullable(result.getImage()).map(ImageResponse::getId).orElse(null));
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(userResponse.getId());
+        assertThat(result.getKeycloakId()).isEqualTo(userResponse.getKeycloakId());
+        assertThat(result.getUsername()).isEqualTo(userResponse.getUsername());
+        assertThat(result.getDisplayName()).isEqualTo(userResponse.getDisplayName());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(userResponse.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(userResponse.getUpdatedAt());
+        assertThat(Optional.ofNullable(result.getImage()).map(ImageResponse::getId).orElse(null)).isEqualTo(Optional.ofNullable(userResponse.getImage()).map(ImageResponse::getId).orElse(null));
     }
 
     @Test
@@ -208,13 +208,13 @@ class UserMapperTest {
         userMapper.updateEntity(newUser, updateRequest);
 
         // Assert
-        assertEquals(user.getId(), newUser.getId());
-        assertEquals(user.getKeycloakId(), newUser.getKeycloakId());
-        assertEquals(user.getUsername(), newUser.getUsername());
-        assertEquals(user.getDisplayName(), newUser.getDisplayName());
-        assertEquals(user.getDescription(), newUser.getDescription());
-        assertEquals(user.getCreatedAt(), newUser.getCreatedAt());
-        assertEquals(Optional.ofNullable(user.getImage()).map(Image::getId).orElse(null), Optional.ofNullable(newUser.getImage()).map(Image::getId).orElse(null));
+        assertThat(newUser.getId()).isEqualTo(user.getId());
+        assertThat(newUser.getKeycloakId()).isEqualTo(user.getKeycloakId());
+        assertThat(newUser.getUsername()).isEqualTo(user.getUsername());
+        assertThat(newUser.getDisplayName()).isEqualTo(user.getDisplayName());
+        assertThat(newUser.getDescription()).isEqualTo(user.getDescription());
+        assertThat(newUser.getCreatedAt()).isEqualToIgnoringNanos(user.getCreatedAt());
+        assertThat(Optional.ofNullable(newUser.getImage()).map(Image::getId).orElse(null)).isEqualTo(Optional.ofNullable(user.getImage()).map(Image::getId).orElse(null));
     }
 
     @Test
@@ -228,13 +228,13 @@ class UserMapperTest {
         userMapper.updateEntity(newUser, updateRequest);
 
         // Assert
-        assertEquals(user.getId(), newUser.getId());
-        assertEquals(user.getKeycloakId(), newUser.getKeycloakId());
-        assertEquals(updateRequest.getUsername(), newUser.getUsername());
-        assertEquals(updateRequest.getDisplayName(), newUser.getDisplayName());
-        assertEquals(updateRequest.getDescription(), newUser.getDescription());
-        assertEquals(user.getCreatedAt(), newUser.getCreatedAt());
-        assertEquals(Optional.ofNullable(user.getImage()).map(Image::getId).orElse(null), Optional.ofNullable(newUser.getImage()).map(Image::getId).orElse(null));
+        assertThat(newUser.getId()).isEqualTo(user.getId());
+        assertThat(newUser.getKeycloakId()).isEqualTo(user.getKeycloakId());
+        assertThat(newUser.getUsername()).isEqualTo(updateRequest.getUsername());
+        assertThat(newUser.getDisplayName()).isEqualTo(updateRequest.getDisplayName());
+        assertThat(newUser.getDescription()).isEqualTo(updateRequest.getDescription());
+        assertThat(newUser.getCreatedAt()).isEqualToIgnoringNanos(user.getCreatedAt());
+        assertThat(Optional.ofNullable(newUser.getImage()).map(Image::getId).orElse(null)).isEqualTo(Optional.ofNullable(user.getImage()).map(Image::getId).orElse(null));
     }
 
 }

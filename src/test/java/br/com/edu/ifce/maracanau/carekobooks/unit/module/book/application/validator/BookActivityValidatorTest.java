@@ -8,8 +8,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.e
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @UnitTest
 class BookActivityValidatorTest {
@@ -22,12 +22,12 @@ class BookActivityValidatorTest {
     }
 
     @Test
-    void validate_withValidActivity_shouldPass() {
+    void validate_withValidActivity_shouldSucceed() {
         // Arrange
         var activity = BookActivityFactory.validActivity();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookActivityValidator.validate(activity));
+        assertThatCode(() -> bookActivityValidator.validate(activity)).doesNotThrowAnyException();
     }
 
     @Test
@@ -36,7 +36,7 @@ class BookActivityValidatorTest {
         var activity = BookActivityFactory.invalidActivityByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> bookActivityValidator.validate(activity));
+        assertThatThrownBy(() -> bookActivityValidator.validate(activity)).isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -45,7 +45,7 @@ class BookActivityValidatorTest {
         var progress = BookActivityFactory.invalidActivityByEmptyBook();
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookActivityValidator.validate(progress));
+        assertThatThrownBy(() -> bookActivityValidator.validate(progress)).isInstanceOf(BookNotFoundException.class);
     }
 
 }

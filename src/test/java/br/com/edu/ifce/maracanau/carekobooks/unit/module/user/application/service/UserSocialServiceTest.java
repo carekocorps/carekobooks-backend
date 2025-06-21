@@ -3,6 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.unit.module.user.application.servi
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserSocialService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
@@ -21,7 +22,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -50,9 +52,13 @@ class UserSocialServiceTest {
         when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any()))
                 .thenReturn(users);
 
+        when(userMapper.toSimplifiedResponse(any(User.class)))
+                .thenReturn(any(SimplifiedUserResponse.class));
+
         // Act && Assert
-        assertDoesNotThrow(() -> userSocialService.findFollowers(followedUserUsername));
+        assertThatCode(() -> userSocialService.findFollowers(followedUserUsername)).doesNotThrowAnyException();
         verify(userRepository, times(1)).findAll(ArgumentMatchers.<Specification<User>>any());
+        verify(userMapper, times(users.size())).toSimplifiedResponse(any(User.class));
     }
 
     @Test
@@ -63,7 +69,7 @@ class UserSocialServiceTest {
             var isFollowingRequest = new Random().nextBoolean();
 
             // Act && Assert
-            assertThrows(UserSelfFollowingException.class, () -> userSocialService.changeFollowing(username, username, isFollowingRequest));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(username, username, isFollowingRequest)).isInstanceOf(UserSelfFollowingException.class);
             verify(userRepository, never()).findByUsernameIn(ArgumentMatchers.any());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -83,7 +89,7 @@ class UserSocialServiceTest {
                     .thenReturn(List.of());
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -104,7 +110,7 @@ class UserSocialServiceTest {
                     .thenReturn(List.of(userFollowed));
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -125,7 +131,7 @@ class UserSocialServiceTest {
                     .thenReturn(List.of(userFollowing));
 
             // Act && Assert
-            assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -153,7 +159,7 @@ class UserSocialServiceTest {
                     .thenThrow(UserModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(UserModificationForbiddenException.class, () -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowingUsername, userFollowedUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userFollowingKeycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -181,7 +187,7 @@ class UserSocialServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertThrows(UserAlreadyFollowingException.class, () -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested)).isInstanceOf(UserAlreadyFollowingException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowingUsername, userFollowedUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userFollowingKeycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -209,7 +215,7 @@ class UserSocialServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertThrows(UserNotFollowingException.class, () -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested));
+            assertThatThrownBy(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested)).isInstanceOf(UserNotFollowingException.class);
             verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowingUsername, userFollowedUsername));
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userFollowingKeycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));
@@ -241,7 +247,7 @@ class UserSocialServiceTest {
                     .follow(userFollowing.getId(), userFollowed.getId());
 
             // Act && Assert
-            assertDoesNotThrow(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested));
+            assertThatCode(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsernameIn(ArgumentMatchers.any());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userFollowingKeycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, times(1)).follow(userFollowing.getId(), userFollowed.getId());
@@ -273,7 +279,7 @@ class UserSocialServiceTest {
                     .unfollow(userFollowing.getId(), userFollowed.getId());
 
             // Act && Assert
-            assertDoesNotThrow(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested));
+            assertThatCode(() -> userSocialService.changeFollowing(userFollowingUsername, userFollowedUsername, isFollowingRequested)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsernameIn(ArgumentMatchers.any());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(userFollowingKeycloakId, UserModificationForbiddenException.class), times(1));
             verify(userRepository, never()).follow(any(Long.class), any(Long.class));

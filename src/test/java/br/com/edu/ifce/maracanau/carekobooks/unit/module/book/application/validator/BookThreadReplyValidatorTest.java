@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @UnitTest
 @ExtendWith(MockitoExtension.class)
@@ -25,12 +25,12 @@ class BookThreadReplyValidatorTest {
     }
 
     @Test
-    void validate_withValidThread_shouldPass() {
+    void validate_withValidThread_shouldSucceed() {
         // Arrange
         var reply = BookThreadReplyFactory.validReply();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookThreadReplyValidator.validate(reply));
+        assertThatCode(() -> bookThreadReplyValidator.validate(reply)).doesNotThrowAnyException();
     }
 
     @Test
@@ -39,7 +39,7 @@ class BookThreadReplyValidatorTest {
         var reply = BookThreadReplyFactory.invalidReviewByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> bookThreadReplyValidator.validate(reply));
+        assertThatThrownBy(() -> bookThreadReplyValidator.validate(reply)).isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -48,7 +48,7 @@ class BookThreadReplyValidatorTest {
         var reply = BookThreadReplyFactory.invalidReviewByEmptyThread();
 
         // Act && Assert
-        assertThrows(BookThreadNotFoundException.class, () -> bookThreadReplyValidator.validate(reply));
+        assertThatThrownBy(() -> bookThreadReplyValidator.validate(reply)).isInstanceOf(BookThreadNotFoundException.class);
     }
 
 }

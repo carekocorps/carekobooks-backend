@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -44,12 +44,12 @@ class MinioServiceTest {
         var filename = minioService.create(file);
 
         // Assert
-        assertNotNull(filename);
+        assertThat(filename).isNotNull();
         verify(minioClient, times(1)).putObject(any(PutObjectArgs.class));
     }
 
     @Test
-    void create_withPutObjectFailing_shouldFail() throws Exception {
+    void create_withPutObjectFailing_shouldThrowImageUploadException() throws Exception {
         // Arrange
         var file = MultipartFileFactory.validFile();
 
@@ -58,17 +58,17 @@ class MinioServiceTest {
                 .putObject(any(PutObjectArgs.class));
 
         // Act & Assert
-        assertThrows(ImageUploadException.class, () -> minioService.create(file));
+        assertThatThrownBy(() -> minioService.create(file)).isInstanceOf(ImageUploadException.class);
         verify(minioClient, times(1)).putObject(any(PutObjectArgs.class));
     }
 
     @Test
-    void delete_withRemoveObjectSucceeding_shouldPass() throws Exception {
+    void delete_withRemoveObjectSucceeding_shouldSucceed() throws Exception {
         // Arrange
         var filename = ImageFactory.validImage().getName();
 
         // Act && Assert
-        assertDoesNotThrow(() -> minioService.delete(filename));
+        assertThatCode(() -> minioService.delete(filename)).doesNotThrowAnyException();
         verify(minioClient, times(1)).removeObject(any(RemoveObjectArgs.class));
     }
 
@@ -82,7 +82,7 @@ class MinioServiceTest {
                 .removeObject(any(RemoveObjectArgs.class));
 
         // Act && Assert
-        assertThrows(ImageDeletionException.class, () -> minioService.delete(filename));
+        assertThatThrownBy(() -> minioService.delete(filename)).isInstanceOf(ImageDeletionException.class);
         verify(minioClient, times(1)).removeObject(any(RemoveObjectArgs.class));
     }
 

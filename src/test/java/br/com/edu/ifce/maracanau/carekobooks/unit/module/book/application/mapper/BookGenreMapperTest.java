@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -42,7 +42,7 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toEntity(genreRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -55,9 +55,9 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toEntity(genreRequest);
 
         // Assert
-        assertEquals(genre.getName(), result.getName());
-        assertEquals(genre.getDisplayName(), result.getDisplayName());
-        assertEquals(genre.getDescription(), result.getDescription());
+        assertThat(genre.getName()).isEqualTo(result.getName());
+        assertThat(genre.getDisplayName()).isEqualTo(result.getDisplayName());
+        assertThat(genre.getDescription()).isEqualTo(result.getDescription());
     }
 
     @Test
@@ -69,7 +69,7 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toEntity(genreResponse);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -82,12 +82,12 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toEntity(genreResponse);
 
         // Assert
-        assertEquals(genre.getId(), result.getId());
-        assertEquals(genre.getName(), result.getName());
-        assertEquals(genre.getDisplayName(), result.getDisplayName());
-        assertEquals(genre.getDescription(), result.getDescription());
-        assertEquals(genre.getCreatedAt(), result.getCreatedAt());
-        assertEquals(genre.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result.getId()).isEqualTo(genre.getId());
+        assertThat(result.getName()).isEqualTo(genre.getName());
+        assertThat(result.getDisplayName()).isEqualTo(genre.getDisplayName());
+        assertThat(result.getDescription()).isEqualTo(genre.getDescription());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(genre.getUpdatedAt());
     }
 
     @Test
@@ -104,9 +104,12 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toEntity(genreNames);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(numGenres, result.size());
-        assertAll(IntStream.range(0, numGenres).mapToObj(x -> () -> assertEquals(genres.get(x).getName(), result.get(x).getName())));
+        assertThat(result)
+                .isNotNull()
+                .hasSize(numGenres)
+                .extracting(BookGenre::getName)
+                .containsExactlyElementsOf(genres.stream().map(BookGenre::getName).toList());
+
         verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
     }
 
@@ -119,7 +122,7 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toResponse(genre);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -131,12 +134,12 @@ class BookGenreMapperTest {
         var result = bookGenreMapper.toResponse(genre);
 
         // Assert
-        assertEquals(genre.getId(), result.getId());
-        assertEquals(genre.getName(), result.getName());
-        assertEquals(genre.getDisplayName(), result.getDisplayName());
-        assertEquals(genre.getDescription(), result.getDescription());
-        assertEquals(genre.getCreatedAt(), result.getCreatedAt());
-        assertEquals(genre.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result.getId()).isEqualTo(genre.getId());
+        assertThat(result.getName()).isEqualTo(genre.getName());
+        assertThat(result.getDisplayName()).isEqualTo(genre.getDisplayName());
+        assertThat(result.getDescription()).isEqualTo(genre.getDescription());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(genre.getUpdatedAt());
     }
 
     @Test
@@ -150,11 +153,11 @@ class BookGenreMapperTest {
         bookGenreMapper.updateEntity(genre, genreRequest);
 
         // Assert
-        assertEquals(genre.getId(), newGenre.getId());
-        assertEquals(genre.getName(), newGenre.getName());
-        assertEquals(genre.getDisplayName(), newGenre.getDisplayName());
-        assertEquals(genre.getDescription(), newGenre.getDescription());
-        assertEquals(genre.getCreatedAt(), newGenre.getCreatedAt());
+        assertThat(newGenre.getId()).isEqualTo(genre.getId());
+        assertThat(newGenre.getName()).isEqualTo(genre.getName());
+        assertThat(newGenre.getDisplayName()).isEqualTo(genre.getDisplayName());
+        assertThat(newGenre.getDescription()).isEqualTo(genre.getDescription());
+        assertThat(newGenre.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
     }
 
     @Test
@@ -168,11 +171,11 @@ class BookGenreMapperTest {
         bookGenreMapper.updateEntity(newGenre, genreRequest);
 
         // Assert
-        assertEquals(genre.getId(), newGenre.getId());
-        assertEquals(genreRequest.getName(), newGenre.getName());
-        assertEquals(genreRequest.getDisplayName(), newGenre.getDisplayName());
-        assertEquals(genreRequest.getDescription(), newGenre.getDescription());
-        assertEquals(genre.getCreatedAt(), newGenre.getCreatedAt());
+        assertThat(newGenre.getId()).isEqualTo(genre.getId());
+        assertThat(newGenre.getName()).isEqualTo(genreRequest.getName());
+        assertThat(newGenre.getDisplayName()).isEqualTo(genreRequest.getDisplayName());
+        assertThat(newGenre.getDescription()).isEqualTo(genreRequest.getDescription());
+        assertThat(newGenre.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
     }
 
 }

@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -59,7 +59,7 @@ class BookMapperTest {
         var result = bookMapper.toEntity(bookRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(bookGenreMapper, never()).toEntity(ArgumentMatchers.<List<String>>any());
     }
 
@@ -76,14 +76,14 @@ class BookMapperTest {
         var result = bookMapper.toEntity(bookRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(book.getTitle(), result.getTitle());
-        assertEquals(book.getSynopsis(), result.getSynopsis());
-        assertEquals(book.getAuthorName(), result.getAuthorName());
-        assertEquals(book.getPublisherName(), result.getPublisherName());
-        assertEquals(book.getPublishedAt(), result.getPublishedAt());
-        assertEquals(book.getPageCount(), result.getPageCount());
-        assertEquals(book.getGenres(), result.getGenres());
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo(book.getTitle());
+        assertThat(result.getSynopsis()).isEqualTo(book.getSynopsis());
+        assertThat(result.getAuthorName()).isEqualTo(book.getAuthorName());
+        assertThat(result.getPublisherName()).isEqualTo(book.getPublisherName());
+        assertThat(result.getPublishedAt()).isEqualTo(book.getPublishedAt());
+        assertThat(result.getPageCount()).isEqualTo(book.getPageCount());
+        assertThat(result.getGenres()).isEqualTo(book.getGenres());
         verify(bookGenreMapper, times(1)).toEntity(bookRequest.getGenres());
     }
 
@@ -99,7 +99,7 @@ class BookMapperTest {
         var result = bookMapper.toEntity(id);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(bookRepository, times(1)).findById(id);
     }
 
@@ -115,7 +115,7 @@ class BookMapperTest {
         var result = bookMapper.toEntity(book.getId());
 
         // Assert
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         verify(bookRepository, times(1)).findById(book.getId());
     }
 
@@ -128,7 +128,7 @@ class BookMapperTest {
         var result = bookMapper.toResponse(book);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(bookGenreMapper, never()).toResponse(any(BookGenre.class));
         verify(imageMapper, never()).toResponse(any(Image.class));
     }
@@ -151,17 +151,17 @@ class BookMapperTest {
         var result = bookMapper.toResponse(book);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(bookResponse.getId(), result.getId());
-        assertEquals(bookResponse.getTitle(), result.getTitle());
-        assertEquals(bookResponse.getSynopsis(), result.getSynopsis());
-        assertEquals(bookResponse.getAuthorName(), result.getAuthorName());
-        assertEquals(bookResponse.getPublisherName(), result.getPublisherName());
-        assertEquals(bookResponse.getPublishedAt(), result.getPublishedAt());
-        assertEquals(bookResponse.getPageCount(), result.getPageCount());
-        assertEquals(bookResponse.getCreatedAt(), result.getCreatedAt());
-        assertEquals(bookResponse.getUpdatedAt(), result.getUpdatedAt());
-        assertIterableEquals(bookResponse.getGenres().stream().map(BookGenreResponse::getName).toList(), result.getGenres().stream().map(BookGenreResponse::getName).toList());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(bookResponse.getId());
+        assertThat(result.getTitle()).isEqualTo(bookResponse.getTitle());
+        assertThat(result.getSynopsis()).isEqualTo(bookResponse.getSynopsis());
+        assertThat(result.getAuthorName()).isEqualTo(bookResponse.getAuthorName());
+        assertThat(result.getPublisherName()).isEqualTo(bookResponse.getPublisherName());
+        assertThat(result.getPublishedAt()).isEqualTo(bookResponse.getPublishedAt());
+        assertThat(result.getPageCount()).isEqualTo(bookResponse.getPageCount());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(bookResponse.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(bookResponse.getUpdatedAt());
+        assertThat(result.getGenres()).extracting(BookGenreResponse::getName).containsExactlyElementsOf(bookResponse.getGenres().stream().map(BookGenreResponse::getName).toList());
         verify(bookGenreMapper, times(book.getGenres().size())).toResponse(any(BookGenre.class));
         verify(imageMapper, times(1)).toResponse(book.getImage());
     }
@@ -175,7 +175,7 @@ class BookMapperTest {
         var result = bookMapper.toSimplifiedResponse(book);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(bookGenreMapper, never()).toResponse(any(BookGenre.class));
         verify(imageMapper, never()).toResponse(any(Image.class));
     }
@@ -198,16 +198,16 @@ class BookMapperTest {
         var result = bookMapper.toResponse(book);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(bookResponse.getId(), result.getId());
-        assertEquals(bookResponse.getTitle(), result.getTitle());
-        assertEquals(bookResponse.getAuthorName(), result.getAuthorName());
-        assertEquals(bookResponse.getPublisherName(), result.getPublisherName());
-        assertEquals(bookResponse.getPublishedAt(), result.getPublishedAt());
-        assertEquals(bookResponse.getPageCount(), result.getPageCount());
-        assertEquals(bookResponse.getCreatedAt(), result.getCreatedAt());
-        assertEquals(bookResponse.getUpdatedAt(), result.getUpdatedAt());
-        assertIterableEquals(bookResponse.getGenres().stream().map(BookGenreResponse::getName).toList(), result.getGenres().stream().map(BookGenreResponse::getName).toList());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(bookResponse.getId());
+        assertThat(result.getTitle()).isEqualTo(bookResponse.getTitle());
+        assertThat(result.getAuthorName()).isEqualTo(bookResponse.getAuthorName());
+        assertThat(result.getPublisherName()).isEqualTo(bookResponse.getPublisherName());
+        assertThat(result.getPublishedAt()).isEqualTo(bookResponse.getPublishedAt());
+        assertThat(result.getPageCount()).isEqualTo(bookResponse.getPageCount());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(bookResponse.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(bookResponse.getUpdatedAt());
+        assertThat(result.getGenres()).extracting(BookGenreResponse::getName).containsExactlyElementsOf(bookResponse.getGenres().stream().map(BookGenreResponse::getName).toList());
         verify(bookGenreMapper, times(book.getGenres().size())).toResponse(any(BookGenre.class));
         verify(imageMapper, times(1)).toResponse(book.getImage());
     }
@@ -223,15 +223,15 @@ class BookMapperTest {
         bookMapper.updateEntity(newBook, bookRequest);
 
         // Assert
-        assertEquals(book.getId(), newBook.getId());
-        assertEquals(book.getTitle(), newBook.getTitle());
-        assertEquals(book.getSynopsis(), newBook.getSynopsis());
-        assertEquals(book.getAuthorName(), newBook.getAuthorName());
-        assertEquals(book.getPublisherName(), newBook.getPublisherName());
-        assertEquals(book.getPublishedAt(), newBook.getPublishedAt());
-        assertEquals(book.getPageCount(), newBook.getPageCount());
-        assertEquals(book.getCreatedAt(), newBook.getCreatedAt());
-        assertIterableEquals(book.getGenres().stream().map(BookGenre::getName).toList(), newBook.getGenres().stream().map(BookGenre::getName).toList());
+        assertThat(newBook.getId()).isEqualTo(book.getId());
+        assertThat(newBook.getTitle()).isEqualTo(book.getTitle());
+        assertThat(newBook.getSynopsis()).isEqualTo(book.getSynopsis());
+        assertThat(newBook.getAuthorName()).isEqualTo(book.getAuthorName());
+        assertThat(newBook.getPublisherName()).isEqualTo(book.getPublisherName());
+        assertThat(newBook.getPublishedAt()).isEqualTo(book.getPublishedAt());
+        assertThat(newBook.getPageCount()).isEqualTo(book.getPageCount());
+        assertThat(newBook.getCreatedAt()).isEqualToIgnoringNanos(book.getCreatedAt());
+        assertThat(newBook.getGenres()).extracting(BookGenre::getName).containsExactlyElementsOf(book.getGenres().stream().map(BookGenre::getName).toList());
         verify(bookGenreMapper, never()).toEntity(ArgumentMatchers.<List<String>>any());
     }
 
@@ -250,15 +250,15 @@ class BookMapperTest {
         bookMapper.updateEntity(newBook, bookRequest);
 
         // Assert
-        assertEquals(book.getId(), newBook.getId());
-        assertEquals(bookRequest.getTitle(), newBook.getTitle());
-        assertEquals(bookRequest.getSynopsis(), newBook.getSynopsis());
-        assertEquals(bookRequest.getAuthorName(), newBook.getAuthorName());
-        assertEquals(bookRequest.getPublisherName(), newBook.getPublisherName());
-        assertEquals(bookRequest.getPublishedAt(), newBook.getPublishedAt());
-        assertEquals(bookRequest.getPageCount(), newBook.getPageCount());
-        assertEquals(book.getCreatedAt(), newBook.getCreatedAt());
-        assertIterableEquals(bookRequest.getGenres(), newBook.getGenres().stream().map(BookGenre::getName).toList());
+        assertThat(newBook.getId()).isEqualTo(book.getId());
+        assertThat(newBook.getTitle()).isEqualTo(bookRequest.getTitle());
+        assertThat(newBook.getSynopsis()).isEqualTo(bookRequest.getSynopsis());
+        assertThat(newBook.getAuthorName()).isEqualTo(bookRequest.getAuthorName());
+        assertThat(newBook.getPublisherName()).isEqualTo(bookRequest.getPublisherName());
+        assertThat(newBook.getPublishedAt()).isEqualTo(bookRequest.getPublishedAt());
+        assertThat(newBook.getPageCount()).isEqualTo(bookRequest.getPageCount());
+        assertThat(newBook.getCreatedAt()).isEqualToIgnoringNanos(book.getCreatedAt());
+        assertThat(newBook.getGenres()).extracting(BookGenre::getName).containsExactlyElementsOf(bookRequest.getGenres());
         verify(bookGenreMapper, times(1)).toEntity(bookRequest.getGenres());
     }
 

@@ -7,7 +7,8 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @UnitTest
 class ImageValidatorTest {
@@ -25,18 +26,18 @@ class ImageValidatorTest {
         var invalidImage = ImageFactory.invalidImageByContentType();
 
         // Act & Assert
-        assertThrows(ImageContentTypeException.class, () -> imageValidator.validate(invalidImage));
+        assertThatThrownBy(() -> imageValidator.validate(invalidImage)).isInstanceOf(ImageContentTypeException.class);
     }
 
     @Test
-    void validate_withValidContentType_shouldPass() {
+    void validate_withValidContentType_shouldSucceed() {
         // Arrange
         var jpegImage = ImageFactory.validJpegImage();
         var pngImage = ImageFactory.validPngImage();
 
         // Act & Assert
-        assertDoesNotThrow(() -> imageValidator.validate(jpegImage));
-        assertDoesNotThrow(() -> imageValidator.validate(pngImage));
+        assertThatCode(() -> imageValidator.validate(jpegImage)).doesNotThrowAnyException();
+        assertThatCode(() -> imageValidator.validate(pngImage)).doesNotThrowAnyException();
     }
 
 }

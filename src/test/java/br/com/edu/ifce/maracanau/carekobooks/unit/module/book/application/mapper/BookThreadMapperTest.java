@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -54,7 +54,7 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toEntity(threadRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -75,11 +75,11 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toEntity(threadRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(thread.getTitle(), result.getTitle());
-        assertEquals(thread.getDescription(), result.getDescription());
-        assertEquals(thread.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(thread.getBook().getId(), result.getBook().getId());
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo(thread.getTitle());
+        assertThat(result.getDescription()).isEqualTo(thread.getDescription());
+        assertThat(result.getUser().getUsername()).isEqualTo(thread.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(thread.getBook().getId());
         verify(userMapper, times(1)).toEntity(threadRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(thread.getBook().getId());
     }
@@ -93,7 +93,7 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toResponse(thread);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toSimplifiedResponse(any(User.class));
         verify(bookMapper, never()).toSimplifiedResponse(any(Book.class));
     }
@@ -113,13 +113,13 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toResponse(thread);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(thread.getTitle(), result.getTitle());
-        assertEquals(thread.getDescription(), result.getDescription());
-        assertEquals(thread.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(thread.getBook().getId(), result.getBook().getId());
-        assertEquals(thread.getCreatedAt(), result.getCreatedAt());
-        assertEquals(thread.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo(thread.getTitle());
+        assertThat(result.getDescription()).isEqualTo(thread.getDescription());
+        assertThat(result.getUser().getUsername()).isEqualTo(thread.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(thread.getBook().getId());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(thread.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(thread.getUpdatedAt());
         verify(userMapper, times(1)).toSimplifiedResponse(thread.getUser());
         verify(bookMapper, times(1)).toSimplifiedResponse(thread.getBook());
     }
@@ -135,12 +135,12 @@ class BookThreadMapperTest {
         bookThreadMapper.updateEntity(newThread, threadRequest);
 
         // Assert
-        assertEquals(thread.getId(), newThread.getId());
-        assertEquals(thread.getTitle(), newThread.getTitle());
-        assertEquals(thread.getDescription(), newThread.getDescription());
-        assertEquals(thread.getUser().getUsername(), newThread.getUser().getUsername());
-        assertEquals(thread.getBook().getId(), newThread.getBook().getId());
-        assertEquals(thread.getCreatedAt(), newThread.getCreatedAt());
+        assertThat(newThread.getId()).isEqualTo(thread.getId());
+        assertThat(newThread.getTitle()).isEqualTo(thread.getTitle());
+        assertThat(newThread.getDescription()).isEqualTo(thread.getDescription());
+        assertThat(newThread.getUser().getUsername()).isEqualTo(thread.getUser().getUsername());
+        assertThat(newThread.getBook().getId()).isEqualTo(thread.getBook().getId());
+        assertThat(newThread.getCreatedAt()).isEqualToIgnoringNanos(thread.getCreatedAt());
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -162,12 +162,12 @@ class BookThreadMapperTest {
         bookThreadMapper.updateEntity(newThread, threadRequest);
 
         // Assert
-        assertEquals(thread.getId(), newThread.getId());
-        assertEquals(threadRequest.getTitle(), newThread.getTitle());
-        assertEquals(threadRequest.getDescription(), newThread.getDescription());
-        assertEquals(threadRequest.getUsername(), newThread.getUser().getUsername());
-        assertEquals(threadRequest.getBookId(), newThread.getBook().getId());
-        assertEquals(thread.getCreatedAt(), newThread.getCreatedAt());
+        assertThat(newThread.getId()).isEqualTo(thread.getId());
+        assertThat(newThread.getTitle()).isEqualTo(threadRequest.getTitle());
+        assertThat(newThread.getDescription()).isEqualTo(threadRequest.getDescription());
+        assertThat(newThread.getUser().getUsername()).isEqualTo(threadRequest.getUsername());
+        assertThat(newThread.getBook().getId()).isEqualTo(threadRequest.getBookId());
+        assertThat(newThread.getCreatedAt()).isEqualToIgnoringNanos(thread.getCreatedAt());
         verify(userMapper, times(1)).toEntity(threadRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(threadRequest.getBookId());
     }
@@ -184,7 +184,7 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toEntity(threadId);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(bookThreadRepository, times(1)).findById(threadId);
     }
 
@@ -200,14 +200,14 @@ class BookThreadMapperTest {
         var result = bookThreadMapper.toEntity(thread.getId());
 
         // Assert
-        assertNotNull(result);
-        assertEquals(thread.getId(), result.getId());
-        assertEquals(thread.getTitle(), result.getTitle());
-        assertEquals(thread.getDescription(), result.getDescription());
-        assertEquals(thread.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(thread.getBook().getId(), result.getBook().getId());
-        assertEquals(thread.getCreatedAt(), result.getCreatedAt());
-        assertEquals(thread.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(thread.getId());
+        assertThat(result.getTitle()).isEqualTo(thread.getTitle());
+        assertThat(result.getDescription()).isEqualTo(thread.getDescription());
+        assertThat(result.getUser().getUsername()).isEqualTo(thread.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(thread.getBook().getId());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(thread.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(thread.getUpdatedAt());
         verify(bookThreadRepository, times(1)).findById(thread.getId());
     }
 

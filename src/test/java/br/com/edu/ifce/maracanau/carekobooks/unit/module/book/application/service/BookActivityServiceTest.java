@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -56,7 +56,7 @@ class BookActivityServiceTest {
         var result = bookActivityService.find(activityId);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookActivityRepository, times(1)).findById(activityId);
         verify(bookActivityMapper, never()).toResponse(any(BookActivity.class));
     }
@@ -77,8 +77,10 @@ class BookActivityServiceTest {
         var result = bookActivityService.find(activity.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(response, result.get());
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookActivityRepository, times(1)).findById(activity.getId());
         verify(bookActivityMapper, times(1)).toResponse(activity);
     }
@@ -105,7 +107,7 @@ class BookActivityServiceTest {
                     .thenThrow(BookActivityModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookActivityModificationForbiddenException.class, () -> bookActivityService.create(request));
+            assertThatThrownBy(() -> bookActivityService.create(request)).isInstanceOf(BookActivityModificationForbiddenException.class);
             verify(bookActivityMapper, times(1)).toEntity(request);
             verify(bookActivityValidator, times(1)).validate(activity);
             verify(bookActivityRepository, times(1)).save(activity);
@@ -148,7 +150,7 @@ class BookActivityServiceTest {
             var result = bookActivityService.create(request);
 
             // Assert
-            assertEquals(response, result);
+            assertThat(result).isEqualTo(response);
             verify(bookActivityMapper, times(1)).toEntity(request);
             verify(bookActivityValidator, times(1)).validate(activity);
             verify(bookActivityRepository, times(1)).save(activity);
@@ -173,7 +175,7 @@ class BookActivityServiceTest {
                     .thenThrow(BookActivityModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookActivityModificationForbiddenException.class, () -> bookActivityService.delete(activityId));
+            assertThatThrownBy(() -> bookActivityService.delete(activityId)).isInstanceOf(BookActivityModificationForbiddenException.class);
             verify(bookActivityRepository, times(1)).findById(activityId);
         }
     }
@@ -193,7 +195,7 @@ class BookActivityServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertDoesNotThrow(() -> bookActivityService.delete(activityId));
+            assertThatCode(() -> bookActivityService.delete(activityId)).doesNotThrowAnyException();
             verify(bookActivityRepository, times(1)).findById(activityId);
         }
     }

@@ -18,8 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -42,7 +43,7 @@ class ImageServiceTest {
     private ImageService imageService;
 
     @Test
-    void find_withExistingImage_shouldReturnValidResponse() {
+    void find_withExistingImage_shouldReturnImageResponse() {
         // Arrange
         var image = ImageFactory.validImage();
         var response = ImageResponseFactory.validResponse(image);
@@ -57,8 +58,10 @@ class ImageServiceTest {
         var result = imageService.find(image.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(result.get(), response);
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(imageRepository, times(1)).findById(image.getId());
         verify(imageMapper, times(1)).toResponse(image);
     }
@@ -66,7 +69,7 @@ class ImageServiceTest {
     @Test
     void find_withNonExistingImage_shouldReturnEmpty() {
         // Arrange
-        var id = 1L;
+        var id = Math.abs(new Random().nextLong()) + 1;
 
         when(imageRepository.findById(id))
                 .thenReturn(Optional.empty());
@@ -75,21 +78,20 @@ class ImageServiceTest {
         var result = imageService.find(id);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(imageRepository, times(1)).findById(id);
         verify(imageMapper, never()).toResponse(any(Image.class));
     }
 
     @Test
-    void create_withValidFile_shouldReturnValidResponse() {
+    void create_withValidFile_shouldReturnImageResponse() {
         // Arrange
-        var filename = "filename.png";
-        var file = MultipartFileFactory.validFile(filename);
+        var file = MultipartFileFactory.validFile();
         var image = ImageFactory.validImage(file);
         var response = ImageResponseFactory.validResponse(image);
 
         when(minioService.create(file))
-                .thenReturn(filename);
+                .thenReturn(file.getName());
 
         doNothing()
                 .when(imageValidator)
@@ -105,8 +107,8 @@ class ImageServiceTest {
         var result = imageService.create(file);
 
         // Assert
-        assertEquals(response, result);
-        assertEquals(filename, image.getName());
+        assertThat(result).isEqualTo(response);
+        assertThat(image.getName()).isEqualTo(file.getName());
         verify(minioService, times(1)).create(file);
         verify(imageValidator, times(1)).validate(any(Image.class));
         verify(imageRepository, times(1)).save(any(Image.class));
@@ -114,7 +116,7 @@ class ImageServiceTest {
     }
 
     @Test
-    void delete_withExistingImage_shouldPass() {
+    void delete_withExistingImage_shouldSucceed() {
         // Arrange
         var image = ImageFactory.validImage();
 
@@ -130,22 +132,22 @@ class ImageServiceTest {
                 .delete(image);
 
         // Act && Assert
-        assertDoesNotThrow(() -> imageService.delete(image.getId()));
+        assertThatCode(() -> imageService.delete(image.getId())).doesNotThrowAnyException();
         verify(imageRepository, times(1)).findById(image.getId());
         verify(minioService, times(1)).delete(image.getName());
         verify(imageRepository, times(1)).delete(image);
     }
 
     @Test
-    void delete_withNonExistingImage_shouldFail() {
+    void delete_withNonExistingImage_shouldThrowNotFoundException() {
         // Arrange
-        var id = 1L;
+        var id = Math.abs(new Random().nextLong()) + 1;
 
         when(imageRepository.findById(id))
                 .thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(ImageNotFoundException.class, () -> imageService.delete(id));
+        assertThatThrownBy(() -> imageService.delete(id)).isInstanceOf(ImageNotFoundException.class);
         verify(imageRepository, times(1)).findById(id);
         verify(minioService, never()).delete(any(String.class));
         verify(imageRepository, never()).deleteById(any(Long.class));

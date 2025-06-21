@@ -18,8 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @UnitTest
@@ -33,21 +33,21 @@ class BookProgressValidatorTest {
     private BookProgressValidator bookProgressValidator;
 
     @Test
-    void validate_withValidProgress_shouldPass() {
+    void validate_withValidProgress_shouldSucceed() {
         // Arrange
         var progress = BookProgressFactory.validProgress();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookProgressValidator.validate(progress));
+        assertThatCode(() -> bookProgressValidator.validate(progress)).doesNotThrowAnyException();
     }
 
     @Test
-    void validate_withValidProgressWithNullPageCount_shouldPass() {
+    void validate_withValidProgressWithNullPageCount_shouldSucceed() {
         // Arrange
         var progress = BookProgressFactory.validProgressWithNullPageCount();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookProgressValidator.validate(progress));
+        assertThatCode(() -> bookProgressValidator.validate(progress)).doesNotThrowAnyException();
     }
 
     @Test
@@ -56,7 +56,7 @@ class BookProgressValidatorTest {
         var progress = BookProgressFactory.invalidProgressByEmptyUser();
 
         // Act && Assert
-        assertThrows(UserNotFoundException.class, () -> bookProgressValidator.validate(progress));
+        assertThatThrownBy(() -> bookProgressValidator.validate(progress)).isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -65,7 +65,7 @@ class BookProgressValidatorTest {
         var progress = BookProgressFactory.invalidProgressByEmptyBook();
 
         // Act && Assert
-        assertThrows(BookNotFoundException.class, () -> bookProgressValidator.validate(progress));
+        assertThatThrownBy(() -> bookProgressValidator.validate(progress)).isInstanceOf(BookNotFoundException.class);
     }
 
     @Test
@@ -74,7 +74,7 @@ class BookProgressValidatorTest {
         var progress = BookProgressFactory.invalidProgressByExceedingPageCount();
 
         // Act && Assert
-        assertThrows(BookProgressExceedingPageCountLimitException.class, () -> bookProgressValidator.validate(progress));
+        assertThatThrownBy(() -> bookProgressValidator.validate(progress)).isInstanceOf(BookProgressExceedingPageCountLimitException.class);
     }
 
     @Test
@@ -90,7 +90,7 @@ class BookProgressValidatorTest {
                 .thenReturn(List.of(existingProgress));
 
         // Act && Assert
-        assertThrows(BookProgressUserConflictException.class, () -> bookProgressValidator.validate(progress));
+        assertThatThrownBy(() -> bookProgressValidator.validate(progress)).isInstanceOf(BookProgressUserConflictException.class);
     }
 
 }

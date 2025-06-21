@@ -11,14 +11,11 @@ public class MultipartFileFactory {
     private MultipartFileFactory() {
     }
 
-    public static MultipartFile validFile(String name) {
+    public static MultipartFile validFile() {
         var contentType = "image/png";
         var content = faker.lorem().paragraph().getBytes();
+        var name = faker.file().fileName(null, null, "png", null);
         return new MockMultipartFile(name, name, contentType, content);
-    }
-
-    public static MultipartFile validFile() {
-        return validFile("test.png");
     }
 
 }

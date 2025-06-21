@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -48,7 +48,7 @@ class BookThreadServiceTest {
     private BookThreadService bookThreadService;
 
     @Test
-    void find_withNonExistingThread_shouldReturnEmpty() {
+    void find_withNonExistingThread_shouldReturnEmptyThreadResponse() {
         // Arrange
         var id = 1L;
 
@@ -59,13 +59,13 @@ class BookThreadServiceTest {
         var result = bookThreadService.find(id);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
         verify(bookThreadRepository, times(1)).findById(id);
         verify(bookThreadMapper, never()).toResponse(any(BookThread.class));
     }
 
     @Test
-    void find_withExistingThread_shouldReturnValidResponse() {
+    void find_withExistingThread_shouldReturnThreadResponse() {
         // Arrange
         var thread = BookThreadFactory.validThread();
         var response = BookThreadResponseFactory.validResponse(thread);
@@ -80,14 +80,16 @@ class BookThreadServiceTest {
         var result = bookThreadService.find(thread.getId());
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(response, result.get());
+        assertThat(result)
+                .isPresent()
+                .contains(response);
+
         verify(bookThreadRepository, times(1)).findById(thread.getId());
         verify(bookThreadMapper, times(1)).toResponse(thread);
     }
 
     @Test
-    void create_withValidThreadAndUserIsUnauthorized_shouldFail() {
+    void create_withValidThreadAndUnauthorizedUser_shouldThrowModificationForbiddenException() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var request = BookThreadRequestFactory.validRequest();
@@ -108,7 +110,7 @@ class BookThreadServiceTest {
                     .thenThrow(BookThreadModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadModificationForbiddenException.class, () -> bookThreadService.create(request));
+            assertThatThrownBy(() -> bookThreadService.create(request)).isInstanceOf(BookThreadModificationForbiddenException.class);
             verify(bookThreadMapper, times(1)).toEntity(request);
             verify(bookThreadValidator, times(1)).validate(thread);
             verify(bookThreadRepository, times(1)).save(thread);
@@ -119,7 +121,7 @@ class BookThreadServiceTest {
     }
 
     @Test
-    void create_withValidThreadAndUserIsAuthorized_shouldReturnValidResponse() {
+    void create_withValidThreadRequestAndAuthorizedUser_shouldReturnThreadResponse() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var request = BookThreadRequestFactory.validRequest();
@@ -151,7 +153,7 @@ class BookThreadServiceTest {
             var result = bookThreadService.create(request);
 
             // Assert
-            assertEquals(response, result);
+            assertThat(result).isEqualTo(response);
             verify(bookThreadMapper, times(1)).toEntity(request);
             verify(bookThreadValidator, times(1)).validate(thread);
             verify(bookThreadRepository, times(1)).save(thread);
@@ -162,14 +164,14 @@ class BookThreadServiceTest {
     }
 
     @Test
-    void update_withNonExistingThread_shouldFail() {
+    void update_withNonExistingThread_shouldThrowNotFoundException() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var id = 1L;
             var request = BookThreadRequestFactory.validRequest();
 
             // Act && Assert
-            assertThrows(BookThreadNotFoundException.class, () -> bookThreadService.update(id, request));
+            assertThatThrownBy(() -> bookThreadService.update(id, request)).isInstanceOf(BookThreadNotFoundException.class);
             verify(bookThreadRepository, times(1)).findById(id);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
             verify(bookThreadMapper, never()).updateEntity(any(BookThread.class), any(BookThreadRequest.class));
@@ -180,7 +182,7 @@ class BookThreadServiceTest {
     }
 
     @Test
-    void update_withExistingThreadAndUserIsUnauthorized_shouldFail() {
+    void update_withExistingThreadAndUnauthorizedUser_shouldThrowModificationForbiddenException() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var request = BookThreadRequestFactory.validRequest();
@@ -195,7 +197,7 @@ class BookThreadServiceTest {
                     .thenThrow(BookThreadModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadModificationForbiddenException.class, () -> bookThreadService.update(threadId, request));
+            assertThatThrownBy(() -> bookThreadService.update(threadId, request)).isInstanceOf(BookThreadModificationForbiddenException.class);
             verify(bookThreadRepository, times(1)).findById(threadId);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(thread.getUser().getKeycloakId(), BookThreadModificationForbiddenException.class), times(1));
             verify(bookThreadMapper, never()).updateEntity(any(BookThread.class), any(BookThreadRequest.class));
@@ -206,7 +208,7 @@ class BookThreadServiceTest {
     }
 
     @Test
-    void update_withExistingThreadAndUserIsAuthorized_shouldPass() {
+    void update_withExistingThreadAndAuthorizedUser_shouldSucceed() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var request = BookThreadRequestFactory.validRequest();
@@ -239,7 +241,7 @@ class BookThreadServiceTest {
             var result = bookThreadService.update(thread.getId(), request);
 
             // Assert
-            assertEquals(updatedThreadResponse, result);
+            assertThat(result).isEqualTo(updatedThreadResponse);
             verify(bookThreadRepository, times(1)).findById(thread.getId());
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(thread.getUser().getKeycloakId(), BookThreadModificationForbiddenException.class), times(1));
             verify(bookThreadMapper, times(1)).updateEntity(thread, request);
@@ -250,7 +252,7 @@ class BookThreadServiceTest {
     }
 
     @Test
-    void delete_withExistingThreadAndUserIsUnauthorized_shouldFail() {
+    void delete_withExistingThreadAndUnauthorizedUser_shouldModificationForbiddenException() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var thread = BookThreadFactory.validThread();
@@ -264,13 +266,13 @@ class BookThreadServiceTest {
                     .thenThrow(BookThreadModificationForbiddenException.class);
 
             // Act && Assert
-            assertThrows(BookThreadModificationForbiddenException.class, () -> bookThreadService.delete(threadId));
+            assertThatThrownBy(() -> bookThreadService.delete(threadId)).isInstanceOf(BookThreadModificationForbiddenException.class);
             verify(bookThreadRepository, times(1)).findById(threadId);
         }
     }
 
     @Test
-    void delete_withExistingThreadAndUserIsAuthorized_shouldPass() {
+    void delete_withExistingThreadAndAuthorizedUser_shouldSucceed() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
             var thread = BookThreadFactory.validThread();
@@ -284,7 +286,7 @@ class BookThreadServiceTest {
                     .thenAnswer(invocation -> null);
 
             // Act && Assert
-            assertDoesNotThrow(() -> bookThreadService.delete(threadId));
+            assertThatCode(() -> bookThreadService.delete(threadId)).doesNotThrowAnyException();
             verify(bookThreadRepository, times(1)).findById(threadId);
         }
     }

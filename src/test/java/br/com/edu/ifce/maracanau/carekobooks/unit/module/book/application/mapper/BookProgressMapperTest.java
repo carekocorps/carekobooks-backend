@@ -22,7 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -47,7 +47,7 @@ class BookProgressMapperTest {
         var result = bookProgressMapper.toEntity(progressRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -68,13 +68,13 @@ class BookProgressMapperTest {
         var result = bookProgressMapper.toEntity(progressRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(progress.getStatus(), result.getStatus());
-        assertEquals(progress.getIsFavorite(), result.getIsFavorite());
-        assertEquals(progress.getScore(), result.getScore());
-        assertEquals(progress.getPageCount(), result.getPageCount());
-        assertEquals(progress.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(progress.getBook().getId(), result.getBook().getId());
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(progress.getStatus());
+        assertThat(result.getIsFavorite()).isEqualTo(progress.getIsFavorite());
+        assertThat(result.getScore()).isEqualTo(progress.getScore());
+        assertThat(result.getPageCount()).isEqualTo(progress.getPageCount());
+        assertThat(result.getUser().getUsername()).isEqualTo(progress.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(progress.getBook().getId());
         verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }
@@ -88,7 +88,7 @@ class BookProgressMapperTest {
         var result = bookProgressMapper.toResponse(progress);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
         verify(userMapper, never()).toSimplifiedResponse(any(User.class));
         verify(bookMapper, never()).toSimplifiedResponse(any(Book.class));
     }
@@ -108,16 +108,16 @@ class BookProgressMapperTest {
         var result = bookProgressMapper.toResponse(progress);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(progress.getId(), result.getId());
-        assertEquals(progress.getStatus(), result.getStatus());
-        assertEquals(progress.getIsFavorite(), result.getIsFavorite());
-        assertEquals(progress.getScore(), result.getScore());
-        assertEquals(progress.getPageCount(), result.getPageCount());
-        assertEquals(progress.getUser().getUsername(), result.getUser().getUsername());
-        assertEquals(progress.getBook().getId(), result.getBook().getId());
-        assertEquals(progress.getCreatedAt(), result.getCreatedAt());
-        assertEquals(progress.getUpdatedAt(), result.getUpdatedAt());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(progress.getId());
+        assertThat(result.getStatus()).isEqualTo(progress.getStatus());
+        assertThat(result.getIsFavorite()).isEqualTo(progress.getIsFavorite());
+        assertThat(result.getScore()).isEqualTo(progress.getScore());
+        assertThat(result.getPageCount()).isEqualTo(progress.getPageCount());
+        assertThat(result.getUser().getUsername()).isEqualTo(progress.getUser().getUsername());
+        assertThat(result.getBook().getId()).isEqualTo(progress.getBook().getId());
+        assertThat(result.getCreatedAt()).isEqualToIgnoringNanos(progress.getCreatedAt());
+        assertThat(result.getUpdatedAt()).isEqualToIgnoringNanos(progress.getUpdatedAt());
         verify(userMapper, times(1)).toSimplifiedResponse(progress.getUser());
         verify(bookMapper, times(1)).toSimplifiedResponse(progress.getBook());
     }
@@ -133,14 +133,14 @@ class BookProgressMapperTest {
         bookProgressMapper.updateEntity(newProgress, progressRequest);
 
         // Assert
-        assertEquals(progress.getId(), newProgress.getId());
-        assertEquals(progress.getStatus(), newProgress.getStatus());
-        assertEquals(progress.getIsFavorite(), newProgress.getIsFavorite());
-        assertEquals(progress.getScore(), newProgress.getScore());
-        assertEquals(progress.getPageCount(), newProgress.getPageCount());
-        assertEquals(progress.getUser().getUsername(), newProgress.getUser().getUsername());
-        assertEquals(progress.getBook().getId(), newProgress.getBook().getId());
-        assertEquals(progress.getCreatedAt(), newProgress.getCreatedAt());
+        assertThat(newProgress.getId()).isEqualTo(progress.getId());
+        assertThat(newProgress.getStatus()).isEqualTo(progress.getStatus());
+        assertThat(newProgress.getIsFavorite()).isEqualTo(progress.getIsFavorite());
+        assertThat(newProgress.getScore()).isEqualTo(progress.getScore());
+        assertThat(newProgress.getPageCount()).isEqualTo(progress.getPageCount());
+        assertThat(newProgress.getUser().getUsername()).isEqualTo(progress.getUser().getUsername());
+        assertThat(newProgress.getBook().getId()).isEqualTo(progress.getBook().getId());
+        assertThat(newProgress.getCreatedAt()).isEqualToIgnoringNanos(progress.getCreatedAt());
         verify(userMapper, never()).toEntity(any(String.class));
         verify(bookMapper, never()).toEntity(any(Long.class));
     }
@@ -162,14 +162,14 @@ class BookProgressMapperTest {
         bookProgressMapper.updateEntity(newProgress, progressRequest);
 
         // Assert
-        assertEquals(progress.getId(), newProgress.getId());
-        assertEquals(progressRequest.getStatus(), newProgress.getStatus());
-        assertEquals(progressRequest.getIsFavorite(), newProgress.getIsFavorite());
-        assertEquals(progressRequest.getScore(), newProgress.getScore());
-        assertEquals(progressRequest.getPageCount(), newProgress.getPageCount());
-        assertEquals(progressRequest.getUsername(), newProgress.getUser().getUsername());
-        assertEquals(progressRequest.getBookId(), newProgress.getBook().getId());
-        assertEquals(progress.getCreatedAt(), newProgress.getCreatedAt());
+        assertThat(newProgress.getId()).isEqualTo(progress.getId());
+        assertThat(newProgress.getStatus()).isEqualTo(progressRequest.getStatus());
+        assertThat(newProgress.getIsFavorite()).isEqualTo(progressRequest.getIsFavorite());
+        assertThat(newProgress.getScore()).isEqualTo(progressRequest.getScore());
+        assertThat(newProgress.getPageCount()).isEqualTo(progressRequest.getPageCount());
+        assertThat(newProgress.getUser().getUsername()).isEqualTo(progressRequest.getUsername());
+        assertThat(newProgress.getBook().getId()).isEqualTo(progressRequest.getBookId());
+        assertThat(newProgress.getCreatedAt()).isEqualToIgnoringNanos(progress.getCreatedAt());
         verify(userMapper, times(1)).toEntity(progressRequest.getUsername());
         verify(bookMapper, times(1)).toEntity(progressRequest.getBookId());
     }

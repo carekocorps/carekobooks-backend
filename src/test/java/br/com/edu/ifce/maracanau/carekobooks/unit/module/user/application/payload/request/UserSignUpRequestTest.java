@@ -7,7 +7,7 @@ import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @UnitTest
 class UserSignUpRequestTest {
@@ -29,7 +29,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -41,7 +41,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("username"));
     }
 
     @Test
@@ -53,7 +53,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("username"));
     }
 
     @Test
@@ -65,7 +65,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("username"));
     }
 
     @Test
@@ -77,7 +77,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("username")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("username"));
     }
 
     @Test
@@ -89,7 +89,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("displayName")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("displayName"));
     }
 
     @Test
@@ -101,7 +101,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("email")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("email"));
     }
 
     @Test
@@ -113,7 +113,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("email")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("email"));
     }
 
     @Test
@@ -125,7 +125,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("email")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("email"));
     }
 
     @Test
@@ -137,7 +137,7 @@ class UserSignUpRequestTest {
         var result = validator.validate(request);
 
         // Assert
-        assertTrue(result.stream().anyMatch(x -> x.getPropertyPath().toString().equals("description")));
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("description"));
     }
 
 }

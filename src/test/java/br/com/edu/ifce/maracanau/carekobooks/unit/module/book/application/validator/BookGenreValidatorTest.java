@@ -13,7 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @UnitTest
@@ -27,16 +28,16 @@ class BookGenreValidatorTest {
     private BookGenreValidator bookGenreValidator;
 
     @Test
-    void validate_withNewAndUniqueGenre_shouldPass() {
+    void validate_withNewAndUniqueGenre_shouldSucceed() {
         // Arrange
         var genre = BookGenreFactory.validGenre();
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookGenreValidator.validate(genre));
+        assertThatCode(() -> bookGenreValidator.validate(genre)).doesNotThrowAnyException();
     }
 
     @Test
-    void validate_withExistingGenreBeingModified_shouldPass() {
+    void validate_withExistingGenreBeingModified_shouldSucceed() {
         // Arrange
         var existingGenre = BookGenreFactory.validGenre();
         var existingGenreModified = BookGenreFactory.validGenre(existingGenre.getId(), existingGenre.getName());
@@ -45,7 +46,7 @@ class BookGenreValidatorTest {
                 .thenReturn(Optional.of(existingGenre));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookGenreValidator.validate(existingGenreModified));
+        assertThatCode(() -> bookGenreValidator.validate(existingGenreModified)).doesNotThrowAnyException();
     }
 
     @Test
@@ -58,7 +59,7 @@ class BookGenreValidatorTest {
                 .thenReturn(Optional.of(existingGenre));
 
         // Act && Assert
-        assertThrows(BookGenreNameConflictException.class, () -> bookGenreValidator.validate(newGenre));
+        assertThatThrownBy(() -> bookGenreValidator.validate(newGenre)).isInstanceOf(BookGenreNameConflictException.class);
     }
 
 }

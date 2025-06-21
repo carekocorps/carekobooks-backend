@@ -19,7 +19,7 @@ import org.testcontainers.shaded.org.apache.commons.lang3.SerializationUtils;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @UnitTest
@@ -41,7 +41,7 @@ class BookValidatorTest {
                 .thenReturn(List.of(book));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookValidator.validate(book));
+        assertThatCode(() -> bookValidator.validate(book)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
     }
 
@@ -54,7 +54,7 @@ class BookValidatorTest {
                 .thenReturn(List.of(book));
 
         // Act && Assert
-        assertDoesNotThrow(() -> bookValidator.validate(book));
+        assertThatCode(() -> bookValidator.validate(book)).doesNotThrowAnyException();
         verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
     }
 
@@ -69,7 +69,7 @@ class BookValidatorTest {
                 .thenReturn(List.of(existingBook, book));
 
         // Act && Assert
-        assertThrows(BookConflictException.class, () -> bookValidator.validate(book));
+        assertThatThrownBy(() -> bookValidator.validate(book)).isInstanceOf(BookConflictException.class);
         verify(bookRepository, times(1)).findAll(ArgumentMatchers.<Specification<Book>>any());
     }
 
@@ -79,9 +79,10 @@ class BookValidatorTest {
         var book = BookFactory.invalidBookByExceedingGenreLimit();
 
         // Act && Assert
-        assertThrows(BookExceedingGenreLimitException.class, () -> bookValidator.validate(book));
-        assertNotNull(book.getGenres());
-        assertTrue(book.getGenres().size() > 5);
+        assertThatThrownBy(() -> bookValidator.validate(book)).isInstanceOf(BookExceedingGenreLimitException.class);
+        assertThat(book.getGenres())
+                .isNotNull()
+                .hasSizeGreaterThan(5);
     }
 
 }

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @UnitTest
 class KeycloakUserMapperTest {
@@ -31,7 +31,7 @@ class KeycloakUserMapperTest {
         var result = keycloakUserMapper.toRepresentation(signUpRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -43,9 +43,9 @@ class KeycloakUserMapperTest {
         var result = keycloakUserMapper.toRepresentation(signUpRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(signUpRequest.getUsername(), result.getUsername());
-        assertEquals(signUpRequest.getEmail(), result.getEmail());
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo(signUpRequest.getUsername());
+        assertThat(result.getEmail()).isEqualTo(signUpRequest.getEmail());
     }
 
     @Test
@@ -57,7 +57,7 @@ class KeycloakUserMapperTest {
         var result = keycloakUserMapper.toRepresentation(updateRequest);
 
         // Assert
-        assertNull(result);
+        assertThat(result).isNull();
     }
 
     @Test
@@ -69,8 +69,8 @@ class KeycloakUserMapperTest {
         var result = keycloakUserMapper.toRepresentation(updateRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(updateRequest.getUsername(), result.getUsername());
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo(updateRequest.getUsername());
     }
 
 }
