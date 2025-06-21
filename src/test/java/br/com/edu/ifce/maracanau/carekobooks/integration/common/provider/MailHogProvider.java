@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Collections;
 
 @Component
-public class MailhogProvider {
+public class MailHogProvider {
 
     private static final RestTemplate restTemplate;
 

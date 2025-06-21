@@ -14,7 +14,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
         DynamicPropertyRegistrarConfig.class
 })
 @TestConfiguration(proxyBeanMethods = false)
-public class MailhogContainerConfig {
+public class MailHogContainerConfig {
 
     private static final String DOCKER_IMAGE = "mailhog/mailhog:v1.0.1";
 

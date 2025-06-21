@@ -3,12 +3,16 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.notificati
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notification.subject.BaseNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.thread.reply.observer.BaseBookThreadReplyNotificationObserver;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookThreadReplyResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 @RequiredArgsConstructor
-public class BookThreadReplyNotificationSubject implements BaseNotificationSubject<BaseBookThreadReplyNotificationObserver> {
+public class BookThreadReplyNotificationSubject implements BaseNotificationSubject<BookThreadReplyResponse, BaseBookThreadReplyNotificationObserver> {
 
     private final List<BaseBookThreadReplyNotificationObserver> observers;
 

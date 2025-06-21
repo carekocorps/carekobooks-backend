@@ -8,7 +8,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.GenericContainer;
 
 @Component
-public class MailhogPropertyContributor implements BasePropertyContributor {
+public class MailHogPropertyContributor implements BasePropertyContributor {
 
     @Value("${mailhog.port.http}")
     private Integer httpPort;

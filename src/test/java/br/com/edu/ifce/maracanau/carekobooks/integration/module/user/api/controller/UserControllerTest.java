@@ -11,7 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.applicat
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.*;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MailhogProvider;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MailHogProvider;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MinioProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @IntegrationTest
 @Import({
         KeycloakContainerConfig.class,
-        MailhogContainerConfig.class,
+        MailHogContainerConfig.class,
         MinioContainerConfig.class,
         PostgresContainerConfig.class
 })
@@ -58,7 +58,7 @@ class UserControllerTest {
     private KeycloakAuthProvider keycloakAuthProvider;
 
     @Autowired
-    private MailhogProvider mailhogProvider;
+    private MailHogProvider mailhogProvider;
 
     @Autowired
     private MinioProvider minioProvider;
