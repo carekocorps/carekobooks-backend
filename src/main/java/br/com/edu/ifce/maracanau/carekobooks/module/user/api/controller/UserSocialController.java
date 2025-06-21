@@ -6,7 +6,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserSocialService;
 import io.swagger.v3.oas.annotations.tags.Tag;

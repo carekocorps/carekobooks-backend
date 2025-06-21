@@ -20,7 +20,6 @@ public class KeycloakContainerConfig {
     @Bean
     public KeycloakContainer keycloakContainer() {
         return new KeycloakContainer(IMAGE_NAME)
-                .withBootstrapAdminDisabled()
                 .withFeaturesEnabled("update-email")
                 .withRealmImportFile(IMPORT_FILE);
     }

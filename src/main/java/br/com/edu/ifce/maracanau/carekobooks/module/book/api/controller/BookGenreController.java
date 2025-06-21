@@ -6,6 +6,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.que
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.genre.BookGenreNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireAdminPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +35,7 @@ public class BookGenreController implements BaseController, BookGenreControllerD
     @GetMapping("/{name}")
     public ResponseEntity<BookGenreResponse> find(@PathVariable String name) {
         var response = bookGenreService.find(name);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(BookGenreNotFoundException::new);
     }
 
     @Override

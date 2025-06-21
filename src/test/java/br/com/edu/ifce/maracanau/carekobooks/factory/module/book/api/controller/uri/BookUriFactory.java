@@ -39,6 +39,13 @@ public class BookUriFactory {
                 .toUriString();
     }
 
+    public static String validCacheUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/cache")
+                .build()
+                .toUriString();
+    }
+
     public static String validQueryUri(Book book, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books")

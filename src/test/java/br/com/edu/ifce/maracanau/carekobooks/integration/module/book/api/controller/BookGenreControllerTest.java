@@ -19,11 +19,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,6 +43,9 @@ class BookGenreControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
     private KeycloakAuthProvider keycloakAuthProvider;
 
     @Autowired
@@ -54,6 +60,14 @@ class BookGenreControllerTest {
     void tearDown() {
         bookGenreRepository.deleteAll();
         keycloakAuthProvider.tearDown();
+        cacheManager
+                .getCacheNames()
+                .forEach(cacheName -> {
+                    var cache = cacheManager.getCache(cacheName);
+                    if (cache != null) {
+                        cache.clear();
+                    }
+                });
     }
 
     @Test
@@ -67,6 +81,7 @@ class BookGenreControllerTest {
         var result = response.getBody();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
@@ -94,6 +109,7 @@ class BookGenreControllerTest {
         var result = response.getBody();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
@@ -110,8 +126,8 @@ class BookGenreControllerTest {
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookGenreResponse.class);
 
         // Assert
-        assertThat(bookGenreRepository.count()).isZero();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(bookGenreRepository.count()).isZero();
     }
 
     @Test
@@ -125,6 +141,7 @@ class BookGenreControllerTest {
         var result = response.getBody();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(genre.getId());
@@ -141,8 +158,8 @@ class BookGenreControllerTest {
         var response = restTemplate.exchange(uri,  HttpMethod.POST, httpEntity, BookGenreResponse.class);
 
         // Assert
-        assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
     }
 
     @Test
@@ -158,13 +175,13 @@ class BookGenreControllerTest {
         var updatedGenre = bookGenreRepository.findByName(request.getName()).orElseThrow();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(updatedGenre.getId()).isEqualTo(genre.getId());
         assertThat(updatedGenre.getName()).isEqualTo(request.getName());
         assertThat(updatedGenre.getDisplayName()).isEqualTo(request.getDisplayName());
         assertThat(updatedGenre.getDescription()).isEqualTo(request.getDescription());
         assertThat(updatedGenre.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
@@ -178,8 +195,28 @@ class BookGenreControllerTest {
         var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, BookGenreResponse.class);
 
         // Assert
-        assertThat(bookGenreRepository.count()).isZero();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(bookGenreRepository.count()).isZero();
+    }
+
+    @Test
+    void clearCache_withExistingCache_shouldReturnNoContent() {
+        // Arrange
+        var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
+
+        // Act
+        var getUri = BookGenreUriFactory.validUri(genre.getName());
+        var getResponse = restTemplate.exchange(getUri, HttpMethod.GET, null, BookGenreResponse.class);
+
+        var deleteCacheUri = BookGenreUriFactory.validCacheUri();
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeaders());
+        var deleteCacheResponse = restTemplate.exchange(deleteCacheUri, HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Assert
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(deleteCacheResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(Objects.requireNonNull(cacheManager.getCache("book:genre")).get(genre.getName())).isNull();
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
     }
 
 }

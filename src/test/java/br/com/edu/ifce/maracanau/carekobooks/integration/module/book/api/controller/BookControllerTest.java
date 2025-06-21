@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -34,6 +35,7 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +52,9 @@ class BookControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
     private KeycloakAuthProvider keycloakAuthProvider;
@@ -79,6 +84,14 @@ class BookControllerTest {
         bookGenreRepository.deleteAll();
         keycloakAuthProvider.tearDown();
         minioProvider.tearDown();
+        cacheManager
+                .getCacheNames()
+                .forEach(cacheName -> {
+                    var cache = cacheManager.getCache(cacheName);
+                    if (cache != null) {
+                        cache.clear();
+                    }
+                });
     }
 
     @Test
@@ -315,6 +328,26 @@ class BookControllerTest {
         // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(bookRepository.count()).isZero();
+    }
+
+    @Test
+    void clearCache_withExistingCache_shouldReturnNoContent() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+
+        // Act
+        var getUri = BookUriFactory.validUri(book.getId());
+        var getResponse = restTemplate.exchange(getUri, HttpMethod.GET, null, BookResponse.class);
+
+        var deleteCacheUri = BookUriFactory.validCacheUri();
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeaders());
+        var deleteCacheResponse = restTemplate.exchange(deleteCacheUri, HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Assert
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(deleteCacheResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(Objects.requireNonNull(cacheManager.getCache("book")).get(book.getId())).isNull();
+        assertThat(bookRepository.count()).isEqualTo(1);
     }
 
 }

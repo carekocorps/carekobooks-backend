@@ -23,6 +23,13 @@ public class BookGenreUriFactory {
                 .toUriString();
     }
 
+    public static String validCacheUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/genres/cache")
+                .build()
+                .toUriString();
+    }
+
     public static String validQueryUri(BookGenre genre, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/genres")

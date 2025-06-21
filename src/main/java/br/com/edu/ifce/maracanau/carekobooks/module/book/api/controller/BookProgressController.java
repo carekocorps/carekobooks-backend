@@ -5,6 +5,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.res
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookProgressQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookProgressRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookProgressService;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.progress.BookProgressNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
@@ -34,7 +35,7 @@ public class BookProgressController implements BaseController, BookProgressContr
     @GetMapping("/{id}")
     public ResponseEntity<BookProgressResponse> find(@PathVariable Long id) {
         var response = bookProgressService.find(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(BookProgressNotFoundException::new);
     }
 
     @Override
