@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.validator;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.validator.ImageValidator;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageContentTypeException;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@UnitTest
 class ImageValidatorTest {
 
     private ImageValidator imageValidator;

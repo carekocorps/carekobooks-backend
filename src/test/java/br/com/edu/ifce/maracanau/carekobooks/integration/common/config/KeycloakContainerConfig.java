@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.common.config;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.KeycloakUriFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.api.controller.uri.KeycloakUriFactory;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;

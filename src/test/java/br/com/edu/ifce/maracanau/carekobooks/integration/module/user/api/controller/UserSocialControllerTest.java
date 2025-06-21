@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.controller;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.IntegrationTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.UserUriFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.api.controller.uri.UserUriFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
@@ -25,6 +26,7 @@ import org.springframework.http.HttpStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@IntegrationTest
 @Import({
         DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,

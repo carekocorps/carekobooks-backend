@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.payload.request;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookGenreRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookGenreRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookRequestFactory;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@UnitTest
 class BookRequestTest {
 
     private Validator validator;

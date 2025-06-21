@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.notification.review.observer;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookReviewResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookReviewResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrastructure.domain.entity.BookReviewFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.review.observer.BookReviewWebSocketNotificationObserver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class BookReviewWebSocketNotificationObserverTest {
 

@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserSignUpRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserUpdateRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.response.UserRepresentationFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserRepresentationFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.KeycloakService;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class KeycloakServiceTest {
 

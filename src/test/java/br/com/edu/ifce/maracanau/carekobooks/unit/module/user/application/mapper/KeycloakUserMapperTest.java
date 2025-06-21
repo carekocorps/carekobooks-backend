@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.user.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserSignUpRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserUpdateRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
@@ -11,6 +12,7 @@ import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@UnitTest
 class KeycloakUserMapperTest {
 
     private KeycloakUserMapper keycloakUserMapper;

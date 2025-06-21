@@ -1,13 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.controller;
 
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.IntegrationTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
-import br.com.edu.ifce.maracanau.carekobooks.factory.common.layer.api.controller.form.MultipartFormDataRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.UserUriFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserSignUpRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.payload.request.UserUpdateRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.common.layer.api.controller.form.MultipartFormDataRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.api.controller.uri.UserUriFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.*;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MinioProvider;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@IntegrationTest
 @Import({
         DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,

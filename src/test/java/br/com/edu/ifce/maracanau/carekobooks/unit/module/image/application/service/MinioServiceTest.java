@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.MinioService;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageDeletionException;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageUploadException;
@@ -19,6 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class MinioServiceTest {
 

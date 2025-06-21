@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookGenreRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.response.BookGenreResponseFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookGenreRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookGenreResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class BookGenreServiceTest {
 

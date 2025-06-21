@@ -1,7 +1,8 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.image.application.mapper;
 
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.application.payload.response.ImageResponseFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.application.payload.response.ImageResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@UnitTest
 class ImageMapperTest {
 
     private static final String OUTER_ENDPOINT = "https://outerendpoint.com";
