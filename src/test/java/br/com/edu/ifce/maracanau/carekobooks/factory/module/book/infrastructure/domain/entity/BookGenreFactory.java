@@ -86,7 +86,7 @@ public class BookGenreFactory {
     public static List<BookGenre> validGenres(int numGenres) {
         return IntStream
                 .range(0, numGenres)
-                .mapToObj(i -> BookGenreFactory.validGenre())
+                .mapToObj(x -> BookGenreFactory.validGenre())
                 .collect(Collectors.toMap(BookGenre::getName, Function.identity(), (existing, replacement) -> existing))
                 .values()
                 .stream()

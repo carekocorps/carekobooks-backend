@@ -92,7 +92,7 @@ class BookGenreMapperTest {
     void toEntity_withValidGenreNames_shouldReturnGenreList() {
         // Arrange
         var numGenres = Math.abs(new Random().nextInt(10));
-        var genres = IntStream.range(0, numGenres).mapToObj(i -> BookGenreFactory.validGenre()).toList();
+        var genres = IntStream.range(0, numGenres).mapToObj(x -> BookGenreFactory.validGenre()).toList();
         var genreNames = genres.stream().map(BookGenre::getName).toList();
 
         when(bookGenreRepository.findAllByNameIn(genreNames))
@@ -104,7 +104,7 @@ class BookGenreMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(numGenres, result.size());
-        assertAll(IntStream.range(0, numGenres).mapToObj(i -> () -> assertEquals(genres.get(i).getName(), result.get(i).getName())));
+        assertAll(IntStream.range(0, numGenres).mapToObj(x -> () -> assertEquals(genres.get(x).getName(), result.get(x).getName())));
         verify(bookGenreRepository, times(1)).findAllByNameIn(genreNames);
     }
 

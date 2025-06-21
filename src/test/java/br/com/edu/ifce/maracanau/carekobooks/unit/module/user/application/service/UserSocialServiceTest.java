@@ -42,7 +42,7 @@ class UserSocialServiceTest {
         var followedUserUsername = followedUser.getUsername();
         var users = IntStream
                 .range(0, 10)
-                .mapToObj(i -> UserFactory.validUserWithFollowing(followedUser))
+                .mapToObj(x -> UserFactory.validUserWithFollowing(followedUser))
                 .toList();
 
         when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any()))

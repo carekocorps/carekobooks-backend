@@ -23,6 +23,7 @@ public class UserFactory {
         user.setId(null);
         user.setKeycloakId(UUID.randomUUID());
         user.setUsername(faker.name().username().toLowerCase().replaceAll("[^a-z0-9]", ""));
+        user.setDisplayName(faker.name().name());
         user.setDescription(faker.lorem().paragraph());
         user.setImage(null);
         user.setProgresses(List.of());

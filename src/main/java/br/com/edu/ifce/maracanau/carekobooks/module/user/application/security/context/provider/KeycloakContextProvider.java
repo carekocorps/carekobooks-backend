@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserForbiddenException;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserUnauthorizedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -22,7 +22,7 @@ public class KeycloakContextProvider {
             try {
                 throw exception.getDeclaredConstructor().newInstance();
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-                throw new UserForbiddenException();
+                throw new UserModificationForbiddenException();
             }
         }
     }

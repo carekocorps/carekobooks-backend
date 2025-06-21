@@ -6,14 +6,14 @@ spring:
         format_sql: true
         use_sql_comments: true
 keycloak:
-  realm: carekobooks
-  client-id: backend-client
+  realm: ${KEYCLOAK_REALM:carekobooks}
+  client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
   client-secret: zIpeiqZF4eH0oSICxVuUeNCwaMd0N57J
   admin:
     username: admin
     password: admin
 minio:
-  bucket: images
+  bucket: ${MINIO_BUCKET:images}
 springdoc:
   swagger-ui:
     custom-css-path: /static/swagger-ui.css

@@ -51,6 +51,12 @@ public class BookProgressFactory {
         return validProgressWithNullId(book, user);
     }
 
+    public static BookProgress validProgressWithNullIdAndNullScore(Book book, User user) {
+        var progress = validProgressWithNullId(book, user);
+        progress.setScore(null);
+        return progress;
+    }
+
     public static BookProgress validProgress() {
         var progress = validProgressWithNullId();
         progress.setId(faker.number().randomNumber());

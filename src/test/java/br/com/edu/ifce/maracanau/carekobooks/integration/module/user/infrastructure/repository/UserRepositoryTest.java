@@ -49,11 +49,9 @@ class UserRepositoryTest {
 
         // Assert
         assertThat(userRepository.count()).isEqualTo(2);
-
         assertThat(updatedUserFollowed).isPresent();
         assertThat(updatedUserFollowed.get().getFollowers()).hasSize(1);
         assertThat(updatedUserFollowed.get().getFollowing()).isEmpty();
-
         assertThat(updatedUserFollowing).isPresent();
         assertThat(updatedUserFollowing.get().getFollowers()).isEmpty();
         assertThat(updatedUserFollowing.get().getFollowing()).hasSize(1);
@@ -74,11 +72,9 @@ class UserRepositoryTest {
 
         // Assert
         assertThat(userRepository.count()).isEqualTo(2);
-
         assertThat(updatedUserFollowed).isPresent();
         assertThat(updatedUserFollowed.get().getFollowers()).isEmpty();
         assertThat(updatedUserFollowed.get().getFollowing()).isEmpty();
-
         assertThat(updatedUserFollowing).isPresent();
         assertThat(updatedUserFollowing.get().getFollowers()).isEmpty();
         assertThat(updatedUserFollowing.get().getFollowing()).isEmpty();

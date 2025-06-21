@@ -11,35 +11,29 @@ import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notificatio
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class NotificationSubjectConfig {
 
     @Bean
     public BookActivityNotificationSubject bookActivitySubject(BookActivityWebSocketNotificationObserver observer) {
-        var subject = new BookActivityNotificationSubject();
-        subject.addObserver(observer);
-        return subject;
+        return new BookActivityNotificationSubject(List.of(observer));
     }
 
     @Bean
     public BookReviewNotificationSubject bookReviewSubject(BookReviewWebSocketNotificationObserver observer) {
-        var subject = new BookReviewNotificationSubject();
-        subject.addObserver(observer);
-        return subject;
+        return new BookReviewNotificationSubject(List.of(observer));
     }
 
     @Bean
     public BookThreadNotificationSubject bookThreadSubject(BookThreadWebSocketNotificationObserver observer) {
-        var subject = new BookThreadNotificationSubject();
-        subject.addObserver(observer);
-        return subject;
+        return new BookThreadNotificationSubject(List.of(observer));
     }
 
     @Bean
     public BookThreadReplyNotificationSubject bookThreadReplyNotificationSubject(BookThreadReplyWebSocketNotificationObserver observer) {
-        var subject = new BookThreadReplyNotificationSubject();
-        subject.addObserver(observer);
-        return subject;
+        return new BookThreadReplyNotificationSubject(List.of(observer));
     }
 
 }

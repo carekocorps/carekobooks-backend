@@ -3,8 +3,4 @@ package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notificat
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.notification.observer.BaseNotificationObserver;
 
 public interface BaseNotificationSubject<T extends BaseNotificationObserver> {
-
-    void addObserver(T observer);
-    void removeObserver(T observer);
-
 }
