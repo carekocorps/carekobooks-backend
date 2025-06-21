@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.applica
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrastructure.domain.entity.BookGenreFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 public class BookGenreRequestFactory {
 

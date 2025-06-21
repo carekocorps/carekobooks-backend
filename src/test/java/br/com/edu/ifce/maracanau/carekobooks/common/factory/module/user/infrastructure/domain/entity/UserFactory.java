@@ -4,7 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrast
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class UserFactory {
         var user = new User();
         user.setId(null);
         user.setKeycloakId(UUID.randomUUID());
-        user.setUsername(faker.name().username().toLowerCase().replaceAll("[^a-z0-9]", ""));
+        user.setUsername(faker.internet().username().toLowerCase().replaceAll("[^a-z0-9]", ""));
         user.setDisplayName(faker.name().name());
         user.setDescription(faker.lorem().paragraph());
         user.setImage(null);

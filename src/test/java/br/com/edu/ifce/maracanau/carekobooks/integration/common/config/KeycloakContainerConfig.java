@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.common.config;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.api.controller.uri.KeycloakUriFactory;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -26,16 +25,7 @@ public class KeycloakContainerConfig {
     private String realm;
 
     @Bean
-    @ConditionalOnExpression("'${keycloak.test.mode:default}' == 'default'")
-    public KeycloakContainer defaultKeycloakContainer() {
-        return new KeycloakContainer(DOCKER_IMAGE)
-                .withFeaturesEnabled(REALM_ENABLED_FEATURES)
-                .withRealmImportFile(REALM_IMPORT_FILE);
-    }
-
-    @Bean
-    @ConditionalOnExpression("'${keycloak.test.mode:default}' != 'default'")
-    public KeycloakContainer mailKeycloakContainer(Network network) {
+    public KeycloakContainer keycloakContainer(Network network) {
         return new KeycloakContainer(DOCKER_IMAGE)
                 .withFeaturesEnabled(REALM_ENABLED_FEATURES)
                 .withRealmImportFile(REALM_IMPORT_FILE)

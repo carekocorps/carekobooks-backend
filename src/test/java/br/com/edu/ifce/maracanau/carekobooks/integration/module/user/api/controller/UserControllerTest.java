@@ -43,12 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         MinioContainerConfig.class,
         PostgresContainerConfig.class
 })
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "keycloak.test.mode=mail"
-        }
-)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
 
     @Autowired
