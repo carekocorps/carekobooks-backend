@@ -79,7 +79,7 @@ public class KeycloakAuthProvider {
 
             if (verify) {
                 var credentials = new CredentialRepresentation();
-                credentials.setValue(UUID.randomUUID().toString().replace("-", ""));
+                credentials.setValue(UUID.randomUUID().toString());
                 credentials.setType(CredentialRepresentation.PASSWORD);
                 credentials.setTemporary(false);
 

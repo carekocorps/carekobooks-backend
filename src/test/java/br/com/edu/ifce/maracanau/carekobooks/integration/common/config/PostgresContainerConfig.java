@@ -8,12 +8,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @TestConfiguration(proxyBeanMethods = false)
 public class PostgresContainerConfig {
 
-    private static final String IMAGE_NAME = "postgres:17";
+    private static final String DOCKER_IMAGE = "postgres:17";
 
     @Bean
     @ServiceConnection
     public PostgreSQLContainer<?> postgreSQLContainer() {
-        return new PostgreSQLContainer<>(IMAGE_NAME);
+        return new PostgreSQLContainer<>(DOCKER_IMAGE);
     }
 
 }

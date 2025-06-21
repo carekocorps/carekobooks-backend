@@ -43,7 +43,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 @Import({
-        DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,
         MinioContainerConfig.class,
         PostgresContainerConfig.class,

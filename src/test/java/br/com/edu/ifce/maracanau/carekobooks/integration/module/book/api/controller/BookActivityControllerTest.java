@@ -9,7 +9,6 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrastr
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookActivityRepository;
@@ -37,7 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 @Import({
-        DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,
         PostgresContainerConfig.class
 })

@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration(proxyBeanMethods = false)
 public class RedisContainerConfig {
 
-    private static final String IMAGE_NAME = "redis:8";
+    private static final String DOCKER_IMAGE = "redis:8";
 
     @Bean
     @ServiceConnection
     public RedisContainer redis() {
-        return new RedisContainer(IMAGE_NAME);
+        return new RedisContainer(DOCKER_IMAGE);
     }
 
 }

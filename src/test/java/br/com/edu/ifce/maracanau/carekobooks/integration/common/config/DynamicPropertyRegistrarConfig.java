@@ -11,7 +11,7 @@ import java.util.List;
 public class DynamicPropertyRegistrarConfig {
 
     @Bean
-    public DynamicPropertyRegistrar properties(List<BasePropertyContributor> contributors) {
+    public DynamicPropertyRegistrar dynamicPropertyRegistrar(List<BasePropertyContributor> contributors) {
         return registry -> contributors.forEach(x -> x.contribute(registry));
     }
 

@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.image.api.contr
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.IntegrationTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.api.controller.uri.ImageUriFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.DynamicPropertyRegistrarConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.KeycloakContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.PostgresContainerConfig;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
@@ -24,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 @Import({
-        DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,
         PostgresContainerConfig.class
 })

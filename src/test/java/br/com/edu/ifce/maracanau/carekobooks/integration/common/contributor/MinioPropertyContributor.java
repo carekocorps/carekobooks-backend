@@ -5,11 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MinIOContainer;
 
+import java.util.UUID;
+
 @Component
 public class MinioPropertyContributor implements BasePropertyContributor {
-
-    private static final String DEFAULT_URL = "http://localhost:9000";
-    private static final String DEFAULT_CREDENTIALS = "minioadmin";
 
     @Autowired(required = false)
     private MinIOContainer minioContainer;
@@ -22,10 +21,10 @@ public class MinioPropertyContributor implements BasePropertyContributor {
             registry.add("minio.access-key", minioContainer::getUserName);
             registry.add("minio.secret-key", minioContainer::getPassword);
         } else {
-            registry.add("minio.inner-endpoint", () -> DEFAULT_URL);
-            registry.add("minio.outer-endpoint", () -> DEFAULT_URL);
-            registry.add("minio.access-key", () -> DEFAULT_CREDENTIALS);
-            registry.add("minio.secret-key", () -> DEFAULT_CREDENTIALS);
+            registry.add("minio.inner-endpoint", () -> "http://localhost:9000");
+            registry.add("minio.outer-endpoint", () -> "http://localhost:9000");
+            registry.add("minio.access-key", () -> UUID.randomUUID().toString());
+            registry.add("minio.secret-key", () -> UUID.randomUUID().toString());
         }
     }
 

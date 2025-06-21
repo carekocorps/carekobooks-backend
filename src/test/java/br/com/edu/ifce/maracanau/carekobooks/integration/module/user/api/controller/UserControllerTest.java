@@ -11,6 +11,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.applicat
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.*;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakAuthProvider;
+import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MailhogProvider;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.MinioProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.repository.ImageRepository;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
@@ -37,12 +38,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @IntegrationTest
 @Import({
-        DynamicPropertyRegistrarConfig.class,
         KeycloakContainerConfig.class,
+        MailhogContainerConfig.class,
         MinioContainerConfig.class,
         PostgresContainerConfig.class
 })
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "keycloak.test.mode=mail"
+        }
+)
 class UserControllerTest {
 
     @Autowired
@@ -50,6 +56,9 @@ class UserControllerTest {
 
     @Autowired
     private KeycloakAuthProvider keycloakAuthProvider;
+
+    @Autowired
+    private MailhogProvider mailhogProvider;
 
     @Autowired
     private MinioProvider minioProvider;
@@ -71,6 +80,7 @@ class UserControllerTest {
         imageRepository.deleteAll();
         userRepository.deleteAll();
         keycloakAuthProvider.tearDown();
+        mailhogProvider.tearDown();
         minioProvider.tearDown();
     }
 
@@ -162,6 +172,7 @@ class UserControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(imageRepository.count()).isEqualTo(1);
+        assertThat(mailhogProvider.getTotalMessages()).isEqualTo(1);
     }
 
     @Test
@@ -178,6 +189,7 @@ class UserControllerTest {
         // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(mailhogProvider.getTotalMessages()).isEqualTo(1);
     }
 
     @Test
@@ -195,6 +207,7 @@ class UserControllerTest {
         // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(mailhogProvider.getTotalMessages()).isEqualTo(1);
     }
 
     @Test

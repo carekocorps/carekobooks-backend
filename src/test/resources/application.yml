@@ -8,12 +8,16 @@ spring:
 keycloak:
   realm: ${KEYCLOAK_REALM:carekobooks}
   client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
-  client-secret: zIpeiqZF4eH0oSICxVuUeNCwaMd0N57J
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
   admin:
-    username: admin
-    password: admin
+    username: ${KEYCLOAK_ADMIN_USERNAME}
+    password: ${KEYCLOAK_ADMIN_PASSWORD}
 minio:
   bucket: ${MINIO_BUCKET:images}
+mailhog:
+  port:
+    http: 8025
+    smtp: 1025
 springdoc:
   swagger-ui:
     custom-css-path: /static/swagger-ui.css
