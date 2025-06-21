@@ -52,20 +52,37 @@ class BookGenreControllerTest {
 
     @AfterEach
     void tearDown() {
-        bookGenreRepository.deleteAllInBatch();
+        bookGenreRepository.deleteAll();
         keycloakAuthProvider.tearDown();
+    }
+
+    @Test
+    void search_withValidGenreQuery_shouldReturnPagedGenreResponse() {
+        // Arrange
+        var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
+
+        // Act
+        var uri = BookGenreUriFactory.validUri();
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookGenreResponse>>() {});
+        var result = response.getBody();
+
+        // Assert
+        assertThat(bookGenreRepository.count()).isEqualTo(1);
+        assertThat(result).isNotNull();
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(genre.getId());
     }
 
     @ParameterizedTest
     @CsvSource({
-        "id,false",
-        "displayName,false",
-        "createAt,false",
-        "updatedAt,false",
-        "id,true",
-        "displayName,true",
-        "createAt,true",
-        "updatedAt,true"
+        "id, false",
+        "displayName, false",
+        "createAt, false",
+        "updatedAt, false",
+        "id, true",
+        "displayName, true",
+        "createAt, true",
+        "updatedAt, true"
     })
     void search_withValidGenreQuery_shouldReturnPagedGenreResponse(String orderBy, boolean isAscendingOrder) {
         // Arrange
@@ -120,7 +137,7 @@ class BookGenreControllerTest {
 
         // Act
         var uri = BookGenreUriFactory.validUri();
-        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeader());
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeaders());
         var response = restTemplate.exchange(uri,  HttpMethod.POST, httpEntity, BookGenreResponse.class);
 
         // Assert
@@ -131,23 +148,23 @@ class BookGenreControllerTest {
     @Test
     void update_withExistingGenreAndValidGenreRequest_shouldReturnNoContent() {
         // Arrange
-        var existingGenre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
+        var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
         var request = BookGenreRequestFactory.validRequest();
 
         // Act
-        var uri = BookGenreUriFactory.validUri(existingGenre.getName());
-        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeader());
-        var response = restTemplate.exchange(uri,  HttpMethod.PUT, httpEntity, Void.class);
+        var uri = BookGenreUriFactory.validUri(genre.getName());
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeaders());
+        var response = restTemplate.exchange(uri, HttpMethod.PUT, httpEntity, Void.class);
         var updatedGenre = bookGenreRepository.findByName(request.getName()).orElseThrow();
 
         // Assert
         assertThat(bookGenreRepository.count()).isEqualTo(1);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(updatedGenre.getId()).isEqualTo(existingGenre.getId());
+        assertThat(updatedGenre.getId()).isEqualTo(genre.getId());
         assertThat(updatedGenre.getName()).isEqualTo(request.getName());
         assertThat(updatedGenre.getDisplayName()).isEqualTo(request.getDisplayName());
         assertThat(updatedGenre.getDescription()).isEqualTo(request.getDescription());
-        assertThat(updatedGenre.getCreatedAt()).isEqualToIgnoringNanos(existingGenre.getCreatedAt());
+        assertThat(updatedGenre.getCreatedAt()).isEqualToIgnoringNanos(genre.getCreatedAt());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
@@ -157,7 +174,7 @@ class BookGenreControllerTest {
 
         // Act
         var uri = BookGenreUriFactory.validUri(genre.getName());
-        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeaders());
         var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, BookGenreResponse.class);
 
         // Assert

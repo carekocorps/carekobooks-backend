@@ -8,6 +8,13 @@ public class BookReviewUriFactory {
     private BookReviewUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/reviews")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(Long reviewId) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/reviews")

@@ -7,6 +7,13 @@ public class BookActivityUriFactory {
 
     private BookActivityUriFactory() {
     }
+    
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/activities")
+                .build()
+                .toUriString();
+    }
 
     public static String validUri(Long activityId) {
         return UriComponentsBuilder

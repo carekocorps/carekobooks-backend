@@ -9,7 +9,6 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.e
 import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 
 public class BookProgressFactory {
 
@@ -46,17 +45,21 @@ public class BookProgressFactory {
         return progress;
     }
 
-    public static BookProgress validProgress() {
+    public static BookProgress validProgressWithNullId() {
         var book = BookFactory.validBook();
         var user = UserFactory.validUser();
-        var progress = validProgressWithNullId(book, user);
+        return validProgressWithNullId(book, user);
+    }
+
+    public static BookProgress validProgress() {
+        var progress = validProgressWithNullId();
         progress.setId(faker.number().randomNumber());
         return progress;
     }
 
     public static BookProgress validProgress(BookProgressRequest request) {
         var progress = new BookProgress();
-        progress.setId(new Random().nextLong());
+        progress.setId(faker.number().randomNumber());
         progress.setStatus(request.getStatus());
         progress.setIsFavorite(request.getIsFavorite());
         progress.setScore(request.getScore());
@@ -83,7 +86,7 @@ public class BookProgressFactory {
     public static BookProgress invalidProgressByExceedingPageCount() {
         var progress = validProgress();
         progress.getBook().setPageCount(faker.number().numberBetween(0, 1000));
-        progress.setPageCount(progress.getBook().getPageCount() + faker.number().numberBetween(0, progress.getPageCount()));
+        progress.setPageCount(progress.getBook().getPageCount() + faker.number().numberBetween(1, 100));
         return progress;
     }
 

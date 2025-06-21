@@ -2,7 +2,9 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.pa
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookThreadReplyFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookThreadReplyRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThread;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookThreadReply;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import com.github.javafaker.Faker;
 
 public class BookThreadReplyRequestFactory {
@@ -20,8 +22,13 @@ public class BookThreadReplyRequestFactory {
         return request;
     }
 
+    public static BookThreadReplyRequest validRequest(BookThread thread, User user) {
+        var reply = BookThreadReplyFactory.validReplyWithNullId(null, thread, user);
+        return validRequest(reply);
+    }
+
     public static BookThreadReplyRequest validRequest() {
-        var reply = BookThreadReplyFactory.validReply();
+        var reply = BookThreadReplyFactory.validReplyWithNullId();
         return validRequest(reply);
     }
 

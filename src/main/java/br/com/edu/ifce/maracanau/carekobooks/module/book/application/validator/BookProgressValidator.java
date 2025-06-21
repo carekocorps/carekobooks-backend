@@ -53,7 +53,7 @@ public class BookProgressValidator implements BaseValidator<BookProgress> {
         query.setBookId(progress.getBook().getId());
 
         var progresses = bookProgressRepository.findAll(query.getSpecification());
-        return !progresses.isEmpty();
+        return progresses.stream().anyMatch(x -> !x.getId().equals(progress.getId()));
     }
 
 }

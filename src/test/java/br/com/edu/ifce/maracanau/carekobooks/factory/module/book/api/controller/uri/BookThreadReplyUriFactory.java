@@ -8,10 +8,25 @@ public class BookThreadReplyUriFactory {
     private BookThreadReplyUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/threads/replies")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(Long replyId) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/threads/replies")
                 .pathSegment(String.valueOf(replyId))
+                .build()
+                .toUriString();
+    }
+
+    public static String validChildrenUri(Long replyId) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/threads/replies")
+                .pathSegment(String.valueOf(replyId), "children")
                 .build()
                 .toUriString();
     }

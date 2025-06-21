@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.factory.module.user.application.pa
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import com.github.javafaker.Faker;
 
 public class UserSignUpRequestFactory {
@@ -11,8 +12,17 @@ public class UserSignUpRequestFactory {
     private UserSignUpRequestFactory() {
     }
 
+    public static UserSignUpRequest validRequest(UserUpdateRequest request) {
+        var signUpRequest = new UserSignUpRequest();
+        signUpRequest.setUsername(request.getUsername());
+        signUpRequest.setDisplayName(request.getDisplayName());
+        signUpRequest.setEmail(faker.internet().emailAddress());
+        signUpRequest.setDescription(request.getDescription());
+        return signUpRequest;
+    }
+
     public static UserSignUpRequest validRequest() {
-        var user = UserFactory.validUser();
+        var user = UserFactory.validUserWithNullId();
         var request = new UserSignUpRequest();
         request.setUsername(user.getUsername());
         request.setDisplayName(user.getDisplayName());

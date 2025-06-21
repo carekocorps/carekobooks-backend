@@ -572,6 +572,61 @@ class BookServiceTest {
     }
 
     @Test
+    void changeImage_withExistingBookAndNullImageAndValidBookImage_shouldSucceed() {
+        // Arrange
+        MultipartFile multipartFile = null;
+        var book = BookFactory.validBookWithImage();
+        var bookImageId = book.getImage().getId();
+
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
+
+        doNothing()
+                .when(imageService)
+                .delete(bookImageId);
+
+        when(bookRepository.save(book))
+                .thenReturn(book);
+
+        // Act && Assert
+        assertDoesNotThrow(() -> bookService.changeImage(book.getId(), multipartFile));
+        verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, times(1)).delete(bookImageId);
+        verify(imageService, never()).create(any(MultipartFile.class));
+        verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+        verify(bookRepository, times(1)).save(book);
+    }
+
+    @Test
+    void changeImage_withExistingBookAndNullBookImageAndValidImage_shouldSucceed() {
+        // Arrange
+        var book = BookFactory.validBook();
+        var multipartFile = MultipartFileFactory.validFile();
+        var image = ImageFactory.validImage(multipartFile);
+        var imageResponse = ImageResponseFactory.validResponse(image);
+
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
+
+        when(imageService.create(multipartFile))
+                .thenReturn(imageResponse);
+
+        when(imageMapper.toEntity(imageResponse))
+                .thenReturn(image);
+
+        when(bookRepository.save(book))
+                .thenReturn(book);
+
+        // Act && Assert
+        assertDoesNotThrow(() -> bookService.changeImage(book.getId(), multipartFile));
+        verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, never()).delete(any(Long.class));
+        verify(imageService, times(1)).create(multipartFile);
+        verify(imageMapper, times(1)).toEntity(imageResponse);
+        verify(bookRepository, times(1)).save(book);
+    }
+
+    @Test
     void changeImage_withExistingBookAndValidImage_shouldSucceed() {
         // Arrange
         var book = BookFactory.validBookWithImage();

@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.contro
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.api.controller.uri.BookThreadUriFactory;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.application.payload.request.BookThreadRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.book.infrastructure.domain.entity.BookThreadFactory;
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity.UserFactory;
@@ -61,22 +62,45 @@ class BookThreadControllerTest {
 
     @AfterEach
     void tearDown() {
-        bookThreadRepository.deleteAllInBatch();
-        bookRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
+        bookThreadRepository.deleteAll();
+        bookRepository.deleteAll();
+        userRepository.deleteAll();
         keycloakAuthProvider.tearDown();
+    }
+
+    @Test
+    void search_withValidThreadQuery_shouldReturnPagedThreadResponse() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var thread = bookThreadRepository.save(BookThreadFactory.validThreadWithNullId(book, user));
+
+        // Act
+        var uri = BookThreadUriFactory.validUri();
+        var response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<ApplicationPage<BookThreadResponse>>() {});
+        var result = response.getBody();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookThreadRepository.count()).isEqualTo(1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(thread.getId());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "id,false",
-            "title,false",
-            "createdAt,false",
-            "updatedAt,false",
-            "id,true",
-            "title,true",
-            "createdAt,true",
-            "updatedAt,true"
+            "id, false",
+            "title, false",
+            "createdAt, false",
+            "updatedAt, false",
+            "id, true",
+            "title, true",
+            "createdAt, true",
+            "updatedAt, true"
     })
     void search_withValidThreadQuery_shouldReturnPagedThreadResponse(String orderBy, boolean isAscendingOrder) {
         // Arrange
@@ -90,6 +114,7 @@ class BookThreadControllerTest {
         var result = response.getBody();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(bookRepository.count()).isEqualTo(1);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookThreadRepository.count()).isEqualTo(1);
@@ -109,8 +134,8 @@ class BookThreadControllerTest {
         var response = restTemplate.exchange(uri, HttpMethod.GET, null, BookThreadResponse.class);
 
         // Assert
-        assertThat(bookThreadRepository.count()).isZero();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(bookThreadRepository.count()).isZero();
     }
 
     @Test
@@ -126,12 +151,60 @@ class BookThreadControllerTest {
         var result = response.getBody();
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(bookRepository.count()).isEqualTo(1);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookThreadRepository.count()).isEqualTo(1);
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(thread.getId());
+    }
+
+    @Test
+    void create_withValidThreadRequest_shouldReturnThreadResponse() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var request = BookThreadRequestFactory.validRequest(book, user);
+
+        // Act
+        var uri = BookThreadUriFactory.validUri();
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeaders());
+        var response = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, BookThreadResponse.class);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookThreadRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    void update_withExistingThreadAndValidThreadRequest_shouldReturnNoContent() {
+        // Arrange
+        var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
+        var user = userRepository.save(UserFactory.validUserWithNullId());
+        var thread = bookThreadRepository.save(BookThreadFactory.validThreadWithNullId(book, user));
+        var request = BookThreadRequestFactory.validRequest(book, user);
+
+        // Act
+        var uri = BookThreadUriFactory.validUri(thread.getId());
+        var httpEntity = new HttpEntity<>(request, keycloakAuthProvider.getAuthorizationHeaders());
+        var response = restTemplate.exchange(uri, HttpMethod.PUT, httpEntity, Void.class);
+        var updatedThread = bookThreadRepository.findById(thread.getId()).orElseThrow();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(bookRepository.count()).isEqualTo(1);
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(bookThreadRepository.count()).isEqualTo(1);
+
+        assertThat(updatedThread.getId()).isEqualTo(thread.getId());
+        assertThat(updatedThread.getTitle()).isEqualTo(request.getTitle());
+        assertThat(updatedThread.getDescription()).isEqualTo(request.getDescription());
+        assertThat(updatedThread.getBook().getId()).isEqualTo(request.getBookId());
+        assertThat(updatedThread.getUser().getUsername()).isEqualTo(request.getUsername());
+        assertThat(updatedThread.getCreatedAt()).isEqualToIgnoringNanos(thread.getCreatedAt());
     }
 
     @Test
@@ -143,15 +216,14 @@ class BookThreadControllerTest {
 
         // Act
         var uri = BookThreadUriFactory.validUri(thread.getId());
-        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeader());
+        var httpEntity = new HttpEntity<>(keycloakAuthProvider.getAuthorizationHeaders());
         var response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, Void.class);
 
         // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(bookRepository.count()).isEqualTo(1);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookThreadRepository.count()).isZero();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

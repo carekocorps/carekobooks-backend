@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import com.github.javafaker.Faker;
 
 import java.time.LocalDate;
@@ -64,6 +65,12 @@ public class BookFactory {
 
     public static Book validBookWithNullIdAndEmptyGenres() {
         return validBookWithNullId(List.of());
+    }
+
+    public static Book validBookWithNullIdAndEmptyGenres(Image image) {
+        var book = validBookWithNullId(List.of());
+        book.setImage(image);
+        return book;
     }
 
     public static Book validBook() {

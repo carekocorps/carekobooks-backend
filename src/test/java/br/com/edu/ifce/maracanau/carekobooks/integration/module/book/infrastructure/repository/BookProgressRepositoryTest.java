@@ -35,15 +35,15 @@ class BookProgressRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        bookProgressRepository.deleteAllInBatch();
-        bookRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-        entityManager.clear();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        bookProgressRepository.deleteAllInBatch();
+        bookRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+        entityManager.clear();
     }
 
     @Test
@@ -65,7 +65,6 @@ class BookProgressRepositoryTest {
         assertThat(bookRepository.count()).isEqualTo(1);
         assertThat(userRepository.count()).isEqualTo(1);
         assertThat(bookProgressRepository.count()).isEqualTo(1);
-
         assertThat(updatedProgress.getIsFavorite()).isEqualTo(newProgressIsFavorite);
     }
 

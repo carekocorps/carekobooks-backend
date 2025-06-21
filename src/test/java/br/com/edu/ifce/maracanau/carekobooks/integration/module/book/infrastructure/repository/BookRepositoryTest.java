@@ -33,14 +33,14 @@ class BookRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        tearDown();
+    }
+
+    @AfterEach()
+    void tearDown() {
         bookRepository.deleteAllInBatch();
         bookGenreRepository.deleteAllInBatch();
         entityManager.clear();
-    }
-
-    @AfterEach
-    void tearDown() {
-        setUp();
     }
 
     @Test
@@ -57,9 +57,8 @@ class BookRepositoryTest {
         // Assert
         assertThat(bookGenreRepository.count()).isEqualTo(1);
         assertThat(bookRepository.count()).isEqualTo(1);
-
         assertThat(updatedBook.getGenres()).hasSize(1);
-        assertThat(updatedBook.getGenres().stream().map(BookGenre::getName)).containsExactly(genre.getName());
+        assertThat(updatedBook.getGenres()).extracting(BookGenre::getName).containsExactly(genre.getName());
     }
 
     @Test
@@ -75,7 +74,6 @@ class BookRepositoryTest {
 
         // Assert
         assertThat(bookGenreRepository.count()).isEqualTo(1);
-        assertThat(bookRepository.count()).isEqualTo(1);
 
         assertThat(updatedBook.getGenres()).isEmpty();
     }

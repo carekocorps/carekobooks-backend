@@ -13,9 +13,7 @@ keycloak:
     username: admin
     password: admin
 minio:
-  access-key: fake
-  secret-key: fake
-  bucket: test-bucket
+  bucket: images
 springdoc:
   swagger-ui:
     custom-css-path: /static/swagger-ui.css

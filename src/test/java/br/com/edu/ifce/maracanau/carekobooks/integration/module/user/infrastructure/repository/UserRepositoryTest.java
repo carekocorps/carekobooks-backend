@@ -25,13 +25,13 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAllInBatch();
-        entityManager.clear();
+        tearDown();
     }
 
     @AfterEach
     void tearDown() {
-        setUp();
+        userRepository.deleteAllInBatch();
+        entityManager.clear();
     }
 
     @Test

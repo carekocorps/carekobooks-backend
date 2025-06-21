@@ -65,7 +65,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @RequireUserPermission
     @PostMapping("/{username}/reset-email")
-    public ResponseEntity<Void> resetEmail(@PathVariable String username) {
+    public ResponseEntity<Void> changeEmail(@PathVariable String username) {
         userService.changeEmail(username);
         return ResponseEntity.noContent().build();
     }

@@ -8,6 +8,13 @@ public class BookThreadUriFactory {
     private BookThreadUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/threads")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(Long threadId) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/threads")

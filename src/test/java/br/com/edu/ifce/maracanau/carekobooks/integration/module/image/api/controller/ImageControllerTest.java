@@ -42,7 +42,7 @@ class ImageControllerTest {
 
     @AfterEach
     void tearDown() {
-        imageRepository.deleteAllInBatch();
+        imageRepository.deleteAll();
     }
 
     @Test

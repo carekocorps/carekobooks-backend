@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserSocialService;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,12 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -31,6 +34,24 @@ class UserSocialServiceTest {
 
     @InjectMocks
     private UserSocialService userSocialService;
+
+    @Test
+    void findFollowers_withExistingUsers_shouldReturnSimplifiedUserResponseList() {
+        // Arrange
+        var followedUser = UserFactory.validUser();
+        var followedUserUsername = followedUser.getUsername();
+        var users = IntStream
+                .range(0, 10)
+                .mapToObj(i -> UserFactory.validUserWithFollowing(followedUser))
+                .toList();
+
+        when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any()))
+                .thenReturn(users);
+
+        // Act && Assert
+        assertDoesNotThrow(() -> userSocialService.findFollowers(followedUserUsername));
+        verify(userRepository, times(1)).findAll(ArgumentMatchers.<Specification<User>>any());
+    }
 
     @Test
     void changeFollowing_withUserSelfFollowing_shouldThrowUserSelfFollowingException() {
@@ -58,6 +79,48 @@ class UserSocialServiceTest {
 
             when(userRepository.findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername)))
                     .thenReturn(List.of());
+
+            // Act && Assert
+            assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));
+            verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername));
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
+            verify(userRepository, never()).follow(any(Long.class), any(Long.class));
+            verify(userRepository, never()).unfollow(any(Long.class), any(Long.class));
+        }
+    }
+
+    @Test
+    void changeFollowing_withValidUserAndInvalidTargetUser_shouldThrowNotFoundException() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var userFollowed = UserFactory.validUser();
+            var userFollowedUsername = userFollowed.getUsername();
+            var userFollowingUsername = UserFactory.validUser().getUsername();
+            var isFollowingRequest = new Random().nextBoolean();
+
+            when(userRepository.findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername)))
+                    .thenReturn(List.of(userFollowed));
+
+            // Act && Assert
+            assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));
+            verify(userRepository, times(1)).findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername));
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
+            verify(userRepository, never()).follow(any(Long.class), any(Long.class));
+            verify(userRepository, never()).unfollow(any(Long.class), any(Long.class));
+        }
+    }
+
+    @Test
+    void changeFollowing_withInvalidUserAndValidTargetUser_shouldThrowNotFoundException() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var userFollowing = UserFactory.validUser();
+            var userFollowedUsername = UserFactory.validUser().getUsername();
+            var userFollowingUsername = userFollowing.getUsername();
+            var isFollowingRequest = new Random().nextBoolean();
+
+            when(userRepository.findByUsernameIn(List.of(userFollowedUsername, userFollowingUsername)))
+                    .thenReturn(List.of(userFollowing));
 
             // Act && Assert
             assertThrows(UserNotFoundException.class, () -> userSocialService.changeFollowing(userFollowedUsername, userFollowingUsername, isFollowingRequest));

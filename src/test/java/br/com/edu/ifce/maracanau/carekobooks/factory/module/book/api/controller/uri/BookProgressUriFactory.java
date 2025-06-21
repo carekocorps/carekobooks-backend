@@ -8,10 +8,25 @@ public class BookProgressUriFactory {
     private BookProgressUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/progresses")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(Long progressId) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books/progresses")
                 .pathSegment(String.valueOf(progressId))
+                .build()
+                .toUriString();
+    }
+
+    public static String validFavoritesUri(Long progressId) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books/progresses")
+                .pathSegment(String.valueOf(progressId), "favorites")
                 .build()
                 .toUriString();
     }

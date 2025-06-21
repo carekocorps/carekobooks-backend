@@ -8,10 +8,33 @@ public class BookUriFactory {
     private BookUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(Long bookId) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/books")
                 .pathSegment(String.valueOf(bookId))
+                .build()
+                .toUriString();
+    }
+
+    public static String validGenreUri(Long bookId, String genreName) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books")
+                .pathSegment(String.valueOf(bookId), "genres", genreName)
+                .build()
+                .toUriString();
+    }
+
+    public static String validImageUri(Long bookId) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/books")
+                .pathSegment(String.valueOf(bookId), "images")
                 .build()
                 .toUriString();
     }

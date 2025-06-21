@@ -29,8 +29,18 @@ public class BookRequestFactory {
         return request;
     }
 
+    public static BookRequest validRequest(List<BookGenre> genres) {
+        var book = BookFactory.validBookWithNullId(genres);
+        return validRequest(book);
+    }
+
     public static BookRequest validRequest() {
-        var book = BookFactory.validBook();
+        var book = BookFactory.validBookWithNullId();
+        return validRequest(book);
+    }
+
+    public static BookRequest validRequestWithEmptyGenres() {
+        var book = BookFactory.validBookWithNullIdAndEmptyGenres();
         return validRequest(book);
     }
 

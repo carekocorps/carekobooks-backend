@@ -38,13 +38,13 @@ public class BookReviewValidator implements BaseValidator<BookReview> {
         return review.getBook() == null;
     }
 
-    private boolean isUserReviewDuplicated(BookReview bookReview) {
+    private boolean isUserReviewDuplicated(BookReview review) {
         var query = new BookReviewQuery();
-        query.setUsername(bookReview.getUser().getUsername());
-        query.setBookId(bookReview.getBook().getId());
+        query.setUsername(review.getUser().getUsername());
+        query.setBookId(review.getBook().getId());
 
         var reviews = bookReviewRepository.findAll(query.getSpecification());
-        return !reviews.isEmpty();
+        return reviews.stream().anyMatch(x -> !x.getId().equals(review.getId()));
     }
 
 }

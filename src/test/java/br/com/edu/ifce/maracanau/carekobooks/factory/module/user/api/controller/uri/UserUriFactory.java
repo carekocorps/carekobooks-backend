@@ -8,10 +8,49 @@ public class UserUriFactory {
     private UserUriFactory() {
     }
 
+    public static String validUri() {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .build()
+                .toUriString();
+    }
+
     public static String validUri(String username) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/users")
                 .pathSegment(username)
+                .build()
+                .toUriString();
+    }
+
+    public static String validImagesUri(String username) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(username, "images")
+                .build()
+                .toUriString();
+    }
+
+    public static String validResetVerificationEmailUri(String username) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(username, "reset-verification-email")
+                .build()
+                .toUriString();
+    }
+
+    public static String validResetEmailUri(String username) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(username, "reset-email")
+                .build()
+                .toUriString();
+    }
+
+    public static String validFollowingUri(String username, String targetUsername) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(username, "social", "following", targetUsername)
                 .build()
                 .toUriString();
     }
@@ -29,6 +68,14 @@ public class UserUriFactory {
                 .toUriString();
     }
 
+    public static String validSocialFollowingQueryUri(User userFollowing) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(userFollowing.getUsername(), "social", "following")
+                .build()
+                .toUriString();
+    }
+
     public static String validSocialFollowingQueryUri(User userFollowing, User userFollowed, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/users")
@@ -39,6 +86,14 @@ public class UserUriFactory {
                 .queryParam("createdAfter", userFollowed.getCreatedAt().toLocalDate())
                 .queryParam("orderBy", orderBy)
                 .queryParam("isAscendingOrder", isAscendingOrder)
+                .build()
+                .toUriString();
+    }
+
+    public static String validSocialFollowersQueryUri(User userFollowed) {
+        return UriComponentsBuilder
+                .fromPath("/api/v1/users")
+                .pathSegment(userFollowed.getUsername(), "social", "followers")
                 .build()
                 .toUriString();
     }

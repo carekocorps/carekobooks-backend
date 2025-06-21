@@ -1,8 +1,9 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.common.contributor;
 
-import br.com.edu.ifce.maracanau.carekobooks.integration.common.provider.KeycloakUriProvider;
+import br.com.edu.ifce.maracanau.carekobooks.factory.module.user.api.controller.uri.KeycloakUriFactory;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 
@@ -10,17 +11,18 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 public class KeycloakPropertyContributor implements BasePropertyContributor {
 
     @Autowired(required = false)
-    private KeycloakContainer keycloak;
+    private KeycloakContainer keycloakContainer;
 
-    @Autowired
-    private KeycloakUriProvider keycloakUriProvider;
+    @Value("${keycloak.realm}")
+    private String realm;
 
     @Override
     public void contribute(DynamicPropertyRegistry registry) {
-        if (keycloak != null && keycloak.isRunning()) {
-            registry.add("keycloak.server-url", keycloak::getAuthServerUrl);
-            registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> keycloakUriProvider.getIssuerUri(keycloak.getAuthServerUrl()));
-            registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", () -> keycloakUriProvider.getJwtSetUri(keycloak.getAuthServerUrl()));
+        if (keycloakContainer != null && keycloakContainer.isRunning()) {
+            var authServerUrl = keycloakContainer.getAuthServerUrl();
+            registry.add("keycloak.server-url", () -> authServerUrl);
+            registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> KeycloakUriFactory.getIssuerUri(realm, authServerUrl));
+            registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", () -> KeycloakUriFactory.getJwtSetUri(realm, authServerUrl));
         }
     }
 

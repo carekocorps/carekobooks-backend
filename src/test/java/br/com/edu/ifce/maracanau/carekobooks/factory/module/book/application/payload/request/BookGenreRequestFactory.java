@@ -21,7 +21,7 @@ public class BookGenreRequestFactory {
     }
 
     public static BookGenreRequest validRequest() {
-        var genre = BookGenreFactory.validGenre();
+        var genre = BookGenreFactory.validGenreWithNullId();
         return validRequest(genre);
     }
 

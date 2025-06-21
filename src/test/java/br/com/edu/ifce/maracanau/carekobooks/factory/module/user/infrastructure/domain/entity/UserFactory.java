@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.factory.module.user.infrastructure.domain.entity;
 
 import br.com.edu.ifce.maracanau.carekobooks.factory.module.image.infrastructure.domain.entity.ImageFactory;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import com.github.javafaker.Faker;
@@ -43,21 +44,9 @@ public class UserFactory {
         return user;
     }
 
-    public static User validUser() {
-        var user = validUserWithNullId();
-        user.setId(faker.number().randomNumber());
-        return user;
-    }
-
-    public static User validUser(String username) {
-        var user = validUserWithNullId();
-        user.setId(faker.number().randomNumber());
-        user.setUsername(username);
-        return user;
-    }
-
-    public static User validUser(UUID keycloakId, UserSignUpRequest request) {
+    public static User validUserWithNullId(UUID keycloakId, UserSignUpRequest request) {
         var user = new User();
+        user.setId(null);
         user.setKeycloakId(keycloakId);
         user.setUsername(request.getUsername());
         user.setDisplayName(request.getDisplayName());
@@ -75,6 +64,31 @@ public class UserFactory {
         return user;
     }
 
+    public static User validUserWithNullIdAndImage(Image image) {
+        var user = validUserWithNullId();
+        user.setImage(image);
+        return user;
+    }
+
+    public static User validUser() {
+        var user = validUserWithNullId();
+        user.setId(faker.number().randomNumber());
+        return user;
+    }
+
+    public static User validUser(String username) {
+        var user = validUserWithNullId();
+        user.setId(faker.number().randomNumber());
+        user.setUsername(username);
+        return user;
+    }
+
+    public static User validUser(UUID keycloakId, UserSignUpRequest request) {
+        var user = validUserWithNullId(keycloakId, request);
+        user.setId(faker.number().randomNumber());
+        return user;
+    }
+
     public static User validUserWithFollowing(User target) {
         var user = validUserWithNullIdAndFollowing(target);
         user.setId(faker.number().randomNumber());
@@ -82,8 +96,8 @@ public class UserFactory {
     }
 
     public static User validUserWithImage() {
-        var user = validUser();
-        user.setImage(ImageFactory.validImage());
+        var user = validUserWithNullIdAndImage(ImageFactory.validImage());
+        user.setId(faker.number().randomNumber());
         return user;
     }
 
