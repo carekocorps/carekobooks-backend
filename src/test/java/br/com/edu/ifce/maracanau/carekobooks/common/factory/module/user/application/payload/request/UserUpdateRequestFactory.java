@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.applica
 
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 public class UserUpdateRequestFactory {
 

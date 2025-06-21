@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrast
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookGenreRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.List;

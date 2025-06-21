@@ -3,7 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.applic
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
-import com.github.javafaker.Faker;
+import net.datafaker.Faker;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class ImageResponseFactory {
