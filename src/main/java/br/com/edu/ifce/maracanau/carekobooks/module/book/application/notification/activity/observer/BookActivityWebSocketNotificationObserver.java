@@ -14,10 +14,20 @@ public class BookActivityWebSocketNotificationObserver implements BaseBookActivi
     private final SimpMessagingTemplate messagingTemplate;
 
     public void notify(BookActivityResponse response) {
+        notifyUserProfile(response);
+        notifyUserFollowersFeed(response);
+    }
+
+    private void notifyUserProfile(BookActivityResponse response) {
+        var destination = String.format("/topic/users/%s", response.getUser().getUsername());
+        messagingTemplate.convertAndSend(destination, response);
+    }
+
+    private void notifyUserFollowersFeed(BookActivityResponse response) {
         userSocialService
                 .findFollowers(response.getUser().getUsername())
                 .forEach(follower -> {
-                    var destination = "/topic/users/" + follower.getUsername() + "/feed";
+                    var destination = String.format("/topic/users/%s/social/feed", follower.getUsername());
                     messagingTemplate.convertAndSend(destination, response);
                 });
     }

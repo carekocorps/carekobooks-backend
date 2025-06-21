@@ -88,7 +88,6 @@ public interface UserControllerDocs {
 
     @Operation(
             summary = "Resend verification email",
-            description = "Resends the verification email for the specified user if they are not yet verified. Requires user role.",
             tags = {"User"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
@@ -100,9 +99,8 @@ public interface UserControllerDocs {
 
     @Operation(
             summary = "Reset user email",
-            description = "Resets the email address of the specified user. Requires user role.",
             tags = {"User"},
-            security = @SecurityRequirement(name = "Bearer"),
+            security = @SecurityRequirement(name = "bearerAuth"),
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -111,7 +109,7 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> resetEmail(@PathVariable String username);
+    ResponseEntity<Void> changeEmail(@PathVariable String username);
 
     @Operation(
             summary = "Update a user",

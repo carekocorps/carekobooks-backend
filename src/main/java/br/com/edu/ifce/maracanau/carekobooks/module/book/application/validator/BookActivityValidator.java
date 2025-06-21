@@ -9,22 +9,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookActivityValidator implements BaseValidator<BookActivity> {
 
-    public void validate(BookActivity bookActivity) {
-        if (isUserEmpty(bookActivity)) {
+    public void validate(BookActivity activity) {
+        if (isUserEmpty(activity)) {
             throw new UserNotFoundException();
         }
 
-        if (isBookEmpty(bookActivity)) {
+        if (isBookEmpty(activity)) {
             throw new BookNotFoundException();
         }
     }
 
-    private boolean isUserEmpty(BookActivity bookActivity) {
-        return bookActivity.getUser() == null;
+    private boolean isUserEmpty(BookActivity activity) {
+        return activity.getUser() == null;
     }
 
-    private boolean isBookEmpty(BookActivity bookActivity) {
-        return bookActivity.getBook() == null;
+    private boolean isBookEmpty(BookActivity activity) {
+        return activity.getBook() == null;
     }
 
 }

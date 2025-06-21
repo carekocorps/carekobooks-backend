@@ -34,8 +34,8 @@ public class BookThreadQuery extends BaseApplicationQuery<BookThread> {
     public Sort getSort() {
         return getSort(Map.of(
                 "title", "title",
-                "created-at", "createdAt",
-                "updated-at", "updatedAt"
+                "createdAt", "createdAt",
+                "updatedAt", "updatedAt"
         ));
     }
 
@@ -45,8 +45,8 @@ public class BookThreadQuery extends BaseApplicationQuery<BookThread> {
             allowableValues = {
                     "id",
                     "title",
-                    "created-at",
-                    "updated-at"
+                    "createdAt",
+                    "updatedAt"
             }
     )
     public String getOrderBy() {

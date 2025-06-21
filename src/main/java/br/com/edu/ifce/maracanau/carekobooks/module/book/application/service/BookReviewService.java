@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.notification.review.subject.BookReviewNotificationSubject;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewModificationForbiddenException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.review.BookReviewNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookReviewMapper;
@@ -24,6 +25,7 @@ public class BookReviewService {
     private final BookReviewRepository bookReviewRepository;
     private final BookReviewValidator bookReviewValidator;
     private final BookReviewMapper bookReviewMapper;
+    private final BookReviewNotificationSubject bookReviewNotificationSubject;
 
     @Transactional(readOnly = true)
     public ApplicationPage<BookReviewResponse> search(BookReviewQuery query) {
@@ -45,7 +47,9 @@ public class BookReviewService {
         review = bookReviewRepository.save(review);
 
         KeycloakContextProvider.assertAuthorized(review.getUser().getKeycloakId(), BookReviewModificationForbiddenException.class);
-        return bookReviewMapper.toResponse(bookReviewRepository.save(review));
+        var response = bookReviewMapper.toResponse(review);
+        bookReviewNotificationSubject.notify(response);
+        return response;
     }
 
     @Transactional

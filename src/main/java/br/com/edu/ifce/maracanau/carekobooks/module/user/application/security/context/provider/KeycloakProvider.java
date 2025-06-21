@@ -39,7 +39,7 @@ public class KeycloakProvider {
         return keycloak;
     }
 
-    public synchronized UsersResource getUsersResource() {
+    public UsersResource getUsersResource() {
         return getKeycloak().realm(realm).users();
     }
 

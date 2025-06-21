@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireAdminPermission;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
@@ -38,7 +39,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> find(@PathVariable Long id) {
         var response = bookService.find(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(BookNotFoundException::new);
     }
 
     @Override

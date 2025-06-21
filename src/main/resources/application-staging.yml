@@ -17,4 +17,4 @@ minio:
   outer-endpoint: ${MINIO_OUTER_ENDPOINT:${minio.inner-endpoint}}
   access-key: ${MINIO_ACCESS_KEY}
   secret-key: ${MINIO_SECRET_KEY}
-  bucket: ${MINIO_BUCKET}
+  bucket: ${MINIO_BUCKET:images}

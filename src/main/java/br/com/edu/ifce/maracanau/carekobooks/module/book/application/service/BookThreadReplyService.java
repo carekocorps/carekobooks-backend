@@ -53,6 +53,23 @@ public class BookThreadReplyService {
     }
 
     @Transactional
+    public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
+        var parent = bookThreadReplyRepository
+                .findById(id)
+                .orElseThrow(BookThreadReplyNotFoundException::new);
+
+        var child = bookThreadReplyMapper.toEntity(request);
+        child.setParent(parent);
+        bookThreadReplyValidator.validate(child);
+        child = bookThreadReplyRepository.save(child);
+
+        KeycloakContextProvider.assertAuthorized(child.getUser().getKeycloakId(), BookThreadReplyModificationForbiddenException.class);
+        var response = bookThreadReplyMapper.toResponse(child);
+        bookThreadReplyNotificationSubject.notify(response);
+        return response;
+    }
+
+    @Transactional
     public BookThreadReplyResponse update(Long id, BookThreadReplyRequest request) {
         var reply = bookThreadReplyRepository
                 .findById(id)
@@ -62,21 +79,6 @@ public class BookThreadReplyService {
         bookThreadReplyMapper.updateEntity(reply, request);
         bookThreadReplyValidator.validate(reply);
         return bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(reply));
-    }
-
-    @Transactional
-    public BookThreadReplyResponse createChild(Long id, BookThreadReplyRequest request) {
-        var parent = bookThreadReplyRepository
-                .findById(id)
-                .orElseThrow(BookThreadReplyNotFoundException::new);
-
-        var child = bookThreadReplyMapper.toEntity(request);
-        child.setParent(parent);
-        bookThreadReplyValidator.validate(child);
-
-        var response = bookThreadReplyMapper.toResponse(bookThreadReplyRepository.save(child));
-        bookThreadReplyNotificationSubject.notify(response);
-        return response;
     }
 
     @Transactional

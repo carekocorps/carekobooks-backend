@@ -1,6 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityFollowingQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityFeedQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookActivityResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookActivityQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
@@ -48,7 +48,7 @@ public interface BookActivityControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivityFollowingQuery query);
+    ResponseEntity<ApplicationPage<BookActivityResponse>> search(@ParameterObject BookActivityFeedQuery query);
 
     @Operation(
             summary = "Find a book activity by ID",

@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +30,7 @@ public interface UserSocialControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query);
+    ResponseEntity<ApplicationPage<SimplifiedUserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query);
 
     @Operation(
             summary = "Search all users that someone follows",
@@ -47,7 +47,7 @@ public interface UserSocialControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query);
+    ResponseEntity<ApplicationPage<SimplifiedUserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query);
 
     @Operation(
             summary = "Follow a user by username",

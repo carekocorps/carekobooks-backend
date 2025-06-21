@@ -4,8 +4,8 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseCon
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserSocialControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserSocialQuery;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.enums.UserRelationship;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.UserSocialService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +24,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
 
     @Override
     @GetMapping("/followers")
-    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query) {
+    public ResponseEntity<ApplicationPage<SimplifiedUserResponse>> searchFollowers(@PathVariable String username, @ParameterObject UserSocialQuery query) {
         query.setUsername(username);
         query.setRelationship(UserRelationship.FOLLOWER);
         var responses = userSocialService.search(query);
@@ -33,7 +33,7 @@ public class UserSocialController implements BaseController, UserSocialControlle
 
     @Override
     @GetMapping("/following")
-    public ResponseEntity<ApplicationPage<UserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query) {
+    public ResponseEntity<ApplicationPage<SimplifiedUserResponse>> searchFollowing(@PathVariable String username, @ParameterObject UserSocialQuery query) {
         query.setUsername(username);
         query.setRelationship(UserRelationship.FOLLOWING);
         var responses = userSocialService.search(query);

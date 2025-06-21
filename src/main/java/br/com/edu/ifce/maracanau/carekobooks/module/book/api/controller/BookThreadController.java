@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.thread.thread.BookThreadNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs.BookThreadControllerDocs;
@@ -34,7 +35,7 @@ public class BookThreadController implements BaseController, BookThreadControlle
     @GetMapping("/{id}")
     public ResponseEntity<BookThreadResponse> find(@PathVariable Long id) {
         var response = bookThreadService.find(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(BookThreadNotFoundException::new);
     }
 
     @Override

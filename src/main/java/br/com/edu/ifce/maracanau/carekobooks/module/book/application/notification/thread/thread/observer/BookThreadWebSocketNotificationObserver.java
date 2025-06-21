@@ -14,7 +14,7 @@ public class BookThreadWebSocketNotificationObserver implements BaseBookThreadNo
     @Override
     public void notify(BookThreadResponse response) {
         var bookId = response.getBook().getId();
-        var destination = "/topic/books/" + bookId + "/threads";
+        var destination = String.format("/topic/books/%d/threads", bookId);
         messagingTemplate.convertAndSend(destination, response);
     }
 

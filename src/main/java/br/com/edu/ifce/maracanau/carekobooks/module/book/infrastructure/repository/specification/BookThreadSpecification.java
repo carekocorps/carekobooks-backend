@@ -10,7 +10,7 @@ public class BookThreadSpecification {
 
     public static Specification<BookThread> titleContains(String title) {
         return (root, query, cb) ->
-                cb.equal(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");
+                cb.like(cb.upper(root.get("title")), "%" + title.toUpperCase() + "%");
     }
 
     public static Specification<BookThread> usernameEqual(String username) {

@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+keycloak:
+  realm: ${KEYCLOAK_REALM:carekobooks}
+  client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  admin:
+    username: ${KEYCLOAK_ADMIN_USERNAME}
+    password: ${KEYCLOAK_ADMIN_PASSWORD}
+minio:
+  bucket: ${MINIO_BUCKET:images}
+mailhog:
+  port:
+    http: 8025
+    smtp: 1025
+springdoc:
+  swagger-ui:
+    custom-css-path: /static/swagger-ui.css
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

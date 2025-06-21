@@ -1,4 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request;
 
-public interface BaseRequest {
+import java.io.Serializable;
+
+public interface BaseRequest extends Serializable {
 }

@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.image.api.controller.docs.Im
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
+import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ImageController implements BaseController, ImageControllerDocs {
     @GetMapping("/{id}")
     public ResponseEntity<ImageResponse> find(@PathVariable Long id) {
         var response = imageService.find(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(ImageNotFoundException::new);
     }
 
 }

@@ -79,7 +79,7 @@ public class UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
-        keycloakService.resetEmail(user.getKeycloakId());
+        keycloakService.changeEmail(user.getKeycloakId());
     }
 
     @Transactional

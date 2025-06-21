@@ -121,6 +121,7 @@ public class BookService {
 
         if (isAdditionRequested) bookRepository.addGenre(book.getId(), genre.getId());
         else bookRepository.removeGenre(book.getId(), genre.getId());
+        bookValidator.validate(book);
     }
 
     @CacheEvict(value = "book", key = "#id")

@@ -16,35 +16,35 @@ public class BookReviewValidator implements BaseValidator<BookReview> {
 
     private final BookReviewRepository bookReviewRepository;
 
-    public void validate(BookReview bookReview) {
-        if (isUserEmpty(bookReview)) {
+    public void validate(BookReview review) {
+        if (isUserEmpty(review)) {
             throw new UserNotFoundException();
         }
 
-        if (isBookEmpty(bookReview)) {
+        if (isBookEmpty(review)) {
             throw new BookNotFoundException();
         }
 
-        if (isUserReviewDuplicated(bookReview)) {
+        if (isUserReviewDuplicated(review)) {
             throw new BookReviewUserConflictException();
         }
     }
 
-    private boolean isUserEmpty(BookReview bookReview) {
-        return bookReview.getUser() == null;
+    private boolean isUserEmpty(BookReview review) {
+        return review.getUser() == null;
     }
 
-    private boolean isBookEmpty(BookReview bookReview) {
-        return bookReview.getBook() == null;
+    private boolean isBookEmpty(BookReview review) {
+        return review.getBook() == null;
     }
 
-    private boolean isUserReviewDuplicated(BookReview bookReview) {
+    private boolean isUserReviewDuplicated(BookReview review) {
         var query = new BookReviewQuery();
-        query.setUsername(bookReview.getUser().getUsername());
-        query.setBookId(bookReview.getBook().getId());
+        query.setUsername(review.getUser().getUsername());
+        query.setBookId(review.getBook().getId());
 
-        var bookReviews = bookReviewRepository.findAll(query.getSpecification());
-        return !bookReviews.isEmpty();
+        var reviews = bookReviewRepository.findAll(query.getSpecification());
+        return reviews.stream().anyMatch(x -> !x.getId().equals(review.getId()));
     }
 
 }

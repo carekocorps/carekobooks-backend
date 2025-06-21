@@ -10,6 +10,7 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.Use
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireUserPermission;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.api.controller.BaseController;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserNotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @GetMapping("/{username}")
     public ResponseEntity<UserResponse> find(@PathVariable String username) {
         var response = userService.find(username);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return response.map(ResponseEntity::ok).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class UserController implements BaseController, UserControllerDocs {
     @Override
     @RequireUserPermission
     @PostMapping("/{username}/reset-email")
-    public ResponseEntity<Void> resetEmail(@PathVariable String username) {
+    public ResponseEntity<Void> changeEmail(@PathVariable String username) {
         userService.changeEmail(username);
         return ResponseEntity.noContent().build();
     }
