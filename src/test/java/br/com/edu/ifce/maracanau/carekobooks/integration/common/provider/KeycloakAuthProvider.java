@@ -74,8 +74,9 @@ public class KeycloakAuthProvider {
                 throw KeycloakExceptionStrategy.of(response.getStatus());
             }
 
-            var location = response.getHeaderString("Location");
-            var userId = location.substring(location.lastIndexOf("/") + 1);
+            var userLocationHeader = response.getHeaderString("Location");
+            var userId = userLocationHeader.substring(userLocationHeader.lastIndexOf("/") + 1);
+            var userResource = resource.get(userId);
 
             if (verify) {
                 var credentials = new CredentialRepresentation();
@@ -87,10 +88,10 @@ public class KeycloakAuthProvider {
                 representation.setCredentials(Collections.singletonList(credentials));
                 representation.setRequiredActions(Collections.emptyList());
                 representation.setEmailVerified(true);
-                resource.get(userId).update(representation);
+                userResource.update(representation);
             }
 
-            return resource.get(userId).toRepresentation();
+            return userResource.toRepresentation();
         }
     }
 

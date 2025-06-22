@@ -21,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -95,6 +94,7 @@ class KeycloakServiceTest {
         // Arrange
         var signUpRequest = UserSignUpRequestFactory.validRequest();
         var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
+        var userLocationHeader = String.format("/%s", userRepresentation.getId());
 
         when(keycloakProvider.getUsersResource())
                 .thenReturn(usersResource);
@@ -108,8 +108,8 @@ class KeycloakServiceTest {
         when(response.getStatus())
                 .thenReturn(HttpStatus.SC_CREATED);
 
-        when(usersResource.searchByUsername(signUpRequest.getUsername(), true))
-                .thenReturn(List.of(userRepresentation));
+        when(response.getHeaderString("Location"))
+                .thenReturn(userLocationHeader);
 
         when(usersResource.get(userRepresentation.getId()))
                 .thenReturn(userResource);
@@ -117,6 +117,9 @@ class KeycloakServiceTest {
         doNothing()
                 .when(userResource)
                 .sendVerifyEmail();
+
+        when(userResource.toRepresentation())
+                .thenReturn(userRepresentation);
 
         // Act
         var result = keycloakService.signUp(signUpRequest);

@@ -4,20 +4,17 @@ import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.Keyc
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.*;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.enums.KeycloakExceptionStrategy;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserAlreadyVerifiedException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.keycloak.representations.idm.AbstractUserRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,17 +31,14 @@ public class KeycloakService {
                 if (response.getStatus() != HttpStatus.SC_CREATED) {
                     throw KeycloakExceptionStrategy.of(response.getStatus());
                 }
+
+                var userLocationHeader = response.getHeaderString("Location");
+                var userId = userLocationHeader.substring(userLocationHeader.lastIndexOf("/") + 1);
+                var userResource = resource.get(userId);
+
+                userResource.sendVerifyEmail();
+                return userResource.toRepresentation();
             }
-
-            var representation = resource
-                    .searchByUsername(request.getUsername(), true)
-                    .stream()
-                    .filter(Predicate.not(AbstractUserRepresentation::isEmailVerified))
-                    .findFirst()
-                    .orElseThrow(KeycloakNotFoundException::new);
-
-            resource.get(representation.getId()).sendVerifyEmail();
-            return representation;
         } catch (WebApplicationException e) {
             log.error(e.getMessage());
             throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());

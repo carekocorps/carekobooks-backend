@@ -65,6 +65,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public void resetVerificationEmail(String username) {
         var user = userRepository
                 .findByUsername(username)
@@ -73,6 +74,7 @@ public class UserService {
         keycloakService.resetVerificationEmail(user.getKeycloakId());
     }
 
+    @Transactional(readOnly = true)
     public void changeEmail(String username) {
         var user = userRepository
                 .findByUsername(username)
