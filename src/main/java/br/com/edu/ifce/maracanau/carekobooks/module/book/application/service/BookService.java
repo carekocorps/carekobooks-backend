@@ -81,6 +81,7 @@ public class BookService {
 
         if (book.getImage() != null) {
             imageService.delete(book.getImage().getId());
+            book.setImage(null);
         }
 
         if (image != null) {

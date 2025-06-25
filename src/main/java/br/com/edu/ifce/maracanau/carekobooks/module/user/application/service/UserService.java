@@ -117,6 +117,7 @@ public class UserService {
         KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         if (user.getImage() != null) {
             imageService.delete(user.getImage().getId());
+            user.setImage(null);
         }
 
         if (image != null) {
