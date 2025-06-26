@@ -115,11 +115,6 @@ public class UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
-        if (user.getImage() != null) {
-            imageService.delete(user.getImage().getId());
-            user.setImage(null);
-        }
-
         if (image != null) {
             user.setImage(imageMapper.toEntity(imageService.create(image)));
         }

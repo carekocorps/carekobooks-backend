@@ -79,11 +79,6 @@ public class BookService {
                 .findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
-        if (book.getImage() != null) {
-            imageService.delete(book.getImage().getId());
-            book.setImage(null);
-        }
-
         if (image != null) {
             book.setImage(imageMapper.toEntity(imageService.create(image)));
         }

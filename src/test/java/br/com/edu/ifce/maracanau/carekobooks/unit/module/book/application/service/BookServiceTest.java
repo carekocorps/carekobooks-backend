@@ -228,7 +228,6 @@ class BookServiceTest {
         // Act && Assert
         assertThatThrownBy(() -> bookService.update(id, request, multipartFile)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(id);
-        verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
         verify(bookMapper, never()).updateEntity(any(Book.class), any(BookRequest.class));
@@ -272,7 +271,6 @@ class BookServiceTest {
                 .isEqualTo(updatedBookResponse);
 
         verify(bookRepository, times(1)).findById(book.getId());
-        verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
         verify(bookMapper, times(1)).updateEntity(book, request);
@@ -303,7 +301,6 @@ class BookServiceTest {
         // Act && Assert
         assertThatThrownBy(() -> bookService.update(bookId, request, multipartFile)).isInstanceOf(BookGenreCountMismatchException.class);
         verify(bookRepository, times(1)).findById(bookId);
-        verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
         verify(bookMapper, times(1)).updateEntity(book, request);
@@ -317,7 +314,6 @@ class BookServiceTest {
         // Arrange
         var request = BookRequestFactory.validRequest();
         var book = BookFactory.validBookWithImage(request);
-        var bookImageId = book.getImage().getId();
         var updatedBook = BookFactory.updatedBook(book, request);
         var updatedBookResponse = BookResponseFactory.validResponse(updatedBook);
 
@@ -327,10 +323,6 @@ class BookServiceTest {
 
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.of(book));
-
-        doNothing()
-                .when(imageService)
-                .delete(bookImageId);
 
         when(imageService.create(multipartFile))
                 .thenReturn(imageResponse);
@@ -361,7 +353,6 @@ class BookServiceTest {
                 .isEqualTo(updatedBookResponse);
 
         verify(bookRepository, times(1)).findById(book.getId());
-        verify(imageService, times(1)).delete(bookImageId);
         verify(imageService, times(1)).create(multipartFile);
         verify(imageMapper, times(1)).toEntity(imageResponse);
         verify(bookMapper, times(1)).updateEntity(book, request);
