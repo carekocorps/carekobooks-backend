@@ -3,6 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserControllerDocs;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateUsernameRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
@@ -73,14 +74,6 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @RequireUserPermission
-    @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
-        userService.update(username, request, image);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    @RequireUserPermission
     @PostMapping(value = "/{username}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile image) {
         userService.changeImage(username, image);
@@ -89,9 +82,41 @@ public class UserController implements BaseController, UserControllerDocs {
 
     @Override
     @RequireUserPermission
+    @PatchMapping("/{username}/username")
+    public ResponseEntity<Void> changeUsername(@PathVariable String username, @RequestBody @Valid UserUpdateUsernameRequest request) {
+        userService.changeUsername(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
+    @PostMapping("/{username}/2fa")
+    public ResponseEntity<Void> assign2FA(@PathVariable String username) {
+        userService.change2FA(username, true);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
+    @PutMapping(value = "/{username}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
+        userService.update(username, request, image);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
     @DeleteMapping(value = "/{username}/images")
     public ResponseEntity<Void> unassignImage(@PathVariable String username) {
         userService.changeImage(username, null);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @RequireUserPermission
+    @DeleteMapping("/{username}/2fa")
+    public ResponseEntity<Void> unassign2FA(@PathVariable String username) {
+        userService.change2FA(username, false);
         return ResponseEntity.noContent().build();
     }
 

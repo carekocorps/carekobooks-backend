@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collections;
+import java.util.List;
 
 @Component
 public class MailHogProvider {
@@ -18,7 +18,7 @@ public class MailHogProvider {
     static {
         restTemplate = new RestTemplate();
         var converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.valueOf("text/json")));
+        converter.setSupportedMediaTypes(List.of(MediaType.valueOf("text/json")));
         restTemplate.getMessageConverters().addFirst(converter);
     }
 

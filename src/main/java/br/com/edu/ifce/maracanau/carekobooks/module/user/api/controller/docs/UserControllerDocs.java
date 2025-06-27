@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.qu
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateUsernameRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -112,6 +113,53 @@ public interface UserControllerDocs {
     ResponseEntity<Void> changeEmail(@PathVariable String username);
 
     @Operation(
+            summary = "Update a user image by username",
+            tags = {"User"},
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Payload Too Large", responseCode = "413", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile image);
+
+    @Operation(
+            summary = "Update a user's username using their current username",
+            tags = {"User"},
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Payload Too Large", responseCode = "413", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> changeUsername(@PathVariable String username, @org.springframework.web.bind.annotation.RequestBody @Valid UserUpdateUsernameRequest request);
+
+    @Operation(
+            summary = "Enable two-factor authentication (2FA) for a user by username",
+            tags = {"User"},
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> assign2FA(@PathVariable String username);
+
+    @Operation(
             summary = "Update a user",
             tags = {"User"},
             requestBody = @RequestBody(
@@ -136,22 +184,6 @@ public interface UserControllerDocs {
     ResponseEntity<Void> update(@PathVariable String username, @RequestPart @Valid UserUpdateRequest request, @RequestPart(required = false) MultipartFile image);
 
     @Operation(
-            summary = "Update a user image by username",
-            tags = {"User"},
-            security = @SecurityRequirement(name = "bearerAuth"),
-            responses = {
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Payload Too Large", responseCode = "413", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<Void> assignImage(@PathVariable String username, @RequestParam(required = false) MultipartFile avatar);
-
-    @Operation(
             summary = "Delete a user image by username",
             tags = {"User"},
             security = @SecurityRequirement(name = "bearerAuth"),
@@ -164,6 +196,20 @@ public interface UserControllerDocs {
             }
     )
     ResponseEntity<Void> unassignImage(@PathVariable String username);
+
+    @Operation(
+            summary = "Disable two-factor authentication (2FA) for a user by username",
+            tags = {"User"},
+            security = @SecurityRequirement(name = "bearerAuth"),
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<Void> unassign2FA(@PathVariable String username);
 
     @Operation(
             summary = "Delete a user by username",

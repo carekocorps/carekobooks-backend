@@ -2,7 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateUsernameRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.enums.KeycloakExceptionStrategy;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserAlreadyVerifiedException;
@@ -73,12 +73,36 @@ public class KeycloakService {
         }
     }
 
-    public void update(UUID keycloakId, UserUpdateRequest request) {
+    public void change2FA(UUID keycloakId, boolean enable2FA) {
         try {
-            keycloakProvider
-                    .getUsersResource()
-                    .get(keycloakId.toString())
-                    .update(keycloakUserMapper.toRepresentation(request));
+            var userResource = keycloakProvider.getUsersResource().get(keycloakId.toString());
+            var representation = new UserRepresentation();
+
+            if (!enable2FA) {
+                userResource
+                        .credentials()
+                        .stream()
+                        .filter(credential -> credential.getType().equalsIgnoreCase("totp"))
+                        .forEach(credential -> userResource.removeCredential(credential.getId()));
+
+                representation.setRequiredActions(List.of());
+            } else {
+                representation.setRequiredActions(List.of("CONFIGURE_TOTP"));
+            }
+
+            userResource.update(representation);
+            userResource.logout();
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage());
+            throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());
+        }
+    }
+
+    public void update(UUID keycloakId, UserUpdateUsernameRequest request) {
+        try {
+            var userResource = keycloakProvider.getUsersResource().get(keycloakId.toString());
+            userResource.update(keycloakUserMapper.toRepresentation(request));
+            userResource.logout();
         } catch (WebApplicationException e) {
             log.error(e.getMessage());
             throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());

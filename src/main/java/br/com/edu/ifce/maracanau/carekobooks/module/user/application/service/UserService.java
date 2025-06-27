@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.qu
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateUsernameRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
@@ -65,7 +66,7 @@ public class UserService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void resetVerificationEmail(String username) {
         var user = userRepository
                 .findByUsername(username)
@@ -74,7 +75,7 @@ public class UserService {
         keycloakService.resetVerificationEmail(user.getKeycloakId());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void changeEmail(String username) {
         var user = userRepository
                 .findByUsername(username)
@@ -82,6 +83,16 @@ public class UserService {
 
         KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
         keycloakService.changeEmail(user.getKeycloakId());
+    }
+
+    @Transactional
+    public void change2FA(String username, boolean enable2FA) {
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
+        keycloakService.change2FA(user.getKeycloakId(), enable2FA);
     }
 
     @Transactional
@@ -109,6 +120,18 @@ public class UserService {
     }
 
     @Transactional
+    public void changeUsername(UserUpdateUsernameRequest request) {
+        var user = userRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(UserNotFoundException::new);
+
+        KeycloakContextProvider.assertAuthorized(user.getKeycloakId(), UserModificationForbiddenException.class);
+        userMapper.updateEntity(user, request);
+        userRepository.save(user);
+        keycloakService.update(user.getKeycloakId(), request);
+    }
+
+    @Transactional
     public void update(String username, UserUpdateRequest request, MultipartFile image) {
         var user = userRepository
                 .findByUsername(username)
@@ -126,7 +149,6 @@ public class UserService {
 
         userMapper.updateEntity(user, request);
         userRepository.save(user);
-        keycloakService.update(user.getKeycloakId(), request);
     }
 
     @Transactional

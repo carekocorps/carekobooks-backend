@@ -4,6 +4,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.ann
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateUsernameRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
@@ -40,6 +41,7 @@ public abstract class UserMapper {
 
     @IgnoreBaseEntityFields
     @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "username", ignore = true)
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "progresses", ignore = true)
     @Mapping(target = "activities", ignore = true)
@@ -49,6 +51,18 @@ public abstract class UserMapper {
     @Mapping(target = "following", ignore = true)
     @Mapping(target = "followers", ignore = true)
     public abstract void updateEntity(@MappingTarget User user, UserUpdateRequest request);
+
+    @IgnoreBaseEntityFields
+    @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "progresses", ignore = true)
+    @Mapping(target = "activities", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "threads", ignore = true)
+    @Mapping(target = "replies", ignore = true)
+    @Mapping(target = "following", ignore = true)
+    @Mapping(target = "followers", ignore = true)
+    public abstract void updateEntity(@MappingTarget User user, UserUpdateUsernameRequest request);
 
     public User toEntity(String username) {
         return userRepository.findByUsername(username).orElse(null);

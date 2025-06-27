@@ -17,7 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -85,8 +85,8 @@ public class KeycloakAuthProvider {
                 credentials.setTemporary(false);
 
                 var representation = new UserRepresentation();
-                representation.setCredentials(Collections.singletonList(credentials));
-                representation.setRequiredActions(Collections.emptyList());
+                representation.setCredentials(List.of(credentials));
+                representation.setRequiredActions(List.of());
                 representation.setEmailVerified(true);
                 userResource.update(representation);
             }
@@ -105,7 +105,7 @@ public class KeycloakAuthProvider {
     public HttpHeaders getMultipartFormDataAuthorizationHeaders() {
         var headers = getAuthorizationHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         return headers;
     }
 
