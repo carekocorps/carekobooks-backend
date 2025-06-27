@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrast
 
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
@@ -18,7 +19,7 @@ public class BookFactory {
     private BookFactory() {
     }
 
-    public static Book updatedBook(Book book, BookRequest request) {
+    public static Book updatedBook(Book book, BookUpdateRequest request) {
         var updatedBook = new Book();
         var genres = BookGenreFactory.validGenres(request.getGenres());
         updatedBook.setId(book.getId());
@@ -99,6 +100,26 @@ public class BookFactory {
         return book;
     }
 
+    public static Book validBook(BookUpdateRequest request) {
+        var book = new Book();
+        var genres = BookGenreFactory.validGenres(request.getGenres());
+        book.setTitle(request.getTitle());
+        book.setSynopsis(request.getSynopsis());
+        book.setAuthorName(request.getAuthorName());
+        book.setPublisherName(request.getPublisherName());
+        book.setPublishedAt(request.getPublishedAt());
+        book.setPageCount(request.getPageCount());
+        book.setGenres(genres);
+        book.setProgresses(List.of());
+        book.setActivities(List.of());
+        book.setReviews(List.of());
+        book.setThreads(List.of());
+        book.setImage(null);
+        book.setCreatedAt(LocalDateTime.now());
+        book.setUpdatedAt(book.getCreatedAt());
+        return book;
+    }
+
     public static Book validBook(Long id) {
         var book = validBook();
         book.setId(id);
@@ -112,7 +133,7 @@ public class BookFactory {
         return book;
     }
 
-    public static Book validBookWithImage(BookRequest request) {
+    public static Book validBookWithImage(BookUpdateRequest request) {
         var book = validBook(request);
         book.setImage(ImageFactory.validImage());
         return book;

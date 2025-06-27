@@ -513,6 +513,7 @@ class UserServiceTest {
             assertThatThrownBy(() -> userService.update(username, updateRequest, multipartFile)).isInstanceOf(UserNotFoundException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(any(UUID.class), ArgumentMatchers.<Class<RuntimeException>>any()), never());
+            verify(imageService, never()).delete(any(Long.class));
             verify(imageService, never()).create(any(MultipartFile.class));
             verify(imageMapper, never()).toEntity(any(ImageResponse.class));
             verify(userMapper, never()).updateEntity(any(User.class), any(UserUpdateRequest.class));
@@ -542,11 +543,53 @@ class UserServiceTest {
             assertThatThrownBy(() -> userService.update(username, updateRequest, multipartFile)).isInstanceOf(UserModificationForbiddenException.class);
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, never()).delete(any(Long.class));
             verify(imageService, never()).create(any(MultipartFile.class));
             verify(imageMapper, never()).toEntity(any(ImageResponse.class));
             verify(userMapper, never()).updateEntity(any(User.class), any(UserUpdateRequest.class));
             verify(userRepository, never()).save(any(User.class));
             verify(keycloakService, never()).update(any(UUID.class), ArgumentMatchers.any());
+        }
+    }
+
+    @Test
+    void update_withExistingUserAndDoesNotRetainImageAndNullImageAndAuthorizedUser_shouldSucceed() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var updateRequest = UserUpdateRequestFactory.validRequest(false);
+            var user = UserFactory.validUser();
+            var username = user.getUsername();
+            var keycloakId = user.getKeycloakId();
+            MultipartFile multipartFile = null;
+
+            when(userRepository.findByUsername(username))
+                    .thenReturn(Optional.of(user));
+
+            mockedStatic
+                    .when(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class))
+                    .thenAnswer(invocation -> null);
+
+            doNothing()
+                    .when(userMapper)
+                    .updateEntity(user, updateRequest);
+
+            when(userRepository.save(user))
+                    .thenReturn(user);
+
+            doNothing()
+                    .when(keycloakService)
+                    .update(keycloakId, updateRequest);
+
+            // Act && Assert
+            assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
+            verify(userRepository, times(1)).findByUsername(username);
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, never()).delete(any(Long.class));
+            verify(imageService, never()).create(any(MultipartFile.class));
+            verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+            verify(userMapper, times(1)).updateEntity(user, updateRequest);
+            verify(userRepository, times(1)).save(user);
+            verify(keycloakService, times(1)).update(keycloakId, updateRequest);
         }
     }
 
@@ -582,6 +625,89 @@ class UserServiceTest {
             assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, never()).delete(any(Long.class));
+            verify(imageService, never()).create(any(MultipartFile.class));
+            verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+            verify(userMapper, times(1)).updateEntity(user, updateRequest);
+            verify(userRepository, times(1)).save(user);
+            verify(keycloakService, times(1)).update(keycloakId, updateRequest);
+        }
+    }
+
+    @Test
+    void update_withExistingUserAndRetainImageAndExistingImageAndAuthorizedUser_shouldSucceed() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var updateRequest = UserUpdateRequestFactory.validRequest(true);
+            var user = UserFactory.validUserWithImage();
+            var username = user.getUsername();
+            var keycloakId = user.getKeycloakId();
+            MultipartFile multipartFile = null;
+
+            when(userRepository.findByUsername(username))
+                    .thenReturn(Optional.of(user));
+
+            mockedStatic
+                    .when(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class))
+                    .thenAnswer(invocation -> null);
+
+            doNothing()
+                    .when(userMapper)
+                    .updateEntity(user, updateRequest);
+
+            when(userRepository.save(user))
+                    .thenReturn(user);
+
+            doNothing()
+                    .when(keycloakService)
+                    .update(keycloakId, updateRequest);
+
+            // Act && Assert
+            assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
+            verify(userRepository, times(1)).findByUsername(username);
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, never()).delete(any(Long.class));
+            verify(imageService, never()).create(any(MultipartFile.class));
+            verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+            verify(userMapper, times(1)).updateEntity(user, updateRequest);
+            verify(userRepository, times(1)).save(user);
+            verify(keycloakService, times(1)).update(keycloakId, updateRequest);
+        }
+    }
+
+    @Test
+    void update_withExistingUserAndDoesNotRetainImageAndNullUserImageAndAuthorizedUser_shouldSucceed() {
+        try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
+            // Arrange
+            var updateRequest = UserUpdateRequestFactory.validRequest(false);
+            var user = UserFactory.validUser();
+            var username = user.getUsername();
+            var keycloakId = user.getKeycloakId();
+            MultipartFile multipartFile = null;
+
+            when(userRepository.findByUsername(username))
+                    .thenReturn(Optional.of(user));
+
+            mockedStatic
+                    .when(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class))
+                    .thenAnswer(invocation -> null);
+
+            doNothing()
+                    .when(userMapper)
+                    .updateEntity(user, updateRequest);
+
+            when(userRepository.save(user))
+                    .thenReturn(user);
+
+            doNothing()
+                    .when(keycloakService)
+                    .update(keycloakId, updateRequest);
+
+            // Act && Assert
+            assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
+            verify(userRepository, times(1)).findByUsername(username);
+            mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, never()).delete(any(Long.class));
             verify(imageService, never()).create(any(MultipartFile.class));
             verify(imageMapper, never()).toEntity(any(ImageResponse.class));
             verify(userMapper, times(1)).updateEntity(user, updateRequest);
@@ -594,8 +720,9 @@ class UserServiceTest {
     void update_withExistingUserAndAuthorizedUser_shouldSucceed() {
         try (var mockedStatic = mockStatic(KeycloakContextProvider.class)) {
             // Arrange
-            var updateRequest = UserUpdateRequestFactory.validRequest();
+            var updateRequest = UserUpdateRequestFactory.validRequest(false);
             var user = UserFactory.validUserWithImage();
+            var userImageId = user.getImage().getId();
             var username = user.getUsername();
             var keycloakId = user.getKeycloakId();
 
@@ -609,6 +736,10 @@ class UserServiceTest {
             mockedStatic
                     .when(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class))
                     .thenAnswer(invocation -> null);
+
+            doNothing()
+                    .when(imageService)
+                    .delete(userImageId);
 
             when(imageService.create(multipartFile))
                     .thenReturn(imageResponse);
@@ -631,6 +762,7 @@ class UserServiceTest {
             assertThatCode(() -> userService.update(username, updateRequest, multipartFile)).doesNotThrowAnyException();
             verify(userRepository, times(1)).findByUsername(username);
             mockedStatic.verify(() -> KeycloakContextProvider.assertAuthorized(keycloakId, UserModificationForbiddenException.class), times(1));
+            verify(imageService, times(1)).delete(userImageId);
             verify(imageService, times(1)).create(multipartFile);
             verify(imageMapper, times(1)).toEntity(imageResponse);
             verify(userMapper, times(1)).updateEntity(user, updateRequest);

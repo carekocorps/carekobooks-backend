@@ -1,7 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.payload.request;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookUpdateRequestFactory;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @UnitTest
-class BookRequestTest {
+class BookUpdateRequestTest {
 
     private Validator validator;
 
@@ -21,9 +21,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withValidRequest_shouldSucceed() {
+    void validate_withValidUpdateRequest_shouldSucceed() {
         // Arrange
-        var request = BookRequestFactory.validRequest();
+        var request = BookUpdateRequestFactory.validRequest();
 
         // Act
         var result = validator.validate(request);
@@ -33,9 +33,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByBlankTitle_shouldFail() {
+    void validate_withInvalidUpdateRequestByBlankTitle_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByBlankTitle();
+        var request = BookUpdateRequestFactory.invalidRequestByBlankTitle();
 
         // Act
         var result = validator.validate(request);
@@ -45,9 +45,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByTitleExceedingMaxLength_shouldFail() {
+    void validate_withInvalidUpdateRequestByTitleExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByTitleExceedingMaxLength();
+        var request = BookUpdateRequestFactory.invalidRequestByTitleExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -57,9 +57,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestBySynopsisExceedingMaxLength_shouldFail() {
+    void validate_withInvalidUpdateRequestBySynopsisExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestBySynopsisExceedingMaxLength();
+        var request = BookUpdateRequestFactory.invalidRequestBySynopsisExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -69,9 +69,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByBlankAuthorName_shouldFail() {
+    void validate_withInvalidUpdateRequestByBlankAuthorName_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByBlankAuthorName();
+        var request = BookUpdateRequestFactory.invalidRequestByBlankAuthorName();
 
         // Act
         var result = validator.validate(request);
@@ -81,9 +81,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByAuthorNameExceedingMaxLength_shouldFail() {
+    void validate_withInvalidUpdateRequestByAuthorNameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByAuthorNameExceedingMaxLength();
+        var request = BookUpdateRequestFactory.invalidRequestByAuthorNameExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -93,9 +93,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByBlankPublisherName_shouldFail() {
+    void validate_withInvalidUpdateRequestByBlankPublisherName_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByBlankPublisherName();
+        var request = BookUpdateRequestFactory.invalidRequestByBlankPublisherName();
 
         // Act
         var result = validator.validate(request);
@@ -105,9 +105,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByPublisherNameExceedingMaxLength_shouldFail() {
+    void validate_withInvalidUpdateRequestByPublisherNameExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByPublisherNameExceedingMaxLength();
+        var request = BookUpdateRequestFactory.invalidRequestByPublisherNameExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -117,9 +117,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByInvalidPublishedAt_shouldFail() {
+    void validate_withInvalidUpdateRequestByInvalidPublishedAt_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByInvalidPublishedAt();
+        var request = BookUpdateRequestFactory.invalidRequestByInvalidPublishedAt();
 
         // Act
         var result = validator.validate(request);
@@ -129,9 +129,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByNullPageCount_shouldFail() {
+    void validate_withInvalidUpdateRequestByNullPageCount_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByNullPageCount();
+        var request = BookUpdateRequestFactory.invalidRequestByNullPageCount();
 
         // Act
         var result = validator.validate(request);
@@ -141,9 +141,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByNegativePageCount_shouldFail() {
+    void validate_withInvalidUpdateRequestByNegativePageCount_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByNegativePageCount();
+        var request = BookUpdateRequestFactory.invalidRequestByNegativePageCount();
 
         // Act
         var result = validator.validate(request);
@@ -153,9 +153,21 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByBlankGenre_shouldFail() {
+    void validate_withInvalidUpdateRequestByNullRetainCurrentImage_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByBlankGenre();
+        var request = BookUpdateRequestFactory.invalidRequestByNullRetainCurrentImage();
+
+        // Act
+        var result = validator.validate(request);
+
+        // Assert
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().contains("retainCurrentImage"));
+    }
+
+    @Test
+    void validate_withInvalidUpdateRequestByBlankGenre_shouldFail() {
+        // Arrange
+        var request = BookUpdateRequestFactory.invalidRequestByBlankGenre();
 
         // Act
         var result = validator.validate(request);
@@ -165,9 +177,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByGenreExceedingMaxLength_shouldFail() {
+    void validate_withInvalidUpdateRequestByGenreExceedingMaxLength_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByGenreExceedingMaxLength();
+        var request = BookUpdateRequestFactory.invalidRequestByGenreExceedingMaxLength();
 
         // Act
         var result = validator.validate(request);
@@ -177,9 +189,9 @@ class BookRequestTest {
     }
 
     @Test
-    void validate_withInvalidRequestByTooManyGenres_shouldFail() {
+    void validate_withInvalidUpdateRequestByTooManyGenres_shouldFail() {
         // Arrange
-        var request = BookRequestFactory.invalidRequestByTooManyGenres();
+        var request = BookUpdateRequestFactory.invalidRequestByTooManyGenres();
 
         // Act
         var result = validator.validate(request);

@@ -47,16 +47,14 @@ public class KeycloakService {
 
     public void resetVerificationEmail(UUID keycloakId) {
         try {
-            var resource = keycloakProvider.getUsersResource();
-            var representation = resource
-                    .get(keycloakId.toString())
-                    .toRepresentation();
+            var userResource = keycloakProvider.getUsersResource().get(keycloakId.toString());
+            var userRepresentation = userResource.toRepresentation();
 
-            if (Boolean.TRUE.equals(representation.isEmailVerified())) {
+            if (Boolean.TRUE.equals(userRepresentation.isEmailVerified())) {
                 throw new UserAlreadyVerifiedException();
             }
 
-            resource.get(representation.getId()).sendVerifyEmail();
+            userResource.sendVerifyEmail();
         } catch (WebApplicationException e) {
             log.error(e.getMessage());
             throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());

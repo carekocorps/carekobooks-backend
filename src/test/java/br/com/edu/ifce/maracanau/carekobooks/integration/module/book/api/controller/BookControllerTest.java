@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.IntegrationTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.common.layer.api.controller.form.MultipartFormDataRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.api.controller.uri.BookUriFactory;
@@ -209,7 +210,7 @@ class BookControllerTest {
         // Arrange
         var genre = bookGenreRepository.save(BookGenreFactory.validGenreWithNullId());
         var book = bookRepository.save(BookFactory.validBookWithNullIdAndEmptyGenres());
-        var request = BookRequestFactory.validRequest(List.of(genre));
+        var request = BookUpdateRequestFactory.validRequest(List.of(genre), false);
         var image = MultipartFileFactory.validFile();
 
         // Act

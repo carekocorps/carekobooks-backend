@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.servi
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookGenreResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.infrastructure.domain.entity.BookFactory;
@@ -11,7 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrast
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookGenreService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.service.BookService;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.validator.BookValidator;
@@ -219,7 +220,7 @@ class BookServiceTest {
     void update_withNonExistingBook_shouldThrowNotFoundException() {
         // Arrange
         var id = Math.abs(new Random().nextLong()) + 1;
-        var request = BookRequestFactory.validRequest();
+        var request = BookUpdateRequestFactory.validRequest();
         var multipartFile = MultipartFileFactory.validFile();
 
         when(bookRepository.findById(id))
@@ -228,9 +229,10 @@ class BookServiceTest {
         // Act && Assert
         assertThatThrownBy(() -> bookService.update(id, request, multipartFile)).isInstanceOf(BookNotFoundException.class);
         verify(bookRepository, times(1)).findById(id);
+        verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
-        verify(bookMapper, never()).updateEntity(any(Book.class), any(BookRequest.class));
+        verify(bookMapper, never()).updateEntity(any(Book.class), any(BookUpdateRequest.class));
         verify(bookValidator, never()).validate(any(Book.class));
         verify(bookRepository, never()).save(any(Book.class));
         verify(bookMapper, never()).toResponse(any(Book.class));
@@ -240,7 +242,7 @@ class BookServiceTest {
     void update_withExistingBookAndValidBookRequestAndNullImage_shouldSucceed() {
         // Arrange
         MultipartFile multipartFile = null;
-        var request = BookRequestFactory.validRequest();
+        var request = BookUpdateRequestFactory.validRequest(false);
         var book = BookFactory.validBook(request);
         var updatedBook = BookFactory.updatedBook(book, request);
         var updatedBookResponse = BookResponseFactory.validResponse(updatedBook);
@@ -271,6 +273,7 @@ class BookServiceTest {
                 .isEqualTo(updatedBookResponse);
 
         verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, never()).delete(any(Long.class));
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
         verify(bookMapper, times(1)).updateEntity(book, request);
@@ -283,7 +286,7 @@ class BookServiceTest {
     void update_withExistingBookAndInvalidBookRequestByGenreCountMismatchAndNullImage_shouldThrowGenreCountMismatchException() {
         // Arrange
         MultipartFile multipartFile = null;
-        var request = BookRequestFactory.invalidRequestByRepeatingGenres();
+        var request = BookUpdateRequestFactory.invalidRequestByRepeatingGenres();
         var book = BookFactory.validBook(request);
         var bookId = book.getId();
 
@@ -300,6 +303,7 @@ class BookServiceTest {
 
         // Act && Assert
         assertThatThrownBy(() -> bookService.update(bookId, request, multipartFile)).isInstanceOf(BookGenreCountMismatchException.class);
+        verify(imageService, never()).delete(any(Long.class));
         verify(bookRepository, times(1)).findById(bookId);
         verify(imageService, never()).create(any(MultipartFile.class));
         verify(imageMapper, never()).toEntity(any(ImageResponse.class));
@@ -310,10 +314,99 @@ class BookServiceTest {
     }
 
     @Test
+    void update_withExistingBookAndRemovingImageAndNullImage_shouldSucceed() {
+        // Arrange
+        var request = BookUpdateRequestFactory.validRequest(false);
+        var book = BookFactory.validBook(request);
+        var updatedBook = BookFactory.updatedBook(book, request);
+        var updatedBookResponse = BookResponseFactory.validResponse(updatedBook);
+        MultipartFile multipartFile = null;
+
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
+
+        doNothing()
+                .when(bookMapper)
+                .updateEntity(book, request);
+
+        doNothing()
+                .when(bookValidator)
+                .validate(book);
+
+        when(bookRepository.save(book))
+                .thenReturn(updatedBook);
+
+        when(bookMapper.toResponse(updatedBook))
+                .thenReturn(updatedBookResponse);
+
+        // Act
+        var result = bookService.update(book.getId(), request, multipartFile);
+
+        // Assert
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(updatedBookResponse);
+
+        verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, never()).delete(any(Long.class));
+        verify(imageService, never()).create(any(MultipartFile.class));
+        verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+        verify(bookMapper, times(1)).updateEntity(book, request);
+        verify(bookValidator, times(1)).validate(book);
+        verify(bookRepository, times(1)).save(book);
+        verify(bookMapper, times(1)).toResponse(updatedBook);
+    }
+
+    @Test
+    void update_withExistingBookAndRetainImageAndExistingImage_shouldSucceed() {
+        // Arrange
+        var request = BookUpdateRequestFactory.validRequest(true);
+        var book = BookFactory.validBookWithImage(request);
+        var updatedBook = BookFactory.updatedBook(book, request);
+        var updatedBookResponse = BookResponseFactory.validResponse(updatedBook);
+        MultipartFile multipartFile = null;
+
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
+
+        doNothing()
+                .when(bookMapper)
+                .updateEntity(book, request);
+
+        doNothing()
+                .when(bookValidator)
+                .validate(book);
+
+        when(bookRepository.save(book))
+                .thenReturn(updatedBook);
+
+        when(bookMapper.toResponse(updatedBook))
+                .thenReturn(updatedBookResponse);
+
+        // Act
+        var result = bookService.update(book.getId(), request, multipartFile);
+
+        // Assert
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(updatedBookResponse);
+
+        verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, never()).delete(any(Long.class));
+        verify(imageService, never()).create(any(MultipartFile.class));
+        verify(imageMapper, never()).toEntity(any(ImageResponse.class));
+        verify(bookMapper, times(1)).updateEntity(book, request);
+        verify(bookValidator, times(1)).validate(book);
+        verify(bookRepository, times(1)).save(book);
+        verify(bookMapper, times(1)).toResponse(updatedBook);
+    }
+
+    @Test
     void update_withExistingBookAndValidBookRequestAndNonNullImage_shouldSucceed() {
         // Arrange
-        var request = BookRequestFactory.validRequest();
+        var request = BookUpdateRequestFactory.validRequest(false);
         var book = BookFactory.validBookWithImage(request);
+        var bookImageId = book.getImage().getId();
         var updatedBook = BookFactory.updatedBook(book, request);
         var updatedBookResponse = BookResponseFactory.validResponse(updatedBook);
 
@@ -323,6 +416,10 @@ class BookServiceTest {
 
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.of(book));
+
+        doNothing()
+                .when(imageService)
+                .delete(bookImageId);
 
         when(imageService.create(multipartFile))
                 .thenReturn(imageResponse);
@@ -353,6 +450,7 @@ class BookServiceTest {
                 .isEqualTo(updatedBookResponse);
 
         verify(bookRepository, times(1)).findById(book.getId());
+        verify(imageService, times(1)).delete(bookImageId);
         verify(imageService, times(1)).create(multipartFile);
         verify(imageMapper, times(1)).toEntity(imageResponse);
         verify(bookMapper, times(1)).updateEntity(book, request);

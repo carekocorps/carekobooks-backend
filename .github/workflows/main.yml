@@ -30,4 +30,4 @@ jobs:
           KEYCLOAK_DB_PASSWORD: ${{ secrets.KEYCLOAK_DB_PASSWORD }}
           KEYCLOAK_HOSTNAME: ${{ secrets.KEYCLOAK_HOSTNAME }}
           DROPBOX_ACCESS_TOKEN: ${{ secrets.DROPBOX_ACCESS_TOKEN }}
-        run: docker compose -f docker-compose.staging.yml up -d --no-deps --build backend
+        run: docker compose -f docker-compose.staging.yml up -d --no-deps --build --force-recreate backend

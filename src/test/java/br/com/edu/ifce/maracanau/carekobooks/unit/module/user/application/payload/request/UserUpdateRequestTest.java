@@ -104,4 +104,16 @@ class UserUpdateRequestTest {
         assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("description"));
     }
 
+    @Test
+    void validate_withInvalidUpdateRequestByNullRetainCurrentImage_shouldFail() {
+        // Arrange
+        var request = UserUpdateRequestFactory.invalidRequestByNullRetainCurrentImage();
+
+        // Act
+        var result = validator.validate(request);
+
+        // Assert
+        assertThat(result).anyMatch(x -> x.getPropertyPath().toString().equals("retainCurrentImage"));
+    }
+
 }

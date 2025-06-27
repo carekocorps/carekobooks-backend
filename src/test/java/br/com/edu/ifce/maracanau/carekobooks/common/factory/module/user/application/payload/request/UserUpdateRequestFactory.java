@@ -11,13 +11,18 @@ public class UserUpdateRequestFactory {
     private UserUpdateRequestFactory() {
     }
 
-    public static UserUpdateRequest validRequest() {
+    public static UserUpdateRequest validRequest(Boolean retainCurrentImage) {
         var user = UserFactory.validUser();
         var request = new UserUpdateRequest();
         request.setUsername(user.getUsername());
         request.setDisplayName(user.getDisplayName());
         request.setDescription(user.getDescription());
+        request.setRetainCurrentImage(retainCurrentImage);
         return request;
+    }
+
+    public static UserUpdateRequest validRequest() {
+        return validRequest(faker.bool().bool());
     }
 
     public static UserUpdateRequest invalidRequestByBlankUsername() {
@@ -53,6 +58,12 @@ public class UserUpdateRequestFactory {
     public static UserUpdateRequest invalidRequestByDescriptionExceedingMaxLength() {
         var request = validRequest();
         request.setDescription(faker.lorem().characters(1001));
+        return request;
+    }
+
+    public static UserUpdateRequest invalidRequestByNullRetainCurrentImage() {
+        var request = validRequest();
+        request.setRetainCurrentImage(null);
         return request;
     }
 

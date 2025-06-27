@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller.docs;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.query.BookQuery;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
@@ -109,7 +110,7 @@ public interface BookControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestPart(required = false) MultipartFile image);
+    ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookUpdateRequest request, @RequestPart(required = false) MultipartFile image);
 
     @Operation(
             summary = "Assign a book genre to a book by ID [ADMIN]",

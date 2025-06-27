@@ -3,6 +3,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.re
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.request.BaseRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,5 +24,8 @@ public class UserUpdateRequest implements BaseRequest {
 
     @Size(max = 1000)
     private String description;
+
+    @NotNull
+    private Boolean retainCurrentImage;
 
 }

@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.unit.module.book.application.mappe
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookRequestFactory;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.request.BookUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookGenreResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.BookResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.book.application.payload.response.simplified.SimplifiedBookResponseFactory;
@@ -11,6 +12,7 @@ import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.applica
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookGenreMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper.BookMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookGenreResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.Book;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.entity.BookGenre;
@@ -67,6 +69,43 @@ class BookMapperTest {
     void toEntity_withValidBookRequest_shouldReturnBook() {
         // Arrange
         var bookRequest = BookRequestFactory.validRequest();
+        var book = BookFactory.validBook(bookRequest);
+
+        when(bookGenreMapper.toEntity(bookRequest.getGenres()))
+                .thenReturn(book.getGenres());
+
+        // Act
+        var result = bookMapper.toEntity(bookRequest);
+
+        // Assert
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo(book.getTitle());
+        assertThat(result.getSynopsis()).isEqualTo(book.getSynopsis());
+        assertThat(result.getAuthorName()).isEqualTo(book.getAuthorName());
+        assertThat(result.getPublisherName()).isEqualTo(book.getPublisherName());
+        assertThat(result.getPublishedAt()).isEqualTo(book.getPublishedAt());
+        assertThat(result.getPageCount()).isEqualTo(book.getPageCount());
+        assertThat(result.getGenres()).isEqualTo(book.getGenres());
+        verify(bookGenreMapper, times(1)).toEntity(bookRequest.getGenres());
+    }
+
+    @Test
+    void toEntity_withNullBookUpdateRequest_shouldReturnNullBook() {
+        // Arrange
+        BookUpdateRequest bookRequest = null;
+
+        // Act
+        var result = bookMapper.toEntity(bookRequest);
+
+        // Assert
+        assertThat(result).isNull();
+        verify(bookGenreMapper, never()).toEntity(ArgumentMatchers.<List<String>>any());
+    }
+
+    @Test
+    void toEntity_withValidBookUpdateRequest_shouldReturnBook() {
+        // Arrange
+        var bookRequest = BookUpdateRequestFactory.validRequest();
         var book = BookFactory.validBook(bookRequest);
 
         when(bookGenreMapper.toEntity(bookRequest.getGenres()))
@@ -215,7 +254,7 @@ class BookMapperTest {
     @Test
     void updateEntity_withValidBookAndNullBookRequest_shouldPreserveBook() {
         // Arrange
-        BookRequest bookRequest = null;
+        BookUpdateRequest bookRequest = null;
         var book = BookFactory.validBook();
         var newBook = SerializationUtils.clone(book);
 
@@ -238,7 +277,7 @@ class BookMapperTest {
     @Test
     void updateEntity_withValidBookAndValidBookRequest_shouldUpdateBook() {
         // Arrange
-        var bookRequest = BookRequestFactory.validRequest();
+        var bookRequest = BookUpdateRequestFactory.validRequest(new Random().nextBoolean());
         var book = BookFactory.validBook(bookRequest);
         var newBook = SerializationUtils.clone(book);
         newBook.setGenres(new ArrayList<>(newBook.getGenres()));

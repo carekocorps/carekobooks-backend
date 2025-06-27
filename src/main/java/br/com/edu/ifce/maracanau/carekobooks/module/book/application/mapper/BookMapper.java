@@ -2,6 +2,7 @@ package br.com.edu.ifce.maracanau.carekobooks.module.book.application.mapper;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.mapper.annotation.IgnoreBaseEntityFields;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.BookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.repository.BookRepository;
@@ -34,6 +35,16 @@ public abstract class BookMapper {
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "threads", ignore = true)
     public abstract Book toEntity(BookRequest request);
+
+    @IgnoreBaseEntityFields
+    @Mapping(target = "userAverageScore", ignore = true)
+    @Mapping(target = "reviewAverageScore", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "progresses", ignore = true)
+    @Mapping(target = "activities", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "threads", ignore = true)
+    public abstract Book toEntity(BookUpdateRequest request);
     public abstract BookResponse toResponse(Book book);
     public abstract SimplifiedBookResponse toSimplifiedResponse(Book book);
 
@@ -45,7 +56,7 @@ public abstract class BookMapper {
     @Mapping(target = "activities", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "threads", ignore = true)
-    public abstract void updateEntity(@MappingTarget Book book, BookRequest request);
+    public abstract void updateEntity(@MappingTarget Book book, BookUpdateRequest request);
 
     public Book toEntity(Long id) {
         return bookRepository.findById(id).orElse(null);

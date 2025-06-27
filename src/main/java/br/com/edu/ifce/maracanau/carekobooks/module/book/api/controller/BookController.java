@@ -1,6 +1,7 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookRequest;
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.annotation.RequireAdminPermission;
@@ -54,7 +55,7 @@ public class BookController implements BaseController, BookControllerDocs {
     @Override
     @RequireAdminPermission
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookRequest request, @RequestParam(required = false) MultipartFile image) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestPart @Valid BookUpdateRequest request, @RequestParam(required = false) MultipartFile image) {
         bookService.update(id, request, image);
         return ResponseEntity.noContent().build();
     }

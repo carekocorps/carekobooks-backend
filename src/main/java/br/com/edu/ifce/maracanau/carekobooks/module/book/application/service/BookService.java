@@ -1,5 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.book.application.service;
 
+import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.request.BookUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.application.payload.response.simplified.SimplifiedBookResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookAlreadyContainingGenreException;
 import br.com.edu.ifce.maracanau.carekobooks.module.book.infrastructure.domain.exception.book.BookNotContainingGenreException;
@@ -74,10 +75,15 @@ public class BookService {
 
     @CachePut(value = "book", key = "#id")
     @Transactional
-    public BookResponse update(Long id, BookRequest request, MultipartFile image) {
+    public BookResponse update(Long id, BookUpdateRequest request, MultipartFile image) {
         var book = bookRepository
                 .findById(id)
                 .orElseThrow(BookNotFoundException::new);
+
+        if (!Boolean.TRUE.equals(request.getRetainCurrentImage()) && book.getImage() != null) {
+            imageService.delete(book.getImage().getId());
+            book.setImage(null);
+        }
 
         if (image != null) {
             book.setImage(imageMapper.toEntity(imageService.create(image)));
