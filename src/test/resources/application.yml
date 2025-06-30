@@ -8,10 +8,10 @@ spring:
 keycloak:
   realm: ${KEYCLOAK_REALM:carekobooks}
   client-id: ${KEYCLOAK_CLIENT_ID:backend-client}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET:zIpeiqZF4eH0oSICxVuUeNCwaMd0N57J}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
   admin:
-    username: ${KEYCLOAK_ADMIN_USERNAME:admin}
-    password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+    username: ${KEYCLOAK_ADMIN_USERNAME}
+    password: ${KEYCLOAK_ADMIN_PASSWORD}
 minio:
   bucket: ${MINIO_BUCKET:images}
 mailhog:

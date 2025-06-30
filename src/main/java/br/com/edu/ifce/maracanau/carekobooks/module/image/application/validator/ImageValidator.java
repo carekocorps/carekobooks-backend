@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class ImageValidator implements BaseValidator<Image> {
 
-    private static final List<String> ALLOWED_CONTENT_TYPES = List.of("image/jpeg", "image/png");
+    private static final List<String> ALLOWED_CONTENT_TYPES = List.of("image/jpeg", "image/png", "image/gif");
 
     public void validate(Image image) {
         if (isContentTypeInvalid(image)) {

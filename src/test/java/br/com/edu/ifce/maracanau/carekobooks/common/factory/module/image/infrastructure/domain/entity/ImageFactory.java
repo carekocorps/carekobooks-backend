@@ -62,7 +62,7 @@ public class ImageFactory {
 
     public static Image invalidImageByContentType() {
         var image = validImage();
-        image.setContentType("image/gif");
+        image.setContentType("image/pdf");
         return image;
     }
 

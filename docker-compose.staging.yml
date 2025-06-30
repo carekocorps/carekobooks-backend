@@ -85,7 +85,7 @@ services:
       - carekonet-redis
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.5
+    image: quay.io/keycloak/keycloak:26.2.5
     container_name: carekobooks-keycloak
     depends_on:
       keycloak-postgres:
@@ -111,7 +111,8 @@ services:
     command: start --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
-      - ./docker/keycloak/ekosutrisno/theme/potluck.warzone:/opt/keycloak/themes/ekosutrisno
+      - ./docker/keycloak/providers:/opt/keycloak/providers
+      - ./docker/keycloak/themes/ekosutrisno/theme/potluck.warzone:/opt/keycloak/themes/ekosutrisno
     restart: unless-stopped
     networks:
       - carekonet-keycloak
