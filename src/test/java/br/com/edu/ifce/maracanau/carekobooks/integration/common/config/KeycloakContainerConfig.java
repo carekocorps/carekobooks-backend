@@ -17,7 +17,7 @@ import org.testcontainers.containers.Network;
 @TestConfiguration(proxyBeanMethods = false)
 public class KeycloakContainerConfig {
 
-    private static final String DOCKER_IMAGE = "quay.io/keycloak/keycloak:26.2.5";
+    private static final String DOCKER_IMAGE = "quay.io/keycloak/keycloak:26.0.5";
     private static final String REALM_IMPORT_FILE = "keycloak/carekobooks-test-realm.json";
     private static final String[] REALM_ENABLED_FEATURES = {"update-email"};
 
