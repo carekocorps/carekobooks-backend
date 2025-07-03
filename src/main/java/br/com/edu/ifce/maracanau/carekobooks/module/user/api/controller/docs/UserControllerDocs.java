@@ -60,44 +60,6 @@ public interface UserControllerDocs {
     ResponseEntity<UserResponse> find(@PathVariable String username);
 
     @Operation(
-            summary = "Register a new user account",
-            tags = {"User"},
-            requestBody = @RequestBody(
-                    content = @Content(
-                            encoding = @Encoding(
-                                    name = "request",
-                                    contentType = "application/json"
-                            )
-                    )
-            ),
-            responses = {
-                    @ApiResponse(
-                            description = "Created",
-                            responseCode = "201",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserResponse.class)
-                            )
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<UserResponse> signUp(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image);
-
-    @Operation(
-            summary = "Resend verification email",
-            tags = {"User"},
-            responses = {
-                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
-            }
-    )
-    ResponseEntity<Void> resetVerificationEmail(@PathVariable String username);
-
-    @Operation(
             summary = "Reset user email",
             tags = {"User"},
             security = @SecurityRequirement(name = "bearerAuth"),

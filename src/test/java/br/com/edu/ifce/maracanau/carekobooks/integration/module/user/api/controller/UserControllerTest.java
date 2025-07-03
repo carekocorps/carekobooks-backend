@@ -152,42 +152,6 @@ class UserControllerTest {
     }
 
     @Test
-    void signUp_withValidSignUpRequest_shouldReturnUserResponse() throws IOException {
-        // Arrange
-        var request = UserSignUpRequestFactory.validRequest();
-        var image = MultipartFileFactory.validFile();
-
-        // Act
-        var uri = UserUriFactory.validUri();
-        var body = MultipartFormDataRequestFactory.validRequestWithImage(request, image);
-        var httpEntity = new HttpEntity<>(body, keycloakAuthProvider.getMultipartFormDataAuthorizationHeaders());
-        var response = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, UserResponse.class);
-
-        // Assert
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(userRepository.count()).isEqualTo(1);
-        assertThat(imageRepository.count()).isEqualTo(1);
-        assertThat(mailhogProvider.getTotalMessages()).isEqualTo(1);
-    }
-
-    @Test
-    void resetVerificationEmail_withExistingUserAndNotVerifiedUser_shouldReturnNoContent() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = keycloakAuthProvider.create(signUpRequest, false);
-        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), signUpRequest));
-
-        // Act
-        var uri = UserUriFactory.validResetVerificationEmailUri(user.getUsername());
-        var response = restTemplate.exchange(uri, HttpMethod.POST, null, Void.class);
-
-        // Assert
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        assertThat(userRepository.count()).isEqualTo(1);
-        assertThat(mailhogProvider.getTotalMessages()).isEqualTo(1);
-    }
-
-    @Test
     void changeEmail_withExistingUserAndVerifiedUser_shouldReturnNoContent() {
         // Arrange
         var signUpRequest = UserSignUpRequestFactory.validRequest();

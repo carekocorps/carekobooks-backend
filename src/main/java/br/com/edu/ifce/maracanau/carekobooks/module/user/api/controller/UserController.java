@@ -1,7 +1,6 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.module.user.api.controller.docs.UserControllerDocs;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.UserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
@@ -19,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,26 +39,6 @@ public class UserController implements BaseController, UserControllerDocs {
     public ResponseEntity<UserResponse> find(@PathVariable String username) {
         var response = userService.find(username);
         return response.map(ResponseEntity::ok).orElseThrow(UserNotFoundException::new);
-    }
-
-    @Override
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserResponse> signUp(@RequestPart @Valid UserSignUpRequest request, @RequestParam(required = false) MultipartFile image) {
-        var response = userService.signUp(request, image);
-        var uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{username}")
-                .buildAndExpand(response.getUsername())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(response);
-    }
-
-    @Override
-    @PostMapping("/{username}/reset-verification-email")
-    public ResponseEntity<Void> resetVerificationEmail(@PathVariable String username) {
-        userService.resetVerificationEmail(username);
-        return ResponseEntity.noContent().build();
     }
 
     @Override

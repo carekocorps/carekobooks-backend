@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.query.UserQuery;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.response.simplified.SimplifiedUserResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserModificationForbiddenException;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,31 +45,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<UserResponse> find(String username) {
         return userRepository.findByUsername(username).map(userMapper::toResponse);
-    }
-
-    @Transactional
-    public UserResponse signUp(UserSignUpRequest request, MultipartFile image) {
-        var keycloakId = UUID.fromString(keycloakService.signUp(request).getId());
-        try {
-            var user = userMapper.toEntity(keycloakId, request);
-            if (image != null) {
-                user.setImage(imageMapper.toEntity(imageService.create(image)));
-            }
-
-            return userMapper.toResponse(userRepository.save(user));
-        } catch (Exception e) {
-            keycloakService.delete(keycloakId);
-            throw e;
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public void resetVerificationEmail(String username) {
-        var user = userRepository
-                .findByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
-
-        keycloakService.resetVerificationEmail(user.getKeycloakId());
     }
 
     @Transactional(readOnly = true)

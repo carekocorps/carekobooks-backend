@@ -1,17 +1,14 @@
 package br.com.edu.ifce.maracanau.carekobooks.unit.module.user.application.service;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserRepresentationFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.KeycloakService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.*;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.user.UserAlreadyVerifiedException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.resource.UserResource;
@@ -47,146 +44,6 @@ class KeycloakServiceTest {
 
     @InjectMocks
     private KeycloakService keycloakService;
-
-    @Test
-    void signUp_withKeycloakWebApplicationConflictException_shouldThrowKeycloakConflictException() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(keycloakUserMapper.toRepresentation(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(usersResource.create(userRepresentation))
-                .thenThrow(new WebApplicationException(Response.status(Response.Status.CONFLICT).build()));
-
-        // Act & Assert
-        assertThatThrownBy(() -> keycloakService.signUp(signUpRequest)).isInstanceOf(KeycloakConflictException.class);
-    }
-
-    @Test
-    void signUp_withValidSignUpRequestAndStatusFailure_shouldThrowException() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(keycloakUserMapper.toRepresentation(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(usersResource.create(userRepresentation))
-                .thenReturn(response);
-
-        when(response.getStatus())
-                .thenReturn(HttpStatus.SC_BAD_REQUEST);
-
-        // Act && Assert
-        assertThatThrownBy(() -> keycloakService.signUp(signUpRequest)).isInstanceOf(KeycloakBadRequestException.class);
-    }
-
-    @Test
-    void signUp_withValidSignUpRequest_shouldReturnUserRepresentation() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-        var userLocationHeader = String.format("/%s", userRepresentation.getId());
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(keycloakUserMapper.toRepresentation(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(usersResource.create(userRepresentation))
-                .thenReturn(response);
-
-        when(response.getStatus())
-                .thenReturn(HttpStatus.SC_CREATED);
-
-        when(response.getHeaderString("Location"))
-                .thenReturn(userLocationHeader);
-
-        when(usersResource.get(userRepresentation.getId()))
-                .thenReturn(userResource);
-
-        doNothing()
-                .when(userResource)
-                .sendVerifyEmail();
-
-        when(userResource.toRepresentation())
-                .thenReturn(userRepresentation);
-
-        // Act
-        var result = keycloakService.signUp(signUpRequest);
-
-        // Assert
-        assertThat(result).isNotNull();
-        assertThat(result.getUsername()).isEqualTo(signUpRequest.getUsername());
-        assertThat(result.getEmail()).isEqualTo(signUpRequest.getEmail());
-    }
-
-    @Test
-    void resetVerificationEmail_withKeycloakWebApplicationInternalServerErrorException_shouldThrowKeycloakBadGatewayException() {
-        // Arrange
-        var userRepresentation = UserRepresentationFactory.validRepresentation();
-        var userRepresentationUUID = UUID.fromString(userRepresentation.getId());
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(usersResource.get(userRepresentation.getId()))
-                .thenThrow(new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()));
-
-        // Act & Assert
-        assertThatThrownBy(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).isInstanceOf(KeycloakBadGatewayException.class);
-    }
-
-    @Test
-    void resetVerificationEmail_withValidKeycloakIdAndEmailVerified_shouldFail() {
-        // Arrange
-        var userRepresentation = UserRepresentationFactory.validRepresentationWithEmailVerified();
-        var userRepresentationUUID = UUID.fromString(userRepresentation.getId());
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(usersResource.get(userRepresentation.getId()))
-                .thenReturn(userResource);
-
-        when(userResource.toRepresentation())
-                .thenReturn(userRepresentation);
-
-        // Act && Assert
-        assertThatThrownBy(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).isInstanceOf(UserAlreadyVerifiedException.class);
-    }
-
-    @Test
-    void resetVerificationEmail_withValidKeycloakIdAndEmailNotVerified_shouldSucceed() {
-        // Arrange
-        var userRepresentation = UserRepresentationFactory.validRepresentation();
-        var userRepresentationUUID = UUID.fromString(userRepresentation.getId());
-
-        when(keycloakProvider.getUsersResource())
-                .thenReturn(usersResource);
-
-        when(usersResource.get(userRepresentation.getId()))
-                .thenReturn(userResource);
-
-        when(userResource.toRepresentation())
-                .thenReturn(userRepresentation);
-
-        doNothing()
-                .when(userResource)
-                .sendVerifyEmail();
-
-        // Act && Assert
-        assertThatCode(() -> keycloakService.resetVerificationEmail(userRepresentationUUID)).doesNotThrowAnyException();
-    }
 
     @Test
     void changeEmail_withKeycloakWebApplicationNotFoundException_shouldThrowKeycloakNotFoundException() {

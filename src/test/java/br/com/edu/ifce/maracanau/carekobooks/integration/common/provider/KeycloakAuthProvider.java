@@ -67,7 +67,11 @@ public class KeycloakAuthProvider {
         return keycloak;
     }
 
-    public UserRepresentation create(UserSignUpRequest request, boolean verify) {
+    public UserRepresentation create() {
+        var resource = keycloakProvider.getUsersResource();
+    }
+
+    public UserRepresentation create(String username) {
         var resource = keycloakProvider.getUsersResource();
         try (var response = resource.create(keycloakUserMapper.toRepresentation(request))) {
             if (response.getStatus() != HttpStatus.SC_CREATED) {
