@@ -117,7 +117,7 @@ services:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
       - ./docker/keycloak/conf:/opt/keycloak/conf
       - ./docker/keycloak/providers:/opt/keycloak/providers
-      - ./docker/keycloak/themes/ekosutrisno/theme/potluck.warzone:/opt/keycloak/themes/ekosutrisno
+      - ./docker/keycloak/themes/keywind/theme/keywind:/opt/keycloak/themes/keywind
     restart: unless-stopped
     networks:
       - carekonet-keycloak
@@ -148,7 +148,7 @@ services:
     environment:
       POSTGRES_DB: carekobooks-keycloak
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      POSTGRES_PASSWORD: postgres
     volumes:
       - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
