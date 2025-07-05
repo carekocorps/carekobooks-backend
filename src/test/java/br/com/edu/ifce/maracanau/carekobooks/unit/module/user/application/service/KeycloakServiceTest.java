@@ -3,7 +3,6 @@ package br.com.edu.ifce.maracanau.carekobooks.unit.module.user.application.servi
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserRepresentationFactory;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.service.KeycloakService;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.*;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,9 +28,6 @@ import static org.mockito.Mockito.*;
 class KeycloakServiceTest {
 
     @Mock
-    private Response response;
-
-    @Mock
     private UserResource userResource;
 
     @Mock
@@ -38,9 +35,6 @@ class KeycloakServiceTest {
 
     @Mock
     private KeycloakProvider keycloakProvider;
-
-    @Mock
-    private KeycloakUserMapper keycloakUserMapper;
 
     @InjectMocks
     private KeycloakService keycloakService;
@@ -94,12 +88,9 @@ class KeycloakServiceTest {
         when(usersResource.get(userRepresentation.getId()))
                 .thenReturn(userResource);
 
-        when(keycloakUserMapper.toRepresentation(updateRequest))
-                .thenReturn(userRepresentation);
-
         doThrow(new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build()))
                 .when(userResource)
-                .update(userRepresentation);
+                .update(any(UserRepresentation.class));
 
         // Act & Assert
         assertThatThrownBy(() -> keycloakService.update(userRepresentationUUID, updateRequest)).isInstanceOf(KeycloakForbiddenException.class);
@@ -118,12 +109,9 @@ class KeycloakServiceTest {
         when(usersResource.get(userRepresentation.getId()))
                 .thenReturn(userResource);
 
-        when(keycloakUserMapper.toRepresentation(updateRequest))
-                .thenReturn(userRepresentation);
-
         doNothing()
                 .when(userResource)
-                .update(userRepresentation);
+                .update(any(UserRepresentation.class));
 
         // Act && Assert
         assertThatCode(() -> keycloakService.update(userRepresentationUUID, updateRequest)).doesNotThrowAnyException();

@@ -1,12 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.module.user.application.service;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.enums.KeycloakExceptionStrategy;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.UUID;
 public class KeycloakService {
 
     private final KeycloakProvider keycloakProvider;
-    private final KeycloakUserMapper keycloakUserMapper;
 
     public void changeEmail(UUID keycloakId) {
         try {
@@ -34,10 +33,13 @@ public class KeycloakService {
 
     public void update(UUID keycloakId, UserUpdateRequest request) {
         try {
+            var representation = new UserRepresentation();
+            representation.setUsername(request.getUsername());
+
             keycloakProvider
                     .getUsersResource()
                     .get(keycloakId.toString())
-                    .update(keycloakUserMapper.toRepresentation(request));
+                    .update(representation);
         } catch (WebApplicationException e) {
             log.error(e.getMessage());
             throw KeycloakExceptionStrategy.of(e.getResponse().getStatus());

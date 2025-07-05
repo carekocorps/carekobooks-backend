@@ -1,7 +1,5 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.common.provider;
 
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.KeycloakUserMapper;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakProvider;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.exception.keycloak.enums.KeycloakExceptionStrategy;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +7,6 @@ import org.apache.http.HttpStatus;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -47,9 +43,6 @@ public class KeycloakAuthProvider {
     @Autowired
     private KeycloakProvider keycloakProvider;
 
-    @Autowired
-    private KeycloakUserMapper keycloakUserMapper;
-
     public synchronized Keycloak getKeycloak() {
         if (keycloak == null) {
             keycloak = KeycloakBuilder
@@ -67,35 +60,16 @@ public class KeycloakAuthProvider {
         return keycloak;
     }
 
-    public UserRepresentation create() {
+    public UserRepresentation create(UserRepresentation representation) {
         var resource = keycloakProvider.getUsersResource();
-    }
-
-    public UserRepresentation create(String username) {
-        var resource = keycloakProvider.getUsersResource();
-        try (var response = resource.create(keycloakUserMapper.toRepresentation(request))) {
+        try (var response = resource.create(representation)) {
             if (response.getStatus() != HttpStatus.SC_CREATED) {
                 throw KeycloakExceptionStrategy.of(response.getStatus());
             }
 
             var userLocationHeader = response.getHeaderString("Location");
             var userId = userLocationHeader.substring(userLocationHeader.lastIndexOf("/") + 1);
-            var userResource = resource.get(userId);
-
-            if (verify) {
-                var credentials = new CredentialRepresentation();
-                credentials.setValue(UUID.randomUUID().toString());
-                credentials.setType(CredentialRepresentation.PASSWORD);
-                credentials.setTemporary(false);
-
-                var representation = new UserRepresentation();
-                representation.setCredentials(Collections.singletonList(credentials));
-                representation.setRequiredActions(Collections.emptyList());
-                representation.setEmailVerified(true);
-                userResource.update(representation);
-            }
-
-            return userResource.toRepresentation();
+            return resource.get(userId).toRepresentation();
         }
     }
 

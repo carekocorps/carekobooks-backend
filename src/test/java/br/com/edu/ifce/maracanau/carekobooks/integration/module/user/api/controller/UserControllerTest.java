@@ -1,12 +1,12 @@
 package br.com.edu.ifce.maracanau.carekobooks.integration.module.user.api.controller;
 
 import br.com.edu.ifce.maracanau.carekobooks.common.annotation.IntegrationTest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserRepresentationFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.layer.application.payload.query.page.ApplicationPage;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.common.layer.api.controller.form.MultipartFormDataRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.api.controller.uri.UserUriFactory;
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.integration.common.config.*;
@@ -154,9 +154,8 @@ class UserControllerTest {
     @Test
     void changeEmail_withExistingUserAndVerifiedUser_shouldReturnNoContent() {
         // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = keycloakAuthProvider.create(signUpRequest, true);
-        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), signUpRequest));
+        var userRepresentation = keycloakAuthProvider.create(UserRepresentationFactory.validRepresentationWithNullId());
+        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), userRepresentation));
 
         // Act
         var uri = UserUriFactory.validResetEmailUri(user.getUsername());
@@ -172,9 +171,8 @@ class UserControllerTest {
     @Test
     void update_withExistingUserAndValidUpdateRequest_shouldReturnNoContent() throws IOException {
         // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = keycloakAuthProvider.create(signUpRequest, true);
-        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), signUpRequest));
+        var userRepresentation = keycloakAuthProvider.create(UserRepresentationFactory.validRepresentationWithNullId());
+        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), userRepresentation));
 
         var updateRequest = UserUpdateRequestFactory.validRequest();
         var image = MultipartFileFactory.validFile();
@@ -237,9 +235,8 @@ class UserControllerTest {
     @Test
     void delete_withExistingUser_shouldReturnNoContent() {
         // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = keycloakAuthProvider.create(signUpRequest, true);
-        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), signUpRequest));
+        var userRepresentation = keycloakAuthProvider.create(UserRepresentationFactory.validRepresentationWithNullId());
+        var user = userRepository.save(UserFactory.validUserWithNullId(UUID.fromString(userRepresentation.getId()), userRepresentation));
 
         // Act
         var uri = UserUriFactory.validUri(user.getUsername());
