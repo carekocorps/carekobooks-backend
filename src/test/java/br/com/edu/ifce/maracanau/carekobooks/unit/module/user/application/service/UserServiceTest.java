@@ -4,16 +4,13 @@ import br.com.edu.ifce.maracanau.carekobooks.common.annotation.UnitTest;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.application.payload.response.ImageResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.MultipartFileFactory;
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserUpdateRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserRepresentationFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response.UserResponseFactory;
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.mapper.ImageMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.payload.response.ImageResponse;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.application.service.ImageService;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageNotFoundException;
-import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.exception.ImageUploadException;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.mapper.UserMapper;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserUpdateRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.application.security.context.provider.KeycloakContextProvider;
@@ -95,148 +92,6 @@ class UserServiceTest {
         assertThat(result).isPresent();
         verify(userRepository, times(1)).findByUsername(user.getUsername());
         verify(userMapper, times(1)).toResponse(user);
-    }
-
-    @Test
-    void signUp_withValidSignUpRequestAndValidImageAndInternalServerError_shouldThrowException() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-        var user = UserFactory.validUser(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        var multipartFile = MultipartFileFactory.validFile();
-
-        when(keycloakService.signUp(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(userMapper.toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest))
-                .thenReturn(user);
-
-        when(imageService.create(multipartFile))
-                .thenThrow(ImageUploadException.class);
-
-        // Act && Assert
-        assertThatThrownBy(() -> userService.signUp(signUpRequest, multipartFile)).isInstanceOf(ImageUploadException.class);
-        verify(keycloakService, times(1)).signUp(signUpRequest);
-        verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        verify(imageService, times(1)).create(multipartFile);
-        verify(imageMapper, never()).toEntity(any(ImageResponse.class));
-        verify(userRepository, never()).save(any(User.class));
-        verify(userMapper, never()).toResponse(any(User.class));
-    }
-
-    @Test
-    void signUp_withValidSignUpRequestAndNullImage_shouldReturnUserResponse() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-        var user = UserFactory.validUser(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        var userResponse = UserResponseFactory.validResponse(user);
-        MultipartFile multipartFile = null;
-
-        when(keycloakService.signUp(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(userMapper.toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest))
-                .thenReturn(user);
-
-        when(userRepository.save(user))
-                .thenReturn(user);
-
-        when(userMapper.toResponse(user))
-                .thenReturn(userResponse);
-
-        // Act
-        var result = userService.signUp(signUpRequest, multipartFile);
-
-        // Assert
-        assertThat(result)
-                .isNotNull()
-                .isEqualTo(userResponse);
-
-        verify(keycloakService, times(1)).signUp(signUpRequest);
-        verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        verify(imageService, never()).create(any(MultipartFile.class));
-        verify(imageMapper, never()).toEntity(any(ImageResponse.class));
-        verify(userRepository, times(1)).save(user);
-        verify(userMapper, times(1)).toResponse(user);
-    }
-
-    @Test
-    void signUp_withValidSignUpRequestAndValidImage_shouldReturnUserResponse() {
-        // Arrange
-        var signUpRequest = UserSignUpRequestFactory.validRequest();
-        var userRepresentation = UserRepresentationFactory.validRepresentation(signUpRequest);
-        var user = UserFactory.validUser(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        var userResponse = UserResponseFactory.validResponse(user);
-
-        var multipartFile = MultipartFileFactory.validFile();
-        var image = ImageFactory.validImage(multipartFile);
-        var imageResponse = ImageResponseFactory.validResponse(image);
-
-        when(keycloakService.signUp(signUpRequest))
-                .thenReturn(userRepresentation);
-
-        when(userMapper.toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest))
-                .thenReturn(user);
-
-        when(imageService.create(multipartFile))
-                .thenReturn(imageResponse);
-
-        when(imageMapper.toEntity(imageResponse))
-                .thenReturn(image);
-
-        when(userRepository.save(user))
-                .thenReturn(user);
-
-        when(userMapper.toResponse(user))
-                .thenReturn(userResponse);
-
-        // Act
-        var result = userService.signUp(signUpRequest, multipartFile);
-
-        // Assert
-        assertThat(result)
-                .isNotNull()
-                .isEqualTo(userResponse);
-
-        verify(keycloakService, times(1)).signUp(signUpRequest);
-        verify(userMapper, times(1)).toEntity(UUID.fromString(userRepresentation.getId()), signUpRequest);
-        verify(imageService, times(1)).create(multipartFile);
-        verify(imageMapper, times(1)).toEntity(imageResponse);
-        verify(userRepository, times(1)).save(user);
-        verify(userMapper, times(1)).toResponse(user);
-    }
-
-    @Test
-    void resetVerificationEmail_withNonExistingUser_shouldThrowNotFoundException() {
-        // Arrange
-        var username = UserFactory.validUser().getUsername();
-
-        when(userRepository.findByUsername(username))
-                .thenReturn(Optional.empty());
-
-        // Act && Assert
-        assertThatThrownBy(() -> userService.resetVerificationEmail(username)).isInstanceOf(UserNotFoundException.class);
-        verify(userRepository, times(1)).findByUsername(username);
-        verify(keycloakService, never()).resetVerificationEmail(any(UUID.class));
-    }
-
-    @Test
-    void resetVerificationEmail_withExistingUser_shouldSucceed() {
-        // Arrange
-        var user = UserFactory.validUser();
-
-        when(userRepository.findByUsername(user.getUsername()))
-                .thenReturn(Optional.of(user));
-
-        doNothing()
-                .when(keycloakService)
-                .resetVerificationEmail(user.getKeycloakId());
-
-        // Act && Assert
-        assertThatCode(() -> userService.resetVerificationEmail(user.getUsername())).doesNotThrowAnyException();
-        verify(userRepository, times(1)).findByUsername(user.getUsername());
-        verify(keycloakService, times(1)).resetVerificationEmail(user.getKeycloakId());
     }
 
     @Test

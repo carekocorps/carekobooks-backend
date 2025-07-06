@@ -31,14 +31,6 @@ public class UserUriFactory {
                 .toUriString();
     }
 
-    public static String validResetVerificationEmailUri(String username) {
-        return UriComponentsBuilder
-                .fromPath("/api/v1/users")
-                .pathSegment(username, "reset-verification-email")
-                .build()
-                .toUriString();
-    }
-
     public static String validResetEmailUri(String username) {
         return UriComponentsBuilder
                 .fromPath("/api/v1/users")

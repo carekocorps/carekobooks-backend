@@ -2,9 +2,9 @@ package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrast
 
 import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.image.infrastructure.domain.entity.ImageFactory;
 import br.com.edu.ifce.maracanau.carekobooks.module.image.infrastructure.domain.entity.Image;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
 import br.com.edu.ifce.maracanau.carekobooks.module.user.infrastructure.domain.entity.User;
 import net.datafaker.Faker;
+import org.keycloak.representations.idm.UserRepresentation;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,13 +45,13 @@ public class UserFactory {
         return user;
     }
 
-    public static User validUserWithNullId(UUID keycloakId, UserSignUpRequest request) {
+    public static User validUserWithNullId(UUID keycloakId, UserRepresentation representation) {
         var user = new User();
         user.setId(null);
         user.setKeycloakId(keycloakId);
-        user.setUsername(request.getUsername());
-        user.setDisplayName(request.getDisplayName());
-        user.setDescription(request.getDescription());
+        user.setUsername(representation.getUsername());
+        user.setDisplayName(null);
+        user.setDescription(null);
         user.setImage(null);
         user.setProgresses(List.of());
         user.setActivities(List.of());
@@ -81,12 +81,6 @@ public class UserFactory {
         var user = validUserWithNullId();
         user.setId(faker.number().randomNumber());
         user.setUsername(username);
-        return user;
-    }
-
-    public static User validUser(UUID keycloakId, UserSignUpRequest request) {
-        var user = validUserWithNullId(keycloakId, request);
-        user.setId(faker.number().randomNumber());
         return user;
     }
 

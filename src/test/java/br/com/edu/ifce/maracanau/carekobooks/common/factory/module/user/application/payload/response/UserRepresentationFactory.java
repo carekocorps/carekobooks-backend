@@ -1,33 +1,31 @@
 package br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.response;
 
-import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.application.payload.request.UserSignUpRequestFactory;
-import br.com.edu.ifce.maracanau.carekobooks.module.user.application.payload.request.UserSignUpRequest;
+import br.com.edu.ifce.maracanau.carekobooks.common.factory.module.user.infrastructure.domain.entity.UserFactory;
+import net.datafaker.Faker;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.util.UUID;
 
 public class UserRepresentationFactory {
 
+    private static final Faker faker = new Faker();
+
     private UserRepresentationFactory() {
     }
 
-    public static UserRepresentation validRepresentation(UserSignUpRequest request) {
+    public static UserRepresentation validRepresentationWithNullId() {
+        var user = UserFactory.validUserWithNullId();
         var representation = new UserRepresentation();
-        representation.setId(UUID.randomUUID().toString());
-        representation.setUsername(request.getUsername());
-        representation.setEmail(request.getEmail());
+        representation.setUsername(user.getUsername());
+        representation.setEmail(faker.internet().emailAddress());
         representation.setEnabled(true);
-        representation.setEmailVerified(false);
+        representation.setEmailVerified(true);
         return representation;
     }
 
     public static UserRepresentation validRepresentation() {
-        return validRepresentation(UserSignUpRequestFactory.validRequest());
-    }
-
-    public static UserRepresentation validRepresentationWithEmailVerified() {
-        var representation = validRepresentation();
-        representation.setEmailVerified(true);
+        var representation = validRepresentationWithNullId();
+        representation.setId(UUID.randomUUID().toString());
         return representation;
     }
 

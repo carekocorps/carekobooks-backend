@@ -7,10 +7,13 @@ services:
     environment:
       POSTGRES_DB: carekobooks
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: postgres
     volumes:
       - carekobooks-postgres-data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "max_prepared_transactions=100"]
     restart: unless-stopped
+    networks:
+      - carekonet-keycloak-backend-postgres
 
   minio:
     image: minio/minio:RELEASE.2025-05-24T17-08-30Z
@@ -52,6 +55,8 @@ services:
     image: quay.io/keycloak/keycloak:26.0.5
     container_name: carekobooks-keycloak
     depends_on:
+      postgres:
+        condition: service_started
       keycloak-postgres:
         condition: service_started
       keycloak-realm-setup:
@@ -64,15 +69,17 @@ services:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/carekobooks-keycloak
       KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KC_DB_PASSWORD: postgres
       KC_FEATURES: update-email
     command: start-dev --import-realm
     volumes:
       - carekobooks-keycloak-realm-data:/opt/keycloak/data/import
+      - ./docker/keycloak/conf:/opt/keycloak/conf
       - ./docker/keycloak/providers:/opt/keycloak/providers
-      - ./docker/keycloak/themes/ekosutrisno/theme/potluck.warzone:/opt/keycloak/themes/ekosutrisno
+      - ./docker/keycloak/themes/keywind/theme/keywind:/opt/keycloak/themes/keywind
     networks:
       - carekonet-keycloak-postgres
+      - carekonet-keycloak-backend-postgres
 
   keycloak-realm-setup:
     build:
@@ -98,7 +105,7 @@ services:
     environment:
       POSTGRES_DB: carekobooks-keycloak
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      POSTGRES_PASSWORD: postgres
     volumes:
       - carekobooks-keycloak-postgres-data:/var/lib/postgresql/data
     networks:
@@ -113,3 +120,4 @@ volumes:
 
 networks:
   carekonet-keycloak-postgres:
+  carekonet-keycloak-backend-postgres:
