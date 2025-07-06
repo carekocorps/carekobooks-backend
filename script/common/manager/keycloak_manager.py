@@ -1,7 +1,9 @@
 from common.factory.user_factory import IUserFactory
 from abc import ABC, abstractmethod
 from keycloak import KeycloakAdmin
+from repositories import UserRepository
 from config import KeycloakConfig
+from models import User
 from typing import Any
 
 class IKeycloakManager(ABC):
@@ -23,4 +25,11 @@ class KeycloakManager(IKeycloakManager):
     def create(self) -> dict[str, Any]:
         user_representation = self.__user_factory.generate_representation().payload
         user_id = self.__keycloak_admin.create_user(user_representation)
+
+        try:
+            UserRepository.create(User(keycloak_id = user_id, username = user_representation.get('username')))
+        except Exception as e:
+            self.__keycloak_admin.delete_user(user_id)
+            raise e
+
         return self.__keycloak_admin.get_user(user_id)

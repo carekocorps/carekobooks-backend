@@ -1,4 +1,5 @@
 from common.factory.user_factory import IUserFactory
+from common.manager.auth_manager import IAuthManager
 from common.manager.keycloak_manager import IKeycloakManager
 from config import ApiConfig
 from typing import Any
@@ -8,8 +9,9 @@ import logging
 import json
 
 class UserGenerator:
-    def __init__(self, user_factory: IUserFactory, keycloak_manager: IKeycloakManager):
+    def __init__(self, user_factory: IUserFactory, auth_manager: IAuthManager, keycloak_manager: IKeycloakManager):
         self.__user_factory = user_factory
+        self.__auth_manager = auth_manager
         self.__keycloak_manager = keycloak_manager
 
     def __create(self) -> dict[str, Any]:
@@ -21,7 +23,7 @@ class UserGenerator:
         }
 
         url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'''v1/users/{user.get('username')}''')
-        response = requests.put(url, files = files)
+        response = requests.put(url, files = files, headers = self.__auth_manager.authorization_header)
         response.raise_for_status()
         logging.info(response.text)
         return response.json()

@@ -33,7 +33,7 @@ def main() -> None:
     auth_manager = KeycloakAuthManager()
     keycloak_manager = KeycloakManager(user_factory)
 
-    user_generator = UserGenerator(user_factory, keycloak_manager)
+    user_generator = UserGenerator(user_factory, auth_manager, keycloak_manager)
     user_social_generator = UserSocialGenerator(auth_manager)
     book_generator = BookGenerator(book_request_factory, auth_manager)
     book_progress_generator = BookProgressGenerator(book_progress_request_factory, auth_manager)

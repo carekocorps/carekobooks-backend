@@ -13,3 +13,10 @@ class KeycloakConfig:
     REALM_NAME = getenv('KEYCLOAK_REALM_NAME')
     CLIENT_ID = getenv('KEYCLOAK_CLIENT_ID')
     CLIENT_SECRET = getenv('KEYCLOAK_CLIENT_SECRET')
+
+class DatabaseConfig:
+    HOST = getenv('DATABASE_HOST')
+    PORT = getenv('DATABASE_PORT')
+    NAME = getenv('DATABASE_NAME')
+    USERNAME = getenv('DATABASE_USERNAME')
+    PASSWORD = getenv('DATABASE_PASSWORD')
