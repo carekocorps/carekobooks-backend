@@ -10,14 +10,14 @@ public class BookThreadReplyUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads/replies")
+                .fromPath("/v1/books/threads/replies")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(Long replyId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads/replies")
+                .fromPath("/v1/books/threads/replies")
                 .pathSegment(String.valueOf(replyId))
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class BookThreadReplyUriFactory {
 
     public static String validChildrenUri(Long replyId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads/replies")
+                .fromPath("/v1/books/threads/replies")
                 .pathSegment(String.valueOf(replyId), "children")
                 .build()
                 .toUriString();
@@ -33,7 +33,7 @@ public class BookThreadReplyUriFactory {
 
     public static String validQueryUri(BookThreadReply reply, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads/replies")
+                .fromPath("/v1/books/threads/replies")
                 .queryParam("parentId", reply.getParent().getId())
                 .queryParam("username", reply.getUser().getUsername())
                 .queryParam("bookId", reply.getThread().getBook().getId())

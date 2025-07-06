@@ -10,14 +10,14 @@ public class BookUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books")
+                .fromPath("/v1/books")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(Long bookId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books")
+                .fromPath("/v1/books")
                 .pathSegment(String.valueOf(bookId))
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class BookUriFactory {
 
     public static String validGenreUri(Long bookId, String genreName) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books")
+                .fromPath("/v1/books")
                 .pathSegment(String.valueOf(bookId), "genres", genreName)
                 .build()
                 .toUriString();
@@ -33,7 +33,7 @@ public class BookUriFactory {
 
     public static String validImageUri(Long bookId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books")
+                .fromPath("/v1/books")
                 .pathSegment(String.valueOf(bookId), "images")
                 .build()
                 .toUriString();
@@ -41,14 +41,14 @@ public class BookUriFactory {
 
     public static String validCacheUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/cache")
+                .fromPath("/v1/books/cache")
                 .build()
                 .toUriString();
     }
 
     public static String validQueryUri(Book book, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books")
+                .fromPath("/v1/books")
                 .queryParam("title", book.getTitle())
                 .queryParam("authorName", book.getAuthorName())
                 .queryParam("publisherName", book.getPublisherName())

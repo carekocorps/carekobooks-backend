@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users/{username}/social")
+@RequestMapping("/v1/users/{username}/social")
 @Tag(name = "User Social", description = "Endpoints for managing user social interactions")
 public class UserSocialController implements BaseController, UserSocialControllerDocs {
 

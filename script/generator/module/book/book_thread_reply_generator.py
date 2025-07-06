@@ -13,7 +13,7 @@ class BookThreadReplyGenerator:
         self.__auth_manager = auth_manager
 
     def __generate_base_reply(self, thread_id: int, users: list[dict[str, any]]):
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/threads/replies')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/threads/replies')
         request = self.__request_factory.generate(random.choice(users).get('username'), thread_id)
         response = requests.post(url, json = request.payload, headers = self.__auth_manager.authorization_header)
         logging.info(response.text)
@@ -21,7 +21,7 @@ class BookThreadReplyGenerator:
         return response.json()
 
     def __generate_base_reply_child(self, reply_response: dict[str, any], users: list[dict[str, any]]):
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'''api/v1/books/threads/replies/{reply_response.get('id')}/children''')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'''v1/books/threads/replies/{reply_response.get('id')}/children''')
         request = self.__request_factory.generate(random.choice(users).get('username'), reply_response.get('thread').get('id'))
         response = requests.post(url, json = request.payload, headers = self.__auth_manager.authorization_header)
         logging.info(response.text)

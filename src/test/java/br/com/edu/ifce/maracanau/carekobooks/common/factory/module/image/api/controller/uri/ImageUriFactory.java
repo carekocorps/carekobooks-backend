@@ -9,7 +9,7 @@ public class ImageUriFactory {
 
     public static String validUri(Long imageId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/images")
+                .fromPath("/v1/images")
                 .pathSegment(String.valueOf(imageId))
                 .build()
                 .toUriString();

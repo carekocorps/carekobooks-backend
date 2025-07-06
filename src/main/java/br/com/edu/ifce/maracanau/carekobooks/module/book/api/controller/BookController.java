@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/v1/books")
 @Tag(name = "Book", description = "Endpoints for managing books")
 public class BookController implements BaseController, BookControllerDocs {
 

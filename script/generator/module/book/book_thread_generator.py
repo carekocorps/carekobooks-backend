@@ -13,7 +13,7 @@ class BookThreadGenerator:
         self.__auth_manager = auth_manager
 
     def generate(self, user_review_prob: float = 0.05) -> None:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/threads')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/threads')
         books = ApiProvider.fetch_books()
         users = ApiProvider.fetch_users()
 

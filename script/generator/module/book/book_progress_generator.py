@@ -13,7 +13,7 @@ class BookProgressGenerator:
         self.__auth_manager = auth_manager
 
     def generate(self, user_progress_prob: float = 0.25) -> None:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/progresses') 
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/progresses') 
         books = ApiProvider.fetch_books()
         users = ApiProvider.fetch_users()
 

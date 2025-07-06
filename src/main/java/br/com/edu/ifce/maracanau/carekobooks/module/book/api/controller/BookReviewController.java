@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/books/reviews")
+@RequestMapping("/v1/books/reviews")
 @Tag(name = "Book Review", description = "Endpoints for managing book reviews")
 public class BookReviewController implements BaseController, BookReviewControllerDocs {
 

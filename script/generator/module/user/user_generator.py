@@ -15,7 +15,7 @@ class UserGenerator:
         self.__mail_manager = mail_manager
 
     def __create(self, email: str) -> dict[str, any]:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/users')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/users')
         request = self.__user_request_factory.generate(email)
         files = {
             'request': (None, json.dumps(request.payload), 'application/json'),

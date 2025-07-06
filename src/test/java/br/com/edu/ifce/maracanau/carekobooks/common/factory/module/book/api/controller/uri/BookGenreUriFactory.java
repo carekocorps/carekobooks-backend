@@ -10,14 +10,14 @@ public class BookGenreUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/genres")
+                .fromPath("/v1/books/genres")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(String genreName) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/genres")
+                .fromPath("/v1/books/genres")
                 .pathSegment(genreName)
                 .build()
                 .toUriString();
@@ -25,14 +25,14 @@ public class BookGenreUriFactory {
 
     public static String validCacheUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/genres/cache")
+                .fromPath("/v1/books/genres/cache")
                 .build()
                 .toUriString();
     }
 
     public static String validQueryUri(BookGenre genre, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/genres")
+                .fromPath("/v1/books/genres")
                 .queryParam("name", genre.getName())
                 .queryParam("displayName", genre.getDisplayName())
                 .queryParam("createdBefore", genre.getCreatedAt().toLocalDate())

@@ -14,7 +14,7 @@ class BookGenerator:
         self.__auth_manager = auth_manager
 
     def generate(self) -> None:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books')
         genre_names = [genre.get('name') for genre in ApiProvider.fetch_book_genres()]
         books = self.__request_factory.generate(genre_names)
 

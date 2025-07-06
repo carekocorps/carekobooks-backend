@@ -10,14 +10,14 @@ public class BookActivityUriFactory {
     
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
+                .fromPath("/v1/books/activities")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(Long activityId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
+                .fromPath("/v1/books/activities")
                 .pathSegment(String.valueOf(activityId))
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class BookActivityUriFactory {
 
     public static String validQueryUri(BookActivity activity, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities")
+                .fromPath("/v1/books/activities")
                 .queryParam("username", activity.getUser().getUsername())
                 .queryParam("genre", activity.getBook().getGenres().getFirst().getName())
                 .queryParam("status", activity.getStatus())
@@ -41,7 +41,7 @@ public class BookActivityUriFactory {
 
     public static String validFeedQueryUri(String username, BookActivity activity, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/activities/social/feed")
+                .fromPath("/v1/books/activities/social/feed")
                 .queryParam("username", username)
                 .queryParam("createdBefore", activity.getCreatedAt().toLocalDate())
                 .queryParam("createdAfter", activity.getCreatedAt().toLocalDate())

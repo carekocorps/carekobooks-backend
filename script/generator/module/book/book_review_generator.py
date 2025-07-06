@@ -13,7 +13,7 @@ class BookReviewGenerator:
         self.__auth_manager = auth_manager
     
     def generate(self, book_review_prob: float = 0.75, user_review_prob: float = 0.10) -> None:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/reviews')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/reviews')
         books = ApiProvider.fetch_books()
         users = ApiProvider.fetch_users()
 

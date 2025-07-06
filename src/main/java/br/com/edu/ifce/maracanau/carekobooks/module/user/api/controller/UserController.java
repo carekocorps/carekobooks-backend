@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/v1/users")
 @Tag(name = "User", description = "Endpoints for managing users")
 public class UserController implements BaseController, UserControllerDocs {
 

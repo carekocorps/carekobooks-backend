@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/images")
+@RequestMapping("/v1/images")
 @Tag(name = "Image", description = "Endpoints for managing images")
 public class ImageController implements BaseController, ImageControllerDocs {
 

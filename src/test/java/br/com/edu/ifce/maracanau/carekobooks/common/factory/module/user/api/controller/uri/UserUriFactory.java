@@ -10,14 +10,14 @@ public class UserUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(String username) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(username)
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class UserUriFactory {
 
     public static String validImagesUri(String username) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(username, "images")
                 .build()
                 .toUriString();
@@ -33,7 +33,7 @@ public class UserUriFactory {
 
     public static String validResetEmailUri(String username) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(username, "reset-email")
                 .build()
                 .toUriString();
@@ -41,7 +41,7 @@ public class UserUriFactory {
 
     public static String validFollowingUri(String username, String targetUsername) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(username, "social", "following", targetUsername)
                 .build()
                 .toUriString();
@@ -49,7 +49,7 @@ public class UserUriFactory {
 
     public static String validQueryUri(User user, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .queryParam("username", user.getUsername())
                 .queryParam("displayName", user.getDisplayName())
                 .queryParam("createdBefore", user.getCreatedAt().toLocalDate())
@@ -62,7 +62,7 @@ public class UserUriFactory {
 
     public static String validSocialFollowingQueryUri(User userFollowing) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(userFollowing.getUsername(), "social", "following")
                 .build()
                 .toUriString();
@@ -70,7 +70,7 @@ public class UserUriFactory {
 
     public static String validSocialFollowingQueryUri(User userFollowing, User userFollowed, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(userFollowing.getUsername(), "social", "following")
                 .queryParam("targetUsername", userFollowed.getUsername())
                 .queryParam("targetDisplayName", userFollowed.getDisplayName())
@@ -84,7 +84,7 @@ public class UserUriFactory {
 
     public static String validSocialFollowersQueryUri(User userFollowed) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(userFollowed.getUsername(), "social", "followers")
                 .build()
                 .toUriString();
@@ -92,7 +92,7 @@ public class UserUriFactory {
 
     public static String validSocialFollowersQueryUri(User userFollowing, User userFollowed, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/users")
+                .fromPath("/v1/users")
                 .pathSegment(userFollowed.getUsername(), "social", "followers")
                 .queryParam("targetUsername", userFollowing.getUsername())
                 .queryParam("targetDisplayName", userFollowing.getDisplayName())

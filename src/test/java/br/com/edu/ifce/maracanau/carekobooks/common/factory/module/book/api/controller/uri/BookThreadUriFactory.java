@@ -10,14 +10,14 @@ public class BookThreadUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads")
+                .fromPath("/v1/books/threads")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(Long threadId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads")
+                .fromPath("/v1/books/threads")
                 .pathSegment(String.valueOf(threadId))
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class BookThreadUriFactory {
 
     public static String validQueryUri(BookThread thread, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/threads")
+                .fromPath("/v1/books/threads")
                 .queryParam("title", thread.getTitle())
                 .queryParam("username", thread.getUser().getUsername())
                 .queryParam("bookId", thread.getBook().getId())

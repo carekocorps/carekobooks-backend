@@ -5,22 +5,22 @@ import urllib
 class ApiProvider:
     @staticmethod
     def fetch_books() -> list[dict[str, any]]:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books')
         return ApiProvider.__fetch(url)
 
     @staticmethod
     def fetch_book_genres() -> list[dict[str, any]]:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/genres')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/genres')
         return ApiProvider.__fetch(url)
 
     @staticmethod
     def fetch_book_threads() -> list[dict[str, any]]:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/books/threads')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/threads')
         return ApiProvider.__fetch(url)   
 
     @staticmethod
     def fetch_users() -> list[dict[str, any]]:
-        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'api/v1/users')
+        url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/users')
         return [user for user in ApiProvider.__fetch(url) if user.get('username') != 'admin']
 
     @staticmethod

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/books/genres")
+@RequestMapping("/v1/books/genres")
 @Tag(name = "Book Genre", description = "Endpoints for managing book genres")
 public class BookGenreController implements BaseController, BookGenreControllerDocs {
 

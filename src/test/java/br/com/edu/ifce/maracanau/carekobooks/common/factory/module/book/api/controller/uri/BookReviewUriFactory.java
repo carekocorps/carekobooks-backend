@@ -10,14 +10,14 @@ public class BookReviewUriFactory {
 
     public static String validUri() {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/reviews")
+                .fromPath("/v1/books/reviews")
                 .build()
                 .toUriString();
     }
 
     public static String validUri(Long reviewId) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/reviews")
+                .fromPath("/v1/books/reviews")
                 .pathSegment(String.valueOf(reviewId))
                 .build()
                 .toUriString();
@@ -25,7 +25,7 @@ public class BookReviewUriFactory {
 
     public static String validQueryUri(BookReview review, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
-                .fromPath("/api/v1/books/reviews")
+                .fromPath("/v1/books/reviews")
                 .queryParam("username", review.getUser().getUsername())
                 .queryParam("score", review.getScore())
                 .queryParam("bookId", review.getBook().getId())

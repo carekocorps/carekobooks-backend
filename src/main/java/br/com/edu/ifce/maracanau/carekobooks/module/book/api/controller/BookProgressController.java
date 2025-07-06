@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/books/progresses")
+@RequestMapping("/v1/books/progresses")
 @Tag(name = "Book Progress", description = "Endpoints for managing book progresses")
 public class BookProgressController implements BaseController, BookProgressControllerDocs {
 

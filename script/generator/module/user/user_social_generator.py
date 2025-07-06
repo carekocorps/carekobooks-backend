@@ -20,7 +20,7 @@ class UserSocialGenerator:
                     continue
 
                 try:
-                    url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'api/v1/users/{username}/social/following/{target_username}')
+                    url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'v1/users/{username}/social/following/{target_username}')
                     response = requests.post(url, headers = self.__auth_manager.authorization_header)
                     response.raise_for_status()
                     logging.info(f'Status {response.status_code}: {username} -> {target_username}')
