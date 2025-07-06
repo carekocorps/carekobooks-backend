@@ -22,7 +22,7 @@ class ApiProvider:
     @staticmethod
     def fetch_users() -> list[dict[str, Any]]:
         url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/users')
-        return [user for user in ApiProvider.__fetch(url) if user.get('username') != 'admin']
+        return list(ApiProvider.__fetch(url))
 
     @staticmethod
     def __fetch(url: str) -> list[dict[str, Any]]:
