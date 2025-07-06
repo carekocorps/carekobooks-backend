@@ -27,7 +27,7 @@ services:
     entrypoint: >
       /bin/sh -c '
         isAlive() { curl -sf http://localhost:9000/minio/health/live; }
-        minio server /data --quiet & echo $! > /tmp/minio.pid
+        minio $0 "$@" --quiet & echo $! > /tmp/minio.pid
         until isAlive; do sleep 1; done
         echo "MinIO is ready. Proceeding with setup..."
         mc alias set myminio http://localhost:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
@@ -35,7 +35,7 @@ services:
         mc anonymous set public myminio/${MINIO_BUCKET}
         kill -s INT $(cat /tmp/minio.pid) && rm /tmp/minio.pid
         while isAlive; do sleep 0.1; done
-        exec minio server /data
+        exec minio $0 "$@"
       '
     command: server /data --console-address ":9001"
     volumes:
@@ -92,9 +92,10 @@ services:
       /bin/sh -c '
         set -e
         if [ ! -f "/app/data/carekobooks-realm.json" ]; then
-          python main.py
+          python $0 "$@"
         fi
       '
+    command: main.py
     volumes:
       - carekobooks-keycloak-realm-data:/app/data
     restart: no

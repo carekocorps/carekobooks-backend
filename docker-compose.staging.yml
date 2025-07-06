@@ -135,9 +135,10 @@ services:
       /bin/sh -c '
         set -e
         if [ ! -f "/app/data/carekobooks-realm.json" ]; then
-          python main.py
+          python $0 "$@"
         fi
       '
+    command: main.py
     volumes:
       - carekobooks-keycloak-realm-data:/app/data
     restart: no
