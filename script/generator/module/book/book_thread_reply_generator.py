@@ -2,17 +2,18 @@ from common.factory.book_thread_reply_request_factory import IBookThreadReplyReq
 from common.manager.auth_manager import IAuthManager
 from common.provider.api_provider import ApiProvider
 from config import ApiConfig
+from typing import Any
+import urllib.parse
 import requests
 import logging
 import random
-import urllib
 
 class BookThreadReplyGenerator:
     def __init__(self, request_factory: IBookThreadReplyRequestFactory, auth_manager: IAuthManager):
         self.__request_factory = request_factory
         self.__auth_manager = auth_manager
 
-    def __generate_base_reply(self, thread_id: int, users: list[dict[str, any]]):
+    def __generate_base_reply(self, thread_id: int, users: list[dict[str, Any]]):
         url = urllib.parse.urljoin(ApiConfig.BASE_URL, 'v1/books/threads/replies')
         request = self.__request_factory.generate(random.choice(users).get('username'), thread_id)
         response = requests.post(url, json = request.payload, headers = self.__auth_manager.authorization_header)
@@ -20,7 +21,7 @@ class BookThreadReplyGenerator:
         response.raise_for_status()
         return response.json()
 
-    def __generate_base_reply_child(self, reply_response: dict[str, any], users: list[dict[str, any]]):
+    def __generate_base_reply_child(self, reply_response: dict[str, Any], users: list[dict[str, Any]]):
         url = urllib.parse.urljoin(ApiConfig.BASE_URL, f'''v1/books/threads/replies/{reply_response.get('id')}/children''')
         request = self.__request_factory.generate(random.choice(users).get('username'), reply_response.get('thread').get('id'))
         response = requests.post(url, json = request.payload, headers = self.__auth_manager.authorization_header)

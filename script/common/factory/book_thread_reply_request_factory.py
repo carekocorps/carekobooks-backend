@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from faker import Faker
+from typing import Any
 
 class BookThreadReplyRequest:
-    def __init__(self, payload: dict[str, any]):
+    def __init__(self, payload: dict[str, Any]):
         self.payload = payload
 
 class IBookThreadReplyRequestFactory(ABC):

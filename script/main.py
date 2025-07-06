@@ -1,13 +1,11 @@
-from common.factory.credentials_factory import CredentialsFactory
 from common.factory.book_request_factory import BookRequestFactory
 from common.factory.book_progress_request_factory import BookProgressRequestFactory
 from common.factory.book_review_request_factory import BookReviewRequestFactory
 from common.factory.book_thread_request_factory import BookThreadRequestFactory
 from common.factory.book_thread_reply_request_factory import BookThreadReplyRequestFactory
-from common.factory.user_request_factory import UserRequestFactory
+from common.factory.user_factory import UserFactory
 from common.manager.auth_manager import KeycloakAuthManager
-from common.manager.verification_manager import KeycloakVerificationManager
-from common.manager.mail_manager import MailSlurpManager
+from common.manager.keycloak_manager import KeycloakManager
 from generator.module.book.book_generator import BookGenerator
 from generator.module.book.book_progress_generator import BookProgressGenerator
 from generator.module.book.book_review_generator import BookReviewGenerator
@@ -25,8 +23,7 @@ logging.basicConfig(
 
 def main() -> None:
     faker = Faker()
-    user_request_factory = UserRequestFactory(faker)
-    credentials_factory = CredentialsFactory(faker)
+    user_factory = UserFactory(faker)
     book_request_factory = BookRequestFactory()
     book_progress_request_factory = BookProgressRequestFactory()
     book_review_request_factory = BookReviewRequestFactory(faker)
@@ -34,10 +31,9 @@ def main() -> None:
     book_thread_reply_request_factory = BookThreadReplyRequestFactory(faker)
 
     auth_manager = KeycloakAuthManager()
-    verification_manager = KeycloakVerificationManager(credentials_factory)
-    mail_manager = MailSlurpManager()
+    keycloak_manager = KeycloakManager(user_factory)
 
-    user_generator = UserGenerator(user_request_factory, verification_manager, mail_manager)
+    user_generator = UserGenerator(user_factory, keycloak_manager)
     user_social_generator = UserSocialGenerator(auth_manager)
     book_generator = BookGenerator(book_request_factory, auth_manager)
     book_progress_generator = BookProgressGenerator(book_progress_request_factory, auth_manager)

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from keycloak import KeycloakOpenID
 from config import ApiConfig, KeycloakConfig
+from typing import Any
 import time
 
 class IAuthManager(ABC):
@@ -21,7 +22,7 @@ class KeycloakAuthManager(IAuthManager):
         )
 
     @property
-    def token(self) -> dict[str, any]:
+    def token(self) -> dict[str, Any]:
         if self.__token is None:
             self.__token = self.__keycloak_open_id.token(ApiConfig.ADMIN_USERNAME, ApiConfig.ADMIN_PASSWORD)
             self.__token_issued_at = time.time()

@@ -1,11 +1,11 @@
 from common.provider.image_provider import ImageProvider
 from common.provider.raw_book_provider import RawBookProvider
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
 import logging
 
 class BookRequest:
-    def __init__(self, payload: dict[str, any], image: Optional[bytes]):
+    def __init__(self, payload: dict[str, Any], image: Optional[bytes]):
         self.payload = payload
         self.image = image
 

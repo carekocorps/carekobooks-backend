@@ -2,10 +2,10 @@ from common.factory.book_thread_request_factory import IBookThreadRequestFactory
 from common.manager.auth_manager import IAuthManager
 from common.provider.api_provider import ApiProvider
 from config import ApiConfig
+import urllib.parse
 import requests
 import logging
 import random
-import urllib
 
 class BookThreadGenerator:
     def __init__(self, request_factory: IBookThreadRequestFactory, auth_manager: IAuthManager):
