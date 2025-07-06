@@ -28,7 +28,7 @@ services:
       - carekonet-minio
       - carekonet-redis
       - carekonet-keycloak
-      - carekonet-nginx
+      - carekonet-proxy
 
   postgres:
     image: postgres:17
@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
     networks:
       - carekonet-minio
-      - carekonet-nginx
+      - carekonet-proxy
 
   redis:
     image: redis:8
@@ -110,6 +110,7 @@ services:
       KC_HOSTNAME_STRICT: true
       KC_HOSTNAME_STRICT_HTTPS: true
       KC_HOSTNAME_STRICT_BACKCHANNEL: true
+      KC_HOSTNAME_PATH: auth
       KC_PROXY: edge
       KC_PROXY_ADDRESS_FORWARDING: true
       KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
@@ -125,7 +126,7 @@ services:
       - carekonet-keycloak
       - carekonet-keycloak-postgres
       - carekonet-keycloak-backend-postgres
-      - carekonet-nginx
+      - carekonet-proxy
 
   keycloak-realm-setup:
     build:
@@ -173,5 +174,5 @@ networks:
   carekonet-keycloak:
   carekonet-keycloak-postgres:
   carekonet-keycloak-backend-postgres:
-  carekonet-nginx:
+  carekonet-proxy:
     external: true
