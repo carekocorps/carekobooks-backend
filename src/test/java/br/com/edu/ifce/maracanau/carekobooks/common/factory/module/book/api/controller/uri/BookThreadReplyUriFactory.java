@@ -34,6 +34,7 @@ public class BookThreadReplyUriFactory {
     public static String validQueryUri(BookThreadReply reply, String orderBy, boolean isAscendingOrder) {
         return UriComponentsBuilder
                 .fromPath("/v1/books/threads/replies")
+                .queryParam("threadId", reply.getThread().getId())
                 .queryParam("parentId", reply.getParent().getId())
                 .queryParam("username", reply.getUser().getUsername())
                 .queryParam("bookId", reply.getThread().getBook().getId())

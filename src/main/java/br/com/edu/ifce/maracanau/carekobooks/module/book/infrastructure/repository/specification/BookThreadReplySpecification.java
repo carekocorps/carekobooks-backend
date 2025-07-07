@@ -8,6 +8,11 @@ public class BookThreadReplySpecification {
     private BookThreadReplySpecification() {
     }
 
+    public static Specification<BookThreadReply> threadIdEqual(Long threadId) {
+        return (root, query, cb) ->
+                cb.equal(root.get("thread").get("id"), threadId);
+    }
+
     public static Specification<BookThreadReply> parentIdEqual(Long parentId) {
         return (root, query, cb) ->
                 cb.equal(root.get("parent").get("id"), parentId);
