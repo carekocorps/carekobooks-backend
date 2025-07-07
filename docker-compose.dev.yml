@@ -11,7 +11,6 @@ services:
     volumes:
       - carekobooks-postgres-data:/var/lib/postgresql/data
     command: ["postgres", "-c", "max_prepared_transactions=100"]
-    restart: unless-stopped
     networks:
       - carekonet-keycloak-backend-postgres
 
@@ -40,7 +39,6 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - carekobooks-minio-data:/data
-    restart: unless-stopped
 
   redis:
     image: redis:8
@@ -49,7 +47,6 @@ services:
       - "6379:6379"
     volumes:
       - carekobooks-redis-data:/data
-    restart: unless-stopped
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.5
